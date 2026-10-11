@@ -1,0 +1,22 @@
+name: Validate knowledge platform v2
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/validate_repo.py
+      - run: node --check assets/app.js && node tests/core.test.js
+      - run: python3 scripts/build_offline.py

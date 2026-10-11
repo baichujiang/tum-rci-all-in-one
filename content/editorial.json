@@ -1,0 +1,350 @@
+{
+  "version": "2.0.0",
+  "released_on": "2026-10-11",
+  "sources": [
+    {
+      "id": "curriculum",
+      "title": "RCI 官方学习规划",
+      "url": "https://www.cit.tum.de/cit/studium/studiengaenge/master-robotics-cognition-intelligence/studienplaene/",
+      "status": "checked",
+      "checked_on": "2026-10-11",
+      "checked_by": "AI 辅助对照公开原文",
+      "scope": "必修结构、Robotics 二选一、G/H/I 最低学分、跨学科要求；不含全部选修模块逐行复核。",
+      "human_review": "pending",
+      "watch": true
+    },
+    {
+      "id": "admissions",
+      "title": "RCI 官方申请说明",
+      "url": "https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/",
+      "status": "checked",
+      "checked_on": "2026-10-11",
+      "checked_by": "AI 辅助对照公开原文",
+      "scope": "常规申请窗口、材料类型、VPD、GRE/APS 条件与文书独立完成要求。",
+      "human_review": "pending",
+      "watch": true
+    },
+    {
+      "id": "matching",
+      "title": "实验课与研讨课 Matching",
+      "url": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/",
+      "status": "checked",
+      "checked_on": "2026-10-11",
+      "checked_by": "AI 辅助对照公开原文",
+      "scope": "IN2106/IN2107 的匹配入口与 2026/27 冬季匹配状态；未逐条复核 58 个历史课题的当前余位。",
+      "human_review": "pending",
+      "watch": true
+    },
+    {
+      "id": "copyright",
+      "title": "TUM Legal Notice / 使用条款",
+      "url": "https://www.tum.de/en/about-tum/contact-directions/legal-notice",
+      "status": "checked",
+      "checked_on": "2026-10-11",
+      "checked_by": "AI 辅助对照公开原文",
+      "scope": "受保护内容转载与翻译的授权边界；本平台仅独立整理事实与原创说明。",
+      "human_review": "pending",
+      "watch": true
+    },
+    {
+      "id": "amendment2025",
+      "title": "2025 年 2 月 11 日 FPSO 修订",
+      "url": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P008777873",
+      "status": "needs_review",
+      "checked_on": null,
+      "checked_by": null,
+      "scope": "沿用 v1 的 35 行目录与控制理论补修规则；v2 尝试读取 PDF 未成功，不能据此声称现行有效。",
+      "human_review": "pending",
+      "watch": false
+    }
+  ],
+  "course_names_zh": {
+    "IN2067": "机器人学",
+    "ED160028": "机器人动力学",
+    "IN2228": "计算机视觉 II：多视几何",
+    "IN2406": "人工智能基础",
+    "IN2064": "机器学习",
+    "IN2107": "硕士研讨课",
+    "IN2106": "硕士实验课",
+    "IN2320": "硕士论文",
+    "ED140014": "控制理论",
+    "IN2060": "实时系统",
+    "IN2076": "高级计算机体系结构",
+    "IN2010": "建模与仿真",
+    "IN2354": "三维扫描与运动捕捉",
+    "IN2346": "深度学习导论",
+    "IN2359": "区块链系统工程",
+    "IN2169": "导师指导研究",
+    "IN2026": "可视数据分析",
+    "MW2352": "汽车驾驶辅助系统",
+    "MW0084": "装配、搬运与工业机器人",
+    "MW0003": "产品开发方法",
+    "MW0038": "机电一体化设备技术",
+    "MW1902": "自动化技术",
+    "IN2257": "附加硕士实验课",
+    "IN2061": "数字信号处理导论",
+    "EI7210": "人形机器人系统",
+    "IN2305": "信息物理系统",
+    "MW0538": "现代控制方法 I",
+    "IN2138": "机器人运动规划",
+    "IN2222": "认知系统",
+    "IN2404": "移动机器人",
+    "WI000159": "商业计划基础：创意与市场",
+    "IN9006": "小型软件企业创业",
+    "IN9003": "信息技术法律",
+    "IN9010": "科学与伦理研讨课",
+    "IN9036": "硕士论文写作方法"
+  },
+  "core_rechecked": [
+    "IN2067",
+    "ED160028",
+    "IN2228",
+    "IN2406",
+    "IN2064",
+    "IN2107",
+    "IN2106"
+  ],
+  "articles": [
+    {
+      "id": "curriculum",
+      "title": "120 ECTS，应该怎样分配？",
+      "subtitle": "先看结构，再决定每学期选什么。",
+      "category": "学业规则",
+      "cohort": "2025 修订目录快照；其他批次另行核实",
+      "sources": [
+        "curriculum",
+        "amendment2025"
+      ],
+      "status": "mixed",
+      "sections": [
+        {
+          "heading": "把总学分拆成四部分",
+          "text": "一般情形按必修 43、专业选修 41、跨学科 6、论文 30 ECTS 规划。总数相同不代表分类合格：G（计算）、H（机械）、I（系统与控制）还要各达到 5 ECTS。"
+        },
+        {
+          "heading": "不要用多修学分填错栏目",
+          "text": "跨学科多修的学分不能在本工具中自动抵扣专业选修。规划器分别显示录入总学分与按栏目封顶后的规划计入学分，不替学校决定认定。"
+        },
+        {
+          "heading": "先确认自己适用的版本",
+          "text": "本工具只提供 2025 修订快照情景，支持选择 2025/26 冬、2026 夏、2026/27 冬入学批次。选中批次不等于学校确认该版本适用于个人；旧批次、未知批次及未来批次不作达成判断。"
+        }
+      ]
+    },
+    {
+      "id": "robotics-choice",
+      "title": "Robotics 与 Roboterdynamik：只能选一门",
+      "subtitle": "不是两门必修，也不是重复修读的加分机会。",
+      "category": "选课提醒",
+      "cohort": "对照官方当前规划及个人适用 FPSO",
+      "sources": [
+        "curriculum"
+      ],
+      "status": "checked",
+      "sections": [
+        {
+          "heading": "先确定你的 Robotics 路线",
+          "text": "官方规划把 IN2067 与 ED160028 标成 XOR，并说明只能参加其中一门的考试。第二版会阻止把两门同时加入计划。"
+        },
+        {
+          "heading": "以课程代码识别模块",
+          "text": "中文名只帮助理解。联系导师、报名或核对成绩单时，请始终附上模块代码与官方原名。目录中的冬／夏开课标记不是当前学期排课承诺。"
+        }
+      ]
+    },
+    {
+      "id": "conditional-control",
+      "title": "控制理论补修，别算成额外毕业学分",
+      "subtitle": "这是需要依据个人录取条件核对的情景。",
+      "category": "待复核规则",
+      "cohort": "v1 记录的 2025/26 冬季起规则情景",
+      "sources": [
+        "amendment2025"
+      ],
+      "status": "needs_review",
+      "sections": [
+        {
+          "heading": "规划器如何处理这 5 ECTS",
+          "text": "沿用 v1 的规则快照：需要 ED140014 时，专业选修 G/H/I 目标由 41 调整为 36，另列补修 5，总目标仍为 120；K 不自动抵扣 G/H/I 各 5 的最低要求。"
+        },
+        {
+          "heading": "这不是本次已确认的新规",
+          "text": "本次未能重新读取修订 PDF，因此这个情景标为待复核。只有在核对适用 FPSO 与个人录取条件后才启用；工具不会判断你是否必须补修，也不作毕业认证。"
+        }
+      ]
+    },
+    {
+      "id": "application",
+      "title": "申请 RCI：把材料和条件分开核对",
+      "subtitle": "中文版行动清单，不代替 TUMonline 个性化要求。",
+      "category": "申请与入学",
+      "cohort": "常规申请；具体学期以官方公布为准",
+      "sources": [
+        "admissions"
+      ],
+      "status": "checked",
+      "sections": [
+        {
+          "heading": "先记两个常规申请窗口",
+          "text": "冬季入学：2 月 1 日至 5 月 31 日。夏季入学：10 月 1 日至 11 月 30 日。这是常规月日范围，不是系统实时开放状态。"
+        },
+        {
+          "heading": "基础材料与条件材料分开准备",
+          "text": "先检查成绩单、本科课程说明、Curricularanalyse、简历以及德语和英语证明。VPD 与 TUMonline 是不同步骤；只申请 VPD 不算向 TUM 提交申请。"
+        },
+        {
+          "heading": "不要只按国籍判断 GRE 与 APS",
+          "text": "GRE 与 APS 条件要按学历取得地核查。官方列出的 GRE 学历地区包括孟加拉国、中国、印度、伊朗、巴基斯坦，最低分为 Quantitative 164、Analytical Writing 4.0，并列有 GATE 替代说明。中国、印度、越南学历还应核查 APS。"
+        },
+        {
+          "heading": "文书必须由申请人独立完成",
+          "text": "官方要求动机说明不超过两页，科学 Essay 约 1000 词，且需独立完成。本平台只做要求说明与核对清单，不提供可冒充本人作品的申请成稿。"
+        }
+      ]
+    },
+    {
+      "id": "matching",
+      "title": "实验课与研讨课，不是普通选课",
+      "subtitle": "IN2106 / IN2107 的申请入口要单独关注。",
+      "category": "选课办事",
+      "cohort": "Matching 流程；状态快照为 WiSe 2026/27",
+      "sources": [
+        "matching"
+      ],
+      "status": "checked",
+      "sections": [
+        {
+          "heading": "先参加 Matching",
+          "text": "官方说明 IN2106、IN2107 等指定模块通过 Matching 分配，不是直接在 TUMonline 注册名额。具体主题还可能有说明会、申请材料等安排，请查看负责教学团队的说明。"
+        },
+        {
+          "heading": "余位列表不是实时库存",
+          "text": "2026 年 10 月 11 日复核时，官网写明 2026/27 冬季常规匹配已完成；余位需直接联系相应导师。站内 58 条课题保留为 v1 学期快照，不能据此推断当前仍有位置。"
+        }
+      ]
+    },
+    {
+      "id": "research-start",
+      "title": "找研究方向：从问题出发，不从名单出发",
+      "subtitle": "给第一次寻找实验室与论文题目的同学。",
+      "category": "原创方法",
+      "cohort": "通用学习建议",
+      "sources": [],
+      "status": "original",
+      "sections": [
+        {
+          "heading": "用三个问题缩小范围",
+          "text": "你希望机器人感知什么、决定什么、执行什么？把兴趣拆成问题，再去资源库搜索视觉、SLAM、控制、机器人学习或 HRI。"
+        },
+        {
+          "heading": "把证据整理成一页",
+          "text": "记录一篇你读过的论文、一个做过的小项目，以及你愿意探索的问题。研究方向是否匹配、名额是否存在、学分能否认定，是三个需要分别确认的问题。"
+        },
+        {
+          "heading": "公开平台只保存公共信息",
+          "text": "导师回复、申请材料与个人学分记录不要上传到公开仓库。站内计划和勾选记录仅保存在当前浏览器，导出后也应按个人文件保管。"
+        }
+      ]
+    },
+    {
+      "id": "rights",
+      "title": "为什么这里是中文知识平台，而不是官网镜像？",
+      "subtitle": "来源可追溯，内容有边界。",
+      "category": "内容政策",
+      "cohort": "适用于本平台全部内容",
+      "sources": [
+        "copyright"
+      ],
+      "status": "checked",
+      "sections": [
+        {
+          "heading": "整理事实，独立表达",
+          "text": "本站保留课程代码、学分等结构化事实，并用自己的语言解释。中文课程名称为参考译名，学校德语／英语名称保留，翻译不具有官方效力。"
+        },
+        {
+          "heading": "不默认拥有转载权",
+          "text": "TUM 使用条款对受保护网页内容的复制发布设有要求。本站不镜像整页、整篇译文、受限课件、第三方图片或学校标识。需要全文翻译时，先单独确认许可。"
+        },
+        {
+          "heading": "机器变化不等于事实变化",
+          "text": "来源检测只生成指纹与审核报告，不自动发布抓取原文，不自动重写中文说明，不把网络可达当成人工审核。维护者核对来源和适用批次后再提交修改。"
+        }
+      ]
+    }
+  ],
+  "guides": [
+    {
+      "id": "01",
+      "title": "申请与录取",
+      "path": "guides/01_申请与录取.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    },
+    {
+      "id": "02",
+      "title": "课程与毕业要求",
+      "path": "guides/02_课程与毕业要求.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    },
+    {
+      "id": "03",
+      "title": "选课系统与考试",
+      "path": "guides/03_选课系统与考试.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    },
+    {
+      "id": "04",
+      "title": "科研实验室与论文",
+      "path": "guides/04_科研实验室与论文.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    },
+    {
+      "id": "05",
+      "title": "费用奖学金和生活",
+      "path": "guides/05_费用奖学金和生活.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    },
+    {
+      "id": "06",
+      "title": "机器人技术栈和学习路线",
+      "path": "guides/06_机器人技术栈和学习路线.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    },
+    {
+      "id": "07",
+      "title": "2026冬季学期快照",
+      "path": "guides/07_2026冬季学期快照.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    },
+    {
+      "id": "08",
+      "title": "常见问题与术语",
+      "path": "guides/08_常见问题与术语.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    },
+    {
+      "id": "09",
+      "title": "经典教材和研究主题",
+      "path": "guides/09_经典教材和研究主题.md",
+      "status": "inherited",
+      "last_recorded": "2026-10-11"
+    }
+  ],
+  "checklist": [
+    "核对所申请学期的官方窗口",
+    "核对本科学历与课程匹配材料",
+    "准备成绩单与本科课程说明",
+    "填写官方 Curricularanalyse 表",
+    "检查德语与英语证明",
+    "按个人学历核查 VPD / GRE 或 GATE / APS",
+    "独立完成 Essay 与动机说明",
+    "以 TUMonline 个性化清单检查并提交"
+  ]
+}

@@ -1,23 +1,37 @@
-name: Resource URL scan (review only)
+name: Official source changes (review only)
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/check_sources.py', 'content/editorial.json', '.github/workflows/linkcheck.yml']
   schedule:
-    - cron: '0 7 1 1,4,7,10 *'
+    - cron: '0 7 * * 1'
+permissions:
+  contents: read
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate metadata
-        run: python3 scripts/validate_repo.py
-      - name: Spot-check external source URLs
-        run: python3 scripts/check_links.py --limit 125 --sleep 0.4
-      - name: Attach report for human review
-        uses: actions/upload-artifact@v4
+      - uses: actions/cache/restore@v4
         with:
-          name: resource-check-report
-          path: data/link_check_latest.csv
+          path: .cache/source-fingerprints.json
+          key: rci-v2-fingerprints-${{ github.run_id }}
+          restore-keys: rci-v2-fingerprints-
+      - name: Check public source fingerprints, not content approval
+        run: python3 scripts/check_sources.py
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: .cache/source-fingerprints.json
+          key: rci-v2-fingerprints-${{ github.run_id }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-review-report
+          path: reports/
+          retention-days: 14

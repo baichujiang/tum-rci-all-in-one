@@ -1,83 +1,71 @@
-# TUM RCI All-in-One · Robotics, Cognition, Intelligence
+# TUM RCI All-in-One · 第二版
 
-**TUM RCI All-in-One — 面向慕尼黑工业大学 Robotics, Cognition, Intelligence 专业及同名学生社群的中文一站式知识库。**
+**为同名学生社群打造的中文优先、来源可追溯的 TUM RCI 知识平台。** 独立学生项目，不隶属于 TUM。
 
-- 项目：TUM **M.Sc. Robotics, Cognition, Intelligence**，Garching，4 semesters / 120 ECTS。
-- 最近整理：**2026-10-11（Europe/Berlin）**。
-- 正式来源：[https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/](https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/) ｜ [学习规划](https://www.cit.tum.de/cit/studium/studiengaenge/master-robotics-cognition-intelligence/studienplaene/) ｜ [现行修订条例 PDF](https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P008777873)。
+第二版整理日期：2026-10-11。平台升级不是“所有信息已经重新核实”。
 
-## ⚡ 立即开始
+## 打开平台
 
-1. **双击 `index.html`** —— 无需联网安装依赖即可搜索仓库的资源标题和分类（访问链接仍需联网）。
-2. 阅读 [START_HERE.md](START_HERE.md) 找到针对申请人/已录取/在读/科研的导航。
-3. 想**查看所有125条带链接资源**，直接打开 [ALL_RESOURCES.md](ALL_RESOURCES.md)。
-4. 快速对照以下指南：
+GitHub Pages 启用后：**https://baichujiang.github.io/tum-rci-all-in-one/**。
 
-| 路径 | 覆盖 |
+本地运行（Python 3，无第三方依赖）：
+
+```sh
+python3 -m http.server 8000
+```
+
+浏览器打开 `http://localhost:8000`。不需要 Node 构建、账号、数据库或 API key。
+
+离线使用：运行 `python3 scripts/build_offline.py` 后双击生成的 `offline.html`。生成文件只是快照，修改源数据后要重新运行；在线网站直接读取 CSV／JSON，不维护内嵌数据副本。
+
+## 第二版功能
+
+| 模块 | 内容 |
 |---|---|
-| [01 申请与录取](guides/01_申请与录取.md) | 截止日期、VPD、APS、GRE、语言、材料、流程 |
-| [02 课程与毕业](guides/02_课程与毕业要求.md) | 120 ECTS / FPSO新旧规则 / 35条法定课程 / 2条学期路线 |
-| [03 选课与考试](guides/03_选课系统与考试.md) | TUMonline、Moodle、Matching、成绩与课程学分审核 |
-| [04 科研实验室与论文](guides/04_科研实验室与论文.md) | MIRMI、CVG、AIR、RSI、Thesis Portal、套磁流程 |
-| [05 费用生活](guides/05_费用奖学金和生活.md) | 非欧盟费用、奖学金、宿舍、交通、保险、签证 |
-| [06 机器人技术栈](guides/06_机器人技术栈和学习路线.md) | ROS2、OpenCV、SLAM、Motion Planning、ML、控制及项目路线 |
-| [07 2026/27 冬季更新](guides/07_2026冬季学期快照.md) | 紧迫日程、当年课程、Matching剩余课题 |
-| [08 常见问题与术语](guides/08_常见问题与术语.md) | 英德中关键词与办事FAQ |
-| [09 参考书与论文](guides/09_经典教材和研究主题.md) | 学术参考书、论文阅读顺序、研究方向 |
+| 课程百科 | 35 门模块的中文参考名＋官方原名、分类筛选、目录学期、详情来源、加入计划 |
+| 学分规划 | 计划／自报已通过分开，Robotics 二选一保护，G/H/I 最低要求，栏目封顶，条件补修情景，自定义待认定选修，JSON 导入导出 |
+| 中文指南 | 7 篇新版重点解读＋9 篇 v1 长篇指南的站内排版 |
+| 申请与入学 | 常规申请窗口、条件要求说明、本地核对清单 |
+| 科研资源 | 15 条原有科研类入口、58 条 WiSe 2026/27 课题快照；不代表实时空位 |
+| 全部资源 | 125 条原始资源、分类／关键词／收藏筛选、来源入口 |
+| 来源台账 | 核对范围、日期、AI 辅助检查与人工待审分开记录 |
+| 维护 | 数据校验、逻辑测试、按白名单低频检测来源变化、只生成审核报告 |
 
-## 在 GitHub 上使用
+## 信息可靠性
 
-- Repository: `baichujiang/tum-rci-all-in-one`（公开仓库已创建）。
-- 将 `index.html` 发布为 GitHub Pages，其他人便能通过浏览器搜索，无需 GitHub 账号。
-- 用 Pull Request 提交新资料，并在 CSV 中记录日期、来源及适用版本。
-- 按 [PUBLISH.md](PUBLISH.md) 完成发布；当前只提供仓库源文件，不代表网站已上线。
+本次重新对照了 **4 个官方网页的指定范围**：课程规划、申请说明、Matching、网站使用条款。所有源记录目前仍标注人工审核待完成。2025 FPSO 修订 PDF 本次未能读取：35 行课程目录及条件补修情景沿用 v1，必须再核对个人适用版本。旧资源与课题不因界面升级变成实时数据。
 
-## 结构 / Contents
+规划器只提供 2025 修订快照情景。可选择 2025/26 冬、2026 夏、2026/27 冬入学；选择批次不证明模型适用于你。其他／未知批次不作达成判断。工具不是毕业审核，也不是报名系统。
+
+## 单一数据来源
 
 ```text
-tum-rci-all-in-one/
-├── README.md                 仓库入口
-├── START_HERE.md             针对不同学业阶段的操作索引
-├── ALL_RESOURCES.md          125条资源的完整 Markdown 列表
-├── index.html                离线可搜索网页
-├── guides/                   完整中文操作/学习指南 01～09
-├── data/
-│   ├── resources.csv/.json             分组资源链接库
-│   ├── courses_legal_2025.csv/.json    2025 修订法规全部35行
-│   ├── topics_ws2026_27.csv           26/27 相关 seminar/practical 快照
-│   └── events_deadlines.csv           需按学期更新的时间
-├── templates/                申请清单/课程记录/个人规划/科研联系表
-├── scripts/                  离线一致性验证 + 可选联网检链
-├── .github/workflows/        GitHub 远程定期链接检查示例
-├── CONTRIBUTING.md
-├── LICENSE.md
-└── CHANGELOG.md
+index.html                 网站入口，GitHub Pages 可直接发布
+assets/app.js              界面与本地交互
+assets/core.js             CSV、学分计算、输入校验、转义 Markdown
+assets/style.css           手机与桌面布局，无外部字体
+content/editorial.json     中文参考名、解读、来源元数据、旧指南导航
+data/*.csv                 事实目录，保留 v1 原文件
+guides/*.md                v1 中文指南
+scripts/check_sources.py   只保存指纹与审核报告，不转载网页
+scripts/build_offline.py   可选离线快照生成器
+tests/core.test.js         学分与安全边界测试
+CONTENT_POLICY.md         内容、来源与隐私政策
 ```
 
-## 先看 120 ECTS 学分约束
+旧 `data/*.json` 与 `ALL_RESOURCES.md` 为 v1 导出，不是第二版网页的数据源；编辑 CSV 后不要把这些旧导出当成自动同步版本。
 
-| 组成 | 通常 ECTS | 注意 |
-|---|---:|---|
-| Core lecture / seminar / practical | 43 | Robotics vs Roboterdynamik XOR |
-| 科学技术选修 G+H+I | 41 | G/H/I 各至少 5；若要求补ED140014，则为36+5 |
-| 跨学科选修 J | 6 | 德语课 C1.2 及以上才有机会认可 |
-| Thesis | 30 | 注册、论文和展示按学校程序 |
-| **总计** | **120** | 适用入学批次法规高于示例规划 |
+## 维护和测试
 
-## 信息可信度与边界
-
-- **官方已查阅**：在整理日访问到的 TUM/CIT/MIRMI/课程官方页面；只是页面查阅，不代表每条链接都做了网络状态码测试。
-- **官网入口待再核实**：官方平台 canonical URL 或业内知名项目入口；未逐项实时验证内容和正常访问，脚本可选批量检查。
-- **历史课程/学生社区**：仅供学习；不能用于确认当年考试安排和毕业认定。
-- **时效信息**：申请费用、课程内容、面试政策、名单和时间表每学期可变。`snapshot_date` 是采集日，不是担保长期有效。
-
-## 更新与贡献
-
-```bash
-python3 scripts/validate_repo.py   # 完全离线，数据/学分约束一致性核验
-python3 scripts/check_links.py --limit 15   # 可选，需要公网，403/429/登录墙不判为死链
+```sh
+python3 scripts/validate_repo.py
+node tests/core.test.js
+node --check assets/app.js
+python3 scripts/build_offline.py
 ```
 
-本文件夹为 GitHub 仓库 `tum-rci-all-in-one` 的初始内容；创建公开仓库后，将全部文件提交到仓库根目录。网站通过 GitHub Pages 发布（参见 [PUBLISH.md](PUBLISH.md)）。
+来源工作流在相关文件推送、手动运行或每周一 07:00 UTC 检查 4 个允许监测的公开来源。首次建立机器基线，后续比较上一次成功抓取；缓存丢失时重新建基线。报告不自动更新网页、翻译或人工审核日期。查看仓库 Actions 的 `source-review-report` artifact；无法访问／robots 禁止会明确记录，不当作验证成功。
 
-**重要：**本仓库不是 TUM 官方项目/招生咨询，也不会保存受限课件、学生身份凭证、申请文书草稿或个人隐私。对于入学、考试、毕业决策，TUMonline 的个人记录和适用 FPSO 优先。
+完整更新规范见 [CONTENT_POLICY.md](CONTENT_POLICY.md)，原有贡献规则见 [CONTRIBUTING.md](CONTRIBUTING.md)。官方来源见 [TUM RCI](https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/)。
+
+**个人计划、成绩单、证件、群聊和受限课件不得上传到这个公开仓库。** 个人收藏与计划只保存在当前浏览器。中文内容为参考，学校原文和个人 TUMonline 记录优先。
