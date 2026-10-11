@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+.vscode/
+data/link_check_latest.csv
+*.bak

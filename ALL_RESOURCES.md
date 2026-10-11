@@ -282,3 +282,4 @@
   <small>发布方：TUM 官方 · 核查：官网入口待再核实 · 访问：公开</small>
 - **R125** [TUM International Campus Life](https://www.international.tum.de/en/global/) — 国际交流、指导计划等  
   <small>发布方：TUM Global · 核查：官网入口待再核实 · 访问：公开</small>
+

@@ -27,7 +27,7 @@
 
 ## 在 GitHub 上使用
 
-- Repository: `baichujiang/tum-rci-all-in-one`（已创建的公开仓库）。
+- Repository: `baichujiang/tum-rci-all-in-one`（公开仓库已创建）。
 - 将 `index.html` 发布为 GitHub Pages，其他人便能通过浏览器搜索，无需 GitHub 账号。
 - 用 Pull Request 提交新资料，并在 CSV 中记录日期、来源及适用版本。
 - 按 [PUBLISH.md](PUBLISH.md) 完成发布；当前只提供仓库源文件，不代表网站已上线。
