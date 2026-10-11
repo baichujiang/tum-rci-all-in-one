@@ -51,6 +51,7 @@ for route, marker in [
     ("/", "常用网站，一步直达。"),
     ("/study/", "选课与学分，一步步来。"),
     ("/favorites/", 'id="favorites-app"'),
+    ("/feedback/", 'id="feedback-form"'),
     ("/guides/matching/", "实验课、研讨课怎么选？"),
     ("/guides/exams/", "选了课，还需要报名考试吗？"),
     ("/courses/IN2067/", "IN2067"),
@@ -80,7 +81,7 @@ def build_check():
     info = json.loads(get("/build-info.json"))
     index = json.loads(get("/assets/search-index.json"))
     assert info["version"] == index["version"], "Build and search data versions differ"
-    assert info["pages"] == 77
+    assert info["pages"] == 78
     assert info["searchRecords"] == 231
     assert info["origin"] == ORIGIN, "Production origin not reflected in build"
 check("production build and canonical origin", build_check)

@@ -265,3 +265,89 @@ button,a,input,select,summary{-webkit-tap-highlight-color:transparent}
 @media(max-width:720px){.home>.entry-hero h1{font-size:22px}.home>.entry-hero h1 br{display:block}.home>.entry-hero h1 span{font-size:20px;margin:0}.portal-module-heading p{font-size:10px}.home>.resume-card{grid-template-columns:minmax(0,1fr) auto;column-gap:18px;padding:20px}.home>.resume-card .resume-icon{display:none}.home>.resume-card .eyebrow,.home>.resume-card h2,.home>.resume-card p{grid-column:1}.home>.resume-card .resume-action{grid-column:2;max-width:90px}}
 @media(max-width:600px){.header-actions{gap:4px}.header-favorites{gap:5px;padding:0 8px;font-size:11px}.favorites-label{display:none}.favorites-label-mobile{display:inline}.header-actions .header-plan{margin:0;padding:0 12px;min-width:44px}.header-actions .header-plan .plan-label,.header-actions .header-plan .plan-badge{display:none}.home>.entry-hero{padding:24px 0 8px}.home>.entry-hero .lead{display:none}.bookmarks-section{padding-bottom:22px}.bookmarks-section h2{font-size:18px}.bookmarks-section .section-title{margin:10px 0 14px}.inline-favorites .portal-link.shortcut{padding:16px 14px}.inline-favorites .portal-link h3{font-size:14px}.inline-favorites .portal-link p{font-size:10px;margin-bottom:0;min-height:34px}.inline-favorites .portal-meta{display:none}.inline-favorites .favorites-empty{padding:16px;gap:12px}.inline-favorites .favorites-empty p{font-size:11px}.portal-controls{margin-bottom:18px;flex-direction:row}.portal-search{width:100%}.portal-module{margin-bottom:24px}.portal-module+.portal-module{padding-top:21px}.portal-module-heading{align-items:flex-start;margin-bottom:12px}.portal-module-heading h3{font-size:14px;flex:none}.portal-module-heading p{font-size:9px;text-align:right;max-width:155px;line-height:1.8}.favorites-heading{margin-bottom:24px}.favorites-heading h1{font-size:29px}.favorites-heading .lead{font-size:12px}.favorites-heading .text-link{font-size:12px}.favorites-empty{padding:32px 18px}.favorites-empty h2{font-size:20px}.favorites-empty p{font-size:12px}.favorites-empty .button{font-size:12px}.home>.resume-card h2{font-size:17px}}
 @media(max-width:350px){.header-favorites .save-badge{display:none}.header-actions{gap:0}.header-favorites{padding:0 6px}.header-actions .header-plan{padding:0 10px}.portal-link h3{font-size:13px}.portal-meta{font-size:8px}.home>.entry-hero h1{font-size:21px}.home>.entry-hero h1 span{font-size:19px}.home>.resume-card{column-gap:10px;padding:16px}.home>.resume-card h2{font-size:15px}.home>.resume-card .resume-action{max-width:75px;font-size:10px}}
+
+/* A term-by-term plan, with overall degree credits kept in the sidebar. */
+.timeline-settings{padding:24px;border:1px solid var(--line);border-radius:16px;background:#edf3e9;margin-bottom:24px}
+.timeline-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.timeline-title h2{font-size:19px;margin:0}
+.timeline-controls{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.timeline-controls label,.cohort-setting{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--muted)}
+.timeline-controls select{font-size:13px;min-width:160px;border-color:#cedcc6}
+.timeline-average{margin:0 0 2px;font-size:12px;color:#5f7359}
+.timeline-average b{font-size:14px;color:var(--green)}
+.timeline-average small{display:block;font-size:10px;margin-top:5px;color:var(--muted)}
+.timeline-note{font-size:11px;margin:15px 0 0;color:#7d8c77}
+.semester-tools{margin:0 0 16px}
+.semester-tools h2{font-size:18px}
+.semester-tools h2 span{display:block;font-size:11px;font-weight:400;color:var(--muted);margin-top:3px}
+.semester-grid,.unassigned-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.semester-card{border:1px solid #dbe4df;border-radius:14px;background:white;padding:18px;min-width:0;scroll-margin-top:110px}
+.semester-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid #edf1ec}
+.semester-heading h3{font-size:17px;margin:4px 0 0}
+.season-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:5px;background:#eaf0fa;color:#61799b}
+.summer .season-tag{background:#f9efdf;color:#a38049}
+.semester-total{text-align:right;white-space:nowrap}
+.semester-total b{font-size:24px;line-height:1.3;color:var(--green);display:block}
+.semester-total span{font-size:10px;color:var(--muted)}
+.semester-placeholder{font-size:12px;color:#94a092;text-align:center;padding:24px 0 12px}
+.semester-add{display:block;font-size:12px;min-height:44px;padding:13px 0 0;margin-top:7px;border-top:1px solid #edf1ec}
+.scheduled-row{display:block;position:relative;padding:16px 0;border-bottom:1px solid #edf1ec}
+.scheduled-row:last-child{border-bottom:0}
+.scheduled-row .row-course{padding-right:28px}
+.scheduled-row .row-course b{font-size:13px}
+.scheduled-row .meta{font-size:10px;margin:4px 0}
+.offering-label{font-size:10px;color:#82907e;margin:0 0 10px}
+.scheduled-row .remove-course{position:absolute;right:0;top:10px;min-width:30px;min-height:36px;padding:0}
+.row-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.row-controls label{display:flex;flex-direction:column;gap:4px;min-width:0;font-size:9px;color:#84907f}
+.scheduled-row .row-controls select{width:100%;max-width:none;min-width:0;font-size:10px;padding:7px 5px;min-height:36px}
+.has-conflict .offering-label{color:#a47336}
+.season-warning,.semester-alert{font-size:10px;line-height:1.8;color:#8a642e;background:#fcf3e4;border-radius:6px;padding:7px 9px;margin:10px 0 0}
+.season-unknown{font-size:10px;color:#8b8f7c;margin:8px 0 0}
+.semester-alert{margin:12px 0 0}
+.unassigned-courses{border:1px dashed #d5dfce;border-radius:14px;padding:18px;background:#f0f4ed;margin-bottom:20px}
+.unassigned-heading h3{font-size:16px;margin:0 0 4px}
+.unassigned-heading h3 span{font-size:11px;font-weight:400;color:var(--muted);margin-left:8px}
+.unassigned-heading p,.schedule-intro{font-size:12px;color:var(--muted);margin-bottom:5px}
+.unassigned-grid{gap:0 20px}
+.schedule-more{margin-top:20px;font-size:12px}
+.semester-planner .plan-summary{align-self:start}
+.cohort-setting{margin:12px 0 16px}
+.cohort-setting select{font-size:12px;max-width:240px}
+@media(max-width:960px){.semester-grid{grid-template-columns:1fr}.timeline-controls{gap:16px}.timeline-average{flex-basis:100%}.unassigned-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.semester-planner{grid-template-areas:'main' 'summary'}.semester-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.timeline-title{align-items:flex-start}.timeline-title .save-state{font-size:9px}.timeline-title h2{font-size:17px}.unassigned-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.timeline-settings{padding:18px 16px;margin-bottom:20px}.timeline-title{flex-direction:column;gap:5px;margin-bottom:16px}.timeline-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.timeline-controls label{font-size:10px}.timeline-controls select{min-width:0;width:100%;font-size:12px;padding:8px}.timeline-average{grid-column:1/-1;font-size:11px;line-height:1.8;margin-top:3px}.timeline-average b{font-size:12px}.timeline-average small{margin-top:1px}.timeline-note{font-size:10px;line-height:1.8;margin-top:12px}.semester-grid,.unassigned-grid{grid-template-columns:1fr;gap:12px}.semester-card{padding:18px}.semester-tools h2{font-size:16px}.semester-tools h2 span{font-size:10px}.semester-tools .quiet{font-size:11px;padding:7px}.scheduled-row .row-course b{font-size:13px}.scheduled-row .row-controls select{font-size:11px;min-height:40px;padding:8px}.row-controls label{font-size:10px}.semester-add{font-size:12px}.unassigned-courses{padding:16px}.unassigned-heading h3 span{display:block;margin:3px 0 0}.unassigned-heading p{font-size:11px}.schedule-more{width:100%;text-align:center}.semester-planner .plan-summary{margin-top:10px}}
+
+/* Quiet feedback links sit beside the directory and in the shared shell. */
+.header-feedback{display:flex;align-items:center;gap:6px;min-height:44px;padding:0 8px;border-radius:8px;font-size:12px;color:#859184;flex:none}
+.header-feedback .icon{width:18px;height:18px}
+.header-feedback:hover{color:var(--green);background:#edf3e7;text-decoration:none}
+.header-actions{gap:14px}
+.portal-title-actions{display:flex;gap:18px;align-items:center}
+.portal-title-actions>span{font-size:11px;color:var(--muted)}
+.quiet-feedback{font-size:11px;color:#7b8b72;min-height:40px;display:inline-flex;align-items:center;border-bottom:1px dashed #c3d0ba}
+.footer-feedback{color:var(--green);font-weight:600}
+.feedback-heading,.feedback-panel,.feedback-followup{max-width:640px;margin-left:auto;margin-right:auto}
+.feedback-heading{margin-top:16px;margin-bottom:24px}
+.feedback-heading .lead{font-size:14px}
+.feedback-panel{background:white;border:1px solid var(--line);border-radius:16px;padding:28px}
+.feedback-panel form>label{display:flex;flex-direction:column;gap:8px;font-size:13px;margin-bottom:20px}
+.feedback-panel select{font-size:13px}
+.feedback-panel textarea{font:inherit;width:100%;resize:vertical;min-height:150px;border:1px solid #bdcdbb;border-radius:10px;padding:13px;font-size:13px;color:var(--ink);line-height:1.8;background:#fcfdfb}
+.feedback-panel textarea:focus{outline:3px solid #dbe9d8;outline-offset:1px;border-color:#71966c}
+.feedback-context{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.feedback-channel,.feedback-followup{font-size:11px;color:var(--muted);line-height:1.9}
+.feedback-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.feedback-actions .button{font-size:12px}
+#feedback-status{font-size:12px;color:var(--green);margin:14px 0 0}
+#feedback-status:empty{display:none}
+.feedback-followup{margin-top:16px}
+.course-semester-context{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;border:1px solid #d2dfcb;background:#eef4e9;padding:16px 20px;border-radius:12px;margin:0 0 20px}
+.course-semester-context label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#67815b}
+.course-semester-context select{font-size:13px;min-width:240px}
+.course-semester-context .text-link{font-size:12px;min-height:44px;display:flex;align-items:center}
+@media(max-width:960px){.header-feedback{display:none}.header-actions{gap:10px}}
+@media(max-width:600px){.header-actions{gap:4px}.portal-title-actions>span{display:none}.quiet-feedback{font-size:10px;min-height:36px}.portal-title-actions{gap:0}.feedback-heading{margin:0 0 22px}.feedback-heading h1{font-size:27px}.feedback-heading .lead{font-size:12px}.feedback-panel{padding:20px 17px}.feedback-panel form>label{font-size:12px}.feedback-panel textarea{font-size:12px}.feedback-actions{flex-direction:column}.feedback-actions .button{text-align:center}.course-semester-context{padding:15px;gap:7px}.course-semester-context label{width:100%;font-size:11px}.course-semester-context select{width:100%;min-width:0;font-size:12px}.course-semester-context .text-link{min-height:30px;font-size:11px}.footer>div:last-child{gap:14px}}
+.timeline-meta{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.timeline-meta .text-link{font-size:11px;min-height:36px;display:inline-flex;align-items:center;color:#76886c}
+@media(max-width:600px){.timeline-meta{width:100%;justify-content:space-between;gap:8px}.timeline-meta .text-link{font-size:10px;min-height:32px}.timeline-title{margin-bottom:11px}}

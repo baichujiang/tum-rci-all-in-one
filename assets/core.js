@@ -29,8 +29,10 @@
     catch (_) { return ''; }
   }
   function validatePlan(raw, courses) {
-    if (!raw || raw.version !== 2 || !Array.isArray(raw.items) || raw.items.length > 250) throw new Error('不是有效的第二版学分计划');
+    if (!raw || raw.version !== 2 || !Array.isArray(raw.items) || raw.items.length > 250) throw new Error('不是有效的学分计划文件');
     if (typeof raw.conditional !== 'boolean' || typeof raw.cohort !== 'string' || !['unknown', 'older', ...cohorts].includes(raw.cohort)) throw new Error('批次或补修设置无效');
+    const timeline = raw.timeline === undefined ? {count:4, start:raw.cohort === '2026夏季' ? 'summer' : 'winter'} : raw.timeline;
+    if (!timeline || !Number.isInteger(timeline.count) || timeline.count < 1 || timeline.count > 12 || !['winter', 'summer'].includes(timeline.start)) throw new Error('学期规划须为 1–12 个学期，并指定冬季或夏季开始');
     const known = new Map(courses.map(c => [c.module_code, c]));
     const used = new Set();
     const items = raw.items.map(x => {
@@ -38,12 +40,39 @@
       const code = x.code.trim().toUpperCase();
       if (!/^[A-Z0-9][A-Z0-9._-]{0,59}$/.test(code) || used.has(code)) throw new Error('模块代码无效或重复');
       used.add(code);
-      if (known.has(code)) return {code, status:x.status};
+      const semester = x.semester === undefined ? 0 : x.semester;
+      if (!Number.isInteger(semester) || semester < 0 || semester > timeline.count) throw new Error('课程安排的学期超出规划范围');
+      if (known.has(code)) return {code, status:x.status, semester};
       if (!x.custom || typeof x.name !== 'string' || !x.name.trim() || x.name.length > 160 || !['G', 'H', 'I', 'J'].includes(x.group) || typeof x.ects !== 'number' || !Number.isFinite(x.ects) || x.ects <= 0 || x.ects > 30 || !Number.isInteger(x.ects * 2)) throw new Error('自定义选修须有名称、G/H/I/J 分类及 0.5–30 ECTS（0.5 的倍数）');
-      return {code, name:x.name.trim(), group:x.group, ects:x.ects, custom:true, status:x.status};
+      return {code, name:x.name.trim(), group:x.group, ects:x.ects, custom:true, status:x.status, semester};
     });
     if (used.has('IN2067') && used.has('ED160028')) throw new Error('Robotics 与 Roboterdynamik 是二选一，请先移除另一门');
-    return {version:2, cohort:raw.cohort, conditional:raw.conditional, items};
+    return {version:2, cohort:raw.cohort, conditional:raw.conditional, timeline:{count:timeline.count, start:timeline.start}, items};
+  }
+  function semesterSeason(timeline, number) {
+    return number % 2 === 1 ? timeline.start : timeline.start === 'winter' ? 'summer' : 'winter';
+  }
+  function semesterLabel(timeline, number) {
+    return `第 ${number} 学期 · ${semesterSeason(timeline, number) === 'winter' ? '冬季' : '夏季'}`;
+  }
+  function offering(course, season) {
+    const term = course?.term_legal_annex;
+    if (term === '自主安排') return {state:'flexible', label:'自主安排'};
+    if (!term || term === '不定期') return {state:'unknown', label:term || '季节待确认'};
+    const seasons = term.split('/');
+    const label = term.replace('WiSe', '冬季').replace('SoSe', '夏季');
+    return {state:seasons.includes(season === 'winter' ? 'WiSe' : 'SoSe') ? 'compatible' : 'conflict', label};
+  }
+  function schedule(plan, courses) {
+    plan = validatePlan(plan, courses);
+    const known = new Map(courses.map(c => [c.module_code, c]));
+    const bucket = (number) => {
+      const season = number ? semesterSeason(plan.timeline, number) : null;
+      const items = plan.items.filter(x => x.semester === number);
+      const credits = items.reduce((n, x) => n + Number(known.get(x.code)?.ects ?? x.ects), 0);
+      return {number, season, items, credits, conflicts:season ? items.filter(x => offering(known.get(x.code), season).state === 'conflict').map(x => x.code) : []};
+    };
+    return {unassigned:bucket(0), semesters:Array.from({length:plan.timeline.count}, (_, i) => bucket(i + 1))};
   }
   function calculate(plan, courses, onlyPassed = false) {
     plan = validatePlan(plan, courses);
@@ -110,7 +139,7 @@
     flushTable(); if (code !== null) out += `<pre><code>${esc(code)}</code></pre>`;
     return out;
   }
-  const api = {csv, esc, safeURL, validatePlan, calculate, markdown, cohorts};
+  const api = {csv, esc, safeURL, validatePlan, calculate, semesterSeason, semesterLabel, offering, schedule, markdown, cohorts};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.RCI = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

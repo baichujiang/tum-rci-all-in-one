@@ -15,7 +15,7 @@ test('resource duplicates merged by canonical URL',()=>{const ds=index.docs.filt
 test('task filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{task:'life'}).every(d=>d.tasks.includes('life'))));
 test('kind filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{kind:'course'}).every(d=>d.kind==='course')));
 const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(path.join(p,x.name)):[path.join(p,x.name)]),html=walk(dist).filter(p=>p.endsWith('.html'));
-test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,77);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
+test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,78);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
 test('all local assets and links resolve',()=>{const build=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));for(const p of html){const txt=fs.readFileSync(p,'utf8');for(const m of txt.matchAll(/(?:href|src)="([^"]+)"/g)){if(!m[1].startsWith('/'))continue;let u=decodeURIComponent(m[1].split(/[?#]/)[0]);if(build.base){assert(u.startsWith(build.base+'/'));u=u.slice(build.base.length);}let target=path.join(dist,u);if(u.endsWith('/'))target=path.join(target,'index.html');assert(fs.existsSync(target),p+' -> '+u);}}});
 test('no raw API credentials, CDN scripts or analytics in emitted markup',()=>{for(const p of html){const txt=fs.readFileSync(p,'utf8');assert(!/src="https?:|ghp_[A-Za-z0-9]+|sk_live_|googletagmanager/.test(txt),p);}});
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
@@ -52,5 +52,16 @@ test('bookmarked cards are inline above expanded website modules',()=>{
  assert(f.includes('id="favorites-app"'));assert(f.includes('id="favorites-empty"'));assert(f.includes('启用 JavaScript'));
 });
 test('study journey separates personal planning from school registration',()=>{const s=fs.readFileSync(path.join(dist,'study/index.html'),'utf8');assert(s.includes('先看懂这 120 ECTS'));assert(s.includes('href="/courses/"'));assert(s.includes('href="/planner/"'));assert(s.includes(matchingSystem));assert(s.includes('课程位置和考试登记要分别在学校系统确认'));assert(s.includes('2025'));});
+test('Feedback is reachable beside the directory and from every page footer',()=>{
+ const home=fs.readFileSync(path.join(dist,'index.html'),'utf8');assert(home.includes('缺少入口？'));
+ for(const p of html)assert(fs.readFileSync(p,'utf8').includes('快速反馈'),p);
+ const feedback=fs.readFileSync(path.join(dist,'feedback/index.html'),'utf8');assert(feedback.includes('需要 GitHub 账号'));assert(feedback.includes('内容会公开'));assert(feedback.includes('id="feedback-message"'));
+ const F=require('../site3/feedback');const d=F.draft('missing','增加测试平台 https://example.org/?x=1&y=2','/planner/');const u=new URL(d.url);
+ assert.equal(u.origin,'https://github.com');assert.equal(u.pathname,'/baichujiang/tum-rci-all-in-one/issues/new');assert(u.searchParams.get('body').includes('x=1&y=2'));assert(u.searchParams.get('body').endsWith('/planner/'));
+ assert(F.draft('feature','test','/search/?private=secret').body.endsWith('/'));assert(!F.draft('feature','test','/search/?private=secret').body.includes('secret'));
+});
+test('Course directory can target a semester while static links remain available',()=>{
+ const s=fs.readFileSync(path.join(dist,'courses/index.html'),'utf8');assert(s.includes('id="course-target-semester"'));assert(s.includes('先选课，稍后分配'));assert(s.includes('TUMonline'));
+});
 
 console.log(count+' site checks passed');

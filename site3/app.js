@@ -5,6 +5,8 @@ const C=window.RCI,esc=C.esc,base=document.querySelector('meta[name="rci-base"]'
 const $=s=>document.querySelector(s),full=p=>base+p;
 let timer,dbPromise,sessionPlan=null,currentPlan=null,planPersisted=true;
 let planQueue=Promise.resolve();
+let selectedSemester=Number(new URLSearchParams(location.search).get('semester'))||0;
+if(!Number.isInteger(selectedSemester)||selectedSemester<0||selectedSemester>12)selectedSemester=0;
 function toast(message,action){
  const el=$('#toast');clearTimeout(timer);el.replaceChildren();
  const label=document.createElement('span');label.textContent=message;el.append(label);
@@ -61,18 +63,24 @@ function syncAddButtons(){
  if(!currentPlan)return;
  const codes=new Set(currentPlan.items.map(x=>x.code));
  document.querySelectorAll('[data-add]').forEach(b=>{
-  const yes=codes.has(b.dataset.add);b.disabled=yes;b.setAttribute('aria-pressed',String(yes));b.textContent=yes?'✓ 已加入':'加入计划';
+  const yes=codes.has(b.dataset.add);b.disabled=yes;b.setAttribute('aria-pressed',String(yes));b.textContent=yes?'✓ 已加入':selectedSemester?`加入第 ${selectedSemester} 学期`:'加入计划';
  });
 }
 async function syncPlanWidgets(){
  try{
   const [p,d]=await Promise.all([plan(),data()]);currentPlan=p;const calc=C.calculate(p,d.courses);
+  if(selectedSemester>p.timeline.count)selectedSemester=0;
+  const target=$('#course-target-semester');
+  if(target){
+   target.innerHTML='<option value="0">先选课，稍后分配</option>'+Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}">${C.semesterLabel(p.timeline,i+1)}</option>`).join('');target.value=selectedSemester;
+   $('#course-semester-context').hidden=false;
+  }
   document.querySelectorAll('[data-plan-count]').forEach(el=>{el.textContent=p.items.length;el.hidden=el.classList.contains('plan-badge')&&!p.items.length;});
   document.querySelectorAll('[data-plan-credits]').forEach(el=>{el.textContent=calc.allocated;});
   const heading=$('[data-plan-heading]');
   if(heading){
    const has=p.items.length>0;heading.textContent=has?'继续你的学分计划':'从第一门课开始';
-   $('[data-plan-description]').textContent=has?`已选 ${p.items.length} 门 · 规划计入 ${calc.allocated} ECTS。回来看看接下来修什么。`:'先了解学分结构，再把想修的课加入计划。';
+   $('[data-plan-description]').textContent=has?`已选 ${p.items.length} 门 · ${p.timeline.count} 学期规划 · 计入 ${calc.allocated} ECTS。回来继续安排。`:'先了解学分结构，再按冬夏学期安排课程。';
    $('[data-plan-cta]').textContent=has?'继续我的计划':'开始选课与规划';heading.closest('a').href=full(has?'/planner/':'/study/');
   }
   syncAddButtons();
@@ -94,7 +102,7 @@ if($('#portal-controls')){
  input.addEventListener('input',filterPortals);
  $('[data-portal-reset]').addEventListener('click',()=>{input.value='';filterPortals();input.focus();});
 }
-function dest(d){return d.direct?C.safeURL(d.url):/^\/[a-zA-Z0-9/?#&=._%+-]*$/.test(d.url)?full(d.url):full('/search/');}
+function dest(d){return d.direct?C.safeURL(d.url):/^\/[a-zA-Z0-9/?#&=._%+-]*$/.test(d.url)?full(d.url)+(d.kind==='course'&&selectedSemester?'?semester='+selectedSemester:''):full('/search/');}
 const groupNames={A:'机器人学 · 二选一',B:'认知 · 必修',C:'智能系统 · 必修',D:'研讨课 · 必修',E:'实验课 · 必修',F:'硕士论文',G:'计算 · 选修',H:'机械 · 选修',I:'系统与控制 · 选修',J:'跨学科 · 选修',K:'条件补修'};
 const starIcon=$('.header-favorites svg').outerHTML;
 const termLabel=t=>String(t||'').replace('WiSe/SoSe','冬季 / 夏季').replace('WiSe','冬季').replace('SoSe','夏季');
@@ -133,7 +141,7 @@ if(app){
  if(app.dataset.mode==='courses'){kind.value='course';kind.closest('label').hidden=true;task.value='';task.closest('label').hidden=true;q.placeholder='课程名或代码，如：机器学习、IN2067';sf.closest('label').hidden=true;sf.checked=false;}
  if(app.dataset.mode==='resources'){kind.value='resource';kind.closest('label').hidden=true;}
  if(sg)sg.value=params.get('group')||'';if(term)term.value=params.get('term')||'';
- function updateURL(){const p=new URLSearchParams();for(const [k,v] of [['q',q.value.trim()],['kind',kind.closest('label').hidden?'':kind.value],['task',task.value],['group',sg?.value],['term',term?.value],['saved',sf.checked?'1':'']])if(v)p.set(k,v);history.replaceState(null,'',location.pathname+(p.size?'?'+p:'')+location.hash);}
+ function updateURL(){const p=new URLSearchParams();for(const [k,v] of [['q',q.value.trim()],['kind',kind.closest('label').hidden?'':kind.value],['task',task.value],['group',sg?.value],['term',term?.value],['saved',sf.checked?'1':''],['semester',selectedSemester?String(selectedSemester):'']])if(v)p.set(k,v);history.replaceState(null,'',location.pathname+(p.size?'?'+p:'')+location.hash);}
  function render(){
   if(!index)return;let results=window.RCISearch.search(index.docs,q.value,index.synonyms,{kind:kind.value,task:task.value});
   if(sg?.value)results=results.filter(d=>sg.value==='core'?'ABCDE'.includes(d.group):sg.value==='professional'?'GHI'.includes(d.group):d.group===sg.value);
@@ -150,6 +158,8 @@ if(app){
  $('#more-results').addEventListener('click',()=>{limit+=18;render();});
  load('/assets/search-index.json').then(d=>{index=d;render();}).catch(err=>{$('#result-count').textContent=err.message+'。下方静态课程目录和链接仍可使用。';});
  window.addEventListener('rci:saveschange',render);
+ const target=$('#course-target-semester');
+ if(target)target.addEventListener('change',()=>{selectedSemester=Number(target.value);render();syncAddButtons();});
 }
 document.addEventListener('click',async ev=>{
  const b=ev.target.closest('button');if(!b)return;
@@ -165,19 +175,26 @@ document.addEventListener('click',async ev=>{
  if(b.hasAttribute('data-add')){
   b.disabled=true;
   try{
-   let added=false;
+   let added=false,assignedSemester=selectedSemester;
    await updatePlan(async p=>{
     const code=b.dataset.add;if(p.items.some(x=>x.code===code))return null;
     const other=code==='IN2067'?'ED160028':code==='ED160028'?'IN2067':null;
+    const replaced=p.items.find(x=>x.code===other);
+    const semester=assignedSemester<=p.timeline.count?assignedSemester:0;
+    assignedSemester=semester||(replaced?.semester||0);
+    if(assignedSemester){
+     const d=await data(),offer=C.offering(d.courses.find(c=>c.module_code===code),C.semesterSeason(p.timeline,assignedSemester));
+     if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,assignedSemester)}。可以改选相应季节；若已确认实际开课有变化，也可以继续安排。`,'仍安排到这个学期'))return null;
+    }
     let items=p.items;
     if(other&&items.some(x=>x.code===other)){
      const d=await data();
      const yes=await confirmAction('这两门课是二选一',`你的计划已有 ${d.names[other]||other}（${other}）。改选 ${d.names[code]||code}（${code}）后，会移除原来的课程，学分不会重复计入。`,'改选这门课');
      if(!yes)return null;items=items.filter(x=>x.code!==other);
     }
-    added=true;return {...p,items:[...items,{code,status:'planned'}]};
+    added=true;return {...p,items:[...items,{code,status:'planned',semester:assignedSemester}]};
    });
-   if(added&&planPersisted)toast('已加入计划，学分已更新。',{label:'查看计划',href:full('/planner/')});
+   if(added&&planPersisted)toast(assignedSemester?`已加入第 ${assignedSemester} 学期，学分已更新。`:'已加入待分配，接下来安排到具体学期。',{label:'查看计划',href:full('/planner/')});
   }catch(err){toast(err.message);}finally{b.disabled=false;syncAddButtons();}
  }
 });

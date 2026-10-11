@@ -9,7 +9,7 @@
 ## 我要选课、规划学分
 
 1. [选课指南](https://tum-rci-all-in-one.vercel.app/study/)：先核对入学批次，看懂必修、选修与论文的学分结构。
-2. [选课程](https://tum-rci-all-in-one.vercel.app/courses/)：按中文名、官方名称或模块代码搜索，加入自己的计划。
+2. [选课程](https://tum-rci-all-in-one.vercel.app/courses/)：按中文名、官方名称或模块代码搜索，选择课程要加入的学期。
 3. [我的计划](https://tum-rci-all-in-one.vercel.app/planner/)：看学分进度和缺口，区分计划修读与自报已通过。调整后自动尝试保存到当前浏览器，页面会提示保存状态。
 
 实验课和研讨课的 Matching、课程参与和考试登记按各自要求办理。加入本站计划只做个人安排，不会向学校报名。
@@ -19,5 +19,9 @@
 ## 本地维护
 
 运行 `node scripts/build_site.js` 后，用 `python3 -m http.server 8000 --directory dist` 预览。当前发布入口是 `dist`，根目录旧 `index.html` 用于历史参考。
+
+计划页可选择四、五学期等不同节奏与起始冬夏季节，课程可在学期之间调整，冬夏目录不符会提示。旧课程先放在待分配，导入导出保留学期安排。
+
+缺少入口或想建议新功能，可从网站区旁「缺少入口？」、桌面页头或页脚「快速反馈」填写，再到 GitHub 确认提交（需要 GitHub 账号）。
 
 个人计划、收藏与勾选只在当前浏览器保存；换设备或域名前请导出计划，保存在自己的设备。
