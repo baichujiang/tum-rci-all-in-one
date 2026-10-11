@@ -1,66 +1,198 @@
-/* Student-facing progressive enhancement. Public content remains readable without JS. MIT. */
+/* Shared student interactions. Public links and answers also work without JS. */
 (function(){
 'use strict';
 const C=window.RCI,esc=C.esc,base=document.querySelector('meta[name="rci-base"]').content;
 const $=s=>document.querySelector(s),full=p=>base+p;
-let timer,dbPromise,idxPromise;
-function toast(message){const el=$('#toast');el.textContent=message;clearTimeout(timer);timer=setTimeout(()=>{el.textContent='';},6500);}
+let timer,dbPromise,sessionPlan=null,currentPlan=null,planPersisted=true;
+let planQueue=Promise.resolve();
+function toast(message,action){
+ const el=$('#toast');clearTimeout(timer);el.replaceChildren();
+ const label=document.createElement('span');label.textContent=message;el.append(label);
+ if(action){
+  const b=document.createElement(action.href?'a':'button');b.textContent=action.label;
+  if(action.href)b.href=action.href;
+  else{b.type='button';b.addEventListener('click',async()=>{clearTimeout(timer);el.replaceChildren();try{await action.run();}catch(err){toast(err.message);}});}
+  el.append(b);
+ }
+ timer=setTimeout(()=>{if(!el.contains(document.activeElement))el.replaceChildren();},action?12000:6500);
+}
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch(_){return fallback;}}
-function store(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){toast('浏览器不允许保存。请导出计划备份；本次页面修改不会持久保存。');return false;}}
+function store(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){toast('浏览器不允许保存。本次修改仅在当前页面有效，请导出计划备份。');return false;}}
 async function load(p){const r=await fetch(full(p));if(!r.ok)throw new Error('资料加载失败，请刷新重试');return r.json();}
 const data=()=>dbPromise||(dbPromise=load('/assets/planner-data.json'));
 const empty=()=>({version:2,cohort:'unknown',conditional:false,items:[]});
-let sessionPlan=null;
 async function plan(){const d=await data();return C.validatePlan(sessionPlan||read('rci:v2:plan',empty()),d.courses);}
-async function savePlan(p){const d=await data();sessionPlan=C.validatePlan(p,d.courses);store('rci:v2:plan',sessionPlan);window.dispatchEvent(new Event('rci:planchange'));return sessionPlan;}
-window.RCIUI={toast,read,store,data,plan,savePlan,empty,base};
-const savedRaw=read('rci:v2:saves',[]);let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);
-function syncSaves(){document.querySelectorAll('[data-save]').forEach(b=>{const yes=saved.has(b.dataset.save);b.textContent=yes?'已收藏':'收藏';b.setAttribute('aria-pressed',String(yes));});}
-function dest(d){return d.direct?C.safeURL(d.url):/^\/[a-zA-Z0-9/?#&=._%+-]*$/.test(d.url)?full(d.url):full('/search/');}
-function resultCard(d){
- const kinds={guide:'问题解答',course:'课程',resource:'原始入口',topic:'历史课题',tool:'工具'};
- const a=`href="${esc(dest(d))}"${d.direct?' target="_blank" rel="noopener noreferrer"':''}`;
- const key=d.code||d.id;
- return `<article class="card search-result"><div class="card-top"><span class="badge">${kinds[d.kind]}</span>${d.code?`<span class="code">${esc(d.code)}</span>`:''}${d.historical?'<span class="badge history">历史快照</span>':''}</div><h3><a ${a}>${esc(d.title)}</a></h3><p>${esc(d.summary)}</p><p class="meta">${esc(d.status)}${d.cohort?'<br>'+esc(d.cohort):''}</p><div class="card-bottom"><a class="text-link" ${a}>${d.direct?'打开原始入口 ↗':'查看'+(d.kind==='guide'?'答案':'详情')+' →'}</a><div>${d.kind==='course'?`<button class="quiet" data-add="${esc(d.code)}">加入计划</button>`:''}<button class="quiet" data-save="${esc(key)}" aria-pressed="${saved.has(key)}">${saved.has(key)?'已收藏':'收藏'}</button></div></div></article>`;
+function updatePlan(change){
+ const task=planQueue.catch(()=>{}).then(async()=>{
+  const d=await data(),p=await plan(),next=await change(p);
+  if(!next)return p;
+  sessionPlan=C.validatePlan(next,d.courses);planPersisted=store('rci:v2:plan',sessionPlan);currentPlan=sessionPlan;
+  window.dispatchEvent(new Event('rci:planchange'));return sessionPlan;
+ });
+ planQueue=task;return task;
 }
-const app=$('#search-app');let refreshSearch=null;
+const savePlan=p=>updatePlan(()=>p);
+function confirmAction(title,description,confirmLabel){
+ const dialog=$('#action-dialog');
+ if(!dialog?.showModal)return Promise.resolve(window.confirm(title+'\n'+description));
+ if(dialog.open)return Promise.resolve(false);
+ $('#dialog-title').textContent=title;$('#dialog-description').textContent=description;$('#dialog-confirm').textContent=confirmLabel;
+ dialog.returnValue='cancel';dialog.showModal();
+ return new Promise(resolve=>dialog.addEventListener('close',()=>resolve(dialog.returnValue==='confirm'),{once:true}));
+}
+window.RCIUI={toast,read,store,data,plan,savePlan,updatePlan,empty,base,confirmAction,get persisted(){return planPersisted;}};
+
+const savedRaw=read('rci:v2:saves',[]);
+let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);
+function syncSaves(){
+ document.querySelectorAll('[data-save]').forEach(b=>{
+  const yes=saved.has(b.dataset.save);b.setAttribute('aria-pressed',String(yes));
+  if(b.dataset.saveStyle==='star'){
+   const label=(yes?'取消收藏 ':'收藏 ')+b.dataset.saveName;b.setAttribute('aria-label',label);b.title=label;
+  }else b.textContent=yes?'已收藏':'收藏';
+ });
+ document.querySelectorAll('[data-save-count]').forEach(el=>{el.textContent=saved.size;el.hidden=!saved.size;});
+}
+function setSaved(key,value){
+ value?saved.add(key):saved.delete(key);
+ const ok=store('rci:v2:saves',[...saved]);syncSaves();window.dispatchEvent(new Event('rci:saveschange'));return ok;
+}
+function syncAddButtons(){
+ if(!currentPlan)return;
+ const codes=new Set(currentPlan.items.map(x=>x.code));
+ document.querySelectorAll('[data-add]').forEach(b=>{
+  const yes=codes.has(b.dataset.add);b.disabled=yes;b.setAttribute('aria-pressed',String(yes));b.textContent=yes?'✓ 已加入':'加入计划';
+ });
+}
+async function syncPlanWidgets(){
+ try{
+  const [p,d]=await Promise.all([plan(),data()]);currentPlan=p;const calc=C.calculate(p,d.courses);
+  document.querySelectorAll('[data-plan-count]').forEach(el=>{el.textContent=p.items.length;el.hidden=el.classList.contains('plan-badge')&&!p.items.length;});
+  document.querySelectorAll('[data-plan-credits]').forEach(el=>{el.textContent=calc.allocated;});
+  const heading=$('[data-plan-heading]');
+  if(heading){
+   const has=p.items.length>0;heading.textContent=has?'继续你的学分计划':'从第一门课开始';
+   $('[data-plan-description]').textContent=has?`已选 ${p.items.length} 门 · 规划计入 ${calc.allocated} ECTS。回来看看接下来修什么。`:'先了解学分结构，再把想修的课加入计划。';
+   $('[data-plan-cta]').textContent=has?'继续我的计划':'开始选课与规划';heading.closest('a').href=full(has?'/planner/':'/study/');
+  }
+  syncAddButtons();
+ }catch(_){document.querySelectorAll('[data-plan-description]').forEach(el=>{el.textContent='已有计划暂时无法读取，请到计划页查看并备份。';});}
+}
+window.addEventListener('rci:planchange',syncPlanWidgets);
+
+// A small website directory: direct links stay usable if enhancement fails.
+if($('#portal-controls')){
+ $('#portal-controls').hidden=false;
+ const directory=$('#websites'),input=$('#portal-search'),cards=[...directory.querySelectorAll('[data-portal]')];
+ function filterPortals(){
+  const normalize=window.RCISearch.normalize,q=normalize(input.value);let count=0;
+  for(const card of cards){card.hidden=!normalize(card.dataset.keywords).includes(q);if(!card.hidden)count++;}
+  directory.querySelectorAll('[data-portal-module]').forEach(section=>{section.hidden=!section.querySelector('[data-portal]:not([hidden])');});
+  $('#portal-empty').hidden=count>0;
+  $('#portal-status').textContent=q?`找到 ${count} 个网站`:'点星标，网站会直接出现在上方「我的收藏」。';
+ }
+ input.addEventListener('input',filterPortals);
+ $('[data-portal-reset]').addEventListener('click',()=>{input.value='';filterPortals();input.focus();});
+}
+function dest(d){return d.direct?C.safeURL(d.url):/^\/[a-zA-Z0-9/?#&=._%+-]*$/.test(d.url)?full(d.url):full('/search/');}
+const groupNames={A:'机器人学 · 二选一',B:'认知 · 必修',C:'智能系统 · 必修',D:'研讨课 · 必修',E:'实验课 · 必修',F:'硕士论文',G:'计算 · 选修',H:'机械 · 选修',I:'系统与控制 · 选修',J:'跨学科 · 选修',K:'条件补修'};
+const starIcon=$('.header-favorites svg').outerHTML;
+const termLabel=t=>String(t||'').replace('WiSe/SoSe','冬季 / 夏季').replace('WiSe','冬季').replace('SoSe','夏季');
+function resultCard(d,saveKey=d.id,asFavorite=false){
+ const a=`href="${esc(dest(d))}"${d.direct?' target="_blank" rel="noopener noreferrer"':''}`;
+ if(asFavorite)return `<article class="portal-card" data-favorite="${esc(saveKey)}"><a class="portal-link shortcut" ${a}><span class="portal-icon">${starIcon}</span><h3>${esc(d.title)}</h3><p>${esc(d.summary)}</p><div class="portal-meta"><span>${d.direct?'打开原始网站':'打开'+(d.kind==='course'?'课程详情':'收藏内容')}</span><span aria-hidden="true">${d.direct?'↗':'→'}</span></div></a><button class="portal-save" data-save="${esc(saveKey)}" data-save-style="star" data-save-name="${esc(d.title)}" aria-label="取消收藏 ${esc(d.title)}" aria-pressed="true">${starIcon}</button></article>`;
+ if(d.kind==='course'&&!asFavorite)return `<article class="card course-choice"><div class="card-top"><span class="badge">${esc(groupNames[d.group])}</span><span class="code">${esc(d.code)}</span></div><h3><a ${a}>${esc(d.title)}</a></h3><p class="english">${esc(d.english||d.summary)}</p><div class="course-meta"><b>${esc(d.ects)} <small>ECTS</small></b><span>${esc(termLabel(d.term))} · 目录</span></div><div class="card-bottom"><a class="text-link" ${a}>课程详情 →</a><button class="quiet" data-add="${esc(d.code)}" aria-pressed="false">加入计划</button></div></article>`;
+ const kinds={guide:'问题解答',resource:'原始入口',topic:'历史课题',tool:'工具',course:'课程'},key=saveKey;
+ return `<article class="card search-result"><div class="card-top"><span class="badge">${kinds[d.kind]}</span>${d.historical?'<span class="badge history">历史快照</span>':''}</div><h3><a ${a}>${esc(d.title)}</a></h3><p>${esc(d.summary)}</p><p class="meta">${esc(d.status)}${d.cohort?'<br>'+esc(d.cohort):''}</p><div class="card-bottom"><a class="text-link" ${a}>${d.direct?'打开原始入口 ↗':'查看'+(d.kind==='guide'?'答案':'详情')+' →'}</a><button class="quiet" data-save="${esc(key)}" aria-pressed="${saved.has(key)}">${saved.has(key)?'已收藏':'收藏'}</button></div></article>`;
+}
+const favoritesApp=$('#favorites-app');
+if(favoritesApp){
+ let index=null,failed=false;
+ const cards=[...favoritesApp.querySelectorAll('[data-portal]')],shortcutIds=new Set(cards.map(card=>card.dataset.portal));
+ function renderFavorites(){
+  let websiteCount=0;
+  for(const card of cards){card.hidden=!saved.has(card.dataset.portal);if(!card.hidden)websiteCount++;}
+  const other=index?index.docs.flatMap(d=>{const key=[d.id,d.code,...(d.resource_ids||[])].find(k=>k&&!shortcutIds.has(k)&&saved.has(k));return key?[{doc:d,key}]:[];}):[];
+  $('[data-favorites-section="websites"]').hidden=!websiteCount;
+  $('[data-favorites-section="other"]').hidden=!other.length;
+  $('#favorites-other').innerHTML=other.map(({doc,key})=>resultCard(doc,key,true)).join('');
+  $('#favorites-loading').hidden=!!index||failed||!saved.size;
+  $('#favorites-empty').hidden=!!saved.size&&(!index||websiteCount+other.length>0);
+  $('#favorites-status').textContent=failed&&saved.size>websiteCount?'其他收藏暂时无法读取，请刷新重试。':index&&saved.size>websiteCount+other.length?'部分旧收藏未找到对应内容，已显示可用的入口。':'';
+  syncSaves();syncAddButtons();
+ }
+ renderFavorites();
+ load('/assets/search-index.json').then(d=>{index=d;renderFavorites();}).catch(()=>{failed=true;renderFavorites();});
+ window.addEventListener('rci:saveschange',renderFavorites);
+}
+const app=$('#search-app');
 if(app){
  let index,limit=18;
  const params=new URLSearchParams(location.search),q=$('#page-search'),kind=$('#kind-filter'),task=$('#task-filter'),sg=$('#group-filter'),term=$('#term-filter'),sf=$('#saved-filter');
  q.value=(params.get('q')||'').slice(0,160);kind.value=params.get('kind')||'';task.value=params.get('task')||'';sf.checked=params.get('saved')==='1';
- if(app.dataset.mode==='courses'){kind.value='course';kind.closest('label').hidden=true;task.value='';task.closest('label').hidden=true;}
+ if(app.dataset.mode==='courses'){kind.value='course';kind.closest('label').hidden=true;task.value='';task.closest('label').hidden=true;q.placeholder='课程名或代码，如：机器学习、IN2067';sf.closest('label').hidden=true;sf.checked=false;}
  if(app.dataset.mode==='resources'){kind.value='resource';kind.closest('label').hidden=true;}
  if(sg)sg.value=params.get('group')||'';if(term)term.value=params.get('term')||'';
  function updateURL(){const p=new URLSearchParams();for(const [k,v] of [['q',q.value.trim()],['kind',kind.closest('label').hidden?'':kind.value],['task',task.value],['group',sg?.value],['term',term?.value],['saved',sf.checked?'1':'']])if(v)p.set(k,v);history.replaceState(null,'',location.pathname+(p.size?'?'+p:'')+location.hash);}
  function render(){
   if(!index)return;let results=window.RCISearch.search(index.docs,q.value,index.synonyms,{kind:kind.value,task:task.value});
-  if(sg?.value)results=results.filter(d=>d.group===sg.value);if(term?.value)results=results.filter(d=>d.term?.includes(term.value));if(sf.checked)results=results.filter(d=>saved.has(d.code||d.id));
-  $('#result-count').textContent=`${q.value.trim()?'“'+q.value.trim()+'”：':''}找到 ${results.length} 条内容${sf.checked?' · 仅收藏':''}`;
-  const el=$('#results');el.innerHTML=results.length?results.slice(0,limit).map(resultCard).join(''):`<div class="empty"><h2>${sf.checked?'没有匹配的收藏':'没有收录完全匹配的内容'}</h2><p>试试课程代码、中文或官方名称，也可以清除筛选。这里不会临时编造答案。</p><div class="actions"><a class="button secondary" href="${full('/')}">按任务重新查找</a><a class="text-link" href="https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/" target="_blank" rel="noopener noreferrer">到 RCI 官方页核对 ↗</a></div></div>`;
-  $('#more-results').hidden=results.length<=limit;syncSaves();updateURL();
+  if(sg?.value)results=results.filter(d=>sg.value==='core'?'ABCDE'.includes(d.group):sg.value==='professional'?'GHI'.includes(d.group):d.group===sg.value);
+  if(term?.value)results=results.filter(d=>d.term?.includes(term.value));if(sf.checked)results=results.filter(d=>saved.has(d.code||d.id));
+  $('#result-count').textContent=`${q.value.trim()?'“'+q.value.trim()+'”：':''}找到 ${results.length} ${app.dataset.mode==='courses'?'门课程':'条内容'}${sf.checked?' · 仅收藏':''}`;
+  const el=$('#results');el.innerHTML=results.length?results.slice(0,limit).map(d=>resultCard(d)).join(''):`<div class="empty"><h2>${sf.checked?'没有匹配的收藏':'没有找到匹配的内容'}</h2><p>试试中文名、课程代码或官方名称，也可以清除筛选重新选择。</p><div class="actions"><button class="button secondary" data-reset-search>清除筛选</button><a class="text-link" href="${full('/study/')}">回到选课指南 →</a></div></div>`;
+  $('#more-results').hidden=results.length<=limit;syncSaves();syncAddButtons();updateURL();
  }
- refreshSearch=render;
- let debounce; q.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>{limit=18;render();},120);});
+ function reset(){q.value='';kind.value=app.dataset.mode==='courses'?'course':app.dataset.mode==='resources'?'resource':'';task.value='';if(sg)sg.value='';if(term)term.value='';sf.checked=false;limit=18;render();q.focus();}
+ let debounce;q.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>{limit=18;render();},120);});
  app.querySelector('form').addEventListener('submit',ev=>{ev.preventDefault();clearTimeout(debounce);limit=18;render();$('#result-count').focus();});
  [kind,task,sg,term,sf].filter(Boolean).forEach(el=>el.addEventListener('change',()=>{limit=18;render();}));
- $('#reset-filters').addEventListener('click',()=>{q.value='';kind.value=app.dataset.mode==='courses'?'course':app.dataset.mode==='resources'?'resource':'';task.value='';if(sg)sg.value='';if(term)term.value='';sf.checked=false;limit=18;render();q.focus();});
+ $('#reset-filters').addEventListener('click',reset);app.addEventListener('click',ev=>{if(ev.target.closest('[data-reset-search]'))reset();});
  $('#more-results').addEventListener('click',()=>{limit+=18;render();});
- load('/assets/search-index.json').then(d=>{index=d;render();}).catch(err=>{$('#result-count').textContent=err.message+'。下方静态目录和首页链接仍可使用。';});
+ load('/assets/search-index.json').then(d=>{index=d;render();}).catch(err=>{$('#result-count').textContent=err.message+'。下方静态课程目录和链接仍可使用。';});
  window.addEventListener('rci:saveschange',render);
 }
 document.addEventListener('click',async ev=>{
  const b=ev.target.closest('button');if(!b)return;
- if(b.hasAttribute('data-save')){const k=b.dataset.save;saved.has(k)?saved.delete(k):saved.add(k);store('rci:v2:saves',[...saved]);syncSaves();window.dispatchEvent(new Event('rci:saveschange'));}
- if(b.hasAttribute('data-share')){try{await navigator.clipboard.writeText(location.href);toast('已复制本页网址，可以直接发到群里。');}catch(_){window.prompt('复制这个页面的网址：',location.href);}}
- if(b.hasAttribute('data-add')){try{const p=await plan(),code=b.dataset.add;if(p.items.some(x=>x.code===code)){toast('这门课已经在计划中。');return;}await savePlan({...p,items:[...p.items,{code,status:'planned'}]});toast('已加入本地计划；没有向学校报名。');b.textContent='已加入计划';}catch(err){toast(err.message);}}
+ if(b.hasAttribute('data-save')){
+  const inFavorites=!!b.closest('[data-favorites-surface]'),k=b.dataset.save,adding=!saved.has(k),ok=setSaved(k,adding);
+  if(ok&&(b.dataset.saveStyle==='star'||favoritesApp)){
+   if(adding)toast('已加入我的收藏',{label:'查看收藏',href:full('/#bookmarks')});
+   else toast('已取消收藏',{label:'撤销',run:()=>{if(setSaved(k,true))toast('已恢复收藏');}});
+  }
+  if(inFavorites&&!adding){const next=[...favoritesApp.querySelectorAll('[data-save]')].find(el=>!el.closest('[hidden]'));(next||$('#portal-search')||$('#favorites-return')).focus();}
+ }
+ if(b.hasAttribute('data-share')){try{await navigator.clipboard.writeText(location.href);toast('已复制本页网址。');}catch(_){window.prompt('复制这个页面的网址：',location.href);}}
+ if(b.hasAttribute('data-add')){
+  b.disabled=true;
+  try{
+   let added=false;
+   await updatePlan(async p=>{
+    const code=b.dataset.add;if(p.items.some(x=>x.code===code))return null;
+    const other=code==='IN2067'?'ED160028':code==='ED160028'?'IN2067':null;
+    let items=p.items;
+    if(other&&items.some(x=>x.code===other)){
+     const d=await data();
+     const yes=await confirmAction('这两门课是二选一',`你的计划已有 ${d.names[other]||other}（${other}）。改选 ${d.names[code]||code}（${code}）后，会移除原来的课程，学分不会重复计入。`,'改选这门课');
+     if(!yes)return null;items=items.filter(x=>x.code!==other);
+    }
+    added=true;return {...p,items:[...items,{code,status:'planned'}]};
+   });
+   if(added&&planPersisted)toast('已加入计划，学分已更新。',{label:'查看计划',href:full('/planner/')});
+  }catch(err){toast(err.message);}finally{b.disabled=false;syncAddButtons();}
+ }
 });
-syncSaves();
-// Preserve old shared hash routes on the same origin. Never redirect to an external URL.
+window.addEventListener('storage',ev=>{
+ if(ev.key==='rci:v2:plan'||ev.key===null){sessionPlan=null;window.dispatchEvent(new Event('rci:planchange'));}
+ if(ev.key==='rci:v2:saves'||ev.key===null){const v=read('rci:v2:saves',[]);saved=new Set(Array.isArray(v)?v:[]);syncSaves();window.dispatchEvent(new Event('rci:saveschange'));}
+});
+syncSaves();syncPlanWidgets();
+// Preserve already shared routes on the same origin.
 if(location.hash.startsWith('#/')){
  const [route,query='']=location.hash.slice(2).split('?'),[page,id]=route.split('/');
  const simple={home:'/',search:'/search/',courses:'/courses/',resources:'/resources/',planner:'/planner/',apply:'/tasks/apply/',guides:'/guides/',research:'/research/',topics:'/research/topics/',sources:'/sources/'};
  let next=simple[page];if(page==='course'&&/^[A-Z0-9]+$/i.test(id||''))next='/courses/'+id+'/';if(page==='article'&&/^[a-z-]+$/.test(id||''))next='/guides/'+id+'/';if(page==='guide'&&/^\d{2}$/.test(id||''))next='/archive/'+id+'/';if(page==='resource'&&/^R\d+$/.test(id||''))next='/resources/';
  if(next)location.replace(full(next)+(query?'?'+query:''));
 }
-const checklist=$('#application-checklist');if(checklist)data().then(d=>{let set=new Set(read('rci:v2:checklist',[]));checklist.innerHTML=d.checklist.map((s,i)=>`<label class="checklist-item"><input type="checkbox" value="${i}" ${set.has(i)?'checked':''}><span>${esc(s)}</span></label>`).join('');checklist.addEventListener('change',ev=>{const n=Number(ev.target.value);ev.target.checked?set.add(n):set.delete(n);store('rci:v2:checklist',[...set]);});}).catch(()=>{checklist.textContent='核对清单未能加载，请按官方个人材料清单办理。';});
+const checklist=$('#application-checklist');
+if(checklist)data().then(d=>{const raw=read('rci:v2:checklist',[]),set=new Set(Array.isArray(raw)?raw:[]);checklist.innerHTML=d.checklist.map((s,i)=>`<label class="checklist-item"><input type="checkbox" value="${i}" ${set.has(i)?'checked':''}><span>${esc(s)}</span></label>`).join('');checklist.addEventListener('change',ev=>{const n=Number(ev.target.value);ev.target.checked?set.add(n):set.delete(n);store('rci:v2:checklist',[...set]);});}).catch(()=>{checklist.textContent='核对清单未能加载，请按官方个人材料清单办理。';});
 })();

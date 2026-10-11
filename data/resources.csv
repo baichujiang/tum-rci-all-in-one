@@ -124,3 +124,5 @@ R122,09_实习就业与生活,TUM Language Center,https://www.sprachenzentrum.tu
 R123,09_实习就业与生活,TUM Student Council,https://mpic.fs.tum.de/,学生自治组织,官网入口待再核实,公开,每学期,,CIT/MPI相关学生会入口，社群与学习经验
 R124,09_实习就业与生活,TUM Student Services Information,https://www.tum.de/en/studies/support-and-advice,TUM 官方,官网入口待再核实,公开,每学期,,学生健康/障碍支持/指导帮助
 R125,09_实习就业与生活,TUM International Campus Life,https://www.international.tum.de/en/global/,TUM Global,官网入口待再核实,公开,每学期,,国际交流、指导计划等
+R126,04_校内平台与日程,TUM OPAC — 查找图书与文献（直接进入检索）,https://search.ub.tum.de/vufind/?lng=en,TUM 图书馆,官方入口已对照（AI）· 待人工审核,检索公开；借阅和电子资源可能需登录,每学期,2026-10-11,查馆藏、电子书和论文；独立于自习座位预约。官方说明 https://ub.tum.de/en/opac
+R127,04_校内平台与日程,TUM 图书馆 — 预约自习座位（直接进入预约登录）,https://auth.anny.eu/start-session?entityId=https%3A%2F%2Ftumidp.lrz.de%2Fidp%2Fshibboleth&target=https%3A%2F%2Fanny.eu%2Fexplore%2Funiversity-library-technical-university-of-munich%2Fresources%3Fo-v%3Dlist,TUM 图书馆 / anny,官方入口已对照（AI）· 待人工审核,TUM 账号,每学期,2026-10-11,进入 TUM 登录后选择图书馆、座位与时间段；未登录核验实时空位。官方说明 https://ub.tum.de/en/study-desks

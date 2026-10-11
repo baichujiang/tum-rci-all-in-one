@@ -1,0 +1,59 @@
+/* Focused student entry points. Original SVG icons; no external assets. */
+'use strict';
+
+const paths = {
+  grid:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
+  book:'M4 4h6a3 3 0 0 1 3 3v14a4 4 0 0 0-4-3H4z M20 4h-4a3 3 0 0 0-3 3v14a4 4 0 0 1 4-3h3z',
+  match:'M4 6h10 M10 2l4 4-4 4 M20 18H10 M14 14l-4 4 4 4',
+  play:'M9 6l10 6-10 6z M3 4v16',
+  map:'M12 21s7-6 7-12A7 7 0 0 0 5 9c0 6 7 12 7 12z M12 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6',
+  library:'M3 21h18 M5 21V9 M10 21V9 M14 21V9 M19 21V9 M3 9h18 M12 3l9 5H3z',
+  seat:'M7 12V4h10v8 M5 12h14v5H5z M7 17v4 M17 17v4 M3 8v7 M21 8v7',
+  help:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M9 9a3 3 0 1 1 4 3c-1 .5-1 1-1 2 M12 17h.01',
+  plan:'M5 3h14v18H5z M8 8h8 M8 12h8 M8 16h5',
+  arrow:'M5 12h14 M13 6l6 6-6 6',
+  external:'M14 3h7v7 M21 3L10 14 M10 3H3v18h18v-7',
+  check:'M5 12l4 4L19 6',
+  star:'m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L2 9.6l6.2-.9z'
+};
+function icon(name, cls='') {
+  return `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name]||paths.grid}"/></svg>`;
+}
+
+module.exports = function views({nav,e,url,resLink,internal,resourceMap,safeURL}) {
+  const studyNav = active => `<nav class="study-nav" aria-label="选课与学分">${[['/study/','选课指南'],['/courses/','选课程'],['/planner/','我的计划']].map(([p,t],i)=>`<a href="${url(p)}"${active===p?' aria-current="page"':''}><span>${i+1}</span>${t}</a>`).join('')}</nav>`;
+  const courseDock = () => `<aside class="plan-dock" aria-label="当前学分计划"><div>${icon('plan')}<span><b><span data-plan-count>0</span> 门已选</b><small>规划计入 <span data-plan-credits>0</span> ECTS</small></span></div>${internal('/planner/','查看我的计划 →','button')}</aside>`;
+
+  function portalCard(s, hidden=false) {
+    const r=resourceMap.get(s.id),href=r&&safeURL(r.url);
+    if(!href)throw new Error('Invalid website shortcut: '+s.id);
+    const domain=new URL(href).hostname;
+    return `<article class="portal-card" data-portal="${e(s.id)}" data-group="${e(s.group)}" data-keywords="${e([s.label,s.hint,domain,...(s.aliases||[])].join(' '))}"${hidden?' hidden':''}><a class="portal-link shortcut" data-portal-link="${e(s.id)}" href="${e(href)}" target="_blank" rel="noopener noreferrer" aria-label="${e(s.label+'：'+s.hint+'（在新标签页打开）')}"><span class="portal-icon">${icon(s.icon)}</span><h3>${e(s.label)}</h3><p>${e(s.hint)}</p><div class="portal-meta"><span>${e(s.access)}</span>${icon('external')}</div></a><button class="portal-save" data-save="${e(s.id)}" data-save-style="star" data-save-name="${e(s.label)}" aria-label="收藏 ${e(s.label)}" aria-pressed="false">${icon('star')}</button></article>`;
+  }
+  function favoritesSurface(inline=false){
+    return `<div id="favorites-app" data-favorites-surface${inline?' class="inline-favorites"':''}><p id="favorites-loading" class="loading-state">正在读取你的收藏…</p><p id="favorites-status" class="portal-hint" role="status" aria-live="polite"></p><section data-favorites-section="websites" hidden>${inline?'':'<div class="section-title"><h2>常用网站</h2><span>点击直接打开 ↗</span></div>'}<div class="portal-grid">${nav.shortcuts.map(s=>portalCard(s,true)).join('')}</div></section><section data-favorites-section="other" hidden>${inline?'':'<div class="section-title"><h2>其他收藏</h2></div>'}<div class="portal-grid" id="favorites-other"></div></section><div id="favorites-empty" class="favorites-empty empty" hidden><span class="empty-symbol">${icon('star')}</span><div><h${inline?'3':'2'}>把常用入口放在这里</h${inline?'3':'2'}><p>点下方网站的星标，收藏会直接出现在这里。</p>${inline?'':internal('/#websites','去收藏常用网站 →','button')}</div></div></div><noscript><p>启用 JavaScript 后，可以读取保存在这个浏览器的收藏。</p></noscript>`;
+  }
+  function portalModules(){
+    for(const s of nav.shortcuts)if(!nav.portal_groups.some(g=>g.id===s.group))throw new Error('Unknown website module: '+s.id);
+    return nav.portal_groups.map(g=>`<section class="portal-module" data-portal-module aria-labelledby="portal-module-${e(g.id)}"><div class="portal-module-heading"><h3 id="portal-module-${e(g.id)}">${e(g.title)}</h3><p>${e(g.hint)}</p></div><div class="portal-grid">${nav.shortcuts.filter(s=>s.group===g.id).map(s=>portalCard(s)).join('')}</div></section>`).join('');
+  }
+  function home() {
+    return `<section class="entry-hero"><div><p class="eyebrow">TUM RCI · 同学的日常起点</p><h1>常用网站，一步直达。<br><span>选课规划，心里有数。</span></h1><p class="lead">打开每天用的网站，理清下一步要修的学分。</p></div></section>
+      <section id="bookmarks" class="bookmarks-section" aria-labelledby="bookmarks-title"><div class="section-title"><h2 id="bookmarks-title">${icon('star')} 我的收藏</h2>${internal('/favorites/','管理收藏 →','text-link')}</div>${favoritesSurface(true)}</section>
+      <section id="websites" class="portal-section" aria-labelledby="portal-title"><div class="section-title"><h2 id="portal-title">全部网站</h2><span>点击卡片直接打开 ↗</span></div><div id="portal-controls" class="portal-controls" hidden><label class="portal-search">${icon('help')}<span class="sr-only">找网站或用途</span><input id="portal-search" type="search" placeholder="找网站或用途" maxlength="100" autocomplete="off"></label></div>${portalModules()}<div id="portal-empty" class="empty" hidden><h3>没有找到对应的网站</h3><p>试试“选课”“课件”或网站名称。</p><div class="inline-actions"><button class="button secondary" data-portal-reset>显示全部网站</button>${internal('/study/','选课与学分指南 →','text-link')}</div></div><p id="portal-status" class="portal-hint" role="status" aria-live="polite">点星标，网站会直接出现在上方「我的收藏」。</p></section>
+      <a class="resume-card" href="${url('/study/')}"><span class="resume-icon">${icon('plan')}</span><span class="eyebrow">选课与学分</span><h2 data-plan-heading>从第一门课开始</h2><p data-plan-description>先了解学分结构，再把想修的课加入计划。</p><span class="resume-action"><span data-plan-cta>开始选课与规划</span>${icon('arrow')}</span></a><section class="study-entry" aria-labelledby="study-entry-title"><div class="section-title"><div><p class="eyebrow">02 / 选课与学分</p><h2 id="study-entry-title">把选课这件事，理顺。</h2></div>${internal('/study/','从这里开始 →','text-link')}</div><div class="journey-grid">${[['/study/#credits','看懂学分结构','必修、选修、论文各需要多少。','book'],['/courses/','选课，加入计划','按领域和目录学期找到想修的课。','grid'],['/planner/','看看还差什么','已选与已通过分开，缺口一眼可见。','plan']].map(([p,t,d,i],n)=>`<a class="journey-card" href="${url(p)}"><span class="journey-number">0${n+1}</span>${icon(i)}<h3>${t}</h3><p>${d}</p><span class="text-link">${n===0?'了解要求':n===1?'去选课程':'打开我的计划'} →</span></a>`).join('')}</div></section>`;
+  }
+
+  function favorites(){
+    return `<div class="favorites-heading"><p class="eyebrow">自己的常用入口</p><h1>我的收藏</h1><p class="lead">收藏的网站和资料，也会直接展示在首页顶部。</p><a class="text-link" id="favorites-return" href="${url('/#bookmarks')}">← 返回首页收藏</a></div>${favoritesSurface()}`;
+  }
+
+  function study() {
+    const buckets=[['43','必修','机器人学、认知、AI、研讨与实验','core'],['41','专业选修','计算、机械、系统与控制','professional'],['6','跨学科','按专业要求确认课程归类','interdisciplinary'],['30','硕士论文','研究与论文单独安排','thesis']];
+    return `${studyNav('/study/')}<div class="study-heading"><p class="eyebrow">先理清要求，再决定修什么</p><h1>选课与学分，一步步来。</h1><p class="lead">看懂结构 → 找到课程 → 加入计划 → 核对学校登记。</p><div class="actions">${internal('/courses/','开始选课程 →','button')}${internal('/planner/','查看我的计划','button secondary')}</div></div>
+      <section id="credits" class="credit-section" aria-labelledby="credit-title"><div class="section-title"><h2 id="credit-title">先看懂这 120 ECTS</h2><span>标准情景 · 2025 规则快照</span></div><div class="credit-visual" aria-label="标准情景：必修43、专业选修41、跨学科6、硕士论文30 ECTS"><span class="credit-core">必修 43</span><span class="credit-professional">专业选修 41</span><span class="credit-interdisciplinary">6</span><span class="credit-thesis">论文 30</span></div><div class="credit-grid">${buckets.map(([n,t,d,k])=>`<article class="credit-card ${k}"><div><b>${n}</b><span>ECTS</span></div><h3>${t}</h3><p>${d}</p></article>`).join('')}</div><div class="credit-footnote"><p>专业选修中，G 计算、H 机械、I 系统与控制各至少 5 ECTS。Robotics 与 Roboterdynamik 二选一。</p><details><summary>有控制理论补修，或入学批次不同？</summary><p>需要补修 ED140014 的情景，模型将 5 ECTS 从专业选修移至补修，专业选修目标变为 36。是否适用请核对个人录取条件与 FPSO；完整修订 PDF 仍待复核。其他批次不能直接套用此结构。</p><div class="actions">${resLink('R002','核对官方学习规划')}${internal('/guides/conditional-control/','了解补修情景 →','text-link')}</div></details></div></section>
+      <section class="selection-section" aria-labelledby="selection-title"><div class="section-title"><h2 id="selection-title">实际选课，按这个顺序</h2></div><div class="selection-steps"><article><span class="step-number">1</span><div><h3>确认自己的入学批次</h3><p>先在官方学习规划中找到适用版本。补修条件以个人录取通知为准。</p>${resLink('R002','打开官方学习规划','text-link')}</div></article><article><span class="step-number">2</span><div><h3>选课程，先加入自己的计划</h3><p>按领域和目录学期筛选，用模块代码核对课程。加一门，马上看学分变化。</p>${internal('/courses/','去选课程 →','text-link')}</div></article><article><span class="step-number">3</span><div><h3>实验课 / 研讨课，走 Matching</h3><p>IN2106 / IN2107 等指定模块通过匹配分配名额。在系统选择 TUM login，再核对当期安排。</p><div class="inline-actions">${resLink('R030','打开 Matching System','text-link')}${internal('/guides/matching/','查看操作说明 →','text-link')}</div></div></article><article><span class="step-number">4</span><div><h3>最后，确认选课和考试登记</h3><p>本地计划帮你安排学分。课程位置和考试登记要分别在学校系统确认，指定模块按教学团队要求办理。</p><div class="inline-actions">${resLink('R010','打开 TUMonline','text-link')}${internal('/guides/exams/','考试登记怎么确认 →','text-link')}</div></div></article></div></section>
+      <div class="study-next"><div><h2>现在，选你的第一门课。</h2><p>选择会保存在这个浏览器，随时回来继续。</p></div>${internal('/courses/','去选课程 →','button')}</div><details class="supplement"><summary>规则来源与适用范围</summary><p>以上是沿用 2025 修订目录的数值规划模型，尚待完整 PDF 和独立人工复核。当前排课、课程认定、个人补修和毕业资格请按学校原文及个人记录核对。</p><div class="inline-actions">${resLink('R002','官方学习规划','text-link')}${resLink('R003','修订条例原文','text-link')}${resLink('R009','学业咨询','text-link')}${internal('/sources/','来源台账 →','text-link')}</div></details>`;
+  }
+  return {home,favorites,study,studyNav,courseDock,icon};
+};

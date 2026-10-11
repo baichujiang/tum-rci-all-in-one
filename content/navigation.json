@@ -1,5 +1,5 @@
 {
-  "version": "3.0.1",
+  "version": "3.1.0",
   "edited_on": "2026-10-11",
   "tasks": [
     {"id":"apply","title":"申请与入学","subtitle":"准备材料、读懂录取要求、开始第一学期","symbol":"01","guides":["application","new-students","finance"],"resources":["R010","R013","R015","R016","R021","R028"],"categories":["02_","03_"]},
@@ -9,14 +9,25 @@
     {"id":"learn","title":"学习资料与工具","subtitle":"找讲义、公开课程、机器人软件和数据集","symbol":"05","guides":["learning"],"resources":["R031","R032","R042","R069","R098"],"categories":["05_","07_","08_"]},
     {"id":"life","title":"生活与就业","subtitle":"住房、校园服务、实习与求职入口","symbol":"06","guides":["housing","career","finance"],"resources":["R112","R114","R111","R118","R124"],"categories":["09_","03_"]}
   ],
+  "portal_groups": [
+    {"id":"courses","title":"上课与选课","hint":"课程、课件、视频与名额申请"},
+    {"id":"campus","title":"图书馆与校园","hint":"找自习位置、查文献、去教室"},
+    {"id":"support","title":"咨询与支持","hint":"学分认定、账号与网络问题"}
+  ],
   "shortcuts": [
-    {"id":"R010","label":"TUMonline","hint":"选课 · 考试 · 成绩"},
-    {"id":"R031","label":"Moodle","hint":"课程材料"},
-    {"id":"R030","label":"Matching 系统","hint":"直接进入 · TUM 登录"},
-    {"id":"R032","label":"TUM Live","hint":"课程视频"},
-    {"id":"R033","label":"教室导航","hint":"查楼栋和房间"}
+    {"id":"R010","label":"TUMonline","hint":"选课 · 考试报名 · 成绩","group":"courses","icon":"grid","access":"TUM 账号","aliases":["课表","报名考试","campus"]},
+    {"id":"R031","label":"Moodle","hint":"课件 · 作业 · 课程通知","group":"courses","icon":"book","access":"TUM 账号","aliases":["学习资料","讲义","slides"]},
+    {"id":"R030","label":"Matching System","hint":"申请实验课与研讨课名额","group":"courses","icon":"match","access":"TUM / 交换生登录","aliases":["实验课","研讨课","实习课","praktikum","seminar"]},
+    {"id":"R032","label":"TUM Live","hint":"课程视频 · 直播 · 录播","group":"courses","icon":"play","access":"部分内容需登录","aliases":["视频","lecture"]},
+    {"id":"R033","label":"Navigatum","hint":"找教室 · 查楼栋 · 校园导航","group":"campus","icon":"map","access":"直接访问","aliases":["教室导航","房间","room"]},
+    {"id":"R127","label":"预约自习座位","hint":"选图书馆 · 座位 · 时间段","group":"campus","icon":"seat","access":"TUM 账号","aliases":["图书馆","library","预约","位置","座位","自习","study desks","anny"]},
+    {"id":"R126","label":"查找图书","hint":"搜索馆藏 · 电子书 · 论文","group":"campus","icon":"book","access":"检索公开 · 借阅需登录","aliases":["图书馆","library","查书","文献","论文检索","OPAC","借书"]},
+    {"id":"R009","label":"RCI 学业咨询","hint":"选修认定 · 学分与特殊情况","group":"support","icon":"help","access":"公开说明","aliases":["协调员","选课咨询","学分认定"]},
+    {"id":"R035","label":"TUM IT 支持","hint":"账号 · Wi-Fi · VPN · 邮箱","group":"support","icon":"help","access":"公开说明","aliases":["登录","网络","软件","IT"]}
   ],
   "sources": [
+    {"id":"library-seats","title":"TUM 图书馆自习座位预约说明","url":"https://ub.tum.de/en/study-desks","checked_on":"2026-10-11","status":"checked","scope":"AI 辅助核对官方 Book a Study Desk 链接，直达 anny 的 TUM SSO 预约入口；需 TUM 账号。未登录账号、未查看实时空位、未提交预约。","human_review":"pending"},
+    {"id":"library-opac","title":"TUM OPAC 图书与文献检索说明","url":"https://ub.tum.de/en/opac","checked_on":"2026-10-11","status":"checked","scope":"AI 辅助核对官方 Start OPAC 链接至 search.ub.tum.de/vufind/?lng=en；与自习座位预约为不同系统。未登录账号、未办理借阅。","human_review":"pending"},
     {"id":"exams-informatics","title":"CIT Informatics 考试报名说明","url":"https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/","checked_on":"2026-10-11","status":"checked","scope":"考试报名要求与 IN2106 / IN2107 等指定模块由教学团队报名的例外；未核查个人考试日期。","human_review":"pending"},
     {"id":"matching-system","title":"Matching System 官方系统登录页（非说明页）","url":"https://matching-in.cit.tum.de/","checked_on":"2026-10-11","status":"checked","scope":"AI 辅助核对公开页面标题 Matching platform、TUM login 与 Exchange student login；TUM login 指向系统的 /saml2/login/。未登录账号、未提交偏好、未核验当期实例或名额。","human_review":"pending"},
     {"id":"matching-docs","title":"Matching 官方手册（说明文档，非报名系统）","url":"https://collab.dvb.bayern/spaces/TUMdmatching/pages/2205033162/Matching-System+Department+Informatik+at+CIT","checked_on":"2026-10-11","status":"checked","scope":"AI 辅助对照文档迁移说明及展示的 matching-in.cit.tum.de 系统地址；原 docmatching 域名为说明入口，不应作为系统快捷入口。","human_review":"pending"}

@@ -48,7 +48,9 @@ def contains(path, expected):
     assert expected in body, f"{path}: expected page content missing"
 
 for route, marker in [
-    ("/", "你想查什么？"),
+    ("/", "常用网站，一步直达。"),
+    ("/study/", "选课与学分，一步步来。"),
+    ("/favorites/", 'id="favorites-app"'),
     ("/guides/matching/", "实验课、研讨课怎么选？"),
     ("/guides/exams/", "选了课，还需要报名考试吗？"),
     ("/courses/IN2067/", "IN2067"),
@@ -61,15 +63,25 @@ for route, marker in [
 
 def index_check():
     data = json.loads(get("/assets/search-index.json"))
-    assert len(data["docs"]) == 229
+    assert len(data["docs"]) == 231
     assert any(d.get("code") == "IN2067" for d in data["docs"])
-check("anonymous search data: 229 records", index_check)
+check("anonymous search data: 231 records", index_check)
+
+def bookmarks_check():
+    body = get("/")
+    assert 'id="bookmarks"' in body, "Inline bookmarks missing"
+    assert body.index('id="favorites-app"') < body.index('id="websites"'), "Bookmarks must precede all websites"
+    assert 'data-favorites-entry' not in body, "Outdated shortcut to a separate favorites page"
+    for group in ["上课与选课", "图书馆与校园", "咨询与支持"]:
+        assert group in body, f"Expanded website module missing: {group}"
+check("inline bookmarks above expanded website modules", bookmarks_check)
 
 def build_check():
     info = json.loads(get("/build-info.json"))
-    assert info["version"] == "3.0.0"
-    assert info["pages"] == 75
-    assert info["searchRecords"] == 229
+    index = json.loads(get("/assets/search-index.json"))
+    assert info["version"] == index["version"], "Build and search data versions differ"
+    assert info["pages"] == 77
+    assert info["searchRecords"] == 231
     assert info["origin"] == ORIGIN, "Production origin not reflected in build"
 check("production build and canonical origin", build_check)
 check("anonymous sitemap", lambda: contains("/sitemap.xml", ORIGIN + "/guides/matching/"))

@@ -15,19 +15,42 @@ test('resource duplicates merged by canonical URL',()=>{const ds=index.docs.filt
 test('task filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{task:'life'}).every(d=>d.tasks.includes('life'))));
 test('kind filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{kind:'course'}).every(d=>d.kind==='course')));
 const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(path.join(p,x.name)):[path.join(p,x.name)]),html=walk(dist).filter(p=>p.endsWith('.html'));
-test('75 prerendered pages and exactly one H1 per page',()=>{assert.equal(html.length,75);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
+test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,77);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
 test('all local assets and links resolve',()=>{const build=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));for(const p of html){const txt=fs.readFileSync(p,'utf8');for(const m of txt.matchAll(/(?:href|src)="([^"]+)"/g)){if(!m[1].startsWith('/'))continue;let u=decodeURIComponent(m[1].split(/[?#]/)[0]);if(build.base){assert(u.startsWith(build.base+'/'));u=u.slice(build.base.length);}let target=path.join(dist,u);if(u.endsWith('/'))target=path.join(target,'index.html');assert(fs.existsSync(target),p+' -> '+u);}}});
 test('no raw API credentials, CDN scripts or analytics in emitted markup',()=>{for(const p of html){const txt=fs.readFileSync(p,'utf8');assert(!/src="https?:|ghp_[A-Za-z0-9]+|sk_live_|googletagmanager/.test(txt),p);}});
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
 test('course sources and status retained in static pages',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('2025'));assert(s.includes('历史整理'));assert(s.includes('campus.tum.de'));});
-test('old source records retained',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,125);assert.equal(info.courses,35);assert.equal(info.topics,58);});
+test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,127);assert.equal(info.courses,35);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
 
 // A public documentation page is not the application itself. Guard real destinations.
 const matchingSystem='https://matching-in.cit.tum.de/';
 const matchingInfo='https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/';
 const matchingGuide=fs.readFileSync(path.join(dist,'guides/matching/index.html'),'utf8');
 test('Matching search resource opens the actual platform',()=>{const d=index.docs.find(d=>d.id==='R030');assert(d);assert.equal(d.url,matchingSystem);assert.equal(d.direct,true);assert(d.title.includes('直接进入系统'));});
-test('Matching home shortcut does not point at documentation',()=>{const s=fs.readFileSync(path.join(dist,'index.html'),'utf8');const a=[...s.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].find(m=>/class="shortcut"/.test(m[1])&&m[2].includes('Matching'));assert(a);assert(a[1].includes('href="'+matchingSystem+'"'));});
+test('Matching home shortcut does not point at documentation',()=>{const s=fs.readFileSync(path.join(dist,'index.html'),'utf8');const a=[...s.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].find(m=>/data-portal-link="R030"/.test(m[1]));assert(a);assert(a[1].includes('href="'+matchingSystem+'"'));});
+test('library shortcuts separate book search from actual seat reservation',()=>{const s=fs.readFileSync(path.join(dist,'index.html'),'utf8'),links=[...s.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)];const books=links.find(m=>/data-portal-link="R126"/.test(m[1])),seats=links.find(m=>/data-portal-link="R127"/.test(m[1]));assert(books);assert(seats);assert(books[2].includes('查找图书'));assert(books[1].includes('href="https://search.ub.tum.de/vufind/?lng=en"'));assert(seats[2].includes('预约自习座位'));assert(seats[1].includes('href="https://auth.anny.eu/start-session?'));const destination=new URL(seats[1].match(/href="([^"]+)"/)[1].replace(/&amp;/g,'&'));assert.equal(destination.searchParams.get('entityId'),'https://tumidp.lrz.de/idp/shibboleth');assert.equal(destination.searchParams.get('target'),'https://anny.eu/explore/university-library-technical-university-of-munich/resources?o-v=list');assert(!links.some(m=>/data-portal-link="R042"/.test(m[1])));});
 test('Matching guide offers system first and separate explanation second',()=>{const actions=matchingGuide.match(/<div class="actions">([\s\S]*?)<\/div>/);assert(actions);const links=[...actions[1].matchAll(/href="([^"]+)"/g)].map(m=>m[1]);assert.equal(links[0],matchingSystem);assert.equal(links[1],matchingInfo);assert(actions[1].includes('非报名系统'));});
 test('Matching guide records login boundary and independent documentation source',()=>{assert(matchingGuide.includes('TUM login'));assert(matchingGuide.includes('Exchange student login'));assert(matchingGuide.includes('个人实例与当期名额未核验'));assert(matchingGuide.includes('https://collab.dvb.bayern/spaces/TUMdmatching/pages/2205033162/'));});
+
+
+test('two primary destinations remain visible without JavaScript',()=>{const s=fs.readFileSync(path.join(dist,'index.html'),'utf8');assert(s.includes('常用网站，一步直达。'));assert(s.includes('选课规划，心里有数。'));assert(s.includes('data-portal-link="R010"'));assert(s.includes('data-portal-link="R031"'));assert(s.includes('href="/study/"'));assert(!s.includes('按你要做的事找'));});
+test('bookmarked cards are inline above expanded website modules',()=>{
+ const s=fs.readFileSync(path.join(dist,'index.html'),'utf8');
+ assert(s.includes('id="bookmarks"'));
+ assert(s.indexOf('id="favorites-app"')<s.indexOf('id="websites"'));
+ const pinned=s.slice(s.indexOf('id="bookmarks"'),s.indexOf('id="websites"'));
+ assert(pinned.includes('data-favorites-surface'));
+ assert(pinned.includes('data-portal-link="R031" href="https://www.moodle.tum.de/"'));
+ assert(pinned.includes('data-save="R031"'));
+ assert(s.includes('href="/favorites/"'));
+ for(const label of ['上课与选课','图书馆与校园','咨询与支持'])assert(s.includes(label));
+ assert(!s.includes('data-favorites-entry'));
+ assert(!s.includes('data-portal-filter'));
+ assert(!s.includes('我常用的'));
+ for(const p of html){const markup=fs.readFileSync(p,'utf8');assert(markup.includes('class="header-favorites" href="/#bookmarks"'),p);}
+ const f=fs.readFileSync(path.join(dist,'favorites/index.html'),'utf8');
+ assert(f.includes('id="favorites-app"'));assert(f.includes('id="favorites-empty"'));assert(f.includes('启用 JavaScript'));
+});
+test('study journey separates personal planning from school registration',()=>{const s=fs.readFileSync(path.join(dist,'study/index.html'),'utf8');assert(s.includes('先看懂这 120 ECTS'));assert(s.includes('href="/courses/"'));assert(s.includes('href="/planner/"'));assert(s.includes(matchingSystem));assert(s.includes('课程位置和考试登记要分别在学校系统确认'));assert(s.includes('2025'));});
+
 console.log(count+' site checks passed');
