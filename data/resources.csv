@@ -1,0 +1,126 @@
+id,category,title,url,publisher,source_status,access,update_frequency,review_date,description_cn
+R001,01_官方与法规,RCI 官方专业页面 / 申请,https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,申请流程、限制条件、面试、essay、课程与论文权威入口
+R002,01_官方与法规,RCI 2024+ Studienpläne 课程结构,https://www.cit.tum.de/cit/studium/studiengaenge/master-robotics-cognition-intelligence/studienplaene/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,各入学批次对应学分结构、示例课表；重点参照本人入学批次
+R003,01_官方与法规,2025年2月11日 FPSO 修订条例（适用于 WiSe25/26 起）,https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P008777873,TUM 官方,官方页面已查阅,公开,法规变化时,2026-10-11,控制理论规则变动与全套 Annex 1 课程表；原始 PDF；权威首选
+R004,01_官方与法规,2024年1月30日 FPSO 主条例,https://www.tum.de/fileadmin/user_upload_87/gi32rab/Robotics_Cognition_Intelligence_MA_Neufassung_30012024.pdf,TUM 官方,官方页面已查阅,公开,法规变化时,2026-10-11,毕业、学分、论文与考核基础规范，须合并阅读 2025 修订
+R005,01_官方与法规,TUM RCI 项目详情（大学总网站）,https://www.tum.de/en/studies/degree-programs/detail/robotics-cognition-intelligence-master-of-science-msc,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,费用、校区、申请入口
+R006,01_官方与法规,TUM 法规总数据库,https://www.tum.de/en/studies/during-your-studies/organizing-your-studies/statutes-and-regulations/,TUM 官方,官网入口待再核实,公开,每学期,,按专业及生效日找进一步修订
+R007,01_官方与法规,CIT School,https://www.cit.tum.de/en/cit/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,"School of Computation, Information and Technology 官方首页"
+R008,01_官方与法规,TUM 学习期间服务,https://www.tum.de/en/studies/during-your-studies/tum,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,选课、考试、重新注册等官方汇总
+R009,01_官方与法规,RCI 学业咨询,https://www.cit.tum.de/en/cit/studies/students/advising/informatics/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,向专业协调员核实选修认定、特殊情况；RCI: rci@tum.de
+R010,02_申请与语言,TUMonline (申请/选课/成绩单),https://campus.tum.de/,TUM,官方平台,TUM账号,每学期,2026-10-11,学期、课程、考试、成绩、费用；需登录
+R011,02_申请与语言,TUM 硕士申请步骤,https://www.tum.de/en/studies/application/application-info-portal/application-for-a-masters-program/,TUM 官方,官网入口待再核实,公开,每学期,,完成 TUMonline 正式申请
+R012,02_申请与语言,TUM 申请期限与学期日期,https://www.tum.de/en/studies/application/application-info-portal/dates-periods-and-deadlines,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,学期开始、讲座期间、缴费日期
+R013,02_申请与语言,uni-assist VPD 官方说明,https://www.tum.de/en/studies/application/application-info-portal/uni-assist,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,德国境外获取 BA 的申请者通常需 VPD，与 TUMonline 双轨
+R014,02_申请与语言,uni-assist Portal,https://my.uni-assist.de/,uni-assist 官方,官方平台,账号,每学期,2026-10-11,申请 VPD / 上传资料
+R015,02_申请与语言,TUM APS 说明,https://www.tum.de/en/studies/application/application-info-portal/aps,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,中国/印度/越南获取学历者核查认证要求
+R016,02_申请与语言,TUM 语言证明,https://www.tum.de/en/studies/application/application-info-portal/admission-requirements/language-certificates/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,RCI 英德双语；依 TUM 接受证书列表
+R017,02_申请与语言,TUM 申请资料清单 / glossary,https://www.tum.de/en/studies/application/application-info-portal/overview-documents/,TUM 官方,官网入口待再核实,公开,每学期,,检查当年上传材料，不以民间清单代替 TUMonline
+R018,02_申请与语言,GRE General 官方,https://www.ets.org/gre.html,ETS 官方,官方主页待核实,公开,每学期,2026-10-11,部分学历国家须提供 GRE；RCI quant>=164、AWA>=4.0
+R019,02_申请与语言,印度 GATE,https://gate2026.iitg.ac.in/,GATE 官方,历史2026入口/需更新,公开,年度,2026-10-11,RCI 官网页有 GATE 替代GRE条款，仅针对符合要求的印度考试
+R020,02_申请与语言,德国签证 Make it in Germany,https://www.make-it-in-germany.com/en/visa-residence/types/studying,德国政府,官方入口待再核实,公开,按政策变化,2026-10-11,国际学生学习签证规则与就业权利
+R021,02_申请与语言,TUM Immatrikulation 信息,https://www.tum.de/en/studies/application/enrollment-info-portal,TUM 官方,官网入口待再核实,公开,每学期,,录取后注册、银行支付、医保及可能的纸质文件
+R022,03_费用与奖学金,TUM 非欧盟学费与延期费政策,https://www.tum.de/en/studies/fees/tuition,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,RCI 2026显示6000/学期；新生27/28将有全校两档新标准
+R023,03_费用与奖学金,TUM Semester Fees,https://www.tum.de/en/studies/fees,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,学期杂费及生活成本参考；按校区/学期变动
+R024,03_费用与奖学金,TUM 学费减免/奖学金/免缴,https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,看资格和各类单独申请截止日期
+R025,03_费用与奖学金,TUM 国际学生奖学金,https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,一般每学期一次性 500–1800欧，特定学习进度与申请期
+R026,03_费用与奖学金,TUM 奖学金总览,https://www.tum.de/en/studies/fees-and-financial-aid/scholarships,TUM 官方,官网入口待再核实,公开,每学期,,DAAD、TUM 奖等统览
+R027,03_费用与奖学金,DAAD Scholarships,https://www.daad.de/en/studying-in-germany/scholarships/,DAAD 官方,官网入口待再核实,公开,每学期,,德国奖学金数据库与条件
+R028,04_校内平台与日程,2026/27 CIT 新生迎新日程,https://www.cit.tum.de/en/cit/studies/students/start-of-studies/orientation-program-informatics-master/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,2026-10-12 09:00 RCI FPSO介绍、地点 Interims II
+R029,04_校内平台与日程,Seminar & Practical Matching + 26/27 remaining places,https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,IN2106/IN2107 须匹配；当年当前剩余名单不是保证名额
+R030,04_校内平台与日程,Seminar/Practical 匹配系统,https://docmatching-in.cit.tum.de/,TUM CIT 官方,官方平台,TUM账号,每学期,2026-10-11,常规报名并非 TUMonline 单独选课
+R031,04_校内平台与日程,TUM Moodle LMS,https://www.moodle.tum.de/,TUM,官方平台,TUM账号,每学期,2026-10-11,受限课程课件、作业、评估资料
+R032,04_校内平台与日程,TUM Live 视频,https://live.rbg.tum.de/,TUM,官方平台,部分TUM登录,每学期,2026-10-11,获授权课程录播与直播
+R033,04_校内平台与日程,TUM Navigatum 建筑房间导航,https://nav.tum.de/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,教室路线、建筑缩写、搜索
+R034,04_校内平台与日程,TUM Student App,https://www.tum.app/,TUM学生团队,社区产品,账号可选,每学期,2026-10-11,个人课表、菜单、导航等；非校方正式法规入口
+R035,04_校内平台与日程,TUM IT 学生入门,https://www.it.tum.de/en/it/for-students/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,TUM ID、校园 WLAN、VPN、邮箱服务
+R036,04_校内平台与日程,CIT Informatics Exams & Modules,https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,考试注册、期限、考试委员会操作
+R037,04_校内平台与日程,CIT thesis and graduation,https://www.cit.tum.de/en/cit/studies/students/thesis-completing-your-studies/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,硕士论文流程和联系信息
+R038,04_校内平台与日程,CIT thesis registration portal,https://portal.cit.tum.de/de/Theses/,TUM CIT,官方平台,TUM账号,每学期,2026-10-11,指导教师发起论文注册，在线提交；本人用 TUM 登录
+R039,04_校内平台与日程,CIT recognition of credits,https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/transfer-of-credits/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,RCI 跨学院选修核认先咨询 RCI 负责人
+R040,04_校内平台与日程,TUM Language Center,https://www.sprachenzentrum.tum.de/en/sz/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,德语等语言课；相关学分认定问 RCI
+R041,04_校内平台与日程,TUM 语言课期限,https://www.sprachenzentrum.tum.de/en/sz/news/dates-and-deadlines/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,语言课另有报名/测试期限
+R042,04_校内平台与日程,TUM Public Library,https://www.ub.tum.de/en,TUM 图书馆,官网入口待再核实,公开,每学期,,论文检索、学习空间、引用和馆际资源
+R043,04_校内平台与日程,TUM 登录与软件许可,https://www.it.tum.de/en/it/software/,TUM IT,官网入口待再核实,公开,每学期,,学校软件许可及远程访问
+R044,04_校内平台与日程,CIT Student Code of Conduct,https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,学术诚信、引用、项目作业独立性；同页面底部
+R045,05_公开课程资料,IN2067 Robotics 官方课程主页,https://mvp.in.tum.de/courses/robotics/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,2026/27 Winter 开课、课时和公开材料
+R046,05_公开课程资料,IN2228 3D Computer Vision SS2026,https://www.cvg.cit.tum.de/teaching/ss2026/3dcv,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,其法定名称仍为 Computer Vision II: Multiple View Geometry；见课程号/当年TUMonline
+R047,05_公开课程资料,CVG Multiple View Geometry 在线资料,https://www.cvg.cit.tum.de/teaching/online/mvg,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,公开录像/讲义，历史参考；不能等同 2026 考试范围
+R048,05_公开课程资料,CVG 公开视频课程总览,https://www.cvg.cit.tum.de/teaching/online,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,computer vision 开源教学内容
+R049,05_公开课程资料,IN2138 Robot Motion Planning 历史课程,https://mvp.in.tum.de/courses/motion/syllabus.html,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,历史 syllabus，需要查当年的课程公告
+R050,05_公开课程资料,IN2404 Mobile Robotics 2023 历史资料,https://srl.cit.tum.de/teaching/w23/mobilerobotics,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,SLAM、导航等课程材料，非最新学期公告
+R051,05_公开课程资料,Robo.innovate 实操课程,https://roboinnovate.mirmi.tum.de/courses/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,Franka/UR 等实操；学分归属需核实
+R052,05_公开课程资料,RCI 社区笔记 (2021-23 历史),https://github.com/philippwulff/TUM_RCI,学生社区,社区资料已查阅,公开,不定期,2026-10-11,部分课程 notes；非官方、旧版本、尊重许可
+R053,05_公开课程资料,TUM CVG Teaching,https://www.cvg.cit.tum.de/teaching,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,Computer Vision Group 公开课程、研究方向
+R054,06_科研实验室与论文,MIRMI Robotics Institute,https://www.mirmi.tum.de/en/mirmi/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,机器人与机器智能多学科研究所
+R055,06_科研实验室与论文,MIRMI Research Labs,https://www.mirmi.tum.de/en/mirmi/research/labs/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,Flying/Ground/Underwater/Robot Learning/Geriatronics等实验室
+R056,06_科研实验室与论文,MIRMI Education,https://www.mirmi.tum.de/en/mirmi/education/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,Hands-on教育、机器人实习机会
+R057,06_科研实验室与论文,MIRMI Jobs,https://www.mirmi.tum.de/en/mirmi/jobs/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,研究助理、博士及技术职位
+R058,06_科研实验室与论文,MIRMI Ground Systems Lab,https://www.mirmi.tum.de/en/mirmi/research/labs/ground-systems-lab/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,移动机器人硬件环境在 Garching
+R059,06_科研实验室与论文,MIRMI Robot Learning Lab,https://www.mirmi.tum.de/en/mirmi/research/labs/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,从实验室目录查最新研究团队入口
+R060,06_科研实验室与论文,Robotics and AI (AIR),https://www.ce.cit.tum.de/air/home/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,机器人学习、具身智能、自主系统
+R061,06_科研实验室与论文,AIR Thesis Proposals,https://www.ce.cit.tum.de/air/thesis-proposals/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,实际论文题目；有岗位不代表所有 RCI 学生匹配
+R062,06_科研实验室与论文,Perception for Intelligent Systems - Student projects,https://www.ce.cit.tum.de/pins/open-positions/student-positions/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,感知/智能系统实习研究或论文选题
+R063,06_科研实验室与论文,Robot Systems Intelligence - Student jobs,https://www.ce.cit.tum.de/en/rsi/career-and-jobs/student-projects-and-jobs/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,机器人系统研究课题
+R064,06_科研实验室与论文,Autonomous Vehicle Systems - Student Projects,https://www.mos.ed.tum.de/en/avs/our-student-projects/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,自动驾驶与移动机器人学生项目
+R065,06_科研实验室与论文,AgriMechatronics - Thesis Opportunities,https://www.mec.ed.tum.de/en/amx/thesis-opportunities/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,农业机器人 / Mechatronics 论文
+R066,06_科研实验室与论文,Computer Vision Group (CVG),https://www.cvg.cit.tum.de/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,3D视觉、多视几何、机器学习与论文选题
+R067,06_科研实验室与论文,TUM CIT 研究方向与 Chairs,https://www.cit.tum.de/en/cit/school/chairs-and-professorships/,TUM CIT 官方,官网入口待再核实,公开,每学期,,查找导师及研究组，地址路径可能变化
+R068,06_科研实验室与论文,TUM 学校论文及学术规定,https://www.cit.tum.de/en/cit/studies/students/thesis-completing-your-studies/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,论文流程与学校联系人
+R069,07_机器人与AI工具,ROS 2 官方文档,https://docs.ros.org/en/rolling/,Open Robotics,官网入口待再核实,公开,每年,,ROS2 nodes/topics/services/actions/TF2 参数 bag2
+R070,07_机器人与AI工具,ROS 2 Lyrical 2026 LTS,https://docs.ros.org/en/lyrical/,Open Robotics,官网入口待再核实,公开,每学期,,新系统用当前 LTS；实际以OS、课程/实验室镜像兼容为准
+R071,07_机器人与AI工具,ROS 2 Jazzy LTS,https://docs.ros.org/en/jazzy/,Open Robotics,官网入口待再核实,公开,每学期,,Ubuntu 24.04 开发兼容；不强制使用最新版本
+R072,07_机器人与AI工具,ros2_control Docs,https://control.ros.org/,ROS Controls,官网入口待再核实,公开,每学期,,硬件接口与机器人控制器
+R073,07_机器人与AI工具,Gazebo Simulator 官方教程,https://gazebosim.org/docs/latest/tutorials/,Gazebo,官方页面已查阅,公开,每学期,2026-10-11,SDF、URDF、传感器仿真
+R074,07_机器人与AI工具,MoveIt motion planning,https://moveit.ai/,MoveIt,官方页面已查阅,公开,每学期,2026-10-11,机械臂轨迹规划、抓取、碰撞检测
+R075,07_机器人与AI工具,MoveIt2 ROS2 源码,https://github.com/moveit/moveit2,MoveIt,官方页面已查阅,公开,每学期,2026-10-11,与 ROS2 各 distro 分支匹配
+R076,07_机器人与AI工具,ROS Navigation2,https://docs.nav2.org/,Navigation2,官网入口待再核实,公开,每学期,,移动机器人导航、行为树
+R077,07_机器人与AI工具,Pinocchio rigid-body dynamics,https://github.com/stack-of-tasks/pinocchio,Pinocchio开发者,官方页面已查阅,公开,每学期,2026-10-11,机器人运动学/动力学与求导
+R078,07_机器人与AI工具,Drake robot simulation/control,https://drake.mit.edu/,MIT,官网入口待再核实,公开,每学期,,机器人动力学、优化与控制
+R079,07_机器人与AI工具,MuJoCo physics simulation,https://mujoco.readthedocs.io/en/stable/,MuJoCo,官网入口待再核实,公开,每学期,,接触动力学、机器人学强化学习
+R080,07_机器人与AI工具,NVIDIA Isaac Sim tutorials,https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-sim/latest/index.html,NVIDIA,官方页面已查阅,公开,每学期,2026-10-11,机器人仿真、合成数据、ROS集成
+R081,07_机器人与AI工具,Eigen C++ Linear Algebra,https://eigen.tuxfamily.org/,Eigen,官网入口待再核实,公开,每学期,,机器人数值线性代数库
+R082,07_机器人与AI工具,OpenCV,https://docs.opencv.org/4.x/,OpenCV,官网入口待再核实,公开,每学期,,视觉处理与几何
+R083,07_机器人与AI工具,PyTorch Tutorials,https://docs.pytorch.org/tutorials/intro.html,PyTorch,官方页面已查阅,公开,每学期,2026-10-11,深度学习、计算机视觉、机器人学习
+R084,07_机器人与AI工具,Hugging Face Datasets,https://huggingface.co/datasets,Hugging Face,官网入口待再核实,公开,每学期,,探索 ML/VLA 数据集；检查各集授权
+R085,07_机器人与AI工具,LeRobot GitHub,https://github.com/huggingface/lerobot,Hugging Face,官网入口待再核实,公开,每学期,,robot imitation learning and learning policies
+R086,07_机器人与AI工具,Stable Baselines3,https://stable-baselines3.readthedocs.io/en/master/,DLR-RM,官网入口待再核实,公开,每学期,,PyTorch RL 算法基线
+R087,07_机器人与AI工具,Gymnasium,https://gymnasium.farama.org/,Farama,官网入口待再核实,公开,每学期,,强化学习环境 API
+R088,07_机器人与AI工具,CasADi,https://web.casadi.org/,CasADi,官网入口待再核实,公开,每学期,,最优控制、MPC 数值优化
+R089,07_机器人与AI工具,Open3D,https://www.open3d.org/,Open3D,官网入口待再核实,公开,每学期,,点云、RGBD与3D视觉
+R090,07_机器人与AI工具,GTSAM,https://gtsam.org/,GTSAM,官网入口待再核实,公开,每学期,,SLAM 因子图与状态估计
+R091,07_机器人与AI工具,ORB-SLAM3,https://github.com/UZ-SLAMLab/ORB_SLAM3,UZ-SLAMLab,官网入口待再核实,公开,每学期,,视觉与视觉惯性 SLAM 参考实现
+R092,07_机器人与AI工具,SLAM evo benchmarking,https://github.com/MichaelGrupp/evo,evo,官网入口待再核实,公开,每学期,,ATE/RPE 轨迹评估
+R093,07_机器人与AI工具,Docker documentation,https://docs.docker.com/,Docker,官网入口待再核实,公开,每学期,,复现实验环境
+R094,07_机器人与AI工具,Git & GitHub Skills,https://skills.github.com/,GitHub,官网入口待再核实,公开,每学期,,科研代码管理与 pull request
+R095,07_机器人与AI工具,Weights & Biases Docs,https://docs.wandb.ai/,Weights & Biases,官网入口待再核实,公开,每学期,,训练可复现记录
+R096,07_机器人与AI工具,Zotero,https://www.zotero.org/,Zotero,官网入口待再核实,公开,每学期,,参考文献管理
+R097,07_机器人与AI工具,Overleaf,https://www.overleaf.com/,Overleaf,官网入口待再核实,公开,每学期,,LaTeX collaboration；TUM是否提供许可请单独核实
+R098,08_数据集与评估,TUM RGB-D SLAM Dataset,https://cvg.cit.tum.de/data/datasets/rgbd-dataset,TUM CVG,官方页面已查阅,公开,每学期,2026-10-11,RGBD相机及轨迹基准；参照其CC BY4数据授权
+R099,08_数据集与评估,TUM Visual-Inertial Dataset (TUM VI),https://cvg.cit.tum.de/data/datasets/visual-inertial-dataset,TUM CVG,官方页面已查阅,公开,每学期,2026-10-11,VI SLAM轨迹和IMU相机数据
+R100,08_数据集与评估,TUM-VIE event-camera dataset,https://cvg.cit.tum.de/data/datasets/visual-inertial-event-dataset,TUM CVG,官方页面已查阅,公开,每学期,2026-10-11,事件相机+IMU+普通帧
+R101,08_数据集与评估,KITTI Vision Benchmark,https://www.cvlibs.net/datasets/kitti/,KITTI,官网入口待再核实,公开,每学期,,自动驾驶、立体深度、SLAM
+R102,08_数据集与评估,EuRoC MAV Dataset,https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets,ETH Zurich,官网入口待再核实,公开,每学期,,视觉惯性里程计Benchmark
+R103,08_数据集与评估,nuScenes,https://www.nuscenes.org/,nuScenes,官网入口待再核实,公开,每学期,,自动驾驶多传感器
+R104,08_数据集与评估,Waymo Open Dataset,https://waymo.com/open/,Waymo,官网入口待再核实,公开,每学期,,自动驾驶公开数据
+R105,08_数据集与评估,Open X-Embodiment,https://robotics-transformer-x.github.io/,研究合作项目,官网入口待再核实,公开,每学期,,跨机器人具身学习
+R106,08_数据集与评估,ArXiv Robotics,https://arxiv.org/list/cs.RO/recent,arXiv,官网入口待再核实,公开,持续,,最新机器人论文预印本；非经过同行评议
+R107,08_数据集与评估,IEEE ICRA,https://www.ieee-icra.org/,IEEE RAS,官网入口待再核实,公开,年度,,机器人会议论文/社区；以 IEEE RAS 当前网站为准
+R108,08_数据集与评估,Robotics: Science and Systems (RSS),https://roboticsconference.org/,RSS,官网入口待再核实,公开,年度,,顶会论文和开源代码
+R109,08_数据集与评估,CoRL Conference,https://www.corl.org/,CoRL,官网入口待再核实,公开,年度,,机器人学习会议
+R110,09_实习就业与生活,TUM career & internships,https://www.tum.de/en/studies/during-your-studies/living-and-working,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,就业/实习官方入口
+R111,09_实习就业与生活,TUM Student Jobs portal,https://jobportal.community.tum.de/,TUM,官网入口待再核实,部分登录,每学期,,校友与企业招聘；登录和域名需核实
+R112,09_实习就业与生活,TUM Living / 找房主页,https://www.tum.de/en/studies/during-your-studies/living-and-working/accommodations,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,住宿信息及防诈骗；TUM 无自有普通宿舍
+R113,09_实习就业与生活,TUM 找房建议,https://www.tum.de/en/studies/during-your-studies/living-and-working/accommodations/tips-for-finding-accommodation,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,尽早找房，考虑郊区
+R114,09_实习就业与生活,学生宿舍 Halls of residence,https://www.tum.de/en/studies/during-your-studies/living-and-working/accommodations/student-halls-of-residence/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,多数宿舍由 Studierendenwerk 管理，候补时间长
+R115,09_实习就业与生活,TUM 私人房源/合租防诈骗,https://www.tum.de/en/studies/during-your-studies/living-and-working/accommodations/private-housing-market,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,未见面或未签合同不要提前转押金
+R116,09_实习就业与生活,Studierendenwerk München Oberbayern,https://www.studierendenwerk-muenchen-oberbayern.de/en/,Studierendenwerk,官网入口待再核实,公开,每学期,,宿舍、Mensa、学生咨询
+R117,09_实习就业与生活,TUM 学生问答 / 指引,https://www.tum.de/en/studies/support-and-advice/support-during-studies/student-information,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,2026年10月找房线上咨询、国际新生信息
+R118,09_实习就业与生活,Münchner Verkehrsverbund MVV,https://www.mvv-muenchen.de/en/,MVV 官方,官网入口待再核实,公开,每学期,,慕尼黑 U6、公交和区域公共交通
+R119,09_实习就业与生活,德国 Deutschlandticket / DB,https://int.bahn.de/en/offers/regional/deutschland-ticket,Deutsche Bahn,官网入口待再核实,公开,每学期,,票价和学生优惠政策变化多
+R120,09_实习就业与生活,Ausländerbehörde Munich,https://stadt.muenchen.de/en.html,München 市政府,官网入口待再核实,公开,每学期,,当地居留申请的政府入口；具体辖区视居住地
+R121,09_实习就业与生活,TUM Student Information Info Sessions,https://www.tum.de/en/studies/support-and-advice/support-during-studies/student-information,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,2026-10-15 14:00 英语找房线上讲座；需注册
+R122,09_实习就业与生活,TUM Language Center,https://www.sprachenzentrum.tum.de/en/sz/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,生活德语、专业学业德语
+R123,09_实习就业与生活,TUM Student Council,https://mpic.fs.tum.de/,学生自治组织,官网入口待再核实,公开,每学期,,CIT/MPI相关学生会入口，社群与学习经验
+R124,09_实习就业与生活,TUM Student Services Information,https://www.tum.de/en/studies/support-and-advice,TUM 官方,官网入口待再核实,公开,每学期,,学生健康/障碍支持/指导帮助
+R125,09_实习就业与生活,TUM International Campus Life,https://www.international.tum.de/en/global/,TUM Global,官网入口待再核实,公开,每学期,,国际交流、指导计划等
