@@ -1,0 +1,26 @@
+name: Anonymous public website checks
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - tests/public_smoke.py
+      - .github/workflows/public-smoke.yml
+permissions:
+  contents: read
+jobs:
+  public-http:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Check public production without authentication
+        run: python3 tests/public_smoke.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: anonymous-public-http-report
+          path: reports/public-smoke.json
+          retention-days: 14
