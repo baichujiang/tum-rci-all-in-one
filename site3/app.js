@@ -33,6 +33,39 @@ function updatePlan(change){
  });
  planQueue=task;return task;
 }
+async function addCourse(code,semester=0,{moveExisting=false}={}){
+ code=String(code).trim().toUpperCase();let result={kind:'cancelled'};
+ await updatePlan(async p=>{
+  const d=await data(),course=d.courses.find(c=>c.module_code===code);
+  if(!course)throw new Error('没有找到这门课程，请刷新目录重试。');
+  if(!Number.isInteger(semester)||semester<0||semester>p.timeline.count)throw new Error('目标学期已调整，请重新选择。');
+  const previous=p.items.find(x=>x.code===code);
+  if(previous&&(!moveExisting||previous.semester===semester)){result={kind:'unchanged',code,semester:previous.semester};return null;}
+  const other=code==='IN2067'?'ED160028':code==='ED160028'?'IN2067':null;
+  const replaced=p.items.find(x=>x.code===other);
+  const target=semester||(!previous&&replaced?.semester)||0;
+  if(target){
+   const offer=C.offering(course,C.semesterSeason(p.timeline,target));
+   if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,target)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
+  }
+  if(replaced&&!await confirmAction('这两门课是二选一',`计划已有 ${d.names[other]||other}（${other}）。改选 ${d.names[code]||code} 后，会移除原课程，学分不会重复计入。`,'改选这门课'))return null;
+  const applied=previous?{...previous,semester:target}:{code,status:'planned',semester:target};
+  result={kind:previous?'moved':replaced?'replaced':'added',code,semester:target,previous:previous||null,replaced:replaced||null,applied};
+  return {...p,items:[...p.items.filter(x=>x.code!==code&&x.code!==other),applied]};
+ });
+ return result;
+}
+async function undoCourse(change){
+ return updatePlan(p=>{
+  const item=p.items.find(x=>x.code===change.code);
+  if(!item||item.semester!==change.semester||item.status!==change.applied.status)throw new Error('这门课已有其他调整，请在学期卡片中修改。');
+  const fit=x=>({...x,semester:x.semester<=p.timeline.count?x.semester:0});
+  const items=p.items.filter(x=>x.code!==change.code);
+  if(change.previous)items.push(fit(change.previous));
+  if(change.replaced)items.push(fit(change.replaced));
+  return {...p,items};
+ });
+}
 const savePlan=p=>updatePlan(()=>p);
 function confirmAction(title,description,confirmLabel){
  const dialog=$('#action-dialog');
@@ -42,7 +75,7 @@ function confirmAction(title,description,confirmLabel){
  dialog.returnValue='cancel';dialog.showModal();
  return new Promise(resolve=>dialog.addEventListener('close',()=>resolve(dialog.returnValue==='confirm'),{once:true}));
 }
-window.RCIUI={toast,read,store,data,plan,savePlan,updatePlan,empty,base,confirmAction,get persisted(){return planPersisted;}};
+window.RCIUI={toast,read,store,data,plan,savePlan,updatePlan,empty,base,confirmAction,addCourse,undoCourse,get persisted(){return planPersisted;}};
 
 const savedRaw=read('rci:v2:saves',[]);
 let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);
@@ -175,26 +208,8 @@ document.addEventListener('click',async ev=>{
  if(b.hasAttribute('data-add')){
   b.disabled=true;
   try{
-   let added=false,assignedSemester=selectedSemester;
-   await updatePlan(async p=>{
-    const code=b.dataset.add;if(p.items.some(x=>x.code===code))return null;
-    const other=code==='IN2067'?'ED160028':code==='ED160028'?'IN2067':null;
-    const replaced=p.items.find(x=>x.code===other);
-    const semester=assignedSemester<=p.timeline.count?assignedSemester:0;
-    assignedSemester=semester||(replaced?.semester||0);
-    if(assignedSemester){
-     const d=await data(),offer=C.offering(d.courses.find(c=>c.module_code===code),C.semesterSeason(p.timeline,assignedSemester));
-     if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,assignedSemester)}。可以改选相应季节；若已确认实际开课有变化，也可以继续安排。`,'仍安排到这个学期'))return null;
-    }
-    let items=p.items;
-    if(other&&items.some(x=>x.code===other)){
-     const d=await data();
-     const yes=await confirmAction('这两门课是二选一',`你的计划已有 ${d.names[other]||other}（${other}）。改选 ${d.names[code]||code}（${code}）后，会移除原来的课程，学分不会重复计入。`,'改选这门课');
-     if(!yes)return null;items=items.filter(x=>x.code!==other);
-    }
-    added=true;return {...p,items:[...items,{code,status:'planned',semester:assignedSemester}]};
-   });
-   if(added&&planPersisted)toast(assignedSemester?`已加入第 ${assignedSemester} 学期，学分已更新。`:'已加入待分配，接下来安排到具体学期。',{label:'查看计划',href:full('/planner/')});
+   const result=await addCourse(b.dataset.add,selectedSemester);
+   if(result.kind!=='cancelled'&&result.kind!=='unchanged'&&planPersisted)toast(result.semester?`已加入第 ${result.semester} 学期，学分已更新。`:'已加入待分配，接下来安排到具体学期。',{label:'查看计划',href:full('/planner/')});
   }catch(err){toast(err.message);}finally{b.disabled=false;syncAddButtons();}
  }
 });

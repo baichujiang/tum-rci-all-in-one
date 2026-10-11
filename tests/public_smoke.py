@@ -59,6 +59,7 @@ for route, marker in [
     ("/planner/", 'id="planner"'),
     ("/assets/site.js", "RCISearch.search"),
     ("/assets/site.css", ".task-grid"),
+    ("/assets/course-picker.js", "Pick multiple courses"),
 ]:
     check("anonymous 200 " + route, lambda route=route, marker=marker: contains(route, marker))
 
@@ -76,6 +77,7 @@ def bookmarks_check():
     for group in ["上课与选课", "图书馆与校园", "咨询与支持"]:
         assert group in body, f"Expanded website module missing: {group}"
 check("inline bookmarks above expanded website modules", bookmarks_check)
+check("planner has an in-page course picker", lambda: contains("/planner/", 'id="course-picker"'))
 
 def build_check():
     info = json.loads(get("/build-info.json"))

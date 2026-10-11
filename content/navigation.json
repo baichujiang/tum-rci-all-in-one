@@ -1,5 +1,5 @@
 {
-  "version": "3.2.0",
+  "version": "3.3.0",
   "edited_on": "2026-10-12",
   "tasks": [
     {"id":"apply","title":"申请与入学","subtitle":"准备材料、读懂录取要求、开始第一学期","symbol":"01","guides":["application","new-students","finance"],"resources":["R010","R013","R015","R016","R021","R028"],"categories":["02_","03_"]},

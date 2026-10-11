@@ -63,5 +63,31 @@ test('Feedback is reachable beside the directory and from every page footer',()=
 test('Course directory can target a semester while static links remain available',()=>{
  const s=fs.readFileSync(path.join(dist,'courses/index.html'),'utf8');assert(s.includes('id="course-target-semester"'));assert(s.includes('先选课，稍后分配'));assert(s.includes('TUMonline'));
 });
+const Picker=require('../site3/course-picker'),Core=require('../assets/core'),pickerData=JSON.parse(fs.readFileSync(path.join(dist,'assets/planner-data.json'),'utf8'));
+const pickerPlan={version:2,cohort:'unknown',conditional:false,timeline:{count:4,start:'winter'},items:[]};
+test('Planner embeds a continuous course picker with explicit close and undo',()=>{
+ const s=fs.readFileSync(path.join(dist,'planner/index.html'),'utf8');assert(s.includes('id="course-picker"'));assert(s.includes('aria-labelledby="picker-title"'));assert(s.includes('id="picker-query"'));assert(s.includes('id="picker-undo"'));assert(s.includes('assets/course-picker.js'));assert(!fs.readFileSync(path.join(dist,'courses/index.html'),'utf8').includes('id="course-picker"'));
+});
+test('Picker defaults to the target season, includes flexible and unconfirmed terms',()=>{
+ const ids=Picker.choices(pickerData,pickerPlan,1).map(x=>x.code);assert(ids.includes('IN2067'));assert(!ids.includes('ED160028'));assert(ids.includes('IN2107'));assert(ids.includes('IN2320'));assert(ids.includes('IN9010'));
+ const summer=Picker.choices(pickerData,pickerPlan,2).map(x=>x.code);assert(!summer.includes('IN2067'));assert(summer.includes('ED160028'));
+});
+test('Picker searches course names, spaced codes and existing ML synonyms',()=>{
+ for(const q of ['机器学习','ML','in 2064'])assert.equal(Picker.choices(pickerData,pickerPlan,1,{query:q})[0]?.code,'IN2064');
+ assert.equal(Picker.choices(pickerData,pickerPlan,1,{query:'量子火锅xyz'}).length,0);
+});
+test('Other-season option reveals conflicts and domain filtering remains scoped',()=>{
+ assert(Picker.choices(pickerData,pickerPlan,1,{otherTerms:true}).some(x=>x.code==='ED160028'));
+ assert(Picker.choices(pickerData,pickerPlan,2,{group:'I'}).every(x=>x.course.section_2025[0]==='I'));
+ assert(Picker.choices(pickerData,pickerPlan,1,{group:'core'}).every(x=>'ABCDE'.includes(x.course.section_2025[0])));
+});
+test('Searching a known course reveals it across seasons without an extra filter step',()=>{
+ const d=Picker.choices(pickerData,pickerPlan,1,{query:'IN2228'})[0];assert.equal(d.code,'IN2228');assert.equal(Core.offering(d.course,'winter').state,'conflict');
+});
+test('Picker identifies previously selected and unassigned courses without duplicate records',()=>{
+ const p={...pickerPlan,items:[{code:'IN2064',status:'passed',semester:0}]},result=Picker.choices(pickerData,p,1,{query:'机器学习'});
+ assert.equal(result.length,1);assert.deepEqual(result[0].assignment,p.items[0]);assert.equal(Core.calculate(p,pickerData.courses).raw,8);
+ assert.throws(()=>Picker.choices(pickerData,p,5),/有效的学期/);
+});
 
 console.log(count+' site checks passed');
