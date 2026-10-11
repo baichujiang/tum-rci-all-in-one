@@ -1,5 +1,5 @@
 {
-  "version": "3.0.0",
+  "version": "3.0.1",
   "edited_on": "2026-10-11",
   "tasks": [
     {"id":"apply","title":"申请与入学","subtitle":"准备材料、读懂录取要求、开始第一学期","symbol":"01","guides":["application","new-students","finance"],"resources":["R010","R013","R015","R016","R021","R028"],"categories":["02_","03_"]},
@@ -12,19 +12,21 @@
   "shortcuts": [
     {"id":"R010","label":"TUMonline","hint":"选课 · 考试 · 成绩"},
     {"id":"R031","label":"Moodle","hint":"课程材料"},
-    {"id":"R030","label":"Matching","hint":"实验课 · 研讨课"},
+    {"id":"R030","label":"Matching 系统","hint":"直接进入 · TUM 登录"},
     {"id":"R032","label":"TUM Live","hint":"课程视频"},
     {"id":"R033","label":"教室导航","hint":"查楼栋和房间"}
   ],
   "sources": [
-    {"id":"exams-informatics","title":"CIT Informatics 考试报名说明","url":"https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/","checked_on":"2026-10-11","status":"checked","scope":"考试报名要求与 IN2106 / IN2107 等指定模块由教学团队报名的例外；未核查个人考试日期。","human_review":"pending"}
+    {"id":"exams-informatics","title":"CIT Informatics 考试报名说明","url":"https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/","checked_on":"2026-10-11","status":"checked","scope":"考试报名要求与 IN2106 / IN2107 等指定模块由教学团队报名的例外；未核查个人考试日期。","human_review":"pending"},
+    {"id":"matching-system","title":"Matching System 官方系统登录页（非说明页）","url":"https://matching-in.cit.tum.de/","checked_on":"2026-10-11","status":"checked","scope":"AI 辅助核对公开页面标题 Matching platform、TUM login 与 Exchange student login；TUM login 指向系统的 /saml2/login/。未登录账号、未提交偏好、未核验当期实例或名额。","human_review":"pending"},
+    {"id":"matching-docs","title":"Matching 官方手册（说明文档，非报名系统）","url":"https://collab.dvb.bayern/spaces/TUMdmatching/pages/2205033162/Matching-System+Department+Informatik+at+CIT","checked_on":"2026-10-11","status":"checked","scope":"AI 辅助对照文档迁移说明及展示的 matching-in.cit.tum.de 系统地址；原 docmatching 域名为说明入口，不应作为系统快捷入口。","human_review":"pending"}
   ],
   "guides": [
     {"id":"application","title":"申请 RCI，需要准备什么？","task":"apply","summary":"先核对所申请学期的专业要求，再按 TUMonline 的个人材料清单准备。VPD、语言与学历条件材料需要分别确认。","steps":["打开 RCI 官方申请说明，确认申请学期和适用条件。","在 TUMonline 核对个人材料清单；需要 VPD 时另行办理。","按照官方要求准备并自行完成文书，提交前逐项检查。"],"aliases":["申请","入学申请","admission","application","APS","VPD","GRE","语言证明"],"links":["R001","R010","R013","R015","R016"],"archive":["01"]},
     {"id":"curriculum","title":"毕业需要哪些学分？怎么安排选课？","task":"study","summary":"不仅要看总学分，还要核对必修、专业选修、跨学科与论文的归类，以及个人适用的 FPSO。站内规划只做模拟。","steps":["在官方学习规划中找到自己的入学批次。","用课程代码核对模块归类，再加入学分计划。","对补修或选修认定有疑问时，向专业协调员确认。"],"aliases":["毕业要求","学分","ECTS","学分规划","选课","FPSO","毕业学分"],"links":["R002","R006","R010","R009"],"archive":["02"]},
     {"id":"robotics-choice","title":"Robotics 和 Roboterdynamik 都要修吗？","task":"study","summary":"官方学习规划把两门课列为二选一，并说明只能参加其中一门的考试。务必核对自己的适用版本和模块代码。","steps":["比较 IN2067 与 ED160028 的官方模块信息。","只选择其中一门加入对应核心要求。","实际开课和考试信息到 TUMonline 核对。"],"aliases":["二选一","机器人学","机器人动力学","Robotics","Roboterdynamik"],"links":["R002","R010"],"archive":[]},
     {"id":"conditional-control","title":"我需要补修控制理论吗？","task":"study","summary":"网站不能判断个人是否需要补修。先核对录取条件及适用 FPSO；当前补修计算沿用旧版规则快照，仍待复核。","steps":["检查录取材料中有无控制理论相关条件。","将个人条件与正式修订条例一起核对。","确认后才切换学分规划器的补修情景。"],"aliases":["补修","控制理论","Regelungstechnik","ED140014","auflage"],"links":["R003","R006","R009"],"archive":[]},
-    {"id":"matching","title":"实验课、研讨课怎么选？","task":"study","summary":"IN2106 / IN2107 等指定模块通过 Matching 分配名额，不是普通 TUMonline 课程报名。先查官方匹配说明，再核对教学团队的要求。","steps":["在官方匹配说明里核对当前学期的安排和模块范围。","通过 Matching 申请；匹配结束后按官方余位说明联系导师。","获得位置后，继续核对课程要求和考试登记状态。"],"aliases":["实验课","研讨课","实习课","seminar","practical","praktikum","matching","实验课怎么选"],"links":["R029","R030","R010"],"archive":["03"]},
+    {"id":"matching","title":"实验课、研讨课怎么选？","task":"study","summary":"IN2106 / IN2107 等指定模块通过 Matching 分配名额。下方第一个按钮直接打开系统，选择 TUM login 登录；流程说明和余位名单是另外的页面，不是报名系统。","steps":["点击「Matching System（直接进入系统）」到系统首页；同时核对官方说明中的当前学期安排。","在系统首页选择 TUM login 完成学校身份认证。无 TUM 账号的交换生使用页面提供的 Exchange student login；登录后核对可见的匹配实例。","按当期要求申请和提交偏好。匹配结束后的余位，请按照学院说明直接联系导师。","获得位置后，继续核对教学团队要求和考试登记状态。"],"aliases":["实验课","研讨课","实习课","seminar","practical","praktikum","matching","实验课怎么选"],"links":["R030","R029","R010"],"sources":["matching-system","matching","matching-docs"],"status":"checked","cohort":"官方指定模块（含 IN2106 / IN2107）；系统公开登录入口已核对，个人实例与当期名额未核验","archive":["03"]},
     {"id":"research-start","title":"怎样找研究方向和实验室？","task":"research","summary":"先把兴趣变成一个具体问题，再查研究组的项目和论文。方向是否匹配、是否有名额、学分能否认定，要分别确认。","steps":["用 SLAM、视觉、控制或 HRI 等关键词搜索资源。","到研究组官网阅读项目和学生课题说明。","准备简短兴趣说明与相关项目，联系负责导师。"],"aliases":["找导师","实验室","研究方向","lab","professor","科研","robot learning","机器人学习"],"links":["R055","R060","R061","R066","R067"],"archive":["04"]},
     {"id":"rights","title":"这些中文资料可靠吗？","task":"exams","summary":"这里是非官方中文导航与原创整理，不是 TUM 官网镜像。每页区分来源、适用范围和核对状态；正式办理仍以学校原文为准。","steps":["阅读答案旁的适用范围和核对状态。","重要决策前打开相应官方原文。","发现错误时通过反馈入口提供来源，不上传个人材料。"],"aliases":["来源","版权","隐私","可靠","官方","资料更新"],"links":[],"archive":[]},
     {"id":"exams","title":"选了课，还需要报名考试吗？","task":"exams","summary":"需要单独确认考试报名，不能把获得课程位置当成已登记考试。CIT 对 IN2106 / IN2107 等指定模块设有教学团队自动报名的例外。","steps":["在 TUMonline 查看具体模块的考试和报名期限。","普通考试按要求自行登记；IN2106 / IN2107 等例外核对教学团队登记结果。","遇到登记问题，在报名截止前联系对应考试事务联系人。"],"aliases":["考试报名","报名考试","考试注册","选了课","重考","补考","exam registration","pruefung","prüfung","考试"],"links":["R036","R010","R009"],"sources":["exams-informatics"],"status":"checked","cohort":"CIT Informatics 报名说明；其他学院及个人模块须另行确认","sections":[{"heading":"不要混淆三个步骤","text":"课程名额分配、参加教学活动、考试登记是不同事项。具体是否由教学团队登记，要按模块代码确认，不能把某一门课的安排推广到全部课程。"},{"heading":"不展示一个适用于所有人的截止日","text":"本平台没有读取你的个人 TUMonline 记录。请核对具体考试；有登记问题时在截止前联系学校，不依赖群内转发的旧时间。"}],"archive":[]},

@@ -27,8 +27,8 @@ R025,03_费用与奖学金,TUM 国际学生奖学金,https://www.tum.de/en/studi
 R026,03_费用与奖学金,TUM 奖学金总览,https://www.tum.de/en/studies/fees-and-financial-aid/scholarships,TUM 官方,官网入口待再核实,公开,每学期,,DAAD、TUM 奖等统览
 R027,03_费用与奖学金,DAAD Scholarships,https://www.daad.de/en/studying-in-germany/scholarships/,DAAD 官方,官网入口待再核实,公开,每学期,,德国奖学金数据库与条件
 R028,04_校内平台与日程,2026/27 CIT 新生迎新日程,https://www.cit.tum.de/en/cit/studies/students/start-of-studies/orientation-program-informatics-master/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,2026-10-12 09:00 RCI FPSO介绍、地点 Interims II
-R029,04_校内平台与日程,Seminar & Practical Matching + 26/27 remaining places,https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,IN2106/IN2107 须匹配；当年当前剩余名单不是保证名额
-R030,04_校内平台与日程,Seminar/Practical 匹配系统,https://docmatching-in.cit.tum.de/,TUM CIT 官方,官方平台,TUM账号,每学期,2026-10-11,常规报名并非 TUMonline 单独选课
+R029,04_校内平台与日程,Matching 官方说明与余位（非报名系统）,https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/,TUM 官方,官方说明页已对照；不等于个人名额核验,公开,每学期,2026-10-11,模块范围、流程和剩余名额说明；不是系统登录页，报名请用 R030 的 Matching System
+R030,04_校内平台与日程,Matching System（直接进入系统）,https://matching-in.cit.tum.de/,TUM CIT 官方,已核对公开系统登录页；未登录核验实例或名额,TUM账号；交换生有专用入口,每学期,2026-10-11,直达 Matching platform；选择 TUM login 完成学校登录，交换生可用专用入口。与流程说明页分开
 R031,04_校内平台与日程,TUM Moodle LMS,https://www.moodle.tum.de/,TUM,官方平台,TUM账号,每学期,2026-10-11,受限课程课件、作业、评估资料
 R032,04_校内平台与日程,TUM Live 视频,https://live.rbg.tum.de/,TUM,官方平台,部分TUM登录,每学期,2026-10-11,获授权课程录播与直播
 R033,04_校内平台与日程,TUM Navigatum 建筑房间导航,https://nav.tum.de/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,教室路线、建筑缩写、搜索
