@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "node tests/core.test.js && node scripts/build_site.js && node tests/site.test.js",
+  "outputDirectory": "dist",
+  "installCommand": "echo No third-party dependencies",
+  "trailingSlash": true,
+  "headers": [{"source":"/(.*)","headers":[{"key":"X-Content-Type-Options","value":"nosniff"},{"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"},{"key":"X-Frame-Options","value":"DENY"}]}]
+}

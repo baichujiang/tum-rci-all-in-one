@@ -5,11 +5,11 @@ __pycache__/
 .vscode/
 data/link_check_latest.csv
 *.bak
-
-# v2 generated snapshots, machine cache, private records
 .cache/
 reports/
 offline.html
 assets/offline-data.js
 rci-study-plan*.json
-__pycache__/
+dist/
+.vercel/
+node_modules/

@@ -1,0 +1,65 @@
+{
+  "version": "3.0.0",
+  "edited_on": "2026-10-11",
+  "tasks": [
+    {"id":"apply","title":"申请与入学","subtitle":"准备材料、读懂录取要求、开始第一学期","symbol":"01","guides":["application","new-students","finance"],"resources":["R010","R013","R015","R016","R021","R028"],"categories":["02_","03_"]},
+    {"id":"study","title":"选课与学分","subtitle":"查课程、选实验课、安排自己的学分","symbol":"02","guides":["curriculum","matching","robotics-choice","conditional-control"],"resources":["R002","R010","R030","R039"],"categories":["01_"]},
+    {"id":"exams","title":"考试与办事","subtitle":"找到报名入口、办理流程和咨询对象","symbol":"03","guides":["exams","help"],"resources":["R010","R036","R039","R009","R035"],"categories":["04_"]},
+    {"id":"research","title":"论文与科研","subtitle":"从研究兴趣找到实验室与论文机会","symbol":"04","guides":["research-start","thesis"],"resources":["R055","R061","R062","R037","R038"],"categories":["06_"]},
+    {"id":"learn","title":"学习资料与工具","subtitle":"找讲义、公开课程、机器人软件和数据集","symbol":"05","guides":["learning"],"resources":["R031","R032","R042","R069","R098"],"categories":["05_","07_","08_"]},
+    {"id":"life","title":"生活与就业","subtitle":"住房、校园服务、实习与求职入口","symbol":"06","guides":["housing","career","finance"],"resources":["R112","R114","R111","R118","R124"],"categories":["09_","03_"]}
+  ],
+  "shortcuts": [
+    {"id":"R010","label":"TUMonline","hint":"选课 · 考试 · 成绩"},
+    {"id":"R031","label":"Moodle","hint":"课程材料"},
+    {"id":"R030","label":"Matching","hint":"实验课 · 研讨课"},
+    {"id":"R032","label":"TUM Live","hint":"课程视频"},
+    {"id":"R033","label":"教室导航","hint":"查楼栋和房间"}
+  ],
+  "sources": [
+    {"id":"exams-informatics","title":"CIT Informatics 考试报名说明","url":"https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/","checked_on":"2026-10-11","status":"checked","scope":"考试报名要求与 IN2106 / IN2107 等指定模块由教学团队报名的例外；未核查个人考试日期。","human_review":"pending"}
+  ],
+  "guides": [
+    {"id":"application","title":"申请 RCI，需要准备什么？","task":"apply","summary":"先核对所申请学期的专业要求，再按 TUMonline 的个人材料清单准备。VPD、语言与学历条件材料需要分别确认。","steps":["打开 RCI 官方申请说明，确认申请学期和适用条件。","在 TUMonline 核对个人材料清单；需要 VPD 时另行办理。","按照官方要求准备并自行完成文书，提交前逐项检查。"],"aliases":["申请","入学申请","admission","application","APS","VPD","GRE","语言证明"],"links":["R001","R010","R013","R015","R016"],"archive":["01"]},
+    {"id":"curriculum","title":"毕业需要哪些学分？怎么安排选课？","task":"study","summary":"不仅要看总学分，还要核对必修、专业选修、跨学科与论文的归类，以及个人适用的 FPSO。站内规划只做模拟。","steps":["在官方学习规划中找到自己的入学批次。","用课程代码核对模块归类，再加入学分计划。","对补修或选修认定有疑问时，向专业协调员确认。"],"aliases":["毕业要求","学分","ECTS","学分规划","选课","FPSO","毕业学分"],"links":["R002","R006","R010","R009"],"archive":["02"]},
+    {"id":"robotics-choice","title":"Robotics 和 Roboterdynamik 都要修吗？","task":"study","summary":"官方学习规划把两门课列为二选一，并说明只能参加其中一门的考试。务必核对自己的适用版本和模块代码。","steps":["比较 IN2067 与 ED160028 的官方模块信息。","只选择其中一门加入对应核心要求。","实际开课和考试信息到 TUMonline 核对。"],"aliases":["二选一","机器人学","机器人动力学","Robotics","Roboterdynamik"],"links":["R002","R010"],"archive":[]},
+    {"id":"conditional-control","title":"我需要补修控制理论吗？","task":"study","summary":"网站不能判断个人是否需要补修。先核对录取条件及适用 FPSO；当前补修计算沿用旧版规则快照，仍待复核。","steps":["检查录取材料中有无控制理论相关条件。","将个人条件与正式修订条例一起核对。","确认后才切换学分规划器的补修情景。"],"aliases":["补修","控制理论","Regelungstechnik","ED140014","auflage"],"links":["R003","R006","R009"],"archive":[]},
+    {"id":"matching","title":"实验课、研讨课怎么选？","task":"study","summary":"IN2106 / IN2107 等指定模块通过 Matching 分配名额，不是普通 TUMonline 课程报名。先查官方匹配说明，再核对教学团队的要求。","steps":["在官方匹配说明里核对当前学期的安排和模块范围。","通过 Matching 申请；匹配结束后按官方余位说明联系导师。","获得位置后，继续核对课程要求和考试登记状态。"],"aliases":["实验课","研讨课","实习课","seminar","practical","praktikum","matching","实验课怎么选"],"links":["R029","R030","R010"],"archive":["03"]},
+    {"id":"research-start","title":"怎样找研究方向和实验室？","task":"research","summary":"先把兴趣变成一个具体问题，再查研究组的项目和论文。方向是否匹配、是否有名额、学分能否认定，要分别确认。","steps":["用 SLAM、视觉、控制或 HRI 等关键词搜索资源。","到研究组官网阅读项目和学生课题说明。","准备简短兴趣说明与相关项目，联系负责导师。"],"aliases":["找导师","实验室","研究方向","lab","professor","科研","robot learning","机器人学习"],"links":["R055","R060","R061","R066","R067"],"archive":["04"]},
+    {"id":"rights","title":"这些中文资料可靠吗？","task":"exams","summary":"这里是非官方中文导航与原创整理，不是 TUM 官网镜像。每页区分来源、适用范围和核对状态；正式办理仍以学校原文为准。","steps":["阅读答案旁的适用范围和核对状态。","重要决策前打开相应官方原文。","发现错误时通过反馈入口提供来源，不上传个人材料。"],"aliases":["来源","版权","隐私","可靠","官方","资料更新"],"links":[],"archive":[]},
+    {"id":"exams","title":"选了课，还需要报名考试吗？","task":"exams","summary":"需要单独确认考试报名，不能把获得课程位置当成已登记考试。CIT 对 IN2106 / IN2107 等指定模块设有教学团队自动报名的例外。","steps":["在 TUMonline 查看具体模块的考试和报名期限。","普通考试按要求自行登记；IN2106 / IN2107 等例外核对教学团队登记结果。","遇到登记问题，在报名截止前联系对应考试事务联系人。"],"aliases":["考试报名","报名考试","考试注册","选了课","重考","补考","exam registration","pruefung","prüfung","考试"],"links":["R036","R010","R009"],"sources":["exams-informatics"],"status":"checked","cohort":"CIT Informatics 报名说明；其他学院及个人模块须另行确认","sections":[{"heading":"不要混淆三个步骤","text":"课程名额分配、参加教学活动、考试登记是不同事项。具体是否由教学团队登记，要按模块代码确认，不能把某一门课的安排推广到全部课程。"},{"heading":"不展示一个适用于所有人的截止日","text":"本平台没有读取你的个人 TUMonline 记录。请核对具体考试；有登记问题时在截止前联系学校，不依赖群内转发的旧时间。"}],"archive":[]},
+    {"id":"new-students","title":"收到录取后，第一步做什么？","task":"apply","summary":"把录取后的事项分成正式注册、账号与课程准备、迎新三部分。个人要求从 TUMonline 和学校通知开始核对。","steps":["打开学校注册说明，检查 TUMonline 中仍待完成的事项。","通过 IT 学生入门页准备账号、Moodle 和软件访问。","查看当期迎新安排，再处理选课；旧迎新日程不能当作今年安排。"],"aliases":["新生","录取后","注册入学","enrollment","迎新","orientation"],"links":["R021","R010","R035","R028"],"sources":[],"status":"original","cohort":"通用办事导航，不替代个人录取条件","sections":[],"archive":["07"]},
+    {"id":"thesis","title":"去哪里找硕士论文题目、办理论文手续？","task":"research","summary":"找题目与论文正式注册是两件事。先查研究组的学生项目，再根据专业和学院说明确认导师资格、注册流程与截止要求。","steps":["在研究资源中查看课题入口，向导师确认当前机会。","从 RCI 专业页与学院论文说明核对办理流程。","确认适用流程后再进入论文系统；不把历史表格当作当前要求。"],"aliases":["硕士论文","毕业论文","master thesis","masterarbeit","论文题目","论文注册","找论文"],"links":["R061","R062","R001","R037","R038"],"sources":[],"status":"original","cohort":"研究与手续导航；具体安排必须核对官网","sections":[],"archive":[]},
+    {"id":"learning","title":"讲义、视频和机器人学习资料在哪里？","task":"learn","summary":"当前课程先看对应教学平台；公开教材、软件与数据集通过资源索引找。历史笔记只能辅助理解，不能替代当前考试要求。","steps":["查当前课件：打开 Moodle；查公开视频：使用 TUM Live 或课程主页。","查代码、工具或数据集：在全站搜索具体技术名称。","确认资料版本与课程要求，不搬运登录后才能访问的课件。"],"aliases":["学习资料","讲义","课件","视频","教材","notes","slides","lecture","机器人入门"],"links":["R031","R032","R048","R042","R069"],"sources":[],"status":"original","cohort":"通用学习导航；课程资料以当前授课团队为准","sections":[],"archive":["06","09"]},
+    {"id":"housing","title":"找房、宿舍和校园生活从哪里开始？","task":"life","summary":"从 TUM 住房指引和学生服务机构入口开始。本站只做导航，不发布实时房源、租金承诺或签证判断。","steps":["阅读学校住房指引，区分学生宿舍与私人租房。","到原始平台确认申请办法与当前房源。","交通和校园服务使用对应官方入口，行动前重新核实。"],"aliases":["找房","租房","宿舍","住宿","住房","housing","accommodation","交通"],"links":["R112","R113","R114","R115","R116","R118"],"sources":[],"status":"original","cohort":"生活导航，房源和政策未作实时核验","sections":[],"archive":[]},
+    {"id":"finance","title":"学费、缴费和奖学金去哪里确认？","task":"apply","summary":"学费、学期费用和减免资格分开核对。本站不根据国籍自动判断个人收费，也不把历史金额当作当前账单。","steps":["在 TUM 费用页核对专业、入学批次与收费条件。","到个人 TUMonline 查看缴费要求。","通过奖学金与减免页核对申请条件和当期截止日期。"],"aliases":["学费","缴费","奖学金","减免","tuition","scholarship","semester fee","费用"],"links":["R022","R023","R024","R026","R010"],"sources":[],"status":"original","cohort":"费用导航；具体金额与资格以个人及官方信息为准","sections":[],"archive":["05"]},
+    {"id":"career","title":"实习、学生工作和就业入口在哪里？","task":"life","summary":"先查学校职业服务和职位平台，再核对用人方的具体要求。研究组学生项目与普通实习不要混为一谈。","steps":["查看 TUM 职业服务与学生职位平台。","查研究助理或项目机会时，另看对应研究组。","直接向发布方确认资格、时间和是否可计入学业。"],"aliases":["实习","就业","求职","学生工作","HiWi","Werkstudent","internship","job","career"],"links":["R110","R111","R057","R063"],"sources":[],"status":"original","cohort":"求职导航，不保证职位仍开放或符合个人资格","sections":[],"archive":[]},
+    {"id":"help","title":"选修认定、考试或系统问题应该问谁？","task":"exams","summary":"先分清是专业规则、考试事务还是账号技术问题，再联系相应官方服务。提问时提供模块代码和入学批次，不把个人材料发到公开平台。","steps":["学分认定和专业规则：查看 RCI 学业咨询。","考试登记问题：查看学院考试说明中的联系人。","登录或软件问题：使用 TUM IT 学生支持入口。"],"aliases":["问谁","联系","协调员","咨询","学分认定","转学分","系统问题","contact","credit transfer"],"links":["R009","R039","R036","R035","R124"],"sources":[],"status":"original","cohort":"联系路径导航；人员与职责以原网页为准","sections":[],"archive":["08"]}
+  ],
+  "synonyms": [
+    ["实验课","实习课","practical","praktikum"],
+    ["研讨课","seminar"],
+    ["考试报名","报名考试","考试注册","exam registration","prüfung","pruefung","register for exams","exam sign up","考试登记"],
+    ["机器学习","machine learning","ml"],
+    ["计算机视觉","computer vision","多视几何","3dcv"],
+    ["机器人学","robotics"],
+    ["机器人动力学","roboterdynamik"],
+    ["控制理论","regelungstechnik"],
+    ["学分","ects","毕业要求"],
+    ["硕士论文","毕业论文","master thesis","masterarbeit"],
+    ["找房","租房","宿舍","housing","住宿"],
+    ["奖学金","scholarship"],
+    ["学费","tuition"],
+    ["实习","internship"],
+    ["学生工作","hiwi","werkstudent"],
+    ["同时定位与建图","slam"],
+    ["机器人操作系统","ros2","ros 2","ros"],
+    ["人机交互","人机协作","hri","human robot interaction"],
+    ["移动机器人","mobile robotics"],
+    ["深度学习","deep learning"],
+    ["运动规划","motion planning"],
+    ["实验室","lab","研究组"],
+    ["课件","讲义","slides"],
+    ["视频","video","录播"]
+  ]
+}

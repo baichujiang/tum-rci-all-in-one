@@ -1,71 +1,48 @@
-# TUM RCI All-in-One · 第二版
+# TUM RCI All-in-One · 学生办事与知识导航
 
-**为同名学生社群打造的中文优先、来源可追溯的 TUM RCI 知识平台。** 独立学生项目，不隶属于 TUM。
+一个面向同名学生社群的中文优先网站：**搜索问题 → 查看答案 → 到官方入口办理**。独立学生项目，不隶属于 TUM。
 
-第二版整理日期：2026-10-11。平台升级不是“所有信息已经重新核实”。
+## 学生如何使用
 
-## 打开平台
+公开网站为主入口，GitHub 仅供维护。不需要注册或下载资料包。
 
-GitHub Pages 启用后：**https://baichujiang.github.io/tum-rci-all-in-one/**。
+首页提供六类任务：申请与入学、选课与学分、考试与办事、论文与科研、学习资料与工具、生活与就业。也可以直接搜索中文问题、原名、缩写或课程代码。Moodle、TUMonline 和原始资料直接打开；需要解释的问题进入独立中文答案页。
 
-本地运行（Python 3，无第三方依赖）：
+公开发布由 Vercel 的 Git 连接从 main 构建，实际网址和部署状态请以项目部署结果为准，提交代码不等于网站已上线。
 
-```sh
-python3 -m http.server 8000
-```
+## 第三版内容
 
-浏览器打开 `http://localhost:8000`。不需要 Node 构建、账号、数据库或 API key。
+15 个主要问答、35 门课程独立页面、六类任务、125 条保留资源（按链接合并后 120 个入口）、58 条历史课题，共 229 条搜索记录。原有 9 篇长指南保留为对应主题的补充阅读，不要求学生选择资料版本。
 
-离线使用：运行 `python3 scripts/build_offline.py` 后双击生成的 `offline.html`。生成文件只是快照，修改源数据后要重新运行；在线网站直接读取 CSV／JSON，不维护内嵌数据副本。
+学分计划、收藏和材料勾选保存在当前浏览器；沿用 v2 计划格式，可自行导入导出。更换网址或设备不会自动迁移，不要将个人计划上传到公开仓库。
 
-## 第二版功能
-
-| 模块 | 内容 |
-|---|---|
-| 课程百科 | 35 门模块的中文参考名＋官方原名、分类筛选、目录学期、详情来源、加入计划 |
-| 学分规划 | 计划／自报已通过分开，Robotics 二选一保护，G/H/I 最低要求，栏目封顶，条件补修情景，自定义待认定选修，JSON 导入导出 |
-| 中文指南 | 7 篇新版重点解读＋9 篇 v1 长篇指南的站内排版 |
-| 申请与入学 | 常规申请窗口、条件要求说明、本地核对清单 |
-| 科研资源 | 15 条原有科研类入口、58 条 WiSe 2026/27 课题快照；不代表实时空位 |
-| 全部资源 | 125 条原始资源、分类／关键词／收藏筛选、来源入口 |
-| 来源台账 | 核对范围、日期、AI 辅助检查与人工待审分开记录 |
-| 维护 | 数据校验、逻辑测试、按白名单低频检测来源变化、只生成审核报告 |
-
-## 信息可靠性
-
-本次重新对照了 **4 个官方网页的指定范围**：课程规划、申请说明、Matching、网站使用条款。所有源记录目前仍标注人工审核待完成。2025 FPSO 修订 PDF 本次未能读取：35 行课程目录及条件补修情景沿用 v1，必须再核对个人适用版本。旧资源与课题不因界面升级变成实时数据。
-
-规划器只提供 2025 修订快照情景。可选择 2025/26 冬、2026 夏、2026/27 冬入学；选择批次不证明模型适用于你。其他／未知批次不作达成判断。工具不是毕业审核，也不是报名系统。
-
-## 单一数据来源
-
-```text
-index.html                 网站入口，GitHub Pages 可直接发布
-assets/app.js              界面与本地交互
-assets/core.js             CSV、学分计算、输入校验、转义 Markdown
-assets/style.css           手机与桌面布局，无外部字体
-content/editorial.json     中文参考名、解读、来源元数据、旧指南导航
-data/*.csv                 事实目录，保留 v1 原文件
-guides/*.md                v1 中文指南
-scripts/check_sources.py   只保存指纹与审核报告，不转载网页
-scripts/build_offline.py   可选离线快照生成器
-tests/core.test.js         学分与安全边界测试
-CONTENT_POLICY.md         内容、来源与隐私政策
-```
-
-旧 `data/*.json` 与 `ALL_RESOURCES.md` 为 v1 导出，不是第二版网页的数据源；编辑 CSV 后不要把这些旧导出当成自动同步版本。
-
-## 维护和测试
+## 维护与构建
 
 ```sh
-python3 scripts/validate_repo.py
 node tests/core.test.js
-node --check assets/app.js
-python3 scripts/build_offline.py
+node scripts/build_site.js
+node tests/site.test.js
+python3 -m http.server 8000 --directory dist
 ```
 
-来源工作流在相关文件推送、手动运行或每周一 07:00 UTC 检查 4 个允许监测的公开来源。首次建立机器基线，后续比较上一次成功抓取；缓存丢失时重新建基线。报告不自动更新网页、翻译或人工审核日期。查看仓库 Actions 的 `source-review-report` artifact；无法访问／robots 禁止会明确记录，不当作验证成功。
+浏览器打开 `http://localhost:8000`。构建不需要第三方依赖。**第三版发布目录是 dist，不是仓库根目录的旧 index.html。** 旧文件保留用于历史参考和 v2 离线生成，不作为新站入口。
 
-完整更新规范见 [CONTENT_POLICY.md](CONTENT_POLICY.md)，原有贡献规则见 [CONTRIBUTING.md](CONTRIBUTING.md)。官方来源见 [TUM RCI](https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/)。
+| 路径 | 用途 |
+|---|---|
+| `content/navigation.json` | 六类任务、主要问答、检索同义词、新增来源范围 |
+| `content/editorial.json` | 保留课程中文参考名、旧解读与来源元数据 |
+| `data/*.csv` | 原始事实目录；旧 JSON 不作为独立维护源 |
+| `guides/*.md` | 历史长指南，生成补充阅读 |
+| `scripts/build_site.js` | 生成静态正文、搜索索引与单页网址 |
+| `site3/` | 响应式界面、本地搜索、收藏和计划交互 |
+| `assets/core.js` | 经过测试的 v2 学分与输入校验逻辑 |
+| `tests/site.test.js` | 检索排序、静态页面、安全边界与站内路径检查 |
+| `vercel.json` | 构建并发布 dist 的配置 |
 
-**个人计划、成绩单、证件、群聊和受限课件不得上传到这个公开仓库。** 个人收藏与计划只保存在当前浏览器。中文内容为参考，学校原文和个人 TUMonline 记录优先。
+## 可靠性边界
+
+界面升级不是事实全面重审。课程和补修模型仍基于 2025 修订快照，完整修订 PDF 待再次逐条核实；课题不是实时空位。新增考试页面对照了 CIT Informatics 的公开报名说明，未读取个人考试记录。AI 辅助对照与独立人工审核分开标记，人工审核待完成。
+
+本地有 20 项原核心测试、39 项检索和站点检查；另完成模拟网络与存储的浏览器组件检查。环境限制阻止了实际浏览器 HTTP 导航，因此组件结果不冒充线上端到端或真实学生可用性测试。公开部署后另核验匿名 HTTP 状态。
+
+本项目不转载官方全文、受限课件、群聊、成绩单或身份材料。来源与隐私详见 [CONTENT_POLICY.md](CONTENT_POLICY.md)。版本说明见 [RELEASE_V3.md](RELEASE_V3.md)，发布方式见 [PUBLISH.md](PUBLISH.md)。
