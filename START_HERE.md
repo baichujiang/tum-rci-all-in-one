@@ -10,7 +10,7 @@
 
 1. [选课指南](https://tum-rci-all-in-one.vercel.app/study/)：先核对入学批次，看懂必修、选修与论文的学分结构。
 2. [选课程](https://tum-rci-all-in-one.vercel.app/courses/)：按中文名、官方名称或模块代码搜索，选择课程要加入的学期。
-3. [我的计划](https://tum-rci-all-in-one.vercel.app/planner/)：看学分进度和缺口，区分计划修读与自报已通过。调整后自动尝试保存到当前浏览器，页面会提示保存状态。
+3. [我的计划](https://tum-rci-all-in-one.vercel.app/planner/)：按学期安排课程，看每学期学分和整体缺口。调整后自动尝试保存到当前浏览器，页面会提示保存状态。
 
 实验课和研讨课的 Matching、课程参与和考试登记按各自要求办理。加入本站计划只做个人安排，不会向学校报名。
 
