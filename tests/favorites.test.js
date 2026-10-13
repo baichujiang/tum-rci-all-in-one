@@ -18,10 +18,10 @@ async function harness(favorites,{mode='resources',query='MIRMI',onlySaved=true}
  const form=control(),app={dataset:{mode},querySelector:()=>form,addEventListener(){}};
  const stored=new Map([['rci:v2:saves',JSON.stringify(favorites)]]),windowListeners={},documentListeners={};
  const storageControl={quota:false,readBlocked:false};
- const window={RCI:C,RCISearch:S,RCIBackup:B,addEventListener(type,fn){(windowListeners[type]||=[]).push(fn);},dispatchEvent(event){for(const fn of windowListeners[event.type]||[])fn(event);}};
+ const window={RCILocalLock:require('../site3/local-lock'),RCI:C,RCISearch:S,RCIBackup:B,addEventListener(type,fn){(windowListeners[type]||=[]).push(fn);},dispatchEvent(event){for(const fn of windowListeners[event.type]||[])fn(event);}};
  const toast={children:[],replaceChildren(){this.children=[];},append(el){this.children.push(el);},contains(){return false;}};
  const params=new URLSearchParams({q:query,...(onlySaved?{saved:'1'}:{})});
- const context={window,URLSearchParams,location:{search:'?'+params,pathname:'/resources/',hash:''},history:{replaceState(){}},
+ const context={window,navigator:{locks:{request:(_name,work)=>work()}},URLSearchParams,location:{search:'?'+params,pathname:'/resources/',hash:''},history:{replaceState(){}},
   document:{querySelector(selector){if(selector==='meta[name="rci-base"]')return {content:''};if(selector==='meta[name="rci-favorite-groups"]')return {content:JSON.stringify([['R055','R059']])};if(selector==='.header-favorites svg')return {outerHTML:'<svg></svg>'};if(selector==='#toast')return toast;if(selector==='#search-app')return app;return controls[selector.slice(1)]||null;},querySelectorAll(){return [];},addEventListener(type,fn){documentListeners[type]=fn;},createElement(){return {listeners:{},addEventListener(type,fn){this.listeners[type]=fn;}};}},
   localStorage:{getItem(key){if(storageControl.readBlocked)throw Error('Storage access revoked');return stored.get(key)??null;},setItem(key,value){if(storageControl.quota)throw Error('Quota exceeded');stored.set(key,value);}},
   fetch:async url=>({ok:true,json:async()=>url.endsWith('search-index.json')?{docs,synonyms:[]}:{courses:[],names:{}}}),

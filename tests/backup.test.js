@@ -15,17 +15,34 @@ const initial=()=>({[B.keys.plan]:' '+JSON.stringify(draft()),[B.keys.favorites]
 let count=0;
 async function test(name,fn){await fn();count++;console.log('PASS',name);}
 const appSource=fs.readFileSync(path.join(__dirname,'../site3/app.js'),'utf8').split('// A small website directory')[0]+'})();';
-function application(mem,locks,manualConfirmation=false){
+function application(mem,locks,manualConfirmation=false,noLock=false,lockOverride=null){
  const events=[],toast={replaceChildren(){},append(){},contains(){return false;}};
  const dialog=manualConfirmation?{open:false,showModal(){this.open=true;},addEventListener(type,fn){this.onClose=fn;},answer(value){this.returnValue=value;this.open=false;this.onClose();}}:null;
  const dialogText={};
- const window={RCI:C,RCIBackup:B,confirm(){return true;},addEventListener(){},dispatchEvent(e){events.push(e.type);}};
- const context={window,URLSearchParams,location:{search:''},navigator:locks?{locks}:undefined,
+ const window={RCILocalLock:lockOverride|| (noLock?{create:()=>require('../site3/local-lock').create()}:require('../site3/local-lock')),RCI:C,RCIBackup:B,confirm(){return true;},addEventListener(){},dispatchEvent(e){events.push(e.type);}};
+ const context={window,URLSearchParams,location:{search:''},navigator:{locks:locks||{request:(_name,work)=>work()}},
   document:{querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;if(s==='#action-dialog')return dialog;if(dialog&&['#dialog-title','#dialog-description','#dialog-confirm'].includes(s))return dialogText[s]||={};return null;},querySelectorAll(){return [];},createElement(){return {addEventListener(){}};}},
   localStorage:mem.storage,fetch:async url=>{assert.equal(url,'/assets/planner-data.json');return {ok:true,json:async()=>({courses,names:{}})};},Event:function(type){this.type=type;},setTimeout(){return 0;},clearTimeout(){}};
  vm.runInNewContext(appSource,context,{filename:'site3/app.js'});return {U:window.RCIUI,events,dialog};
 }
 (async()=>{
+ await test('A lost storage lock cannot later publish temporary records over another page',async()=>{
+  let runs=0;
+  const lockOverride={create:()=>({run(work){const run=++runs;return work(()=>{if(run===2)throw Object.assign(new Error('lock lost'),{lockLost:true});});}})};
+  const mem=memory(initial()),h=application(mem,undefined,false,false,lockOverride);
+  await h.U.addCourse('IN2320',4);assert.equal(h.U.persisted,false);
+  const latest={...draft(),items:[...draft().items,{code:'IN2106',status:'planned',semester:2}]};
+  mem.storage.setItem(B.keys.plan,JSON.stringify(latest));const before=B.capture(mem.storage);
+  await h.U.addCourse('IN2107',1);assert.deepEqual(B.capture(mem.storage),before);assert.equal(h.U.backupPersisted,false);
+  const snapshot=await h.U.backupSnapshot();assert(snapshot.data.plan.items.some(x=>x.code==='IN2320'));assert(snapshot.data.plan.items.some(x=>x.code==='IN2107'));
+ });
+ await test('Without either safe lock, editing stays exportable in memory and never writes existing records',async()=>{
+  const mem=memory(initial()),before=B.capture(mem.storage),h=application(mem,undefined,false,true);
+  await h.U.addCourse('IN2320',4);const snapshot=await h.U.backupSnapshot();
+  assert(snapshot.data.plan.items.some(x=>x.code==='IN2320'));assert(snapshot.data.plan.items.some(x=>x.code==='IN2064'));
+  assert.deepEqual(plain(snapshot.data.favorites),local().favorites);assert.equal(h.U.backupPersisted,false);assert.deepEqual(B.capture(mem.storage),before);
+  await assert.rejects(h.U.importBackup({plan:draft(),favorites:[]},'replace',snapshot),/持久|导出/);assert.deepEqual(B.capture(mem.storage),before);
+ });
  await test('Losing storage access after a successful read preserves observed courses and favorites in the session backup',async()=>{
   const mem=memory(initial()),h=application(mem);await h.U.plan();
   const observed={plan:{...draft(),items:[...draft().items,{code:'IN2107',status:'planned',semester:1}]},favorites:['R031','R055','OLD-FAVORITE']};

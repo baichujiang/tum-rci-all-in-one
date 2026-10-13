@@ -519,3 +519,7 @@ html:has(#course-picker[open]){overflow:hidden;scrollbar-gutter:stable}
  .course-card-alert{font-size:11px}.course-card-meta,.course-card-meta a{font-size:12px}
  .semester-board .course-card-actions .remove-course,.unassigned-grid .course-card-actions .remove-course{min-height:44px;font-size:12px}
 }
+
+/* Official help stays reachable beside service links and in favorites. */
+.portal-help{display:block;padding:0 18px 14px;font-size:12px;line-height:1.6;color:var(--brand);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+@media(max-width:600px){.portal-help{padding:0 14px 12px;font-size:11px;min-height:44px;display:flex;align-items:center}}

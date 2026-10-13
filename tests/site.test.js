@@ -48,7 +48,8 @@ test('Local backup UI is reachable from favorites and planner, with its dependen
   const s=fs.readFileSync(p,'utf8');assert.equal((s.match(/id="backup-dialog"/g)||[]).length,1,p);
   const scripts=[...s.matchAll(/<script defer src="([^"]+)"/g)].map(m=>path.basename(m[1]));
   assert(scripts.indexOf('core.js')<scripts.indexOf('backup-core.js'),p);
-  assert(scripts.indexOf('backup-core.js')<scripts.indexOf('site.js'),p);
+  assert(scripts.indexOf('backup-core.js')<scripts.indexOf('local-lock.js'),p);
+  assert(scripts.indexOf('local-lock.js')<scripts.indexOf('site.js'),p);
   assert(scripts.indexOf('site.js')<scripts.indexOf('backup-ui.js'),p);
  }
  for(const p of ['index.html','favorites/index.html'])assert(fs.readFileSync(path.join(dist,p),'utf8').includes('data-backup-open'),p);
@@ -130,6 +131,20 @@ test('Picker identifies previously selected and unassigned courses without dupli
  const p={...pickerPlan,items:[{code:'IN2064',status:'passed',semester:0}]},result=Picker.choices(pickerData,p,1,{query:'机器学习'});
  assert.equal(result.length,1);assert.deepEqual(result[0].assignment,p.items[0]);assert.equal(Core.calculate(p,pickerData.courses).raw,8);
  assert.throws(()=>Picker.choices(pickerData,p,5),/有效的学期/);
+});
+
+
+test('Restricted service cards preserve direct access and provide verified official help in home and favorites',()=>{
+ const nav=JSON.parse(fs.readFileSync(path.join(__dirname,'../content/navigation.json'),'utf8'));
+ const expected={R127:['library-seats','预约打不开？查看官方说明'],R132:['matlab-campus','许可激活与安装说明']};
+ for(const file of ['index.html','favorites/index.html']){
+  const s=fs.readFileSync(path.join(dist,file),'utf8');
+  for(const [id,[source,label]] of Object.entries(expected)){
+   const help=nav.sources.find(x=>x.id===source);
+   const links=[...s.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].filter(m=>m[1].includes('data-portal-help="'+id+'"'));
+   assert(links.length,file+' '+id);for(const link of links){assert(link[1].includes('href="'+help.url+'"'));assert(link[2].includes(label));assert(link[1].includes('noopener noreferrer'));}
+  }
+ }
 });
 
 require('./community.test.js');

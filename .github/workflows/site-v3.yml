@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
-      - run: node tests/core.test.js && node tests/interactions.test.js && node tests/backup.test.js
+      - run: node tests/local-lock.test.js && node tests/core.test.js && node tests/interactions.test.js && node tests/backup.test.js
       - run: node tests/backup-ui.test.js && node tests/favorites.test.js && node tests/search.test.js
       - run: node tests/routes.test.js
       - run: node tests/portals.test.js

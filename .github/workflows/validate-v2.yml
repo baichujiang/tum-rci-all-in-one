@@ -19,7 +19,7 @@ jobs:
           python-version: '3.12'
       - run: python3 scripts/validate_repo.py
       - run: python3 tests/links.test.py
-      - run: node --check assets/app.js && node tests/core.test.js
+      - run: node --check assets/app.js && node tests/local-lock.test.js && node tests/core.test.js
       - run: node tests/interactions.test.js && node tests/backup.test.js
       - run: node tests/backup-ui.test.js && node tests/favorites.test.js && node tests/search.test.js
       - run: node tests/routes.test.js

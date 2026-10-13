@@ -8,7 +8,7 @@
 
 **常用网站入口**：打开首页就能找到 TUMonline、Moodle、Matching、TUM Live 等平台。每个入口写清用途，点击卡片直接打开；按「上课与选课」「图书馆与校园」「科研与协作」「咨询与支持」直接分区展示，支持用途搜索。已收藏的网站卡片直接展示在首页顶部，点击即可打开；下方继续按模块展示全部网站。
 
-图书馆入口直达 OPAC 检索和 anny 预约登录；预约支持自习座位、小组讨论室与视频间。eAccess 用于校外读取已许可电子文献，dokumenTUM 提供馆藏纸本文献扫描申请步骤。首页另有论文题目平台、MATLAB 校园许可、TUM ShareLaTeX、LRZ GitLab、Sync+Share 和 GigaMove，卡片注明用途与登录条件，来源台账记录公开核对范围。
+图书馆入口直达 OPAC 检索和 anny 预约登录，卡片另有官方预约说明；预约支持自习座位、小组讨论室与视频间。eAccess 用于校外读取已许可电子文献，dokumenTUM 提供馆藏纸本文献扫描申请步骤。首页另有论文题目平台、MATLAB 校园许可、TUM ShareLaTeX、LRZ GitLab、Sync+Share 和 GigaMove，卡片注明用途与登录条件，MATLAB 卡片另有官方激活与安装说明；来源台账记录公开核对范围。
 
 另收录 MPIC 学生会课程评价查询、考试专用 Moodle、CIT 打印与扫描说明、英语写作辅导预约、Academic Coaching、文献管理校园许可、图书馆文献咨询和 ProLehre 学习方法。图书馆预约也注明主校区 Presentation Lab 的演讲练习用途；需要个人登录或申请的服务，只核对公开入口，不转载个人结果。
 
@@ -40,6 +40,7 @@
 
 ```sh
 node tests/core.test.js
+node tests/local-lock.test.js
 node tests/interactions.test.js
 node tests/backup.test.js
 node tests/backup-ui.test.js
@@ -80,3 +81,5 @@ python3 -m http.server 8000 --directory dist
 浏览器无法保存时，修改仅在当前页面保留，仍可导出完整备份。请先导出再刷新重试，核对当前数据后按需合并导入；存储恢复可写不会自动把旧临时状态覆盖到其他页面的新记录上。
 
 详见 [CONTENT_POLICY.md](CONTENT_POLICY.md)、[PUBLISH.md](PUBLISH.md) 和 [RELEASE_V3.md](RELEASE_V3.md)。
+
+跨页面修改优先使用 Web Locks；不支持时使用 IndexedDB 读写事务互斥，现有计划、收藏与恢复备份仍保留在原 localStorage 格式。两种锁均不可用时只保留本页临时数据并允许导出，拒绝持久导入；不会无锁写回旧记录。升级前已打开的旧页面请刷新后再继续编辑。

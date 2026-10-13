@@ -7,6 +7,9 @@ const $=s=>document.querySelector(s),full=p=>base+p;
 let timer,dbPromise,sessionPlan=null,currentPlan=null,planPersisted=true;
 let planQueue=Promise.resolve();
 let recoveryBlocked=false,recoveryBefore=null,recoveryPromise=null,storageUnavailable=false;
+let indexed;
+try{indexed=typeof indexedDB==='undefined'?undefined:indexedDB;}catch(_){}
+const localLock=window.RCILocalLock?.create({locks:typeof navigator==='undefined'?undefined:navigator.locks,indexedDB:indexed});
 function pendingRecovery(){
  if(!B)return null;
  let raw;try{raw=localStorage.getItem(B.keys.journal);}catch(_){storageUnavailable=true;return null;}
@@ -14,7 +17,19 @@ function pendingRecovery(){
 }
 if(B)try{const pending=pendingRecovery();if(pending){recoveryBlocked=true;recoveryBefore=pending.before;}}catch(_){recoveryBlocked=true;}
 if(storageUnavailable)planPersisted=false;
-function withLocalLock(work){return typeof navigator!=='undefined'&&navigator.locks?.request?navigator.locks.request('rci:local-data',work):Promise.resolve().then(work);}
+async function withLocalLock(work){
+ if(storageUnavailable)return work();
+ try{
+  if(!localLock)throw Object.assign(new Error(),{lockUnavailable:true});
+  return await localLock.run(work);
+ }catch(err){
+  if(err.lockLost){storageUnavailable=true;planPersisted=false;favoritesPersisted=false;throw err;}
+  if(!err.lockUnavailable)throw err;
+  storageUnavailable=true;planPersisted=false;favoritesPersisted=false;
+  toast('浏览器无法安全保存。本次修改仅在当前页面有效，请导出备份后刷新重试。');
+  return work();
+ }
+}
 let selectedSemester=Number(new URLSearchParams(location.search).get('semester'))||0;
 if(!Number.isInteger(selectedSemester)||selectedSemester<0||selectedSemester>12)selectedSemester=0;
 function toast(message,action){
@@ -34,7 +49,7 @@ function record(key,fallback){
  try{return raw===null?fallback:JSON.parse(raw);}catch(_){throw new Error('本地记录无法读取，请先导出原始记录。');}
 }
 function requireRecovered(){if(recoveryBlocked||pendingRecovery())throw new Error('本地记录尚未恢复，请刷新以恢复，或先导出原始记录。');}
-function store(key,value){try{requireRecovered();}catch(err){toast(err.message);return false;}try{if(storageUnavailable)throw new Error();localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){storageUnavailable=true;toast('浏览器不允许保存。本次修改仅在当前页面有效，请导出备份后刷新重试。');return false;}}
+function store(key,value,guard){try{requireRecovered();guard?.();}catch(err){if(err.lockLost)storageUnavailable=true;toast(err.message);return false;}try{if(storageUnavailable||!guard)throw new Error();localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){storageUnavailable=true;toast('浏览器不允许保存。本次修改仅在当前页面有效，请导出备份后刷新重试。');return false;}}
 async function load(p){const r=await fetch(full(p));if(!r.ok)throw new Error('资料加载失败，请刷新重试');return r.json();}
 const data=()=>dbPromise||(dbPromise=load('/assets/planner-data.json'));
 const empty=()=>({version:2,cohort:'unknown',conditional:false,items:[]});
@@ -42,18 +57,18 @@ async function plan(){const d=await data();currentPlan=C.validatePlan(sessionPla
 function updatePlan(change){
  const task=planQueue.catch(()=>{}).then(async()=>{
   const d=await data();
-  const {p,before}=await withLocalLock(async()=>{
+  const {p,before}=await withLocalLock(async guard=>{
    requireRecovered();
    if(planPersisted)sessionPlan=null;
    let before;try{before=localStorage.getItem('rci:v2:plan');}catch(_){}
-   return {p:await plan(),before};
+   const p=await plan();guard?.();return {p,before};
   });
   const next=await change(p);
   if(!next)return p;
-  return withLocalLock(()=>{
+  return withLocalLock(guard=>{
    requireRecovered();
    if(before!==undefined&&localStorage.getItem('rci:v2:plan')!==before)throw new Error('计划已在其他页面更新，请重新操作，避免覆盖新记录。');
-   sessionPlan=C.validatePlan(next,d.courses);planPersisted=store('rci:v2:plan',sessionPlan);currentPlan=sessionPlan;
+   sessionPlan=C.validatePlan(next,d.courses);planPersisted=store('rci:v2:plan',sessionPlan,guard);currentPlan=sessionPlan;
    window.dispatchEvent(new Event('rci:planchange'));return sessionPlan;
   });
  });
@@ -148,7 +163,7 @@ function syncSaves(){
  document.querySelectorAll('[data-save-count]').forEach(el=>{el.textContent=countFavorites([...saved]);el.hidden=!saved.size;});
 }
 async function setSaved(keys,value){
- return withLocalLock(()=>{
+ return withLocalLock(guard=>{
   requireRecovered();
   if(favoritesPersisted){
    let latest;try{latest=record('rci:v2:saves',[]);if(B)latest=B.favorites(latest);if(!Array.isArray(latest))throw new Error();}
@@ -160,7 +175,7 @@ async function setSaved(keys,value){
   for(const key of adding&&value===undefined?keys.slice(0,1):keys)adding?next.add(key):next.delete(key);
   if(next.size>2000)throw new Error('收藏最多支持 2000 条记录，请先取消部分收藏。当前记录未修改。');
   if(B)B.favorites([...next]);saved=next;
-  const ok=store('rci:v2:saves',[...saved]);favoritesPersisted=ok;syncSaves();window.dispatchEvent(new Event('rci:saveschange'));return {ok,adding,previous};
+  const ok=store('rci:v2:saves',[...saved],guard);favoritesPersisted=ok;syncSaves();window.dispatchEvent(new Event('rci:saveschange'));return {ok,adding,previous};
  });
 }
 async function currentBackupState(){
@@ -170,23 +185,24 @@ async function currentBackupState(){
  const value=B.state({plan:p,favorites:f},d.courses);currentPlan=value.plan;saved=new Set(value.favorites);return value;
 }
 async function backupSnapshot(){
- await planQueue.catch(()=>{});if(recoveryPromise)await recoveryPromise;
- return withLocalLock(async()=>{
+ await data();await planQueue.catch(()=>{});if(recoveryPromise)await recoveryPromise;
+ return withLocalLock(async guard=>{
   requireRecovered();
-  const value=await currentBackupState();let raw=null;try{raw=B.capture(localStorage);}catch(_){}
+  const value=await currentBackupState();guard?.();let raw=null;try{raw=B.capture(localStorage);}catch(_){}
   return {data:value,fingerprint:B.fingerprint(value),raw};
  });
 }
 function importBackup(incoming,mode,expected){
  const task=planQueue.catch(()=>{}).then(async()=>{
   if(recoveryPromise)await recoveryPromise;
-  return withLocalLock(async()=>{
+  const d=await data();
+  return withLocalLock(async guard=>{
    requireRecovered();
    if(storageUnavailable)throw new Error('浏览器无法持久保存导入。请先导出当前计划，再刷新页面重试。');
-   const d=await data(),before=await currentBackupState();
+   const before=await currentBackupState();
    if(expected&&B.fingerprint(before)!==expected.fingerprint)throw new Error('当前数据已更新，请重新核对导入预览。');
    const next=B.prepare(before,incoming,mode,d.courses);
-   B.commit(localStorage,next,{expected:expected?.raw,beforeBackup:B.create(before,d.courses)});
+   guard?.();B.commit(localStorage,next,{expected:expected?.raw,beforeBackup:B.create(before,d.courses)});
    sessionPlan=next.plan;currentPlan=next.plan;planPersisted=true;favoritesPersisted=true;saved=new Set(next.favorites);
    syncSaves();window.dispatchEvent(new Event('rci:planchange'));window.dispatchEvent(new Event('rci:saveschange'));
    return next;
@@ -333,7 +349,7 @@ window.addEventListener('storage',ev=>{
  if(favoritesPersisted&&!storageUnavailable&&(ev.key==='rci:v2:saves'||ev.key===null||imported)){const v=read('rci:v2:saves',[...saved]);saved=new Set(Array.isArray(v)?v:[]);syncSaves();window.dispatchEvent(new Event('rci:saveschange'));}
 });
 if(recoveryBlocked&&B){
- recoveryPromise=withLocalLock(()=>B.recover(localStorage)).then(()=>{
+ recoveryPromise=withLocalLock(guard=>{if(storageUnavailable)throw new Error('请先导出原始记录，再刷新重试。');guard?.();return B.recover(localStorage);}).then(()=>{
   recoveryBlocked=false;recoveryBefore=null;sessionPlan=null;const v=read('rci:v2:saves',[]);saved=new Set(Array.isArray(v)?v:[]);
   syncSaves();window.dispatchEvent(new Event('rci:planchange'));window.dispatchEvent(new Event('rci:saveschange'));
   toast('上次导入未完成，原有计划和收藏已恢复。');
@@ -361,9 +377,9 @@ if(checklist)data().then(d=>{
  checklist.addEventListener('change',async ev=>{
   const n=Number(ev.target.value),checked=ev.target.checked;if(ev.target.type!=='checkbox'||!Number.isInteger(n)||n<0||n>=d.checklist.length)return;
   try{
-   await withLocalLock(()=>{
+   await withLocalLock(guard=>{
     requireRecovered();const next=new Set(latest());checked?next.add(n):next.delete(n);
-    checklistPersisted=store(key,[...next]);set=next;sync();
+    checklistPersisted=store(key,[...next],guard);set=next;sync();
     if(!checklistPersisted)toast('核对清单暂时不能保存，本次勾选仅在当前页面有效。');
    });
   }catch(err){ev.target.checked=!checked;toast(err.message);}

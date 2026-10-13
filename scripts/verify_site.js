@@ -3,7 +3,7 @@
 const path=require('node:path'),{spawnSync}=require('node:child_process');
 const root=path.resolve(__dirname,'..');
 const pipeline=[
- 'tests/core.test.js','tests/interactions.test.js','tests/backup.test.js',
+ 'tests/core.test.js','tests/local-lock.test.js','tests/interactions.test.js','tests/backup.test.js',
  'tests/backup-ui.test.js','tests/favorites.test.js','tests/search.test.js',
  'tests/routes.test.js','tests/portals.test.js','tests/checklist.test.js',
  'tests/build.test.js','scripts/build_site.js','tests/site.test.js'
