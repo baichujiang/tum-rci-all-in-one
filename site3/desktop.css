@@ -129,15 +129,7 @@
  .portal-save{top:8px;right:8px;color:var(--muted);border-radius:6px}
  .portal-save:hover,.portal-save[aria-pressed=true]{background:var(--brand-soft);color:var(--brand)}
  .portal-hint{font-size:13px}
- .home>.resume-card{display:grid;grid-template-columns:44px minmax(0,1fr) auto;column-gap:20px;align-items:center;margin-top:24px;padding:22px 24px;background:var(--white);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:none}
- .resume-card:hover{transform:none;box-shadow:none;border-color:#87b3dc}
- .resume-card .eyebrow,.resume-icon,.resume-action{color:var(--brand)}
- .home>.resume-card .resume-icon{position:static;grid-column:1;grid-row:1/4;display:grid;place-items:center;width:44px;height:44px;border-radius:10px;background:var(--brand-soft)}
- .home>.resume-card .eyebrow{grid-column:2;grid-row:1;margin:0 0 4px}
- .home>.resume-card h2{grid-column:2;grid-row:2;font-size:18px;margin:0 0 4px}
- .home>.resume-card p{grid-column:2;grid-row:3;font-size:14px;color:var(--muted);max-width:none;margin:0}
- .home>.resume-card .resume-action{grid-column:3;grid-row:1/4;gap:16px;border:0;padding:0;font-size:14px;white-space:nowrap}
- .home>.study-entry{display:none}
+ .home>.resume-card,.home>.study-entry{display:none}
 
  /* Course tools share one row; static markup still works without JavaScript. */
  .courses-page{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px 24px;align-content:start;padding-bottom:48px}
