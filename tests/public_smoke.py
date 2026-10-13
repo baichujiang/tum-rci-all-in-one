@@ -65,9 +65,9 @@ for route, marker in [
 
 def index_check():
     data = json.loads(get("/assets/search-index.json"))
-    assert len(data["docs"]) == 240
+    assert len(data["docs"]) == 248
     assert any(d.get("code") == "IN2067" for d in data["docs"])
-check("anonymous search data: 240 records", index_check)
+check("anonymous search data: 248 records", index_check)
 
 def bookmarks_check():
     body = get("/")
@@ -84,7 +84,7 @@ def build_check():
     index = json.loads(get("/assets/search-index.json"))
     assert info["version"] == index["version"], "Build and search data versions differ"
     assert info["pages"] == 78
-    assert info["searchRecords"] == 240
+    assert info["searchRecords"] == 248
     assert info["origin"] == ORIGIN, "Production origin not reflected in build"
 check("production build and canonical origin", build_check)
 check("anonymous sitemap", lambda: contains("/sitemap.xml", ORIGIN + "/guides/matching/"))
