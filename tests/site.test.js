@@ -42,7 +42,7 @@ test('bookmarked cards are inline above expanded website modules',()=>{
  assert(pinned.includes('data-favorites-surface'));
  assert(pinned.includes('data-portal-link="R031" href="https://www.moodle.tum.de/"'));
  assert(pinned.includes('data-save="R031"'));
- assert(s.includes('href="/favorites/"'));
+ assert(!s.includes('href="/favorites/"'));
  for(const label of ['上课与选课','图书馆与校园','咨询与支持'])assert(s.includes(label));
  assert(!s.includes('data-favorites-entry'));
  assert(!s.includes('data-portal-filter'));
