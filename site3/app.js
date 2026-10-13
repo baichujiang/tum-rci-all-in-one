@@ -81,12 +81,12 @@ async function addCourse(code,semester=0,{moveExisting=false}={}){
   if(!course)throw new Error('没有找到这门课程，请刷新目录重试。');
   if(!Number.isInteger(semester)||semester<0||semester>p.timeline.count)throw new Error('目标学期已调整，请重新选择。');
   const previous=p.items.find(x=>x.code===code);
-  if(previous&&(!moveExisting||previous.semester===semester)){result={kind:'unchanged',code,semester:previous.semester};return null;}
+  if(previous&&(previous.status==='passed'||!moveExisting||previous.semester===semester)){result={kind:'unchanged',code,semester:previous.semester};return null;}
   const other=code==='IN2067'?'ED160028':code==='ED160028'?'IN2067':null;
   const replaced=p.items.find(x=>x.code===other);
   const target=semester||(!previous&&replaced?.semester)||0;
   if(target){
-   const offer=C.offering(course,C.semesterSeason(p.timeline,target));
+   const offer=window.RCITimetable?window.RCITimetable.offering(p,course,target,d.details||{}):C.offering(course,C.semesterSeason(p.timeline,target));
    if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,target)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
   }
   if(replaced&&!await confirmAction('这两门课是二选一',`计划已有 ${d.names[other]||other}（${other}）。改选 ${d.names[code]||code} 后，会移除原课程，学分不会重复计入。`,'改选这门课'))return null;
@@ -99,7 +99,7 @@ async function addCourse(code,semester=0,{moveExisting=false}={}){
 async function undoCourse(change){
  return updatePlan(p=>{
   const item=p.items.find(x=>x.code===change.code);
-  if(!item||item.semester!==change.semester||item.status!==change.applied.status)throw new Error('这门课已有其他调整，请在学期卡片中修改。');
+  if(!item||item.semester!==change.semester||item.status!==change.applied.status||(item.locked??false)!==(change.applied.locked??false)||item.group!==change.applied.group)throw new Error('这门课已有其他调整，请在学期卡片中修改。');
   const fit=x=>({...x,semester:x.semester<=p.timeline.count?x.semester:0});
   const items=p.items.filter(x=>x.code!==change.code);
   if(change.previous)items.push(fit(change.previous));
@@ -113,10 +113,11 @@ async function moveCourse(code,semester){
   if(!Number.isInteger(semester)||semester<0||semester>p.timeline.count)throw new Error('目标学期已调整，请重新选择。');
   const previous=p.items.find(x=>x.code===code);
   if(!previous)throw new Error('这门课已不在计划中，请重新选择。');
+  if(previous.status==='passed')throw new Error('这门课已修通过，不需要安排到未来学期。');
   if(previous.semester===semester){result={kind:'unchanged',code,semester};return null;}
   const d=await data(),course=d.courses.find(c=>c.module_code===code);
   if(semester&&course){
-   const offer=C.offering(course,C.semesterSeason(p.timeline,semester));
+   const offer=window.RCITimetable?window.RCITimetable.offering(p,course,semester,d.details||{}):C.offering(course,C.semesterSeason(p.timeline,semester));
    if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,semester)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
   }
   const applied={...previous,semester};

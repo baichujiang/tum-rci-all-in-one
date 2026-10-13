@@ -129,7 +129,7 @@
     const active=({course:'courses',resource:'resources',guide:'guides',article:'guides',topics:'research'})[page]||page;
     document.querySelectorAll('[data-nav]').forEach(a=>{if(a.dataset.nav===active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
   }
-  function commitPlan(next, message) {try{plan=C.validatePlan(next,courses);writeLocal(planKey,plan);render();if(message)toast(message);}catch(err){toast(err.message);}}
+  function commitPlan(next, message) {try{if(JSON.parse(localStorage.getItem(planKey)||'null')?.version>=3)throw new Error('计划已升级，请使用新版 /planner/ 页面，避免旧页面覆盖新数据。');plan=C.validatePlan(next,courses);writeLocal(planKey,plan);render();if(message)toast(message);}catch(err){toast(err.message);}}
   document.addEventListener('click',event=>{
     const b=event.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-add')){const code=b.dataset.add;if(plan.items.some(i=>i.code===code)){toast('这门课已在计划里。');return;}commitPlan({...plan,items:[...plan.items,{code,status:'planned'}]},'已加入计划；这不是学校选课报名。');}

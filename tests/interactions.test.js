@@ -4,7 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const root=path.resolve(__dirname,'..'),C=require('../assets/core.js');
 const courses=C.csv(fs.readFileSync(path.join(root,'data/courses_legal_2025.csv'),'utf8'));
 const source=fs.readFileSync(path.join(root,'site3/app.js'),'utf8').split('const savedRaw=')[0]+'})();';
-const draft=()=>({version:2,cohort:'2026/27冬季',conditional:false,timeline:{count:4,start:'winter'},items:[{code:'IN2064',status:'passed',semester:1}]});
+const draft=()=>({version:2,cohort:'2026/27冬季',conditional:false,timeline:{count:4,start:'winter'},items:[{code:'IN2064',status:'planned',semester:1}]});
 function harness(initial=draft()){
  let stored=JSON.stringify(initial),writes=0,events=0,confirmations=0;
  const control={confirm:true,quota:false};
@@ -39,14 +39,14 @@ async function test(name,fn){await fn();tests++;console.log('PASS',name);}
   const h=harness(),before=C.calculate(await h.U.plan(),courses).allocated;
   const change=await h.U.moveCourse(' in2064 ',3);
   assert.equal(change.kind,'moved');assert.equal(change.previous.semester,1);
-  assert.deepEqual(h.stored().items,[{code:'IN2064',status:'passed',semester:3}]);
+  assert.deepEqual(h.stored().items,[{code:'IN2064',status:'planned',semester:3,locked:false}]);
   assert.equal(C.calculate(await h.U.plan(),courses).allocated,before);assert.equal(h.writes(),1);assert.equal(h.events(),1);
  });
  await test('Custom and unassigned courses can move and undo without losing fields',async()=>{
-  const initial=draft();initial.items=[{code:'OWN101',name:'自己的选修',ects:6,group:'G',status:'passed',custom:true,semester:0}];
+  const initial=draft();initial.items=[{code:'OWN101',name:'自己的选修',ects:6,group:'G',status:'planned',custom:true,semester:0}];
   const h=harness(initial),change=await h.U.moveCourse('OWN101',2);
-  assert.deepEqual(h.stored().items[0],{...initial.items[0],semester:2});
-  await h.U.undoCourse(change);assert.deepEqual(h.stored().items,initial.items);
+  assert.deepEqual(h.stored().items[0],{...initial.items[0],semester:2,locked:false});
+  await h.U.undoCourse(change);assert.deepEqual(h.stored().items,C.validatePlan(initial,courses).items);
  });
  await test('Cancelling a seasonal mismatch leaves storage untouched; confirmation allows it',async()=>{
   const h=harness();h.control.confirm=false;

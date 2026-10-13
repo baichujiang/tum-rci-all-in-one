@@ -1,0 +1,69 @@
+{
+  "id": "rci-fpso-2024-amendment-2025",
+  "applicableFrom": "2025/26冬季",
+  "checkedOn": "2026-10-13",
+  "humanReview": "pending",
+  "core": 43,
+  "thesis": 30,
+  "interdisciplinary": 6,
+  "professional": 41,
+  "conditionalProfessional": 36,
+  "conditionalControl": 5,
+  "domainMinimum": 5,
+  "progression": [
+    {
+      "semester": 3,
+      "ects": 30
+    },
+    {
+      "semester": 4,
+      "ects": 60
+    },
+    {
+      "semester": 5,
+      "ects": 90
+    },
+    {
+      "semester": 6,
+      "ects": 120
+    }
+  ],
+  "sources": [
+    {
+      "title": "RCI FPSO 2024 · §§37,43,46 + 附件",
+      "url": "https://www.tum.de/fileadmin/user_upload_87/gi32rab/Robotics_Cognition_Intelligence_MA_Neufassung_30012024.pdf"
+    },
+    {
+      "title": "2025-02-11 修订 · §43 + 附件",
+      "url": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P008777873"
+    },
+    {
+      "title": "官方学习计划 · 二选一与分类最低额",
+      "url": "https://www.cit.tum.de/cit/studium/studiengaenge/master-robotics-cognition-intelligence/studienplaene/"
+    },
+    {
+      "title": "RCI 选修与跨学科说明",
+      "url": "https://www.cit.tum.de/cit/studium/studiengaenge/master-robotics-cognition-intelligence/"
+    },
+    {
+      "title": "APSO §10 · 学业进度期限",
+      "url": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P009252245"
+    }
+  ],
+  "versions": [
+    {
+      "id": "2024",
+      "cohorts": [
+        "2024夏季",
+        "2024/25冬季",
+        "2025夏季"
+      ],
+      "conditionalCreditShift": false
+    },
+    {
+      "id": "2024+2025",
+      "from": "2025/26冬季",
+      "conditionalCreditShift": true
+    }
+  ]
+}

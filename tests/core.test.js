@@ -27,13 +27,13 @@ test('120 ECTS without a domain minimum is not complete',()=>{const p=add(draft(
 test('Correct conditional plan meets model',()=>{const p={...add(draft(),'ED160028','IN2228','IN2406','IN2064','IN2107','IN2106','IN2320','ED140014'),conditional:true};p.items.push(custom('G1','G',16),custom('H1','H',10),custom('I1','I',10),custom('J1','J',6));assert.equal(C.calculate(p,courses).allocated,120);assert.equal(C.calculate(p,courses).complete,true);});
 test('Invalid imports and forged core credits rejected or ignored',()=>{assert.throws(()=>C.validatePlan({...draft(),items:[custom('X','A',30)]},courses));assert.throws(()=>C.validatePlan({...draft(),items:[custom('X','G',-1)]},courses));const p=draft();p.items=[{code:'IN2067',status:'planned',ects:120}];assert.equal(C.calculate(p,courses).raw,6);});
 test('Unsafe URLs are rejected and raw HTML stays inert',()=>{assert.equal(C.safeURL('javascript:alert(1)'),'');assert.equal(C.safeURL('https://user:pass@example.org'),'');assert(!C.markdown('<script>alert(1)</script>',C.safeURL).includes('<script>'));assert(!C.markdown('[bad](javascript:alert)',C.safeURL).includes('href='));});
-test('Editorial source records are auditable and translations cover modules',()=>{const d=JSON.parse(fs.readFileSync(path.join(__dirname,'../content/editorial.json')));assert.equal(d.sources.filter(s=>s.status==='checked').length,4);for(const c of courses)assert(d.course_names_zh[c.module_code]);for(const a of d.articles)for(const s of a.sources)assert(d.sources.some(x=>x.id===s));for(const s of d.sources)if(s.status==='checked')assert(s.checked_on&&s.scope&&s.human_review==='pending');});
+test('Editorial source records are auditable and translations cover modules',()=>{const d=JSON.parse(fs.readFileSync(path.join(__dirname,'../content/editorial.json')));assert.equal(d.sources.filter(s=>s.status==='checked').length,5);for(const c of courses)assert(d.course_names_zh[c.module_code]);for(const a of d.articles)for(const s of a.sources)assert(d.sources.some(x=>x.id===s));for(const s of d.sources)if(s.status==='checked')assert(s.checked_on&&s.scope&&s.human_review==='pending');});
 test('Code normalization prevents case and whitespace duplicates',()=>assert.throws(()=>C.validatePlan(add(draft(),'IN2067',' in2067 '),courses)));
 test('Old v2 plans keep courses, passed states and custom credits as unassigned',()=>{
  const old=add(draft(),'IN2067');old.items[0].status='passed';old.items.push(custom('OLD1','G',5.5));
- const p=C.validatePlan(old,courses);assert.equal(p.version,2);assert.deepEqual(p.timeline,{count:4,start:'winter'});
+ const p=C.validatePlan(old,courses);assert.equal(p.version,3);assert.deepEqual(p.timeline,{count:4,start:'winter'});
  assert.equal(p.items[0].status,'passed');assert.equal(p.items[1].ects,5.5);assert(p.items.every(x=>x.semester===0));
- assert.equal(C.schedule(p,courses).unassigned.credits,11.5);
+ assert.equal(C.schedule(p,courses).unassigned.credits,5.5);
 });
 test('Four and five semesters alternate winter/summer from the chosen start',()=>{
  for(const start of ['winter','summer'])for(const count of [4,5]){

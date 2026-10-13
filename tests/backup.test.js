@@ -72,7 +72,7 @@ function application(mem,locks,manualConfirmation=false,noLock=false,lockOverrid
   assert.deepEqual(B.capture(mem.storage),mixed);assert.equal(h.U.rawBackup().records.plan,mixed.plan);
  });
  await test('A pending recovery marker created during confirmation prevents the later save',async()=>{
-  const mem=memory(initial()),h=application(mem,undefined,true),before=B.capture(mem.storage),move=h.U.moveCourse('IN2064',2);
+  const mem=memory(initial()),h=application(mem,undefined,true),before=B.capture(mem.storage),move=h.U.addCourse('IN2067',2);
   await new Promise(resolve=>setImmediate(resolve));assert(h.dialog.open);
   mem.storage.setItem(B.keys.journal,JSON.stringify({version:1,before}));h.dialog.answer('confirm');
   await assert.rejects(move,/恢复/);assert.deepEqual(B.capture(mem.storage),before);assert(B.pending(mem.storage));
@@ -84,7 +84,7 @@ function application(mem,locks,manualConfirmation=false,noLock=false,lockOverrid
  await test('A page waiting for confirmation does not block another page’s backup preview',async()=>{
   let queue=Promise.resolve();const locks={request(name,fn){assert.equal(name,'rci:local-data');const task=queue.then(fn);queue=task.catch(()=>{});return task;}};
   const mem=memory(initial()),first=application(mem,locks,true),second=application(mem,locks);
-  const move=first.U.moveCourse('IN2064',2);await new Promise(resolve=>setImmediate(resolve));assert(first.dialog.open);
+  const move=first.U.addCourse('IN2067',2);await new Promise(resolve=>setImmediate(resolve));assert(first.dialog.open);
   let ready=false;const preview=second.U.backupSnapshot().then(value=>{ready=true;return value;});
   await new Promise(resolve=>setImmediate(resolve));const wasReady=ready;
   first.dialog.answer('cancel');await move;await preview;
@@ -93,7 +93,7 @@ function application(mem,locks,manualConfirmation=false,noLock=false,lockOverrid
  await test('Another page may add a course during confirmation without being overwritten',async()=>{
   let queue=Promise.resolve();const locks={request(name,fn){const task=queue.then(fn);queue=task.catch(()=>{});return task;}};
   const mem=memory(initial()),first=application(mem,locks,true),second=application(mem,locks);
-  const move=first.U.moveCourse('IN2064',2);await new Promise(resolve=>setImmediate(resolve));assert(first.dialog.open);
+  const move=first.U.addCourse('IN2067',2);await new Promise(resolve=>setImmediate(resolve));assert(first.dialog.open);
   let added=false;const addition=second.U.addCourse('IN2320',4).then(value=>{added=true;return value;});
   await new Promise(resolve=>setImmediate(resolve));const wasAdded=added;
   first.dialog.answer('confirm');const error=await move.then(()=>null,error=>error);await addition;
@@ -134,7 +134,7 @@ function application(mem,locks,manualConfirmation=false,noLock=false,lockOverrid
  await test('Replacing data keeps a recoverable backup and limits history to three imports',()=>{
   const mem=memory(initial()),before=B.capture(mem.storage),next={plan:{...draft(),items:[]},favorites:[]};
   B.commit(mem.storage,next,{expected:before,beforeBackup:B.create(local(),courses)});
-  assert.deepEqual(JSON.parse(mem.storage.getItem(B.keys.plan)),next.plan);assert.deepEqual(B.history(mem.storage)[0].data,local());assert.equal(mem.storage.getItem(B.keys.journal),null);
+  assert.deepEqual(JSON.parse(mem.storage.getItem(B.keys.plan)),next.plan);assert.deepEqual(B.history(mem.storage)[0].data,B.state(local(),courses));assert.equal(mem.storage.getItem(B.keys.journal),null);
   for(let i=0;i<4;i++)B.commit(mem.storage,next,{expected:B.capture(mem.storage),beforeBackup:B.create(next,courses)});assert.equal(B.history(mem.storage).length,3);
  });
  await test('Failure before the recovery backup does not touch current plan or favorites',()=>{
@@ -174,12 +174,12 @@ function application(mem,locks,manualConfirmation=false,noLock=false,lockOverrid
  await test('Production API imports plan and favorites together, refreshes both surfaces and restores history',async()=>{
   const mem=memory(initial()),h=application(mem),snapshot=await h.U.backupSnapshot(),incoming={plan:{...draft(),items:[{code:'IN2320',status:'planned',semester:4}]},favorites:['R140'],legacy:false};
   await h.U.importBackup(incoming,'replace',snapshot);assert.equal((await h.U.plan()).items[0].code,'IN2320');assert.deepEqual(JSON.parse(mem.storage.getItem(B.keys.favorites)),['R140']);assert(h.events.includes('rci:planchange'));assert(h.events.includes('rci:saveschange'));
-  const restore=B.parse(JSON.stringify(h.U.getBackupHistory()[0]),courses);await h.U.importBackup(restore,'replace',await h.U.backupSnapshot());assert.deepEqual(plain((await h.U.backupSnapshot()).data),local());
+  const restore=B.parse(JSON.stringify(h.U.getBackupHistory()[0]),courses);await h.U.importBackup(restore,'replace',await h.U.backupSnapshot());assert.deepEqual(plain((await h.U.backupSnapshot()).data),B.state(local(),courses));
  });
  await test('Invalid imports and changed production previews never replace local records',async()=>{
   const mem=memory(initial()),h=application(mem),snapshot=await h.U.backupSnapshot(),before=B.capture(mem.storage);
   await assert.rejects(h.U.importBackup({plan:{version:99},favorites:[]},'replace',snapshot));assert.deepEqual(B.capture(mem.storage),before);
-  await h.U.moveCourse('IN2064',1);const newer=B.capture(mem.storage);await assert.rejects(h.U.importBackup({plan:draft(),favorites:[]},'replace',snapshot),/已更新/);assert.deepEqual(B.capture(mem.storage),newer);
+  await h.U.updatePlan(p=>({...p,conditional:!p.conditional}));const newer=B.capture(mem.storage);await assert.rejects(h.U.importBackup({plan:draft(),favorites:[]},'replace',snapshot),/已更新/);assert.deepEqual(B.capture(mem.storage),newer);
  });
  await test('Unreadable existing local records remain intact and can be exported as raw recovery data',async()=>{
   const mem=memory({...initial(),[B.keys.plan]:'{damaged original record','rci:v2:checklist':'{damaged checklist'}),h=application(mem),before=B.capture(mem.storage);
@@ -192,7 +192,7 @@ function application(mem,locks,manualConfirmation=false,noLock=false,lockOverrid
   let queue=Promise.resolve();const locks={request(name,fn){assert.equal(name,'rci:local-data');const task=queue.then(fn);queue=task.catch(()=>{});return task;}};
   const mem=memory(initial()),first=application(mem,locks),second=application(mem,locks),snapshot=await first.U.backupSnapshot();
   await second.U.plan();await first.U.importBackup({plan:{...draft(),items:[...draft().items,{code:'IN2320',status:'planned',semester:4}]},favorites:['R140']},'replace',snapshot);
-  await second.U.moveCourse('IN2064',1);assert.equal(JSON.parse(mem.storage.getItem(B.keys.plan)).items.length,2);assert.equal(JSON.parse(mem.storage.getItem(B.keys.favorites))[0],'R140');
+  await second.U.updatePlan(p=>({...p,conditional:!p.conditional}));assert.equal(JSON.parse(mem.storage.getItem(B.keys.plan)).items.length,2);assert.equal(JSON.parse(mem.storage.getItem(B.keys.favorites))[0],'R140');
  });
  console.log(count+' backup checks passed');
 })().catch(error=>{console.error(error);process.exitCode=1;});

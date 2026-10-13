@@ -34,7 +34,7 @@ test('merged resource entries retain their original descriptions and task catego
 test('task filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{task:'life'}).every(d=>d.tasks.includes('life'))));
 test('kind filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{kind:'course'}).every(d=>d.kind==='course')));
 const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(path.join(p,x.name)):[path.join(p,x.name)]),html=walk(dist).filter(p=>p.endsWith('.html'));
-test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,78);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
+test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,112);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
 test('every page can resolve historical favorite IDs before loading search data',()=>{
  for(const p of html){const match=fs.readFileSync(p,'utf8').match(/<meta name="rci-favorite-groups" content="([^"]+)">/);assert(match,p);
   const groups=JSON.parse(match[1].replace(/&quot;/g,'"'));
@@ -57,7 +57,7 @@ test('Local backup UI is reachable from favorites and planner, with its dependen
 });
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
 test('course sources and status retained in static pages',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('2025'));assert(s.includes('历史整理'));assert(s.includes('campus.tum.de'));});
-test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,144);assert.equal(info.courses,35);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
+test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,144);assert.equal(info.courses,69);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
 
 // A public documentation page is not the application itself. Guard real destinations.
 const matchingSystem='https://matching-in.cit.tum.de/';
@@ -129,7 +129,7 @@ test('Searching a known course reveals it across seasons without an extra filter
 });
 test('Picker identifies previously selected and unassigned courses without duplicate records',()=>{
  const p={...pickerPlan,items:[{code:'IN2064',status:'passed',semester:0}]},result=Picker.choices(pickerData,p,1,{query:'机器学习'});
- assert.equal(result.length,1);assert.deepEqual(result[0].assignment,p.items[0]);assert.equal(Core.calculate(p,pickerData.courses).raw,8);
+ assert.equal(result.filter(x=>x.code==='IN2064').length,1);assert.deepEqual(result.find(x=>x.code==='IN2064').assignment,Core.validatePlan(p,pickerData.courses).items[0]);assert.equal(Core.calculate(p,pickerData.courses).raw,8);
  assert.throws(()=>Picker.choices(pickerData,p,5),/有效的学期/);
 });
 

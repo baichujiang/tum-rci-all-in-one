@@ -1,0 +1,957 @@
+[
+  {
+    "module_code": "IN2389",
+    "name": "Advanced Deep Learning for Computer Vision: Dynamic Vision",
+    "section": "G Computation",
+    "ects": 8.0,
+    "source_node_ids": [
+      "3871929"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/2809077/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcxOTI5&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe/SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "2809077",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2390",
+    "name": "Advanced Deep Learning for Computer Vision: Visual Computing",
+    "section": "G Computation",
+    "ects": 8.0,
+    "source_node_ids": [
+      "3871937"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/2808965/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcxOTM3&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe/SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "2808965",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "CIT433027",
+    "name": "Advanced Deep Learning for Robotics",
+    "section": "G Computation",
+    "ects": 8.0,
+    "source_node_ids": [
+      "3942754"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3893427/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozOTQyNzU0&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe/SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "3893427",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2309",
+    "name": "Advanced Topics of Software Engineering",
+    "section": "G Computation",
+    "ects": 8.0,
+    "source_node_ids": [
+      "3871717"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1060130/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcxNzE3&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "DE/EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "1060130",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2410",
+    "name": "Causality",
+    "section": "G Computation",
+    "ects": 8.0,
+    "source_node_ids": [
+      "3872060"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3138501/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcyMDYw&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "3138501",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2375",
+    "name": "Computer Vision III: Detection, Segmentation, and Tracking",
+    "section": "G Computation",
+    "ects": 6.0,
+    "source_node_ids": [
+      "3871878"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1733754/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcxODc4&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "1733754",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "CIT433021",
+    "name": "Fundamentals of Foundation Models",
+    "section": "G Computation",
+    "ects": 5.0,
+    "source_node_ids": [
+      "4387324"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3838717/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0Mzg3MzI0&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "3838717",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2323",
+    "name": "Machine Learning for Graphs and Sequential Data",
+    "section": "G Computation",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3871850"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1799629/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcxODUw&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "1799629",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2392",
+    "name": "Machine Learning for 3D Geometry",
+    "section": "G Computation",
+    "ects": 6.0,
+    "source_node_ids": [
+      "3871960"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/2808442/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcxOTYw&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "2808442",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2361",
+    "name": "Natural Language Processing",
+    "section": "G Computation",
+    "ects": 6.0,
+    "source_node_ids": [
+      "3871845"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1493755/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcxODQ1&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "1493755",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2355",
+    "name": "Robotic 3D Vision",
+    "section": "G Computation",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3871896"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1433527/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcxODk2&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "G Computation"
+    ],
+    "module_detail_id": "1433527",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "ED150039",
+    "name": "Autonomous Vehicles: Motion Planning & Decision Making",
+    "section": "H Mechanics",
+    "ects": 5.0,
+    "source_node_ids": [
+      "4966997"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4064369/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0OTY2OTk3&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "H Mechanics"
+    ],
+    "module_detail_id": "4064369",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "MW0612",
+    "name": "Finite Elemente",
+    "section": "H Mechanics",
+    "ects": 5.0,
+    "source_node_ids": [
+      "4440753"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/261127/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0NDQwNzUz&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "DE",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "H Mechanics"
+    ],
+    "module_detail_id": "261127",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "MW0837",
+    "name": "Fundamentals of Flight Control",
+    "section": "H Mechanics",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3872271"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/2796311/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcyMjcx&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "H Mechanics"
+    ],
+    "module_detail_id": "2796311",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "ED150017",
+    "name": "Grundlagen Autonomer Fahrzeuge",
+    "section": "H Mechanics",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3872285"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3426050/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcyMjg1&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "DE",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "H Mechanics"
+    ],
+    "module_detail_id": "3426050",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "MW1911",
+    "name": "Grundlagen der Fahrzeugtechnik",
+    "section": "H Mechanics",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3872203"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/767694/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcyMjAz&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "DE",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "H Mechanics"
+    ],
+    "module_detail_id": "767694",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "CIT433050",
+    "name": "Nichtlineare Regelungssysteme",
+    "section": "H Mechanics",
+    "ects": 5.0,
+    "source_node_ids": [
+      "4768555"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4715091/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0NzY4NTU1&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe/SoSe",
+    "language": "DE/EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "H Mechanics",
+      "I Systems and Control"
+    ],
+    "module_detail_id": "4715091",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "MW1420",
+    "name": "Advanced Control",
+    "section": "I Systems and Control",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3873141"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/559547/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODczMTQx&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "559547",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2376",
+    "name": "Advanced Robot Control and Learning",
+    "section": "I Systems and Control",
+    "ects": 6.0,
+    "source_node_ids": [
+      "3873075"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1734236/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODczMDc1&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "1734236",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "CIT433037",
+    "name": "Advanced Robot Learning and Decision-Making",
+    "section": "I Systems and Control",
+    "ects": 5.0,
+    "source_node_ids": [
+      "4440748"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4388109/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0NDQwNzQ4&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe/SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "4388109",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "CIT436000",
+    "name": "Beinroboter",
+    "section": "I Systems and Control",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3944159"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3939503/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozOTQ0MTU5&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "3939503",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "CIT4330014",
+    "name": "Control for Robotics: from Optimal Control to Reinforcement Learning",
+    "section": "I Systems and Control",
+    "ects": 6.0,
+    "source_node_ids": [
+      "3873162"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3436129/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODczMTYy&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "3436129",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN2371",
+    "name": "Fundamentals of Human-Centered Robotics",
+    "section": "I Systems and Control",
+    "ects": 6.0,
+    "source_node_ids": [
+      "3873004"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1698301/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODczMDA0&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "1698301",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "CIT433060",
+    "name": "Model Predictive Control",
+    "section": "I Systems and Control",
+    "ects": 3.0,
+    "source_node_ids": [
+      "4966533"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4860651/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0OTY2NTMz&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "4860651",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "CIT4330007",
+    "name": "Modelling and Control of Legged Robots",
+    "section": "I Systems and Control",
+    "ects": 6.0,
+    "source_node_ids": [
+      "3873157"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3395087/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODczMTU3&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "3395087",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "MW1808",
+    "name": "Nonlinear Control",
+    "section": "I Systems and Control",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3873013"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/704894/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODczMDEz&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "704894",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "EI70140",
+    "name": "Optimal Control and Decision Making",
+    "section": "I Systems and Control",
+    "ects": 5.0,
+    "source_node_ids": [
+      "3873038"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1772070/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODczMDM4&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe/SoSe",
+    "language": "DE/EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "1772070",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "MW1340",
+    "name": "Reglerimplementierung auf Mikrocontrollern",
+    "section": "I Systems and Control",
+    "ects": 4.0,
+    "source_node_ids": [
+      "3872326"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/615185/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODcyMzI2&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe/SoSe",
+    "language": "DE",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "I Systems and Control"
+    ],
+    "module_detail_id": "615185",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "MGT000159",
+    "name": "Start-up Launchpad - Business Plan Basics",
+    "section": "J Support Electives",
+    "ects": 6.0,
+    "source_node_ids": [
+      "4719059",
+      "4583636"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4569738/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0NzE5MDU5&$ctx=design=pl;header=max;lang=de",
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0NTgzNjM2&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe/SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "J Support Electives"
+    ],
+    "module_detail_id": "4569738",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "SOT46401",
+    "name": "Data Ethics and Governance",
+    "section": "J Support Electives",
+    "ects": 6.0,
+    "source_node_ids": [
+      "4419137"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4025776/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0NDE5MTM3&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "J Support Electives"
+    ],
+    "module_detail_id": "4025776",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "SOT87317",
+    "name": "Ethics in Artificial Intelligence",
+    "section": "J Support Electives",
+    "ects": 3.0,
+    "source_node_ids": [
+      "4032857"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3907351/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0MDMyODU3&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "J Support Electives"
+    ],
+    "module_detail_id": "3907351",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "IN9017",
+    "name": "Existenzgründung",
+    "section": "J Support Electives",
+    "ects": 4.0,
+    "source_node_ids": [
+      "3886964"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/473910/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODg2OTY0&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "DE",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "J Support Electives"
+    ],
+    "module_detail_id": "473910",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "SOT86066",
+    "name": "Machine Learning and Society (3 ECTS)",
+    "section": "J Support Electives",
+    "ects": 3.0,
+    "source_node_ids": [
+      "4028339"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/3844317/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDo0MDI4MzM5&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "SoSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "J Support Electives"
+    ],
+    "module_detail_id": "3844317",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  },
+  {
+    "module_code": "WI001056_1",
+    "name": "Principles of Economics",
+    "section": "J Support Electives",
+    "ects": 6.0,
+    "source_node_ids": [
+      "3887021"
+    ],
+    "module_detail_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1175362/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    ],
+    "current_offering_urls": [
+      "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses?curriculumVersionId=5271&$filter=courseFilterResourceId-eq=RUxFTUVOVDtWRVJTSU9OX0lEOjUyNzE7Tk9ERV9JRDozODg3MDIx&$ctx=design=pl;header=max;lang=de"
+    ],
+    "curriculum_version": "20241",
+    "academic_year": "2026/27",
+    "review_date": "2026-10-13",
+    "term": "WiSe",
+    "language": "EN",
+    "recognition_status": "official_public_curriculum",
+    "accepted_sections": [
+      "J Support Electives"
+    ],
+    "module_detail_id": "1175362",
+    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
+    "automatic_recommendation_eligible": true
+  }
+]

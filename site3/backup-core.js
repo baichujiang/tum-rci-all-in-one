@@ -28,7 +28,9 @@ function prepare(current,incoming,mode,courses){
  if(!['merge','replace'].includes(mode))throw new Error('请选择合并或替换。');
  const other=C.validatePlan(incoming.plan,courses),saves=incoming.favorites===null?null:favorites(incoming.favorites);
  const notes=[];let plan;
- if(mode==='replace'||!current.plan.items.length){plan=other;if(mode==='merge')notes.push('当前没有课程，采用备份里的学期、批次与补修设置。');}
+ const defaultSettings=C.validatePlan({version:2,cohort:'unknown',conditional:false,items:[]},courses);
+ const settingsUntouched=['cohort','conditional','conditionalConfirmed','timeline','preferences','workload','timetable'].every(key=>JSON.stringify(current.plan[key])===JSON.stringify(defaultSettings[key]));
+ if(mode==='replace'||!current.plan.items.length&&settingsUntouched){plan=other;if(mode==='merge')notes.push('当前没有课程或个人规划设置，采用备份里的学期、批次与补修设置。');}
  else{
   const p=current.plan,sameSeason=p.timeline.start===other.timeline.start;
   const count=sameSeason?Math.max(p.timeline.count,other.timeline.count):p.timeline.count;
@@ -43,6 +45,7 @@ function prepare(current,incoming,mode,courses){
   if(kept)notes.push(`${kept} 门重复课程保留当前设备的安排与状态。`);
   if(moved)notes.push(`起始冬夏季节不同，${moved} 门新增课程放入待分配。`);
   plan={...p,timeline:{...p.timeline,count},items};
+  notes.push('想选／排除、语言、负担、固定时间与周课表保留当前设备设置；替换模式会采用备份的全部设置。');
  }
  const result=state({plan,favorites:saves===null?current.favorites:mode==='merge'?[...new Set([...current.favorites,...saves])]:saves},courses);
  return {...result,notes,legacy:incoming.legacy};
