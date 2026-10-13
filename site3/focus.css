@@ -490,3 +490,28 @@ html:has(#course-picker[open]){overflow:hidden;scrollbar-gutter:stable}
  .unassigned-grid{grid-template-columns:1fr}.course-drag{display:none}.semester-board .scheduled-row .row-course,.unassigned-grid .scheduled-row .row-course{padding-left:0;padding-right:25px}
 }
 @media(prefers-reduced-motion:reduce){.board-courses-scroll,.board-head-scroll{scroll-behavior:auto}}
+
+/* Keep course tiles quiet; semester controls appear only after opening a course. */
+.semester-board details.course-card,.unassigned-grid details.course-card{padding:0;overflow:hidden}
+.course-card-summary{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;min-height:64px;padding:12px 13px;list-style:none;border-radius:inherit;cursor:pointer}
+.course-card-summary::-webkit-details-marker{display:none}
+.course-card-summary:hover{background:var(--brand-soft,#ecf2e9)}
+.course-card-summary:focus-visible{outline-offset:-4px}
+.course-card-title{min-width:0;font-size:13px;font-weight:600;line-height:1.6;overflow-wrap:anywhere}
+.course-card-credits{font-size:15px;font-weight:650;color:var(--green);white-space:nowrap}
+.course-card-credits small{font-size:10px;color:var(--muted)}
+.course-card-summary .course-drag{top:50%;left:3px;transform:translateY(-50%);font-size:13px;opacity:0}
+.course-card-summary:hover .course-drag,.course-card[open] .course-drag{opacity:1}
+.course-card-alert{grid-column:1/-1;font-size:10px;color:#8a642e;font-weight:400}
+.course-card[open]>.course-card-summary{border-bottom:1px solid var(--line);border-radius:8px 8px 0 0}
+.course-card-actions{padding:11px 13px 12px}
+.course-card-meta{font-size:11px;color:var(--muted);line-height:1.8;margin:0}
+.course-card-meta a{display:block;font-size:11px;margin-top:3px}
+.semester-board .course-card-actions .row-controls,.unassigned-grid .course-card-actions .row-controls{margin:10px 0 4px}
+.semester-board .course-card-actions .remove-course,.unassigned-grid .course-card-actions .remove-course{position:static;font-size:11px;font-weight:400;min-height:36px;min-width:0;padding:5px 0;margin-top:5px;color:var(--muted)}
+@media(max-width:600px){
+ .course-card-summary{min-height:68px;padding:13px 14px}
+ .course-card-title{font-size:14px}.course-card-credits{font-size:17px}.course-card-credits small{font-size:11px}
+ .course-card-alert{font-size:11px}.course-card-meta,.course-card-meta a{font-size:12px}
+ .semester-board .course-card-actions .remove-course,.unassigned-grid .course-card-actions .remove-course{min-height:44px;font-size:12px}
+}
