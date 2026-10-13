@@ -3,6 +3,17 @@
   'use strict';
   const cohorts = ['2025/26冬季', '2026夏季', '2026/27冬季'];
   const statuses = ['planned', 'passed'];
+  // Display names shared by the catalog, picker, guide and plan. Calculations use group codes.
+  const courseGroups = {
+    A:'A · Robotics（机器人学，二选一）', B:'B · Cognition（认知）',
+    C:'C · Intelligent Autonomous Systems（智能自主系统）',
+    D:'D · Seminar（研讨课）', E:'E · Practical（实践课）', F:'F · Thesis（论文）',
+    G:'G · Computation（计算）', H:'H · Mechanics（机械）',
+    I:'I · Systems and Control（系统与控制）',
+    J:'J · Überfachliche Grundlagen（跨学科基础）', K:'K · Regelungstechnik（控制理论补修）'
+  };
+  const creditOriginalNames = ['Pflichtbereich A–E', 'Fachliche Wahlmodule G/H/I',
+    'Überfachliche Grundlagen J', "Master's Thesis F", 'Regelungstechnik K'];
   function csv(text) {
     const rows = []; let row = [], cell = '', quoted = false;
     text = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n');
@@ -139,7 +150,7 @@
     flushTable(); if (code !== null) out += `<pre><code>${esc(code)}</code></pre>`;
     return out;
   }
-  const api = {csv, esc, safeURL, validatePlan, calculate, semesterSeason, semesterLabel, offering, schedule, markdown, cohorts};
+  const api = {csv, esc, safeURL, validatePlan, calculate, semesterSeason, semesterLabel, offering, schedule, markdown, cohorts, courseGroups, creditOriginalNames};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.RCI = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

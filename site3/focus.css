@@ -492,6 +492,10 @@ html:has(#course-picker[open]){overflow:hidden;scrollbar-gutter:stable}
 @media(prefers-reduced-motion:reduce){.board-courses-scroll,.board-head-scroll{scroll-behavior:auto}}
 
 /* Keep course tiles quiet; semester controls appear only after opening a course. */
+.original-label{display:block;font-size:11px;font-weight:400;color:var(--muted);line-height:1.5;margin-top:3px;overflow-wrap:anywhere}
+.progress-row>div>b{white-space:nowrap}
+.course-card-translation{font-size:12px;color:var(--muted);margin:0 0 4px;line-height:1.7}
+.domain-minimums>span{gap:8px}
 .semester-board details.course-card,.unassigned-grid details.course-card{padding:0;overflow:hidden}
 .course-card-summary{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;min-height:64px;padding:12px 13px;list-style:none;border-radius:inherit;cursor:pointer}
 .course-card-summary::-webkit-details-marker{display:none}

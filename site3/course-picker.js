@@ -3,12 +3,12 @@
 'use strict';
 const node=typeof module!=='undefined'&&module.exports;
 const C=node?require('../assets/core'):root.RCI,S=node?require('./search'):root.RCISearch;
-const groups={A:'必修 · 机器人学',B:'必修 · 认知',C:'必修 · 智能系统',D:'必修 · 研讨',E:'必修 · 实验',F:'硕士论文',G:'计算 · 选修',H:'机械 · 选修',I:'系统与控制 · 选修',J:'跨学科 · 选修',K:'条件补修'};
+const groups=C.courseGroups;
 function choices(data,plan,semester,{query='',group='',otherTerms=false}={}){
  plan=C.validatePlan(plan,data.courses);
  if(!Number.isInteger(semester)||semester<1||semester>plan.timeline.count)throw new Error('请先选择有效的学期。');
  const season=C.semesterSeason(plan.timeline,semester),items=new Map(plan.items.map(x=>[x.code,x])),searching=!!S.normalize(query);
- const docs=data.courses.filter(c=>(!group||(group==='core'?'ABCDE'.includes(c.section_2025[0]):c.section_2025[0]===group))&&(otherTerms||searching||C.offering(c,season).state!=='conflict')).map(c=>({id:c.module_code,code:c.module_code,kind:'course',title:data.names[c.module_code]||c.module_name_legal_2025,summary:c.module_name_legal_2025,body:groups[c.section_2025[0]],aliases:[c.module_code,c.module_name_legal_2025],tasks:['study'],course:c,assignment:items.get(c.module_code)||null}));
+ const docs=data.courses.filter(c=>(!group||(group==='core'?'ABCDE'.includes(c.section_2025[0]):c.section_2025[0]===group))&&(otherTerms||searching||C.offering(c,season).state!=='conflict')).map(c=>({id:c.module_code,code:c.module_code,kind:'course',title:c.module_name_legal_2025,translation:data.names[c.module_code]||'',summary:c.module_name_legal_2025,body:groups[c.section_2025[0]],aliases:[c.module_code,c.module_name_legal_2025,data.names[c.module_code]||''],tasks:['study'],course:c,assignment:items.get(c.module_code)||null}));
  return S.search(docs,query,data.synonyms||[]);
 }
 if(node)module.exports={choices};else root.RCICoursePicker={choices};
@@ -32,7 +32,7 @@ async function render(){
  results.innerHTML=list.length?list.map(d=>{
   const c=d.course,assigned=d.assignment,here=assigned?.semester===semester,busy=pending.has(d.code),offer=C.offering(c,season);
   const assignment=assigned?assigned.semester?`已在${C.semesterLabel(p.timeline,assigned.semester)}`:'已选 · 待分配':'';
-  return `<article class="picker-course${here?' is-picked':''}"><div><p class="picker-course-meta">${e(groups[c.section_2025[0]])} · ${e(d.code)}</p><h3><a href="${U.base}/courses/${e(d.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(d.title)} 说明（新标签页）">${e(d.title)}</a></h3><p class="picker-english">${e(c.module_name_legal_2025)}</p><p class="picker-offering${offer.state==='conflict'?' conflict':''}">${e(offer.label)} · 目录${assignment?' <span>'+e(assignment)+'</span>':''}</p></div><div class="picker-course-action"><b>${e(c.ects)} <small>ECTS</small></b><button type="button" class="button ${here?'picked':'secondary'}" data-picker-add="${e(d.code)}" aria-label="${here?'已在本学期：':assigned?'将课程移到本学期：':'加入本学期：'}${e(d.title)}"${here||busy?' disabled':''}>${busy?'处理中…':here?'✓ 已加入':assigned?'移到这里':'＋ 加入'}</button></div></article>`;
+  return `<article class="picker-course${here?' is-picked':''}"><div><p class="picker-course-meta">${e(groups[c.section_2025[0]])} · ${e(d.code)}</p><h3><a href="${U.base}/courses/${e(d.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(d.title)} 说明（新标签页）">${e(d.title)}</a></h3><p class="picker-english">${e(d.translation)}</p><p class="picker-offering${offer.state==='conflict'?' conflict':''}">${e(offer.label)} · 目录${assignment?' <span>'+e(assignment)+'</span>':''}</p></div><div class="picker-course-action"><b>${e(c.ects)} <small>ECTS</small></b><button type="button" class="button ${here?'picked':'secondary'}" data-picker-add="${e(d.code)}" aria-label="${here?'已在本学期：':assigned?'将课程移到本学期：':'加入本学期：'}${e(d.title)}"${here||busy?' disabled':''}>${busy?'处理中…':here?'✓ 已加入':assigned?'移到这里':'＋ 加入'}</button></div></article>`;
  }).join(''):`<div class="picker-empty"><h3>没有找到对应课程</h3><p>试试课程代码，或清除领域筛选。</p><button type="button" class="button secondary" data-picker-reset>清除搜索与筛选</button></div>`;
  const bucket=C.schedule(p,db.courses).semesters[semester-1];$('#picker-credits').textContent=`本学期 ${bucket.credits} ECTS · ${bucket.items.length} 门`;
  $('#picker-save-state').textContent=U.persisted?'加入后自动保存':'仅当前页面有效，请导出备份';

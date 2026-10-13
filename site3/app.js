@@ -154,13 +154,13 @@ if($('#portal-controls')){
  $('[data-portal-reset]').addEventListener('click',()=>{input.value='';filterPortals();input.focus();});
 }
 function dest(d){return d.direct?C.safeURL(d.url):/^\/[a-zA-Z0-9/?#&=._%+-]*$/.test(d.url)?full(d.url)+(d.kind==='course'&&selectedSemester?'?semester='+selectedSemester:''):full('/search/');}
-const groupNames={A:'机器人学 · 二选一',B:'认知 · 必修',C:'智能系统 · 必修',D:'研讨课 · 必修',E:'实验课 · 必修',F:'硕士论文',G:'计算 · 选修',H:'机械 · 选修',I:'系统与控制 · 选修',J:'跨学科 · 选修',K:'条件补修'};
+const groupNames=C.courseGroups;
 const starIcon=$('.header-favorites svg').outerHTML;
 const termLabel=t=>String(t||'').replace('WiSe/SoSe','冬季 / 夏季').replace('WiSe','冬季').replace('SoSe','夏季');
 function resultCard(d,saveKey=d.id,asFavorite=false){
  const a=`href="${esc(dest(d))}"${d.direct?' target="_blank" rel="noopener noreferrer"':''}`;
  if(asFavorite)return `<article class="portal-card" data-favorite="${esc(saveKey)}"><a class="portal-link shortcut" ${a}><span class="portal-icon">${starIcon}</span><h3>${esc(d.title)}</h3><p>${esc(d.summary)}</p><div class="portal-meta"><span>${d.direct?'打开原始网站':'打开'+(d.kind==='course'?'课程详情':'收藏内容')}</span><span aria-hidden="true">${d.direct?'↗':'→'}</span></div></a><button class="portal-save" data-save="${esc(saveKey)}" data-save-style="star" data-save-name="${esc(d.title)}" aria-label="取消收藏 ${esc(d.title)}" aria-pressed="true">${starIcon}</button></article>`;
- if(d.kind==='course'&&!asFavorite)return `<article class="card course-choice"><div class="card-top"><span class="badge">${esc(groupNames[d.group])}</span><span class="code">${esc(d.code)}</span></div><h3><a ${a}>${esc(d.title)}</a></h3><p class="english">${esc(d.english||d.summary)}</p><div class="course-meta"><b>${esc(d.ects)} <small>ECTS</small></b><span>${esc(termLabel(d.term))} · 目录</span></div><div class="card-bottom"><button class="quiet" data-add="${esc(d.code)}" aria-pressed="false">加入计划</button></div></article>`;
+ if(d.kind==='course'&&!asFavorite)return `<article class="card course-choice"><div class="card-top"><span class="badge">${esc(groupNames[d.group])}</span><span class="code">${esc(d.code)}</span></div><h3><a ${a}>${esc(d.title)}</a></h3><p class="english">${esc(d.chinese||'')}</p><div class="course-meta"><b>${esc(d.ects)} <small>ECTS</small></b><span>${esc(termLabel(d.term))} · 目录</span></div><div class="card-bottom"><button class="quiet" data-add="${esc(d.code)}" aria-pressed="false">加入计划</button></div></article>`;
  const kinds={guide:'问题解答',resource:'原始入口',topic:'历史课题',tool:'工具',course:'课程'},key=saveKey;
  return `<article class="card search-result"><div class="card-top"><span class="badge">${kinds[d.kind]}</span>${d.historical?'<span class="badge history">历史快照</span>':''}</div><h3><a ${a}>${esc(d.title)}</a></h3><p>${esc(d.summary)}</p><p class="meta">${esc(d.status)}${d.cohort?'<br>'+esc(d.cohort):''}</p><div class="card-bottom"><button class="quiet" data-save="${esc(key)}" aria-pressed="${saved.has(key)}">${saved.has(key)?'已收藏':'收藏'}</button></div></article>`;
 }
