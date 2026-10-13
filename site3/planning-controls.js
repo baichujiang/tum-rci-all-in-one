@@ -2,7 +2,7 @@
 (async function(){
 'use strict';
 const U=window.RCIUI,C=window.RCI,T=window.RCITimetable,E=window.RCIPlanning,e=C.esc,box=document.getElementById('planning-controls');if(!box)return;
-let db,p,query='',mode='passed',worker=null,preview=null,expected='',original=null,renderId=0;
+let db,p,query='',mode='passed',worker=null,preparing=false,searchTimer=null,generation=0,preview=null,expected='',original=null,renderId=0;
 const dialog=document.getElementById('auto-plan-dialog'),result=document.getElementById('auto-plan-result');
 try{db=await U.data();await render();}catch(error){box.innerHTML=`<p class="notice">${e(error.message)}。现有计划没有修改。</p>`;return;}
 function title(code){return db.names[code]||db.courses.find(c=>c.module_code===code)?.module_name_legal_2025||p.items.find(x=>x.code===code)?.name||code;}
@@ -46,23 +46,27 @@ box.addEventListener('click',async event=>{
  }catch(error){U.toast(error.message);}
 });
 async function generate(){
- if(worker)return;
- original=await U.plan();expected=JSON.stringify(original);preview=null;
+ if(worker||preparing)return;
+ preparing=true;
+ const run=++generation;
+ let snapshot;try{snapshot=await U.plan();}finally{preparing=false;}
+ if(run!==generation)return;
+ original=snapshot;expected=JSON.stringify(original);preview=null;
  result.innerHTML='<p role="status">正在检查课程、学分与学期约束…</p>';dialog.querySelector('[data-apply-auto]').hidden=true;dialog.showModal();
  if(typeof Worker==='undefined'){result.innerHTML='<p>这个浏览器不支持后台规划。请使用较新的浏览器；现有手动计划仍可使用。</p>';return;}
- worker=new Worker(U.base+'/assets/planning-worker.js');
- const timer=setTimeout(()=>{worker?.terminate();worker=null;result.innerHTML='<p>本次搜索超时，没有修改计划。可减少固定条件或增加规划学期后重试。</p>';},25000);
- const finish=()=>{clearTimeout(timer);worker?.terminate();worker=null;};
- worker.onerror=()=>{finish();result.innerHTML='<p>自动规划暂时无法运行；现有记录没有修改。请刷新后重试。</p>';};
- worker.onmessage=event=>{finish();const r=event.data;preview=r;
+ const activeWorker=new Worker(U.base+'/assets/planning-worker.js');worker=activeWorker;
+ const finish=()=>{if(run!==generation)return false;clearTimeout(searchTimer);searchTimer=null;activeWorker.terminate();worker=null;return true;};
+ searchTimer=setTimeout(()=>{if(!finish())return;result.innerHTML='<p>本次搜索超时，没有修改计划。可减少固定条件或增加规划学期后重试。</p>';},25000);
+ activeWorker.onerror=()=>{if(!finish())return;result.innerHTML='<p>自动规划暂时无法运行；现有记录没有修改。请刷新后重试。</p>';};
+ activeWorker.onmessage=event=>{if(!finish())return;const r=event.data;preview=r;
   if(!r.ok){result.innerHTML=`<h3>暂未生成可用方案</h3><ul>${r.reasons.map(x=>`<li>${e(x)}</li>`).join('')}</ul>`;return;}
   const s=C.schedule(r.plan,db.courses);
   result.innerHTML=`<p class="auto-result-total"><b>${r.calculation.allocated} / 120 ECTS</b> · 已修 ${r.passed.allocated} · 未来 ${r.plan.items.filter(x=>x.status==='planned').reduce((sum,x)=>sum+Number(db.courses.find(c=>c.module_code===x.code)?.ects??x.ects),0)} ECTS</p><p>安排至第 ${r.finish} 学期；新增 ${r.added.length} 门、移动 ${r.moved.length} 门、移除排除选修 ${(r.removed||[]).length} 门。固定课程与已修记录保留。${r.removed?.length?' 移除：'+r.removed.map(title).map(e).join('、')+'。':''}</p><div class="auto-preview-semesters">${s.semesters.filter(x=>x.number<=r.finish).map(n=>`<section><h3>${e(T.term(r.plan,n.number).label)} · ${n.credits} ECTS · ${n.items.length} 项考核</h3><ul>${n.items.map(x=>`<li>${e(title(x.code))} <small>${e(x.code)}${x.locked?' · 固定':''}</small></li>`).join('')}</ul></section>`).join('')}</div>${r.warnings.length?`<div class="notice"><h3>采用前需要核对</h3><ul>${r.warnings.map(x=>`<li>${e(x)}</li>`).join('')}</ul></div>`:''}<p class="meta">在当前目录与计算预算内优先找到较早完成的方案；未证明全局最优。确认会更新安排，可立即撤销。</p>`;
   dialog.querySelector('[data-apply-auto]').hidden=false;
  };
- worker.postMessage({plan:original,courses:db.courses,details:db.details||{}});
+ activeWorker.postMessage({plan:original,courses:db.courses,details:db.details||{}});
 }
-dialog.addEventListener('close',()=>{worker?.terminate();worker=null;});
+dialog.addEventListener('close',()=>{generation++;clearTimeout(searchTimer);searchTimer=null;worker?.terminate();worker=null;});
 dialog.querySelector('[data-cancel-auto]').addEventListener('click',()=>dialog.close());
 dialog.querySelector('[data-apply-auto]').addEventListener('click',async()=>{try{
  if(!preview?.ok)return;const next=preview.plan,before=original;
