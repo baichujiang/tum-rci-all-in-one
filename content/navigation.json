@@ -4,18 +4,19 @@
   "tasks": [
     {"id":"apply","title":"申请与入学","subtitle":"准备材料、读懂录取要求、开始第一学期","symbol":"01","guides":["application","new-students","finance"],"resources":["R010","R013","R015","R016","R021","R028"],"categories":["02_","03_"]},
     {"id":"study","title":"选课与学分","subtitle":"查课程、选实验课、安排自己的学分","symbol":"02","guides":["curriculum","matching","robotics-choice","conditional-control"],"resources":["R002","R010","R030","R039"],"categories":["01_"]},
-    {"id":"exams","title":"考试与办事","subtitle":"找到报名入口、办理流程和咨询对象","symbol":"03","guides":["exams","help"],"resources":["R010","R036","R039","R009","R035"],"categories":["04_"]},
+    {"id":"exams","title":"考试与办事","subtitle":"找到报名入口、办理流程和咨询对象","symbol":"03","guides":["exams","help"],"resources":["R010","R128","R036","R039","R009","R035"],"categories":["04_"]},
     {"id":"research","title":"论文与科研","subtitle":"从研究兴趣找到实验室与论文机会","symbol":"04","guides":["research-start","thesis"],"resources":["R055","R061","R062","R037","R038"],"categories":["06_"]},
     {"id":"learn","title":"学习资料与工具","subtitle":"找讲义、公开课程、机器人软件和数据集","symbol":"05","guides":["learning"],"resources":["R031","R032","R042","R069","R098"],"categories":["05_","07_","08_"]},
     {"id":"life","title":"生活与就业","subtitle":"住房、校园服务、实习与求职入口","symbol":"06","guides":["housing","career","finance"],"resources":["R112","R114","R111","R118","R124"],"categories":["09_","03_"]}
   ],
   "portal_groups": [
-    {"id":"courses","title":"上课与选课","hint":"课程、课件、视频与名额申请"},
+    {"id":"courses","title":"上课与选课","hint":"课程、课件、成绩排名与名额申请"},
     {"id":"campus","title":"图书馆与校园","hint":"找自习位置、查文献、去教室"},
     {"id":"support","title":"咨询与支持","hint":"学分认定、账号与网络问题"}
   ],
   "shortcuts": [
     {"id":"R010","label":"TUMonline","hint":"选课 · 考试报名 · 成绩","group":"courses","icon":"grid","access":"TUM 账号","aliases":["课表","报名考试","campus"]},
+    {"id":"R128","label":"成绩排名查询","hint":"查看学期成绩排名","group":"courses","icon":"plan","access":"登录后查看","aliases":["排名","排名查询","成绩排名","学期排名","排名证明","Ranking","Rankings","Rangbescheinigung","DSSNAT","Digital School Services NAT"]},
     {"id":"R031","label":"Moodle","hint":"课件 · 作业 · 课程通知","group":"courses","icon":"book","access":"TUM 账号","aliases":["学习资料","讲义","slides"]},
     {"id":"R030","label":"Matching System","hint":"申请实验课与研讨课名额","group":"courses","icon":"match","access":"TUM / 交换生登录","aliases":["实验课","研讨课","实习课","praktikum","seminar"]},
     {"id":"R032","label":"TUM Live","hint":"课程视频 · 直播 · 录播","group":"courses","icon":"play","access":"部分内容需登录","aliases":["视频","lecture"]},
@@ -26,6 +27,7 @@
     {"id":"R035","label":"TUM IT 支持","hint":"账号 · Wi-Fi · VPN · 邮箱","group":"support","icon":"help","access":"公开说明","aliases":["登录","网络","软件","IT"]}
   ],
   "sources": [
+    {"id":"student-ranking","title":"CIT 学生成绩排名官方说明与查询入口","url":"https://www.cit.tum.de/en/cit/studies/students/advising/informatics/tips-for-successful-studies/","checked_on":"2026-10-13","status":"checked","scope":"AI 辅助核对 Rankings 栏目链接，直达 Digital School Services NAT 的 /rnk/student；公开系统显示 Rankings、LOGIN 与 Student。未登录核验 RCI 账号权限、个人排名记录或计算结果。","human_review":"pending"},
     {"id":"library-seats","title":"TUM 图书馆自习座位预约说明","url":"https://ub.tum.de/en/study-desks","checked_on":"2026-10-11","status":"checked","scope":"AI 辅助核对官方 Book a Study Desk 链接，直达 anny 的 TUM SSO 预约入口；需 TUM 账号。未登录账号、未查看实时空位、未提交预约。","human_review":"pending"},
     {"id":"library-opac","title":"TUM OPAC 图书与文献检索说明","url":"https://ub.tum.de/en/opac","checked_on":"2026-10-11","status":"checked","scope":"AI 辅助核对官方 Start OPAC 链接至 search.ub.tum.de/vufind/?lng=en；与自习座位预约为不同系统。未登录账号、未办理借阅。","human_review":"pending"},
     {"id":"exams-informatics","title":"CIT Informatics 考试报名说明","url":"https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/","checked_on":"2026-10-11","status":"checked","scope":"考试报名要求与 IN2106 / IN2107 等指定模块由教学团队报名的例外；未核查个人考试日期。","human_review":"pending"},
@@ -50,6 +52,7 @@
     {"id":"help","title":"选修认定、考试或系统问题应该问谁？","task":"exams","summary":"先分清是专业规则、考试事务还是账号技术问题，再联系相应官方服务。提问时提供模块代码和入学批次，不把个人材料发到公开平台。","steps":["学分认定和专业规则：查看 RCI 学业咨询。","考试登记问题：查看学院考试说明中的联系人。","登录或软件问题：使用 TUM IT 学生支持入口。"],"aliases":["问谁","联系","协调员","咨询","学分认定","转学分","系统问题","contact","credit transfer"],"links":["R009","R039","R036","R035","R124"],"sources":[],"status":"original","cohort":"联系路径导航；人员与职责以原网页为准","sections":[],"archive":["08"]}
   ],
   "synonyms": [
+    ["排名","排名查询","成绩排名","学期排名","排名证明","ranking","rankings","rangbescheinigung","dssnat"],
     ["实验课","实习课","practical","praktikum"],
     ["研讨课","seminar"],
     ["考试报名","报名考试","考试注册","exam registration","prüfung","pruefung","register for exams","exam sign up","考试登记"],

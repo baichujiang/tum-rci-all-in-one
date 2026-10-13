@@ -20,7 +20,7 @@ test('all local assets and links resolve',()=>{const build=JSON.parse(fs.readFil
 test('no raw API credentials, CDN scripts or analytics in emitted markup',()=>{for(const p of html){const txt=fs.readFileSync(p,'utf8');assert(!/src="https?:|ghp_[A-Za-z0-9]+|sk_live_|googletagmanager/.test(txt),p);}});
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
 test('course sources and status retained in static pages',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('2025'));assert(s.includes('历史整理'));assert(s.includes('campus.tum.de'));});
-test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,127);assert.equal(info.courses,35);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
+test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,128);assert.equal(info.courses,35);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
 
 // A public documentation page is not the application itself. Guard real destinations.
 const matchingSystem='https://matching-in.cit.tum.de/';
