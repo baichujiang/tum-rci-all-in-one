@@ -1,6 +1,6 @@
 {
-  "version": "3.3.1",
-  "edited_on": "2026-10-12",
+  "version": "3.4.0",
+  "edited_on": "2026-10-13",
   "tasks": [
     {"id":"apply","title":"申请与入学","subtitle":"准备材料、读懂录取要求、开始第一学期","symbol":"01","guides":["application","new-students","finance"],"resources":["R010","R013","R015","R016","R021","R028"],"categories":["02_","03_"]},
     {"id":"study","title":"选课与学分","subtitle":"查课程、选实验课、安排自己的学分","symbol":"02","guides":["curriculum","matching","robotics-choice","conditional-control"],"resources":["R002","R010","R030","R039"],"categories":["01_"]},

@@ -66,6 +66,24 @@ async function undoCourse(change){
   return {...p,items};
  });
 }
+async function moveCourse(code,semester){
+ code=String(code).trim().toUpperCase();let result={kind:'cancelled'};
+ await updatePlan(async p=>{
+  if(!Number.isInteger(semester)||semester<0||semester>p.timeline.count)throw new Error('目标学期已调整，请重新选择。');
+  const previous=p.items.find(x=>x.code===code);
+  if(!previous)throw new Error('这门课已不在计划中，请重新选择。');
+  if(previous.semester===semester){result={kind:'unchanged',code,semester};return null;}
+  const d=await data(),course=d.courses.find(c=>c.module_code===code);
+  if(semester&&course){
+   const offer=C.offering(course,C.semesterSeason(p.timeline,semester));
+   if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,semester)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
+  }
+  const applied={...previous,semester};
+  result={kind:'moved',code,semester,previous,applied,replaced:null};
+  return {...p,items:p.items.map(x=>x.code===code?applied:x)};
+ });
+ return result;
+}
 const savePlan=p=>updatePlan(()=>p);
 function confirmAction(title,description,confirmLabel){
  const dialog=$('#action-dialog');
@@ -75,7 +93,7 @@ function confirmAction(title,description,confirmLabel){
  dialog.returnValue='cancel';dialog.showModal();
  return new Promise(resolve=>dialog.addEventListener('close',()=>resolve(dialog.returnValue==='confirm'),{once:true}));
 }
-window.RCIUI={toast,read,store,data,plan,savePlan,updatePlan,empty,base,confirmAction,addCourse,undoCourse,get persisted(){return planPersisted;}};
+window.RCIUI={toast,read,store,data,plan,savePlan,updatePlan,empty,base,confirmAction,addCourse,moveCourse,undoCourse,get persisted(){return planPersisted;}};
 
 const savedRaw=read('rci:v2:saves',[]);
 let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);
