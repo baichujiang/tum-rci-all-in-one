@@ -112,7 +112,7 @@ function generate(raw,courses,details={},options={}){
     for(const n of ordered){
      const b=bins[n],limits=bounds(p,n),events=T.sessions(p,d.item.code,n,details);
      if(b.credits+d.credits>limits.maxECTS||b.exams+1>limits.maxExams)continue;
-     if(!p.preferences.allowOverlap&&events.some(a=>b.events.some(z=>!a.allowOverlap&&!z.allowOverlap&&T.overlap(a,z)))){attempts.add(`第 ${n} 学期 ${d.item.code} 与已安排课程或个人禁止时段重叠；请调整固定学期／时间条件。`);continue;}
+     if(events.some(a=>b.events.some(z=>!a.allowOverlap&&!z.allowOverlap&&T.overlap(a,z)&&(!p.preferences.allowOverlap||a.kind==='blocked'||z.kind==='blocked')))){attempts.add(`第 ${n} 学期 ${d.item.code} 与已安排课程或个人禁止时段重叠；请调整固定学期／时间条件。`);continue;}
      const length=b.events.length;b.credits+=d.credits;b.exams++;b.codes.push(d.item.code);b.events.push(...events);assignments.set(d.item.code,n);
      if(search(index+1))return true;
      assignments.delete(d.item.code);b.credits-=d.credits;b.exams--;b.codes.pop();b.events.length=length;
