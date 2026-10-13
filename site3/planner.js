@@ -139,9 +139,9 @@ box.addEventListener('change',async ev=>{
   if(el.id==='plan-semester-count'){
    const count=Number(el.value);
    await U.updatePlan(async p=>{
-    const displaced=p.items.filter(x=>x.semester>count);
+    const displaced=p.items.filter(x=>x.status==='planned'&&x.semester>count);
     if(displaced.length&&!await U.confirmAction(`改为 ${count} 个学期？`,`${displaced.length} 门课原本安排在之后的学期，会移到「待分配」。课程和学分都会保留。`,'保留课程并调整')){await render();return null;}
-    return {...p,timeline:{...p.timeline,count},preferences:{...p.preferences,startSemester:Math.min(count,p.preferences.startSemester)},items:p.items.map(x=>x.semester>count?{...x,semester:0}:x)};
+    return {...p,timeline:{...p.timeline,count},preferences:{...p.preferences,startSemester:Math.min(count,p.preferences.startSemester)},items:p.items.map(x=>x.status==='planned'&&x.semester>count?{...x,semester:0}:x)};
    });
   }
   if(el.hasAttribute('data-allocation'))await U.updatePlan(p=>({...p,items:p.items.map(x=>x.code===el.dataset.allocation?{...x,group:el.value}:x)}));

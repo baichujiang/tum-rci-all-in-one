@@ -84,6 +84,7 @@ async function addCourse(code,semester=0,{moveExisting=false}={}){
   if(previous&&(previous.status==='passed'||!moveExisting||previous.semester===semester)){result={kind:'unchanged',code,semester:previous.semester};return null;}
   const other=code==='IN2067'?'ED160028':code==='ED160028'?'IN2067':null;
   const replaced=p.items.find(x=>x.code===other);
+  if(replaced?.status==='passed')throw new Error(`已修 ${other} 与这门课二选一，不能替换已修成绩。若记录有误，请先在已修列表取消该记录。`);
   const target=semester||(!previous&&replaced?.semester)||0;
   if(target){
    const offer=window.RCITimetable?window.RCITimetable.offering(p,course,target,d.details||{}):C.offering(course,C.semesterSeason(p.timeline,target));
@@ -100,7 +101,7 @@ async function undoCourse(change){
  return updatePlan(p=>{
   const item=p.items.find(x=>x.code===change.code);
   if(!item||item.semester!==change.semester||item.status!==change.applied.status||(item.locked??false)!==(change.applied.locked??false)||item.group!==change.applied.group)throw new Error('这门课已有其他调整，请在学期卡片中修改。');
-  const fit=x=>({...x,semester:x.semester<=p.timeline.count?x.semester:0});
+  const fit=x=>({...x,semester:x.status==='passed'||x.semester<=p.timeline.count?x.semester:0});
   const items=p.items.filter(x=>x.code!==change.code);
   if(change.previous)items.push(fit(change.previous));
   if(change.replaced)items.push(fit(change.replaced));

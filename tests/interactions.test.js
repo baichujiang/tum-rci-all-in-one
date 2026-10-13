@@ -74,5 +74,11 @@ async function test(name,fn){await fn();tests++;console.log('PASS',name);}
   await h.U.moveCourse('IN2064',3);
   assert.equal((await h.U.plan()).items[0].semester,3);assert.equal(h.stored().items[0].semester,1);assert.equal(h.U.persisted,false);
  });
+ await test('Selecting the other Robotics option cannot replace a passed grade or its historical semester',async()=>{
+  const initial=draft();initial.items=[{code:'IN2067',status:'passed',semester:5}];const h=harness(initial);
+  await assert.rejects(h.U.addCourse('ED160028',2),/已修/);
+  await assert.rejects(h.U.moveCourse('IN2067',1),/已修/);
+  assert.deepEqual(h.stored(),initial);assert.equal(h.writes(),0);assert.equal((await h.U.plan()).items[0].semester,5);
+ });
  console.log(`${tests} plan interaction checks passed`);
 })().catch(err=>{console.error(err);process.exitCode=1;});

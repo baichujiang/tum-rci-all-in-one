@@ -55,7 +55,7 @@
       if (!/^[A-Z0-9][A-Z0-9._-]{0,59}$/.test(code) || used.has(code)) throw new Error('模块代码无效或重复');
       used.add(code);
       const semester = x.semester === undefined ? 0 : x.semester;
-      if (!Number.isInteger(semester) || semester < 0 || semester > timeline.count) throw new Error('课程安排的学期超出规划范围');
+      if (!Number.isInteger(semester) || semester < 0 || semester > (x.status==='passed'?12:timeline.count)) throw new Error('课程安排的学期超出规划范围');
       if (x.locked !== undefined && typeof x.locked !== 'boolean') throw new Error('固定课程设置无效');
       const extra = {locked:x.locked ?? false};
       if (known.has(code)) {
