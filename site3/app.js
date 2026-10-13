@@ -2,9 +2,13 @@
 (function(){
 'use strict';
 const C=window.RCI,esc=C.esc,base=document.querySelector('meta[name="rci-base"]').content;
+const B=window.RCIBackup;
 const $=s=>document.querySelector(s),full=p=>base+p;
 let timer,dbPromise,sessionPlan=null,currentPlan=null,planPersisted=true;
 let planQueue=Promise.resolve();
+let recoveryBlocked=false,recoveryBefore=null,recoveryPromise=null;
+if(B)try{const pending=B.pending(localStorage);if(pending){recoveryBlocked=true;recoveryBefore=pending.before;}}catch(_){recoveryBlocked=true;}
+function withLocalLock(work){return typeof navigator!=='undefined'&&navigator.locks?.request?navigator.locks.request('rci:local-data',work):Promise.resolve().then(work);}
 let selectedSemester=Number(new URLSearchParams(location.search).get('semester'))||0;
 if(!Number.isInteger(selectedSemester)||selectedSemester<0||selectedSemester>12)selectedSemester=0;
 function toast(message,action){
@@ -18,19 +22,20 @@ function toast(message,action){
  }
  timer=setTimeout(()=>{if(!el.contains(document.activeElement))el.replaceChildren();},action?12000:6500);
 }
-function read(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback;}catch(_){return fallback;}}
-function store(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){toast('浏览器不允许保存。本次修改仅在当前页面有效，请导出计划备份。');return false;}}
+function read(key,fallback){try{const before=recoveryBefore&&(key===B.keys.plan?'plan':key===B.keys.favorites?'favorites':null);return JSON.parse(before?recoveryBefore[before]:localStorage.getItem(key))??fallback;}catch(_){return fallback;}}
+function store(key,value){if(recoveryBlocked){toast('本地记录尚未恢复，请先导出原始记录并刷新。');return false;}try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){toast('浏览器不允许保存。本次修改仅在当前页面有效，请导出备份。');return false;}}
 async function load(p){const r=await fetch(full(p));if(!r.ok)throw new Error('资料加载失败，请刷新重试');return r.json();}
 const data=()=>dbPromise||(dbPromise=load('/assets/planner-data.json'));
 const empty=()=>({version:2,cohort:'unknown',conditional:false,items:[]});
 async function plan(){const d=await data();return C.validatePlan(sessionPlan||read('rci:v2:plan',empty()),d.courses);}
 function updatePlan(change){
- const task=planQueue.catch(()=>{}).then(async()=>{
+ const task=planQueue.catch(()=>{}).then(()=>withLocalLock(async()=>{
+  if(planPersisted)sessionPlan=null;
   const d=await data(),p=await plan(),next=await change(p);
   if(!next)return p;
   sessionPlan=C.validatePlan(next,d.courses);planPersisted=store('rci:v2:plan',sessionPlan);currentPlan=sessionPlan;
   window.dispatchEvent(new Event('rci:planchange'));return sessionPlan;
- });
+ }));
  planQueue=task;return task;
 }
 async function addCourse(code,semester=0,{moveExisting=false}={}){
@@ -97,6 +102,7 @@ window.RCIUI={toast,read,store,data,plan,savePlan,updatePlan,empty,base,confirmA
 
 const savedRaw=read('rci:v2:saves',[]);
 let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);
+let favoritesPersisted=true;
 function syncSaves(){
  document.querySelectorAll('[data-save]').forEach(b=>{
   const yes=saved.has(b.dataset.save);b.setAttribute('aria-pressed',String(yes));
@@ -106,10 +112,46 @@ function syncSaves(){
  });
  document.querySelectorAll('[data-save-count]').forEach(el=>{el.textContent=saved.size;el.hidden=!saved.size;});
 }
-function setSaved(key,value){
- value?saved.add(key):saved.delete(key);
- const ok=store('rci:v2:saves',[...saved]);syncSaves();window.dispatchEvent(new Event('rci:saveschange'));return ok;
+async function setSaved(key,value){
+ return withLocalLock(()=>{
+  if(favoritesPersisted){const latest=read('rci:v2:saves',[]);if(Array.isArray(latest))saved=new Set(latest.filter(x=>typeof x==='string'));}
+  value?saved.add(key):saved.delete(key);
+  const ok=store('rci:v2:saves',[...saved]);favoritesPersisted=ok;syncSaves();window.dispatchEvent(new Event('rci:saveschange'));return ok;
+ });
 }
+async function currentBackupState(){
+ const d=await data();
+ function record(key,fallback){
+  let raw;try{raw=recoveryBefore?recoveryBefore[key===B.keys.plan?'plan':'favorites']:localStorage.getItem(key);}catch(_){return read(key,fallback);}
+  try{return JSON.parse(raw)??fallback;}catch(_){throw new Error('本地记录无法读取，请先导出原始记录。');}
+ }
+ const p=planPersisted?C.validatePlan(record(B.keys.plan,empty()),d.courses):await plan();
+ const f=favoritesPersisted?record(B.keys.favorites,[]):[...saved];
+ return B.state({plan:p,favorites:f},d.courses);
+}
+async function backupSnapshot(){
+ await planQueue.catch(()=>{});if(recoveryPromise)await recoveryPromise;
+ return withLocalLock(async()=>{
+  const value=await currentBackupState();let raw=null;try{raw=B.capture(localStorage);}catch(_){}
+  return {data:value,fingerprint:B.fingerprint(value),raw};
+ });
+}
+function importBackup(incoming,mode,expected){
+ const task=planQueue.catch(()=>{}).then(async()=>{
+  if(recoveryPromise)await recoveryPromise;
+  return withLocalLock(async()=>{
+   if(recoveryBlocked)throw new Error('本地记录尚未恢复，请先导出原始记录。');
+   const d=await data(),before=await currentBackupState();
+   if(expected&&B.fingerprint(before)!==expected.fingerprint)throw new Error('当前数据已更新，请重新核对导入预览。');
+   const next=B.prepare(before,incoming,mode,d.courses);
+   B.commit(localStorage,next,{expected:expected?.raw,beforeBackup:B.create(before,d.courses)});
+   sessionPlan=next.plan;currentPlan=next.plan;planPersisted=true;favoritesPersisted=true;saved=new Set(next.favorites);
+   syncSaves();window.dispatchEvent(new Event('rci:planchange'));window.dispatchEvent(new Event('rci:saveschange'));
+   return next;
+  });
+ });planQueue=task;return task;
+}
+if(B)Object.assign(window.RCIUI,{backupSnapshot,importBackup,getBackupHistory:()=>B.history(localStorage),rawBackup:()=>({type:'tum-rci-raw-backup',version:1,createdAt:new Date().toISOString(),records:B.capture(localStorage),recovery:localStorage.getItem(B.keys.journal)})});
 function syncAddButtons(){
  if(!currentPlan)return;
  const codes=new Set(currentPlan.items.map(x=>x.code));
@@ -217,10 +259,10 @@ if(app){
 document.addEventListener('click',async ev=>{
  const b=ev.target.closest('button');if(!b)return;
  if(b.hasAttribute('data-save')){
-  const inFavorites=!!b.closest('[data-favorites-surface]'),k=b.dataset.save,adding=!saved.has(k),ok=setSaved(k,adding);
+  const inFavorites=!!b.closest('[data-favorites-surface]'),k=b.dataset.save,adding=!saved.has(k),ok=await setSaved(k,adding);
   if(ok&&(b.dataset.saveStyle==='star'||favoritesApp)){
    if(adding)toast('已加入我的收藏',{label:'查看收藏',href:full('/#bookmarks')});
-   else toast('已取消收藏',{label:'撤销',run:()=>{if(setSaved(k,true))toast('已恢复收藏');}});
+   else toast('已取消收藏',{label:'撤销',run:async()=>{if(await setSaved(k,true))toast('已恢复收藏');}});
   }
   if(inFavorites&&!adding){const next=[...favoritesApp.querySelectorAll('[data-save]')].find(el=>!el.closest('[hidden]'));(next||$('#portal-search')||$('#favorites-return')).focus();}
  }
@@ -234,9 +276,18 @@ document.addEventListener('click',async ev=>{
  }
 });
 window.addEventListener('storage',ev=>{
+ if(B)try{if(B.pending(localStorage))return;}catch(_){return;}
+ if(B&&ev.key===B.keys.journal&&ev.newValue===null){sessionPlan=null;const v=read('rci:v2:saves',[]);saved=new Set(Array.isArray(v)?v:[]);syncSaves();window.dispatchEvent(new Event('rci:planchange'));window.dispatchEvent(new Event('rci:saveschange'));return;}
  if(ev.key==='rci:v2:plan'||ev.key===null){sessionPlan=null;window.dispatchEvent(new Event('rci:planchange'));}
  if(ev.key==='rci:v2:saves'||ev.key===null){const v=read('rci:v2:saves',[]);saved=new Set(Array.isArray(v)?v:[]);syncSaves();window.dispatchEvent(new Event('rci:saveschange'));}
 });
+if(recoveryBlocked&&B){
+ recoveryPromise=withLocalLock(()=>B.recover(localStorage)).then(()=>{
+  recoveryBlocked=false;recoveryBefore=null;sessionPlan=null;const v=read('rci:v2:saves',[]);saved=new Set(Array.isArray(v)?v:[]);
+  syncSaves();window.dispatchEvent(new Event('rci:planchange'));window.dispatchEvent(new Event('rci:saveschange'));
+  toast('上次导入未完成，原有计划和收藏已恢复。');
+ }).catch(()=>{toast('原始记录仍在恢复备份中，请先导出原始记录。');});
+}
 syncSaves();syncPlanWidgets();
 // Preserve already shared routes on the same origin.
 if(location.hash.startsWith('#/')){

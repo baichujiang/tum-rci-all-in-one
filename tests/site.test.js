@@ -18,6 +18,17 @@ const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(x=>x.isDirectory()?
 test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,78);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
 test('all local assets and links resolve',()=>{const build=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));for(const p of html){const txt=fs.readFileSync(p,'utf8');for(const m of txt.matchAll(/(?:href|src)="([^"]+)"/g)){if(!m[1].startsWith('/'))continue;let u=decodeURIComponent(m[1].split(/[?#]/)[0]);if(build.base){assert(u.startsWith(build.base+'/'));u=u.slice(build.base.length);}let target=path.join(dist,u);if(u.endsWith('/'))target=path.join(target,'index.html');assert(fs.existsSync(target),p+' -> '+u);}}});
 test('no raw API credentials, CDN scripts or analytics in emitted markup',()=>{for(const p of html){const txt=fs.readFileSync(p,'utf8');assert(!/src="https?:|ghp_[A-Za-z0-9]+|sk_live_|googletagmanager/.test(txt),p);}});
+test('Local backup UI is reachable from favorites and planner, with its dependencies loaded in order',()=>{
+ for(const p of html){
+  const s=fs.readFileSync(p,'utf8');assert.equal((s.match(/id="backup-dialog"/g)||[]).length,1,p);
+  const scripts=[...s.matchAll(/<script defer src="([^"]+)"/g)].map(m=>path.basename(m[1]));
+  assert(scripts.indexOf('core.js')<scripts.indexOf('backup-core.js'),p);
+  assert(scripts.indexOf('backup-core.js')<scripts.indexOf('site.js'),p);
+  assert(scripts.indexOf('site.js')<scripts.indexOf('backup-ui.js'),p);
+ }
+ for(const p of ['index.html','favorites/index.html'])assert(fs.readFileSync(path.join(dist,p),'utf8').includes('data-backup-open'),p);
+ const planner=fs.readFileSync(path.join(dist,'assets/planner.js'),'utf8');assert(planner.includes('data-backup-open'));assert(!planner.includes('plan-import'));
+});
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
 test('course sources and status retained in static pages',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('2025'));assert(s.includes('历史整理'));assert(s.includes('campus.tum.de'));});
 test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,144);assert.equal(info.courses,35);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});

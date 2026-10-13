@@ -60,6 +60,8 @@ for route, marker in [
     ("/assets/site.js", "RCISearch.search"),
     ("/assets/site.css", ".task-grid"),
     ("/assets/course-picker.js", "Pick multiple courses"),
+    ("/assets/backup-core.js", "tum-rci-backup"),
+    ("/assets/backup-ui.js", "importBackup"),
 ]:
     check("anonymous 200 " + route, lambda route=route, marker=marker: contains(route, marker))
 
@@ -78,6 +80,7 @@ def bookmarks_check():
         assert group in body, f"Expanded website module missing: {group}"
 check("inline bookmarks above expanded website modules", bookmarks_check)
 check("planner has an in-page course picker", lambda: contains("/planner/", 'id="course-picker"'))
+check("local backup is reachable from the home page", lambda: contains("/", 'data-backup-open'))
 
 def build_check():
     info = json.loads(get("/build-info.json"))
