@@ -1,0 +1,22 @@
+# Publish source only. Local QA evidence, generated output and personal exports stay local.
+.git/
+.vercel/
+dist/
+reports/
+.site-build-*/
+node_modules/
+.cache/
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+.vscode/
+*.bak
+.env
+.env.*
+data/link_check_latest.csv
+offline.html
+assets/offline-data.js
+rci-study-plan*.*
+rci-backup*.*
+rci-week*.ics
