@@ -8,3 +8,5 @@
 .admission-settings{display:flex;align-items:end;flex-wrap:wrap;gap:16px;margin:18px 0}.admission-settings label{max-width:310px;width:100%}.admission-settings>a{margin-bottom:10px}
 
 .workload-hint{display:block;font-size:10px;font-weight:400;color:#69796f;margin-top:5px;white-space:normal}.over-workload .workload-hint{color:#a36227;font-weight:600}.over-workload{box-shadow:inset 0 -3px #d9954e}
+
+.optional-time-tools{padding:20px 24px;margin:28px 0}.optional-time-tools>summary{font-weight:700;cursor:pointer;padding:6px 0}.optional-time-tools>.meta{margin:12px 0}.optional-time-tools .timetable-panel{padding:0;margin:20px 0 0;border:0;box-shadow:none}.official-timetable-help{margin-top:14px!important}@media(max-width:700px){.optional-time-tools{padding:18px}}

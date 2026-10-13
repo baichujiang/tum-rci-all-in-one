@@ -10,8 +10,8 @@ function sheets(p){
  for(const x of p.items){const c=db.courses.find(c=>c.module_code===x.code);rows.push([x.code,getName(x.code,p),db.names[x.code]||'',Number(c?.ects??x.ects),x.group||c?.section_2025[0],x.status==='passed'?'已修通过':'未来计划',x.status==='passed'?'已修':x.semester?T.term(p,x.semester).label:'待分配',x.locked?'是':'否']);}
  const times=[['学期','星期','开始','结束','课程／事件','地点','来源','核对状态','具体日期']];
  for(let n=1;n<=p.timeline.count;n++){const week=T.week(p,db.courses,n,db.details||{});for(const x of week.events)times.push([T.term(p,n).label,['周一','周二','周三','周四','周五','周六','周日'][x.day],T.time(x.start),T.time(x.end),x.title,x.room||'',x.source||'个人录入',x.source?'教学网页的典型周':'自行录入',x.dates?.join('、')||'每周']);for(const code of week.missing)times.push([T.term(p,n).label,'','','',getName(code,p),'','','缺少本学期时间']);}
- const settings=[['设置','值'],['入学批次',p.cohort],['控制理论补修',p.conditional?'是':'否'],['想选',p.preferences.desired.join(', ')],['排除',p.preferences.excluded.join(', ')],['语言',p.preferences.languages.join('/')],['全局学分',`${p.workload.minECTS}–${p.workload.maxECTS}`],['全局考核',`${p.workload.minExams}–${p.workload.maxExams}`],['规则','2024 FPSO + 2025-02-11 修订；模拟结果不等于学校认可'],['数据核验','2026-10-13；实际开课和课程认定以个人TUMonline为准']];
- return [{name:'毕业计划',rows},{name:'周课表',rows:times},{name:'规划条件',rows:settings}];
+ const settings=[['设置','值'],['入学批次',p.cohort],['控制理论补修',p.conditional?'是':'否'],['想选',p.preferences.desired.join(', ')],['排除',p.preferences.excluded.join(', ')],['语言',p.preferences.languages.join('/')],['全局学分',`${p.workload.minECTS}–${p.workload.maxECTS}`],['全局考核',`${p.workload.minExams}–${p.workload.maxExams}`],['规则','2024 FPSO + 2025-02-11 修订；模拟结果不等于学校认可'],['数据核验','2026-10-13；实际开课和课程认定以个人TUMonline为准'],['时间数据','典型周参考，未同步个人TUMonline；隔周、停课、改期与分组未完整覆盖，不能保证整学期无冲突']];
+ return [{name:'毕业计划',rows},{name:'典型周时间参考',rows:times},{name:'规划条件',rows:settings}];
 }
 box.addEventListener('click',async event=>{const b=event.target.closest('button');if(!b)return;try{
  const p=await U.plan();
