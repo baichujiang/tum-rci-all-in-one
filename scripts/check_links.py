@@ -24,8 +24,12 @@ for x in u[:a.limit]:
                 code=resp.status; status='OK' if code<400 else 'REVIEW'; detail=f'HTTP {code}'; break
         except urllib.error.HTTPError as ex:
             code=ex.code
+            ex.close()
             if code in (401,403,429):status='LOGIN_OR_BLOCKED';detail=f'HTTP {code}';break
-            if code in (404,410):status='POSSIBLY_DEAD';detail=f'HTTP {code}';break
+            if code in (404,410):
+                detail=f'HTTP {code}'
+                if method=='HEAD':continue
+                status='POSSIBLY_DEAD';break
             detail=f'HTTP {code}'
         except Exception as ex:
             detail=str(ex)[:140]

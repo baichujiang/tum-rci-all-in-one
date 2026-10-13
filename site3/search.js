@@ -3,22 +3,23 @@
 'use strict';
 const normalize=s=>String(s||'').normalize('NFKC').toLowerCase().replace(/[\p{P}\p{Z}\s]+/gu,'');
 const stop=/^(怎么|如何|什么|哪里|我要|我想|请问|可以|需要|一个|有没有|找到|want|how|where|what|the|to|for|is|a|i)$/i;
+const phrasePattern=s=>[...s].map(c=>c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('\\s*');
 function terms(query,groups){
- const q=normalize(query);let rest=normalize(String(query).replace(/\b(how|do|does|i|we|where|what|is|are|the|a|an|to|can|please|course|courses|module)\b/gi,' '));const out=[];
+ const q=normalize(query);let rest=String(query).normalize('NFKC').toLowerCase().replace(/\b(how|do|does|i|we|where|what|is|are|the|a|an|to|can|please|find|need|course|courses|module)\b/gi,' ').replace(/\b(in|ed|mw|ei|wi)\s+(\d+)\b/gi,'$1$2').replace(/[\p{P}\p{Z}\s]+/gu,' ');const out=[];
  [...groups].sort((a,b)=>Math.max(...b.map(x=>normalize(x).length))-Math.max(...a.map(x=>normalize(x).length))).forEach(g=>{
-  const ns=g.map(normalize).filter(Boolean);const hits=ns.filter(x=>rest.includes(x) && (x.length>2 || !/^[a-z]+$/.test(x) || new RegExp('(^|[^a-z])'+x+'([^a-z]|$)','i').test(query)));
-  if(hits.length){out.push(ns);hits.forEach(x=>{rest=rest.split(x).join(' ');});}
+  const ns=g.map(normalize).filter(Boolean);const hits=ns.filter(x=>normalize(rest).includes(x) && (!/^[a-z0-9]+$/.test(x) || new RegExp('(^|[^a-z0-9])'+phrasePattern(x)+'([^a-z0-9]|$)','i').test(rest)));
+  if(hits.length){out.push(ns);hits.forEach(x=>{rest=rest.replace(new RegExp(phrasePattern(x),'gu'),' ');});}
  });
  rest=rest.replace(/(请问|我想要|我想|我要|怎样|怎么|如何|哪里|在哪|什么|需要|可以|能不能|有没有|找到|一下|请|的|了|吗|呢|是)/g,' ');
  const parts=rest.match(/[a-z0-9._-]+|[\u3400-\u9fff]+/gi)||[];
- for(const x of parts)if(!stop.test(x)&&x.length>1)out.push([x]);
+ for(const x of parts)if(!stop.test(x)&&(x.length>1||/^\d$/.test(x)))out.push([x]);
  return out.length?out:[[q]];
 }
 function search(docs,query,groups=[],filter={}){
  const q=normalize(query);if(!q)return docs.filter(d=>(!filter.kind||d.kind===filter.kind)&&(!filter.task||d.tasks.includes(filter.task)));
  const gs=terms(query,groups),exactCode=q.match(/^(in|ed|mw|ei|wi)\d+$/i);
  const scored=[];
- const has=(text,t)=>/^[a-z]{1,3}$/.test(t)?new RegExp('(^|[^a-z0-9])'+t+'([^a-z0-9]|$)','i').test(String(text||'')):normalize(text).includes(t);
+ const has=(text,t)=>/^[a-z]{1,3}$/.test(t)||/^\d$/.test(t)?new RegExp('(^|[^a-z0-9])'+t+'([^a-z0-9]|$)','i').test(String(text||'')):normalize(text).includes(t);
  for(const d of docs){
   if(filter.kind&&d.kind!==filter.kind || filter.task&&!d.tasks.includes(filter.task))continue;
   const title=normalize(d.title), aliases=(d.aliases||[]).map(normalize), all=[d.title,d.summary,d.body,...(d.aliases||[])].join(' ');

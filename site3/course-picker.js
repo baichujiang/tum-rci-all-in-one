@@ -46,7 +46,7 @@ document.addEventListener('click',async ev=>{
  dialog.showModal();query.focus({preventScroll:true});await refresh();
 });
 dialog.addEventListener('close',()=>{
- const opener=document.querySelector(`[data-pick-semester="${semester}"]`);if(opener){opener.focus({preventScroll:true});opener.closest('.semester-card').scrollIntoView({block:'nearest'});}
+ const opener=document.querySelector(`[data-pick-semester="${semester}"]`)||document.querySelector('[data-pick-semester]');if(opener){opener.focus({preventScroll:true});opener.closest('.semester-card').scrollIntoView({block:'nearest'});}
 });
 dialog.addEventListener('click',async ev=>{
  const button=ev.target.closest('button');
@@ -54,7 +54,7 @@ dialog.addEventListener('click',async ev=>{
  if(button?.hasAttribute('data-picker-reset')){query.value='';group.value='';other.checked=false;await refresh();query.focus();}
  if(button?.id==='picker-undo'&&lastChange){
   button.disabled=true;
-  try{await U.undoCourse(lastChange);notice('已撤销，原来的安排已恢复。',null);await refresh();}
+  try{await U.undoCourse(lastChange);notice('已撤销，原来的安排已恢复。',null);await refresh();if(dialog.open)query.focus({preventScroll:true});}
   catch(err){notice(err.message,null);}finally{button.disabled=false;}
  }
  if(button?.hasAttribute('data-picker-add')){

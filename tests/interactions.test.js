@@ -9,14 +9,32 @@ function harness(initial=draft()){
  let stored=JSON.stringify(initial),writes=0,events=0,confirmations=0;
  const control={confirm:true,quota:false};
  const toast={replaceChildren(){},append(){},contains(){return false;}};
- const window={RCI:C,confirm(){confirmations++;return control.confirm;},dispatchEvent(ev){assert.equal(ev.type,'rci:planchange');events++;}};
+ const window={RCI:C,confirm(){confirmations++;if(control.onConfirm)control.onConfirm();return control.confirm;},dispatchEvent(ev){assert.equal(ev.type,'rci:planchange');events++;}};
  const context={window,URLSearchParams,location:{search:''},document:{querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;return null;},createElement(){return {addEventListener(){}};}},localStorage:{getItem(){return stored;},setItem(key,value){assert.equal(key,'rci:v2:plan');if(control.quota)throw new Error('quota');stored=value;writes++;}},fetch:async url=>{assert.equal(url,'/assets/planner-data.json');return {ok:true,json:async()=>({courses,names:{}})};},Event:function(type){this.type=type;},setTimeout(){return 0;},clearTimeout(){}};
  vm.runInNewContext(source,context,{filename:'site3/app.js'});
- return {U:window.RCIUI,control,stored:()=>JSON.parse(stored),writes:()=>writes,events:()=>events,confirmations:()=>confirmations};
+ return {U:window.RCIUI,control,stored:()=>JSON.parse(stored),externalPlan:value=>{stored=JSON.stringify(value);},writes:()=>writes,events:()=>events,confirmations:()=>confirmations};
 }
 let tests=0;
 async function test(name,fn){await fn();tests++;console.log('PASS',name);}
 (async()=>{
+ await test('A clear confirmation cannot erase a course added by another page',async()=>{
+  const h=harness(),latest={...draft(),items:[...draft().items,{code:'IN2320',status:'planned',semester:4}]};
+  h.control.onConfirm=()=>h.externalPlan(latest);
+  await assert.rejects(h.U.clearPlan(),/其他页面/);
+  assert.deepEqual(h.stored(),latest);assert.equal(h.writes(),0);
+ });
+ await test('Clearing a plan requires confirmation and resets settings only after acceptance',async()=>{
+  const h=harness();h.control.confirm=false;
+  assert.equal(await h.U.clearPlan(),false);assert.deepEqual(h.stored(),draft());assert.equal(h.writes(),0);
+  h.control.confirm=true;assert.equal(await h.U.clearPlan(),true);
+  assert.deepEqual(h.stored(),JSON.parse(JSON.stringify(C.validatePlan(h.U.empty(),courses))));assert.equal(h.writes(),1);
+ });
+ await test('Without cross-page locks, a confirmation cannot overwrite another page’s new course',async()=>{
+  const h=harness(),latest={...draft(),items:[...draft().items,{code:'IN2320',status:'planned',semester:4}]};
+  h.control.onConfirm=()=>h.externalPlan(latest);
+  await assert.rejects(h.U.moveCourse('IN2064',2),/其他页面/);
+  assert.deepEqual(h.stored(),latest);assert.equal(h.writes(),0);
+ });
  await test('Moving a legacy course preserves its record and degree accounting',async()=>{
   const h=harness(),before=C.calculate(await h.U.plan(),courses).allocated;
   const change=await h.U.moveCourse(' in2064 ',3);

@@ -10,12 +10,37 @@ test('ML does not match TUM Live or housing',()=>{const ids=S.search(index.docs,
 test('unknown query yields no invented answer',()=>assert.equal(S.search(index.docs,'量子火锅xyz',index.synonyms).length,0));
 test('question result prefers guidance over a historic topic',()=>assert.equal(top('实验课怎么选'),'guide:matching'));
 test('exact code always resolves to the module',()=>{for(const d of index.docs.filter(d=>d.kind==='course'))assert.equal(top(d.code),d.id);});
+test('every indexed item can be found by its displayed title',()=>{
+ for(const d of index.docs)assert(S.search(index.docs,d.title,index.synonyms,{kind:d.kind}).some(found=>found.id===d.id),d.id+' '+d.title);
+});
 test('all main guides unique in search, archives not indexed',()=>{assert.equal(index.docs.filter(d=>d.kind==='guide').length,15);assert(!index.docs.some(d=>d.url.startsWith('/archive/')));assert.equal(new Set(index.docs.map(d=>d.id)).size,index.docs.length);});
 test('resource duplicates merged by canonical URL',()=>{const ds=index.docs.filter(d=>d.direct);assert.equal(new Set(ds.map(d=>d.url.replace(/\/$/,''))).size,ds.length);});
+test('Merged directories use the broad destination name while retaining historical IDs',()=>{
+ const matching=index.docs.find(d=>d.resource_ids?.includes('R029')),labs=index.docs.find(d=>d.resource_ids?.includes('R055'));
+ assert.equal(matching.title,'Matching 官方说明与余位（非报名系统）');assert.equal(matching.id,'R044');
+ assert.equal(labs.title,'MIRMI Research Labs');assert.equal(labs.id,'R059');
+ assert(labs.summary.includes('Flying/Ground/Underwater'));assert(matching.summary.includes('不是系统登录页'));
+});
+test('merged resource entries remain searchable by every original title',()=>{
+ const original=require('../assets/core').csv(fs.readFileSync(path.join(root,'data/resources.csv'),'utf8')),canonical=url=>url.replace(/\/$/,'');
+ for(const r of original.filter(r=>original.filter(other=>canonical(other.url)===canonical(r.url)).length>1)){
+  const found=S.search(index.docs,r.title,index.synonyms,{kind:'resource'})[0];assert.equal(found&&canonical(found.url),canonical(r.url),r.id+' '+r.title);
+ }
+});
+test('merged resource entries retain their original descriptions and task categories',()=>{
+ const lab=S.search(index.docs,'Flying Ground',index.synonyms,{kind:'resource'})[0];assert(lab?.resource_ids.includes('R055'));
+ const language=index.docs.find(d=>d.id==='R122');assert(language.tasks.includes('life'));assert(language.tasks.includes('exams'));
+});
 test('task filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{task:'life'}).every(d=>d.tasks.includes('life'))));
 test('kind filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{kind:'course'}).every(d=>d.kind==='course')));
 const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(path.join(p,x.name)):[path.join(p,x.name)]),html=walk(dist).filter(p=>p.endsWith('.html'));
 test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,78);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
+test('every page can resolve historical favorite IDs before loading search data',()=>{
+ for(const p of html){const match=fs.readFileSync(p,'utf8').match(/<meta name="rci-favorite-groups" content="([^"]+)">/);assert(match,p);
+  const groups=JSON.parse(match[1].replace(/&quot;/g,'"'));
+  for(const d of index.docs.filter(d=>d.resource_ids?.length>1))assert(groups.some(keys=>keys.length===d.resource_ids.length&&d.resource_ids.every(id=>keys.includes(id))),p+' '+d.id);
+ }
+});
 test('all local assets and links resolve',()=>{const build=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));for(const p of html){const txt=fs.readFileSync(p,'utf8');for(const m of txt.matchAll(/(?:href|src)="([^"]+)"/g)){if(!m[1].startsWith('/'))continue;let u=decodeURIComponent(m[1].split(/[?#]/)[0]);if(build.base){assert(u.startsWith(build.base+'/'));u=u.slice(build.base.length);}let target=path.join(dist,u);if(u.endsWith('/'))target=path.join(target,'index.html');assert(fs.existsSync(target),p+' -> '+u);}}});
 test('no raw API credentials, CDN scripts or analytics in emitted markup',()=>{for(const p of html){const txt=fs.readFileSync(p,'utf8');assert(!/src="https?:|ghp_[A-Za-z0-9]+|sk_live_|googletagmanager/.test(txt),p);}});
 test('Local backup UI is reachable from favorites and planner, with its dependencies loaded in order',()=>{
@@ -70,6 +95,12 @@ test('Feedback is reachable beside the directory and from every page footer',()=
  const F=require('../site3/feedback');const d=F.draft('missing','增加测试平台 https://example.org/?x=1&y=2','/planner/');const u=new URL(d.url);
  assert.equal(u.origin,'https://github.com');assert.equal(u.pathname,'/baichujiang/tum-rci-all-in-one/issues/new');assert(u.searchParams.get('body').includes('x=1&y=2'));assert(u.searchParams.get('body').endsWith('/planner/'));
  assert(F.draft('feature','test','/search/?private=secret').body.endsWith('/'));assert(!F.draft('feature','test','/search/?private=secret').body.includes('secret'));
+});
+test('Homepage search retains every original resource name behind its shorter card label',()=>{
+ const nav=JSON.parse(fs.readFileSync(path.join(root,'content/navigation.json'),'utf8')),C=require('../assets/core'),resources=C.csv(fs.readFileSync(path.join(root,'data/resources.csv'),'utf8')),home=fs.readFileSync(path.join(dist,'index.html'),'utf8');
+ const entities={'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'"},decode=text=>text.replace(/&(?:amp|lt|gt|quot|#39);/g,entity=>entities[entity]);
+ const cards=[...home.matchAll(/<article class="portal-card" data-portal="([^"]+)"[^>]*data-keywords="([^"]*)"/g)].map(match=>{const shortcut=nav.shortcuts.find(s=>s.id===match[1]);return {id:match[1],kind:'resource',title:shortcut.label,summary:shortcut.hint,body:decode(match[2]),aliases:[],tasks:[]};});
+ for(const shortcut of nav.shortcuts){const original=resources.find(r=>r.id===shortcut.id);assert(S.search(cards,original.title).some(card=>card.id===shortcut.id),original.id+' '+original.title);}
 });
 test('Course directory can target a semester while static links remain available',()=>{
  const s=fs.readFileSync(path.join(dist,'courses/index.html'),'utf8');assert(s.includes('id="course-target-semester"'));assert(s.includes('先选课，稍后分配'));assert(s.includes('TUMonline'));

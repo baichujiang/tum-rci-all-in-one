@@ -11,5 +11,6 @@ offline.html
 assets/offline-data.js
 rci-study-plan*.json
 dist/
+.site-build-*/
 .vercel/
 node_modules/

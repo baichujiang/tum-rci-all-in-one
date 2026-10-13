@@ -4,7 +4,7 @@
 const U=window.RCIUI,C=window.RCI,e=C.esc,box=document.getElementById('planner');if(!box)return;
 let db,known,renderId=0,draggedCode=null,dragFrame=0,dragX=0,boardScrollOwner=null;
 const domainNames=C.courseGroups;
-try{db=await U.data();known=new Map(db.courses.map(c=>[c.module_code,c]));await render();}catch(err){box.innerHTML='<div class="empty"><h2>暂时无法读取计划</h2><p>'+e(err.message)+'。已有记录没有覆盖，请先备份再重试。</p><a class="button secondary" href="'+U.base+'/courses/">先浏览课程</a></div>';return;}
+try{db=await U.data();known=new Map(db.courses.map(c=>[c.module_code,c]));await render();}catch(err){box.innerHTML='<div class="empty"><h2>暂时无法读取计划</h2><p>'+e(err.message)+'。已有记录没有覆盖，请先备份再重试。</p><button class="button" type="button" data-backup-open>备份与恢复</button> <a class="button secondary" href="'+U.base+'/courses/">先浏览课程</a></div>';return;}
 function progress(calc){return calc.buckets.map(([name,value,target],i)=>`<div class="progress-row"><div><span>${e(name)}<small class="original-label">${e(C.creditOriginalNames[i])}</small></span><b>${Math.min(value,target)} / ${target}</b></div><progress max="${target}" value="${Math.min(value,target)}" aria-label="${e(name)} ${e(C.creditOriginalNames[i])} ${Math.min(value,target)} / ${target} ECTS"></progress></div>`).join('');}
 function gaps(calc,p){
  if(!p.items.length)return '<p>加入课程后，查看各类别还需要多少学分。</p>';
@@ -33,7 +33,7 @@ function semesterCard(semester,p){
  return `<section class="semester-card ${semester.season}" id="semester-${semester.number}" data-drop-semester="${semester.number}" aria-labelledby="semester-title-${semester.number}">${conflictCount?`<p class="semester-alert">${conflictCount} 门课程的目录季节与安排不符</p>`:''}<div class="semester-courses">${semester.items.length?semester.items.map(x=>row(x,p)).join(''):'<p class="semester-placeholder">还没有安排课程</p>'}</div><button type="button" class="semester-add text-link" data-pick-semester="${semester.number}" aria-haspopup="dialog" aria-label="为第 ${semester.number} 学期添加课程">＋ 添加课程</button></section>`;
 }
 function summary(calc,p){
- return `<section class="panel plan-summary board-summary" aria-labelledby="plan-summary-title"><div class="summary-overview"><h2 id="plan-summary-title">规划学分</h2><div class="summary-total"><b>${calc.allocated}</b><small>/ 120 ECTS</small></div></div><div class="summary-progress">${progress(calc)}</div><p class="summary-caption">已选课程计入 · 2025 规则快照</p><details id="summary-gaps" class="summary-gaps"><summary>查看分类学分缺口</summary><div class="domain-minimums">${['G','H','I'].map(k=>`<span class="${calc.totals[k]>=5?'met':''}">${domainNames[k]}<b>${calc.totals[k]} / 最低 5</b></span>`).join('')}</div><div class="gaps">${gaps(calc,p)}</div><p class="summary-note">${calc.supported?'按 2025 规则快照模拟，不等于学校认定。':'先确认入学批次，再核对上述结构是否适用。'}${calc.custom?' 含自行录入选修，实际认定待确认。':''}</p></details></section>`;
+ return `<section class="panel plan-summary board-summary" aria-labelledby="plan-summary-title"><div class="summary-overview"><h2 id="plan-summary-title">规划学分</h2><div class="summary-total"><b>${calc.allocated}</b><small>/ 120 ECTS</small></div></div><div class="summary-progress">${progress(calc)}</div><p class="summary-caption">已选课程计入 · 2025 规则快照</p><details id="summary-gaps" class="summary-gaps"><summary>查看分类学分缺口</summary><div class="domain-minimums">${['G','H','I'].map(k=>`<span class="${calc.totals[k]>=5?'met':''}">${domainNames[k]}<b>${calc.totals[k]} / 最低 5</b></span>`).join('')}</div><div class="gaps">${gaps(calc,p)}</div><p class="summary-note">${calc.supported?'按 2025 规则快照模拟，不等于学校认定。':p.cohort==='older'?'其他入学批次未包含在当前模型中，请核对学校原文。':'先确认入学批次，再核对上述结构是否适用。'}${calc.custom?' 含自行录入选修，实际认定待确认。':''}</p></details></section>`;
 }
 function syncBoard(source){
  const head=box.querySelector('.board-head-scroll'),body=box.querySelector('.board-courses-scroll');if(!head||!body)return;
@@ -70,7 +70,8 @@ async function moveCourse(code,semester){
 }
 async function render(){
  const id=++renderId,active=document.activeElement;
- const focusKey=active?.id?{id:active.id}:active?.dataset.semester?{semester:active.dataset.semester}:null;
+ const focusKey=active?.id?{id:active.id}:active?.dataset.semester?{semester:active.dataset.semester}:active?.closest('#custom-plan')&&active.name?{customField:active.name,start:active.selectionStart,end:active.selectionEnd}:null;
+ const customDraft=[...box.querySelectorAll('#custom-plan [name]')].map(el=>[el.name,el.value]);
  const openDetails=[...box.querySelectorAll('details[open]')].map(el=>el.id);
  const summaryOpen=box.querySelector('#summary-gaps')?.open;
  const boardLeft=box.querySelector('.board-courses-scroll')?.scrollLeft||0;
@@ -83,7 +84,7 @@ async function render(){
  // Desktop helpers use the existing controls and never change the plan schema.
  const cohortLink=document.createElement('a');
  cohortLink.className='text-link desktop-only desktop-cohort';cohortLink.href='#plan-options';cohortLink.dataset.planRuleOpen='';
- cohortLink.textContent=p.cohort==='unknown'?'入学批次尚未确认 →':`规则适用：${p.cohort} →`;
+ cohortLink.textContent=p.cohort==='unknown'?'入学批次尚未确认 →':p.cohort==='older'?'其他入学批次 →':`入学批次：${p.cohort} →`;
  box.querySelector('.timeline-meta').prepend(cohortLink);
  const swipeHint=box.querySelector('.board-swipe-hint');
  swipeHint.innerHTML='<span class="desktop-only">左右滚动查看其他学期。</span><span class="desktop-legacy">'+e(swipeHint.textContent)+'</span>';
@@ -97,7 +98,8 @@ async function render(){
  }
  syncBoard();
  for(const detailId of openDetails){const el=document.getElementById(detailId);if(el)el.open=true;}
- if(focusKey){const target=focusKey.id?document.getElementById(focusKey.id):box.querySelector(`[data-semester="${focusKey.semester}"]`);if(target)target.focus({preventScroll:true});}
+ const customForm=box.querySelector('#custom-plan');for(const [name,value] of customDraft){const field=customForm.elements.namedItem(name);if(field)field.value=value;}
+ if(focusKey){const target=focusKey.id?document.getElementById(focusKey.id):focusKey.customField?customForm.elements.namedItem(focusKey.customField):box.querySelector(`[data-semester="${focusKey.semester}"]`);if(target){target.focus({preventScroll:true});if(focusKey.customField&&target.type==='text'&&Number.isInteger(focusKey.start))target.setSelectionRange(focusKey.start,focusKey.end);}}
 }
 window.addEventListener('rci:planchange',()=>render().catch(err=>U.toast(err.message)));
 window.addEventListener('resize',()=>syncBoard());
@@ -163,7 +165,7 @@ box.addEventListener('click',async ev=>{
    await U.updatePlan(p=>{removed=p.items.find(x=>x.code===b.dataset.remove);return {...p,items:p.items.filter(x=>x.code!==b.dataset.remove)};});
    if(removed&&U.persisted)U.toast('已移除课程。',{label:'撤销',run:async()=>{await U.updatePlan(p=>p.items.some(x=>x.code===removed.code)?null:{...p,items:[...p.items,{...removed,semester:removed.semester<=p.timeline.count?removed.semester:0}]});if(U.persisted)U.toast('课程已恢复。');}});
   }
-  if(b.hasAttribute('data-clear')&&await U.confirmAction('清空这份计划？','课程、学期安排、入学批次和补修设置会一起清空。建议先导出备份。','清空计划')){await U.savePlan(U.empty());if(U.persisted)U.toast('计划已清空，可以重新开始。');}
+  if(b.hasAttribute('data-clear')&&await U.clearPlan()&&U.persisted)U.toast('计划已清空，可以重新开始。');
 
  }catch(err){U.toast(err.message);}
 });
@@ -173,6 +175,7 @@ box.addEventListener('submit',async ev=>{
   const f=new FormData(ev.target),code=String(f.get('code')).trim().toUpperCase();
   if(known.has(code))throw new Error('此模块已在目录里，请从课程页添加');
   await U.updatePlan(p=>({...p,items:[...p.items,{code,name:String(f.get('name')),ects:Number(f.get('ects')),group:f.get('group'),status:'planned',custom:true}]}));
+  await render();box.querySelector('#custom-plan').reset();
   if(U.persisted)U.toast('选修已加入，实际认定请向学校确认。');
  }catch(err){U.toast(err.message);}
 });

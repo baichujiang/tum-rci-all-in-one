@@ -75,6 +75,8 @@ function commit(storage,next,{expected,beforeBackup}){
  if(expected&&JSON.stringify(before)!==JSON.stringify(expected))throw new Error('当前数据已在其他页面更新，请重新核对导入预览。');
  const records=[beforeBackup,...history(storage)].slice(0,3);
  const journal={version:1,createdAt:new Date().toISOString(),before};
+ if(pending(storage))throw new Error('上次导入尚未恢复，请刷新后再试。');
+ if(JSON.stringify(capture(storage))!==JSON.stringify(before))throw new Error('当前数据已在其他页面更新，请重新核对导入预览。');
  try{storage.setItem(keys.journal,JSON.stringify(journal));}catch(_){throw new Error('浏览器无法保存恢复备份。请先导出文件，当前数据未修改。');}
  try{
   storage.setItem(keys.history,JSON.stringify(records));

@@ -42,9 +42,17 @@
 node tests/core.test.js
 node tests/interactions.test.js
 node tests/backup.test.js
+node tests/backup-ui.test.js
+node tests/favorites.test.js
+node tests/search.test.js
+node tests/routes.test.js
+node tests/portals.test.js
+node tests/checklist.test.js
+node tests/build.test.js
 node scripts/build_site.js
 node tests/site.test.js
 python3 scripts/validate_repo.py
+python3 tests/links.test.py
 python3 -m http.server 8000 --directory dist
 ```
 
@@ -52,7 +60,7 @@ python3 -m http.server 8000 --directory dist
 
 | 路径 | 用途 |
 |---|---|
-| `content/navigation.json` | 常用网站展示、问答与检索同义词 |
+| `content/navigation.json` | 常用网站展示、问答、检索同义词与合并资源的显示记录 |
 | `content/editorial.json` | 中文参考名称、解释与来源元数据 |
 | `data/*.csv` | 原始事实目录 |
 | `scripts/student_views.js` | 首页与选课指南 |
@@ -66,5 +74,7 @@ python3 -m http.server 8000 --directory dist
 课程和补修模型沿用 2025 修订快照，完整 PDF 及独立人工审核仍待完成。目录学期不是实时排课，历史课题不是当前空位；个人适用规则、选课、考试和认定请核对学校原文及个人记录。
 
 个人计划与收藏只在当前浏览器保存，换设备或更换域名不会自动迁移。清理浏览器数据也会删除本地记录和恢复备份，请提前导出文件。备份文件不会上传到服务器，不要将其或成绩单、证件、群聊提交到公开仓库。记录无法读取时可导出原始记录留作修复副本；原始副本不直接用于常规导入。
+
+浏览器无法保存时，修改仅在当前页面保留，仍可导出完整备份。请先导出再刷新重试，核对当前数据后按需合并导入；存储恢复可写不会自动把旧临时状态覆盖到其他页面的新记录上。
 
 详见 [CONTENT_POLICY.md](CONTENT_POLICY.md)、[PUBLISH.md](PUBLISH.md) 和 [RELEASE_V3.md](RELEASE_V3.md)。

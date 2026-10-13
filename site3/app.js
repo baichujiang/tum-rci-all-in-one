@@ -6,8 +6,14 @@ const B=window.RCIBackup;
 const $=s=>document.querySelector(s),full=p=>base+p;
 let timer,dbPromise,sessionPlan=null,currentPlan=null,planPersisted=true;
 let planQueue=Promise.resolve();
-let recoveryBlocked=false,recoveryBefore=null,recoveryPromise=null;
-if(B)try{const pending=B.pending(localStorage);if(pending){recoveryBlocked=true;recoveryBefore=pending.before;}}catch(_){recoveryBlocked=true;}
+let recoveryBlocked=false,recoveryBefore=null,recoveryPromise=null,storageUnavailable=false;
+function pendingRecovery(){
+ if(!B)return null;
+ let raw;try{raw=localStorage.getItem(B.keys.journal);}catch(_){storageUnavailable=true;return null;}
+ return B.pending({getItem:()=>raw});
+}
+if(B)try{const pending=pendingRecovery();if(pending){recoveryBlocked=true;recoveryBefore=pending.before;}}catch(_){recoveryBlocked=true;}
+if(storageUnavailable)planPersisted=false;
 function withLocalLock(work){return typeof navigator!=='undefined'&&navigator.locks?.request?navigator.locks.request('rci:local-data',work):Promise.resolve().then(work);}
 let selectedSemester=Number(new URLSearchParams(location.search).get('semester'))||0;
 if(!Number.isInteger(selectedSemester)||selectedSemester<0||selectedSemester>12)selectedSemester=0;
@@ -23,19 +29,34 @@ function toast(message,action){
  timer=setTimeout(()=>{if(!el.contains(document.activeElement))el.replaceChildren();},action?12000:6500);
 }
 function read(key,fallback){try{const before=recoveryBefore&&(key===B.keys.plan?'plan':key===B.keys.favorites?'favorites':null);return JSON.parse(before?recoveryBefore[before]:localStorage.getItem(key))??fallback;}catch(_){return fallback;}}
-function store(key,value){if(recoveryBlocked){toast('本地记录尚未恢复，请先导出原始记录并刷新。');return false;}try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){toast('浏览器不允许保存。本次修改仅在当前页面有效，请导出备份。');return false;}}
+function record(key,fallback){
+ let raw;try{raw=recoveryBefore?recoveryBefore[key===B.keys.plan?'plan':'favorites']:localStorage.getItem(key);}catch(_){storageUnavailable=true;if(key==='rci:v2:plan'&&currentPlan)return currentPlan;if(key==='rci:v2:saves')return [...saved];return read(key,fallback);}
+ try{return raw===null?fallback:JSON.parse(raw);}catch(_){throw new Error('本地记录无法读取，请先导出原始记录。');}
+}
+function requireRecovered(){if(recoveryBlocked||pendingRecovery())throw new Error('本地记录尚未恢复，请刷新以恢复，或先导出原始记录。');}
+function store(key,value){try{requireRecovered();}catch(err){toast(err.message);return false;}try{if(storageUnavailable)throw new Error();localStorage.setItem(key,JSON.stringify(value));return true;}catch(_){storageUnavailable=true;toast('浏览器不允许保存。本次修改仅在当前页面有效，请导出备份后刷新重试。');return false;}}
 async function load(p){const r=await fetch(full(p));if(!r.ok)throw new Error('资料加载失败，请刷新重试');return r.json();}
 const data=()=>dbPromise||(dbPromise=load('/assets/planner-data.json'));
 const empty=()=>({version:2,cohort:'unknown',conditional:false,items:[]});
-async function plan(){const d=await data();return C.validatePlan(sessionPlan||read('rci:v2:plan',empty()),d.courses);}
+async function plan(){const d=await data();currentPlan=C.validatePlan(sessionPlan||record('rci:v2:plan',empty()),d.courses);return currentPlan;}
 function updatePlan(change){
- const task=planQueue.catch(()=>{}).then(()=>withLocalLock(async()=>{
-  if(planPersisted)sessionPlan=null;
-  const d=await data(),p=await plan(),next=await change(p);
+ const task=planQueue.catch(()=>{}).then(async()=>{
+  const d=await data();
+  const {p,before}=await withLocalLock(async()=>{
+   requireRecovered();
+   if(planPersisted)sessionPlan=null;
+   let before;try{before=localStorage.getItem('rci:v2:plan');}catch(_){}
+   return {p:await plan(),before};
+  });
+  const next=await change(p);
   if(!next)return p;
-  sessionPlan=C.validatePlan(next,d.courses);planPersisted=store('rci:v2:plan',sessionPlan);currentPlan=sessionPlan;
-  window.dispatchEvent(new Event('rci:planchange'));return sessionPlan;
- }));
+  return withLocalLock(()=>{
+   requireRecovered();
+   if(before!==undefined&&localStorage.getItem('rci:v2:plan')!==before)throw new Error('计划已在其他页面更新，请重新操作，避免覆盖新记录。');
+   sessionPlan=C.validatePlan(next,d.courses);planPersisted=store('rci:v2:plan',sessionPlan);currentPlan=sessionPlan;
+   window.dispatchEvent(new Event('rci:planchange'));return sessionPlan;
+  });
+ });
  planQueue=task;return task;
 }
 async function addCourse(code,semester=0,{moveExisting=false}={}){
@@ -90,6 +111,14 @@ async function moveCourse(code,semester){
  return result;
 }
 const savePlan=p=>updatePlan(()=>p);
+async function clearPlan(){
+ let cleared=false;
+ await updatePlan(async()=>{
+  if(!await confirmAction('清空这份计划？','课程、学期安排、入学批次和补修设置会一起清空。建议先导出备份。','清空计划'))return null;
+  cleared=true;return empty();
+ });
+ return cleared;
+}
 function confirmAction(title,description,confirmLabel){
  const dialog=$('#action-dialog');
  if(!dialog?.showModal)return Promise.resolve(window.confirm(title+'\n'+description));
@@ -98,40 +127,52 @@ function confirmAction(title,description,confirmLabel){
  dialog.returnValue='cancel';dialog.showModal();
  return new Promise(resolve=>dialog.addEventListener('close',()=>resolve(dialog.returnValue==='confirm'),{once:true}));
 }
-window.RCIUI={toast,read,store,data,plan,savePlan,updatePlan,empty,base,confirmAction,addCourse,moveCourse,undoCourse,get persisted(){return planPersisted;}};
+window.RCIUI={toast,read,store,data,plan,savePlan,clearPlan,updatePlan,empty,base,confirmAction,addCourse,moveCourse,undoCourse,get persisted(){return planPersisted;}};
 
 const savedRaw=read('rci:v2:saves',[]);
 let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);
-let favoritesPersisted=true;
+let favoritesPersisted=!storageUnavailable;
+Object.defineProperty(window.RCIUI,'backupPersisted',{get:()=>planPersisted&&favoritesPersisted&&!storageUnavailable});
+const favoriteFamilies=new Map();
+for(const family of JSON.parse($('meta[name="rci-favorite-groups"]')?.content||'[]'))for(const key of family)favoriteFamilies.set(key,family);
+const favoriteKeysFor=key=>[key,...(favoriteFamilies.get(key)||[]).filter(other=>other!==key)];
+const countFavorites=values=>new Set(values.map(key=>favoriteFamilies.get(key)?.[0]||key)).size;
+window.RCIUI.countFavorites=countFavorites;
 function syncSaves(){
  document.querySelectorAll('[data-save]').forEach(b=>{
-  const yes=saved.has(b.dataset.save);b.setAttribute('aria-pressed',String(yes));
+  const yes=favoriteKeysFor(b.dataset.save).some(key=>saved.has(key));b.setAttribute('aria-pressed',String(yes));
   if(b.dataset.saveStyle==='star'){
    const label=(yes?'取消收藏 ':'收藏 ')+b.dataset.saveName;b.setAttribute('aria-label',label);b.title=label;
   }else b.textContent=yes?'已收藏':'收藏';
  });
- document.querySelectorAll('[data-save-count]').forEach(el=>{el.textContent=saved.size;el.hidden=!saved.size;});
+ document.querySelectorAll('[data-save-count]').forEach(el=>{el.textContent=countFavorites([...saved]);el.hidden=!saved.size;});
 }
-async function setSaved(key,value){
+async function setSaved(keys,value){
  return withLocalLock(()=>{
-  if(favoritesPersisted){const latest=read('rci:v2:saves',[]);if(Array.isArray(latest))saved=new Set(latest.filter(x=>typeof x==='string'));}
-  value?saved.add(key):saved.delete(key);
-  const ok=store('rci:v2:saves',[...saved]);favoritesPersisted=ok;syncSaves();window.dispatchEvent(new Event('rci:saveschange'));return ok;
+  requireRecovered();
+  if(favoritesPersisted){
+   let latest;try{latest=record('rci:v2:saves',[]);if(B)latest=B.favorites(latest);if(!Array.isArray(latest))throw new Error();}
+   catch(_){throw new Error('本地收藏记录无法读取，请先导出原始记录。');}
+   saved=new Set(latest.filter(x=>typeof x==='string'));
+  }
+  const previous=[...saved].filter(key=>keys.includes(key)),adding=value===undefined?!previous.length:value;
+  const next=new Set(saved);
+  for(const key of adding&&value===undefined?keys.slice(0,1):keys)adding?next.add(key):next.delete(key);
+  if(next.size>2000)throw new Error('收藏最多支持 2000 条记录，请先取消部分收藏。当前记录未修改。');
+  if(B)B.favorites([...next]);saved=next;
+  const ok=store('rci:v2:saves',[...saved]);favoritesPersisted=ok;syncSaves();window.dispatchEvent(new Event('rci:saveschange'));return {ok,adding,previous};
  });
 }
 async function currentBackupState(){
  const d=await data();
- function record(key,fallback){
-  let raw;try{raw=recoveryBefore?recoveryBefore[key===B.keys.plan?'plan':'favorites']:localStorage.getItem(key);}catch(_){return read(key,fallback);}
-  try{return JSON.parse(raw)??fallback;}catch(_){throw new Error('本地记录无法读取，请先导出原始记录。');}
- }
  const p=planPersisted?C.validatePlan(record(B.keys.plan,empty()),d.courses):await plan();
  const f=favoritesPersisted?record(B.keys.favorites,[]):[...saved];
- return B.state({plan:p,favorites:f},d.courses);
+ const value=B.state({plan:p,favorites:f},d.courses);currentPlan=value.plan;saved=new Set(value.favorites);return value;
 }
 async function backupSnapshot(){
  await planQueue.catch(()=>{});if(recoveryPromise)await recoveryPromise;
  return withLocalLock(async()=>{
+  requireRecovered();
   const value=await currentBackupState();let raw=null;try{raw=B.capture(localStorage);}catch(_){}
   return {data:value,fingerprint:B.fingerprint(value),raw};
  });
@@ -140,7 +181,8 @@ function importBackup(incoming,mode,expected){
  const task=planQueue.catch(()=>{}).then(async()=>{
   if(recoveryPromise)await recoveryPromise;
   return withLocalLock(async()=>{
-   if(recoveryBlocked)throw new Error('本地记录尚未恢复，请先导出原始记录。');
+   requireRecovered();
+   if(storageUnavailable)throw new Error('浏览器无法持久保存导入。请先导出当前计划，再刷新页面重试。');
    const d=await data(),before=await currentBackupState();
    if(expected&&B.fingerprint(before)!==expected.fingerprint)throw new Error('当前数据已更新，请重新核对导入预览。');
    const next=B.prepare(before,incoming,mode,d.courses);
@@ -151,7 +193,7 @@ function importBackup(incoming,mode,expected){
   });
  });planQueue=task;return task;
 }
-if(B)Object.assign(window.RCIUI,{backupSnapshot,importBackup,getBackupHistory:()=>B.history(localStorage),rawBackup:()=>({type:'tum-rci-raw-backup',version:1,createdAt:new Date().toISOString(),records:B.capture(localStorage),recovery:localStorage.getItem(B.keys.journal)})});
+if(B)Object.assign(window.RCIUI,{backupSnapshot,importBackup,getBackupHistory:()=>B.history(localStorage),rawBackup:()=>({type:'tum-rci-raw-backup',version:1,createdAt:new Date().toISOString(),records:{...B.capture(localStorage),checklist:localStorage.getItem('rci:v2:checklist')},recovery:localStorage.getItem(B.keys.journal)})});
 function syncAddButtons(){
  if(!currentPlan)return;
  const codes=new Set(currentPlan.items.map(x=>x.code));
@@ -185,9 +227,11 @@ window.addEventListener('rci:planchange',syncPlanWidgets);
 if($('#portal-controls')){
  $('#portal-controls').hidden=false;
  const directory=$('#websites'),input=$('#portal-search'),cards=[...directory.querySelectorAll('[data-portal]')];
+ const entries=cards.map(card=>({id:card.dataset.portal,kind:'resource',title:card.querySelector('h3').textContent,summary:card.querySelector('p').textContent,body:card.dataset.keywords.replace(/(?:[\w-]+\.)+[a-z]{2,}/gi,host=>host.replace(/\.[a-z]+$/i,'')),hosts:card.dataset.keywords.match(/(?:[\w-]+\.)+[a-z]{2,}/gi)||[],aliases:[],tasks:[]}));
  function filterPortals(){
-  const normalize=window.RCISearch.normalize,q=normalize(input.value);let count=0;
-  for(const card of cards){card.hidden=!normalize(card.dataset.keywords).includes(q);if(!card.hidden)count++;}
+  const q=window.RCISearch.normalize(input.value),matches=new Set(window.RCISearch.search(entries,input.value).map(d=>d.id));let count=0;
+  if(q.length>3)for(const entry of entries)if(entry.hosts.some(host=>window.RCISearch.normalize(host).includes(q)))matches.add(entry.id);
+  for(const card of cards){card.hidden=!matches.has(card.dataset.portal);if(!card.hidden)count++;}
   directory.querySelectorAll('[data-portal-module]').forEach(section=>{section.hidden=!section.querySelector('[data-portal]:not([hidden])');});
   $('#portal-empty').hidden=count>0;
   $('#portal-status').textContent=q?`找到 ${count} 个网站`:'点星标，网站会直接出现在上方「我的收藏」。';
@@ -199,7 +243,8 @@ function dest(d){return d.direct?C.safeURL(d.url):/^\/[a-zA-Z0-9/?#&=._%+-]*$/.t
 const groupNames=C.courseGroups;
 const starIcon=$('.header-favorites svg').outerHTML;
 const termLabel=t=>String(t||'').replace('WiSe/SoSe','冬季 / 夏季').replace('WiSe','冬季').replace('SoSe','夏季');
-function resultCard(d,saveKey=d.id,asFavorite=false){
+function favoriteKey(d){return [d.id,d.code,...(d.resource_ids||[])].find(key=>key&&saved.has(key));}
+function resultCard(d,saveKey=favoriteKey(d)||d.id,asFavorite=false){
  const a=`href="${esc(dest(d))}"${d.direct?' target="_blank" rel="noopener noreferrer"':''}`;
  if(asFavorite)return `<article class="portal-card" data-favorite="${esc(saveKey)}"><a class="portal-link shortcut" ${a}><span class="portal-icon">${starIcon}</span><h3>${esc(d.title)}</h3><p>${esc(d.summary)}</p><div class="portal-meta"><span>${d.direct?'打开原始网站':'打开'+(d.kind==='course'?'课程详情':'收藏内容')}</span><span aria-hidden="true">${d.direct?'↗':'→'}</span></div></a><button class="portal-save" data-save="${esc(saveKey)}" data-save-style="star" data-save-name="${esc(d.title)}" aria-label="取消收藏 ${esc(d.title)}" aria-pressed="true">${starIcon}</button></article>`;
  if(d.kind==='course'&&!asFavorite)return `<article class="card course-choice"><div class="card-top"><span class="badge">${esc(groupNames[d.group])}</span><span class="code">${esc(d.code)}</span></div><h3><a ${a}>${esc(d.title)}</a></h3><p class="english">${esc(d.chinese||'')}</p><div class="course-meta"><b>${esc(d.ects)} <small>ECTS</small></b><span>${esc(termLabel(d.term))} · 目录</span></div><div class="card-bottom"><button class="quiet" data-add="${esc(d.code)}" aria-pressed="false">加入计划</button></div></article>`;
@@ -211,6 +256,7 @@ if(favoritesApp){
  let index=null,failed=false;
  const cards=[...favoritesApp.querySelectorAll('[data-portal]')],shortcutIds=new Set(cards.map(card=>card.dataset.portal));
  function renderFavorites(){
+  const total=countFavorites([...saved]);
   let websiteCount=0;
   for(const card of cards){card.hidden=!saved.has(card.dataset.portal);if(!card.hidden)websiteCount++;}
   const other=index?index.docs.flatMap(d=>{const key=[d.id,d.code,...(d.resource_ids||[])].find(k=>k&&!shortcutIds.has(k)&&saved.has(k));return key?[{doc:d,key}]:[];}):[];
@@ -219,7 +265,7 @@ if(favoritesApp){
   $('#favorites-other').innerHTML=other.map(({doc,key})=>resultCard(doc,key,true)).join('');
   $('#favorites-loading').hidden=!!index||failed||!saved.size;
   $('#favorites-empty').hidden=!!saved.size&&(!index||websiteCount+other.length>0);
-  $('#favorites-status').textContent=failed&&saved.size>websiteCount?'其他收藏暂时无法读取，请刷新重试。':index&&saved.size>websiteCount+other.length?'部分旧收藏未找到对应内容，已显示可用的入口。':'';
+  $('#favorites-status').textContent=failed&&total>websiteCount?'其他收藏暂时无法读取，请刷新重试。':index&&total>websiteCount+other.length?'部分旧收藏未找到对应内容，已显示可用的入口。':'';
   syncSaves();syncAddButtons();
  }
  renderFavorites();
@@ -238,7 +284,7 @@ if(app){
  function render(){
   if(!index)return;let results=window.RCISearch.search(index.docs,q.value,index.synonyms,{kind:kind.value,task:task.value});
   if(sg?.value)results=results.filter(d=>sg.value==='core'?'ABCDE'.includes(d.group):sg.value==='professional'?'GHI'.includes(d.group):d.group===sg.value);
-  if(term?.value)results=results.filter(d=>d.term?.includes(term.value));if(sf.checked)results=results.filter(d=>saved.has(d.code||d.id));
+  if(term?.value)results=results.filter(d=>d.term?.includes(term.value));if(sf.checked)results=results.filter(d=>favoriteKey(d));
   $('#result-count').textContent=`${q.value.trim()?'“'+q.value.trim()+'”：':''}找到 ${results.length} ${app.dataset.mode==='courses'?'门课程':'条内容'}${sf.checked?' · 仅收藏':''}`;
   const hasFilters=!!(q.value.trim()||(!kind.closest('label').hidden&&kind.value)||task.value||sg?.value||term?.value||sf.checked);
   $('#reset-filters').hidden=!hasFilters||!results.length;
@@ -250,7 +296,10 @@ if(app){
  app.querySelector('form').addEventListener('submit',ev=>{ev.preventDefault();clearTimeout(debounce);limit=18;render();$('#result-count').focus();});
  [kind,task,sg,term,sf].filter(Boolean).forEach(el=>el.addEventListener('change',()=>{limit=18;render();}));
  $('#reset-filters').addEventListener('click',reset);app.addEventListener('click',ev=>{if(ev.target.closest('[data-reset-search]'))reset();});
- $('#more-results').addEventListener('click',()=>{limit+=18;render();});
+ $('#more-results').addEventListener('click',()=>{
+  const before=$('#results').children.length;limit+=18;render();
+  $('#results').children[before]?.querySelector('h3 a,a,button')?.focus();
+ });
  load('/assets/search-index.json').then(d=>{index=d;render();}).catch(err=>{$('#result-count').textContent=err.message+'。下方静态课程目录和链接仍可使用。';});
  window.addEventListener('rci:saveschange',render);
  const target=$('#course-target-semester');
@@ -259,12 +308,14 @@ if(app){
 document.addEventListener('click',async ev=>{
  const b=ev.target.closest('button');if(!b)return;
  if(b.hasAttribute('data-save')){
-  const inFavorites=!!b.closest('[data-favorites-surface]'),k=b.dataset.save,adding=!saved.has(k),ok=await setSaved(k,adding);
+  try{
+  const inFavorites=!!b.closest('[data-favorites-surface]'),{ok,adding,previous}=await setSaved(favoriteKeysFor(b.dataset.save));
   if(ok&&(b.dataset.saveStyle==='star'||favoritesApp)){
    if(adding)toast('已加入我的收藏',{label:'查看收藏',href:full('/#bookmarks')});
-   else toast('已取消收藏',{label:'撤销',run:async()=>{if(await setSaved(k,true))toast('已恢复收藏');}});
+   else toast('已取消收藏',{label:'撤销',run:async()=>{if((await setSaved(previous,true)).ok)toast('已恢复收藏');}});
   }
   if(inFavorites&&!adding){const next=[...favoritesApp.querySelectorAll('[data-save]')].find(el=>!el.closest('[hidden]'));(next||$('#portal-search')||$('#favorites-return')).focus();}
+  }catch(err){toast(err.message);}
  }
  if(b.hasAttribute('data-share')){try{await navigator.clipboard.writeText(location.href);toast('已复制本页网址。');}catch(_){window.prompt('复制这个页面的网址：',location.href);}}
  if(b.hasAttribute('data-add')){
@@ -277,9 +328,9 @@ document.addEventListener('click',async ev=>{
 });
 window.addEventListener('storage',ev=>{
  if(B)try{if(B.pending(localStorage))return;}catch(_){return;}
- if(B&&ev.key===B.keys.journal&&ev.newValue===null){sessionPlan=null;const v=read('rci:v2:saves',[]);saved=new Set(Array.isArray(v)?v:[]);syncSaves();window.dispatchEvent(new Event('rci:planchange'));window.dispatchEvent(new Event('rci:saveschange'));return;}
- if(ev.key==='rci:v2:plan'||ev.key===null){sessionPlan=null;window.dispatchEvent(new Event('rci:planchange'));}
- if(ev.key==='rci:v2:saves'||ev.key===null){const v=read('rci:v2:saves',[]);saved=new Set(Array.isArray(v)?v:[]);syncSaves();window.dispatchEvent(new Event('rci:saveschange'));}
+ const imported=B&&ev.key===B.keys.journal&&ev.newValue===null;
+ if(planPersisted&&!storageUnavailable&&(ev.key==='rci:v2:plan'||ev.key===null||imported)){sessionPlan=null;window.dispatchEvent(new Event('rci:planchange'));}
+ if(favoritesPersisted&&!storageUnavailable&&(ev.key==='rci:v2:saves'||ev.key===null||imported)){const v=read('rci:v2:saves',[...saved]);saved=new Set(Array.isArray(v)?v:[]);syncSaves();window.dispatchEvent(new Event('rci:saveschange'));}
 });
 if(recoveryBlocked&&B){
  recoveryPromise=withLocalLock(()=>B.recover(localStorage)).then(()=>{
@@ -293,9 +344,33 @@ syncSaves();syncPlanWidgets();
 if(location.hash.startsWith('#/')){
  const [route,query='']=location.hash.slice(2).split('?'),[page,id]=route.split('/');
  const simple={home:'/',search:'/search/',courses:'/courses/',resources:'/resources/',planner:'/planner/',apply:'/tasks/apply/',guides:'/guides/',research:'/research/',topics:'/research/topics/',sources:'/sources/'};
- let next=simple[page];if(page==='course'&&/^[A-Z0-9]+$/i.test(id||''))next='/courses/'+id+'/';if(page==='article'&&/^[a-z-]+$/.test(id||''))next='/guides/'+id+'/';if(page==='guide'&&/^\d{2}$/.test(id||''))next='/archive/'+id+'/';if(page==='resource'&&/^R\d+$/.test(id||''))next='/resources/';
+ let next=simple[page];if(page==='course'&&/^[A-Z0-9]+$/i.test(id||''))next='/courses/'+id.toUpperCase()+'/';if(page==='article'&&/^[a-z-]+$/.test(id||''))next='/guides/'+id+'/';if(page==='guide'&&/^\d{2}$/.test(id||''))next='/archive/'+id+'/';if(page==='resource'&&/^R\d+$/.test(id||''))next='/resources/';
  if(next)location.replace(full(next)+(query?'?'+query:''));
 }
 const checklist=$('#application-checklist');
-if(checklist)data().then(d=>{const raw=read('rci:v2:checklist',[]),set=new Set(Array.isArray(raw)?raw:[]);checklist.innerHTML=d.checklist.map((s,i)=>`<label class="checklist-item"><input type="checkbox" value="${i}" ${set.has(i)?'checked':''}><span>${esc(s)}</span></label>`).join('');checklist.addEventListener('change',ev=>{const n=Number(ev.target.value);ev.target.checked?set.add(n):set.delete(n);store('rci:v2:checklist',[...set]);});}).catch(()=>{checklist.textContent='核对清单未能加载，请按官方个人材料清单办理。';});
+if(checklist)data().then(d=>{
+ const key='rci:v2:checklist',raw=read(key,[]);let set=new Set(Array.isArray(raw)?raw:[]),checklistPersisted=!storageUnavailable;
+ checklist.innerHTML=d.checklist.map((s,i)=>`<label class="checklist-item"><input type="checkbox" value="${i}" ${set.has(i)?'checked':''}><span>${esc(s)}</span></label>`).join('');
+ const sync=()=>checklist.querySelectorAll('input').forEach(input=>{input.checked=set.has(Number(input.value));});
+ function latest(){
+  if(!checklistPersisted||storageUnavailable)return [...set];
+  let value;try{const text=localStorage.getItem(key);value=text===null?[]:JSON.parse(text);}catch(_){throw new Error('本地核对清单无法读取，请先导出原始记录。');}
+  if(!Array.isArray(value)||value.some(n=>!Number.isInteger(n)||n<0))throw new Error('本地核对清单格式无效，请先导出原始记录。');
+  return value;
+ }
+ checklist.addEventListener('change',async ev=>{
+  const n=Number(ev.target.value),checked=ev.target.checked;if(ev.target.type!=='checkbox'||!Number.isInteger(n)||n<0||n>=d.checklist.length)return;
+  try{
+   await withLocalLock(()=>{
+    requireRecovered();const next=new Set(latest());checked?next.add(n):next.delete(n);
+    checklistPersisted=store(key,[...next]);set=next;sync();
+    if(!checklistPersisted)toast('核对清单暂时不能保存，本次勾选仅在当前页面有效。');
+   });
+  }catch(err){ev.target.checked=!checked;toast(err.message);}
+ });
+ window.addEventListener('storage',ev=>{
+  if(!checklistPersisted||storageUnavailable||ev.key!==key&&ev.key!==null)return;
+  try{set=new Set(latest());sync();}catch(err){toast(err.message);}
+ });
+}).catch(()=>{checklist.textContent='核对清单未能加载，请按官方个人材料清单办理。';});
 })();

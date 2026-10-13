@@ -15,15 +15,74 @@ const initial=()=>({[B.keys.plan]:' '+JSON.stringify(draft()),[B.keys.favorites]
 let count=0;
 async function test(name,fn){await fn();count++;console.log('PASS',name);}
 const appSource=fs.readFileSync(path.join(__dirname,'../site3/app.js'),'utf8').split('// A small website directory')[0]+'})();';
-function application(mem,locks){
+function application(mem,locks,manualConfirmation=false){
  const events=[],toast={replaceChildren(){},append(){},contains(){return false;}};
+ const dialog=manualConfirmation?{open:false,showModal(){this.open=true;},addEventListener(type,fn){this.onClose=fn;},answer(value){this.returnValue=value;this.open=false;this.onClose();}}:null;
+ const dialogText={};
  const window={RCI:C,RCIBackup:B,confirm(){return true;},addEventListener(){},dispatchEvent(e){events.push(e.type);}};
  const context={window,URLSearchParams,location:{search:''},navigator:locks?{locks}:undefined,
-  document:{querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;return null;},querySelectorAll(){return [];},createElement(){return {addEventListener(){}};}},
+  document:{querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;if(s==='#action-dialog')return dialog;if(dialog&&['#dialog-title','#dialog-description','#dialog-confirm'].includes(s))return dialogText[s]||={};return null;},querySelectorAll(){return [];},createElement(){return {addEventListener(){}};}},
   localStorage:mem.storage,fetch:async url=>{assert.equal(url,'/assets/planner-data.json');return {ok:true,json:async()=>({courses,names:{}})};},Event:function(type){this.type=type;},setTimeout(){return 0;},clearTimeout(){}};
- vm.runInNewContext(appSource,context,{filename:'site3/app.js'});return {U:window.RCIUI,events};
+ vm.runInNewContext(appSource,context,{filename:'site3/app.js'});return {U:window.RCIUI,events,dialog};
 }
 (async()=>{
+ await test('Losing storage access after a successful read preserves observed courses and favorites in the session backup',async()=>{
+  const mem=memory(initial()),h=application(mem);await h.U.plan();
+  const observed={plan:{...draft(),items:[...draft().items,{code:'IN2107',status:'planned',semester:1}]},favorites:['R031','R055','OLD-FAVORITE']};
+  mem.storage.setItem(B.keys.plan,JSON.stringify(observed.plan));mem.storage.setItem(B.keys.favorites,JSON.stringify(observed.favorites));await h.U.backupSnapshot();const before=B.capture(mem.storage);
+  mem.storage.getItem=()=>{throw Error('Storage access revoked');};mem.storage.setItem=()=>{throw Error('Storage access revoked');};
+  await h.U.addCourse('IN2320',4);const snapshot=await h.U.backupSnapshot();
+  assert.deepEqual(plain(snapshot.data.plan.items).map(item=>item.code),['IN2064','IN2107','IN2320']);assert.deepEqual(plain(snapshot.data.favorites),observed.favorites);
+  assert.equal(h.U.backupPersisted,false);assert.equal(mem.values.get(B.keys.plan),before.plan);assert.equal(mem.values.get(B.keys.favorites),before.favorites);
+ });
+ await test('Blocked storage still allows a session-only plan and an exportable in-memory backup',async()=>{
+  const mem=memory(initial()),original=mem.values.get(B.keys.plan),get=mem.storage.getItem,set=mem.storage.setItem;
+  mem.storage.getItem=()=>{throw Error('Storage access blocked');};mem.storage.setItem=()=>{throw Error('Storage access blocked');};
+  const h=application(mem);await h.U.addCourse('IN2320',4);
+  assert.equal(h.U.persisted,false);assert.equal(h.U.backupPersisted,false);assert.equal((await h.U.plan()).items[0].code,'IN2320');
+  assert.equal((await h.U.backupSnapshot()).data.plan.items[0].code,'IN2320');assert.equal(mem.values.get(B.keys.plan),original);
+  mem.storage.getItem=get;mem.storage.setItem=set;await h.U.addCourse('IN2107',1);
+  assert.equal(h.U.persisted,false);assert.equal(mem.values.get(B.keys.plan),original);
+  await assert.rejects(h.U.importBackup({plan:draft(),favorites:[]},'replace',await h.U.backupSnapshot()),/导出/);
+  assert.equal(mem.values.get(B.keys.plan),original);
+ });
+ await test('An already-open page cannot edit or export mixed records from an interrupted import',async()=>{
+  const mem=memory(initial()),h=application(mem),original=B.capture(mem.storage);
+  mem.storage.setItem(B.keys.journal,JSON.stringify({version:1,before:original}));
+  mem.storage.setItem(B.keys.plan,JSON.stringify({...draft(),items:[]}));const mixed=B.capture(mem.storage);
+  await assert.rejects(h.U.addCourse('IN2320',4),/恢复/);
+  await assert.rejects(h.U.backupSnapshot(),/恢复/);
+  assert.deepEqual(B.capture(mem.storage),mixed);assert.equal(h.U.rawBackup().records.plan,mixed.plan);
+ });
+ await test('A pending recovery marker created during confirmation prevents the later save',async()=>{
+  const mem=memory(initial()),h=application(mem,undefined,true),before=B.capture(mem.storage),move=h.U.moveCourse('IN2064',2);
+  await new Promise(resolve=>setImmediate(resolve));assert(h.dialog.open);
+  mem.storage.setItem(B.keys.journal,JSON.stringify({version:1,before}));h.dialog.answer('confirm');
+  await assert.rejects(move,/恢复/);assert.deepEqual(B.capture(mem.storage),before);assert(B.pending(mem.storage));
+ });
+ await test('A malformed saved plan cannot be silently replaced by adding a course',async()=>{
+  const mem=memory({...initial(),[B.keys.plan]:'{"version":2,broken'}),h=application(mem),before=B.capture(mem.storage);
+  await assert.rejects(h.U.addCourse('IN2320',4),/原始|读取/);assert.deepEqual(B.capture(mem.storage),before);
+ });
+ await test('A page waiting for confirmation does not block another page’s backup preview',async()=>{
+  let queue=Promise.resolve();const locks={request(name,fn){assert.equal(name,'rci:local-data');const task=queue.then(fn);queue=task.catch(()=>{});return task;}};
+  const mem=memory(initial()),first=application(mem,locks,true),second=application(mem,locks);
+  const move=first.U.moveCourse('IN2064',2);await new Promise(resolve=>setImmediate(resolve));assert(first.dialog.open);
+  let ready=false;const preview=second.U.backupSnapshot().then(value=>{ready=true;return value;});
+  await new Promise(resolve=>setImmediate(resolve));const wasReady=ready;
+  first.dialog.answer('cancel');await move;await preview;
+  assert.equal(wasReady,true,'Waiting for a dialog must release the shared storage lock');
+ });
+ await test('Another page may add a course during confirmation without being overwritten',async()=>{
+  let queue=Promise.resolve();const locks={request(name,fn){const task=queue.then(fn);queue=task.catch(()=>{});return task;}};
+  const mem=memory(initial()),first=application(mem,locks,true),second=application(mem,locks);
+  const move=first.U.moveCourse('IN2064',2);await new Promise(resolve=>setImmediate(resolve));assert(first.dialog.open);
+  let added=false;const addition=second.U.addCourse('IN2320',4).then(value=>{added=true;return value;});
+  await new Promise(resolve=>setImmediate(resolve));const wasAdded=added;
+  first.dialog.answer('confirm');const error=await move.then(()=>null,error=>error);await addition;
+  assert.equal(wasAdded,true);assert.match(error?.message||'',/其他页面/);
+  const stored=JSON.parse(mem.storage.getItem(B.keys.plan));assert(stored.items.some(item=>item.code==='IN2320'));assert.equal(stored.items.find(item=>item.code==='IN2064').semester,3);
+ });
  await test('Full backup preserves semesters, passed states, custom credits and unknown favorite IDs',()=>{
   const value=local();value.plan.items.push({code:'OWN1',name:'自己的选修',group:'G',ects:5.5,custom:true,status:'planned',semester:4});
   const parsed=B.parse('\uFEFF'+JSON.stringify(B.create(value,courses)),courses);
@@ -80,6 +139,21 @@ function application(mem,locks){
   const mem=memory(initial()),before=B.capture(mem.storage);mem.storage.setItem(B.keys.favorites,JSON.stringify(['R128']));const latest=B.capture(mem.storage);
   assert.throws(()=>B.commit(mem.storage,local(),{expected:before,beforeBackup:B.create(local(),courses)}),/其他页面/);assert.deepEqual(B.capture(mem.storage),latest);
  });
+ await test('A change after the initial capture cannot be overwritten while reading backup history',()=>{
+  const mem=memory(initial()),before=B.capture(mem.storage),get=mem.storage.getItem,other={plan:{...draft(),items:[{code:'IN2320',status:'planned',semester:4}]},favorites:['R140']};let historyReads=0,latest;
+  mem.storage.getItem=k=>{
+   if(k===B.keys.history&&++historyReads===2){B.commit(mem.storage,other,{beforeBackup:B.create(local(),courses)});latest=B.capture(mem.storage);}
+   return get(k);
+  };
+  assert.throws(()=>B.commit(mem.storage,local(),{expected:before,beforeBackup:B.create(local(),courses)}),/其他页面/);
+  assert.deepEqual(B.capture(mem.storage),latest);assert.equal(mem.storage.getItem(B.keys.journal),null);
+ });
+ await test('A recovery marker appearing after the initial capture is never overwritten',()=>{
+  const mem=memory(initial()),before=B.capture(mem.storage),get=mem.storage.getItem;let historyReads=0;
+  mem.storage.getItem=k=>{if(k===B.keys.history&&++historyReads===2)mem.storage.setItem(B.keys.journal,JSON.stringify({version:1,before}));return get(k);};
+  assert.throws(()=>B.commit(mem.storage,local(),{expected:before,beforeBackup:B.create(local(),courses)}),/恢复/);
+  assert.deepEqual(B.capture(mem.storage),before);assert.deepEqual(B.pending(mem.storage).before,before);
+ });
  await test('Production API imports plan and favorites together, refreshes both surfaces and restores history',async()=>{
   const mem=memory(initial()),h=application(mem),snapshot=await h.U.backupSnapshot(),incoming={plan:{...draft(),items:[{code:'IN2320',status:'planned',semester:4}]},favorites:['R140'],legacy:false};
   await h.U.importBackup(incoming,'replace',snapshot);assert.equal((await h.U.plan()).items[0].code,'IN2320');assert.deepEqual(JSON.parse(mem.storage.getItem(B.keys.favorites)),['R140']);assert(h.events.includes('rci:planchange'));assert(h.events.includes('rci:saveschange'));
@@ -91,10 +165,11 @@ function application(mem,locks){
   await h.U.moveCourse('IN2064',1);const newer=B.capture(mem.storage);await assert.rejects(h.U.importBackup({plan:draft(),favorites:[]},'replace',snapshot),/已更新/);assert.deepEqual(B.capture(mem.storage),newer);
  });
  await test('Unreadable existing local records remain intact and can be exported as raw recovery data',async()=>{
-  const mem=memory({...initial(),[B.keys.plan]:'{damaged original record'}),h=application(mem),before=B.capture(mem.storage);
+  const mem=memory({...initial(),[B.keys.plan]:'{damaged original record','rci:v2:checklist':'{damaged checklist'}),h=application(mem),before=B.capture(mem.storage);
   await assert.rejects(h.U.backupSnapshot(),/原始记录/);
   await assert.rejects(h.U.importBackup({plan:draft(),favorites:[]},'replace'),/原始记录/);
   assert.deepEqual(B.capture(mem.storage),before);assert.equal(h.U.rawBackup().records.plan,before.plan);
+  assert.equal(h.U.rawBackup().records.checklist,'{damaged checklist');
  });
  await test('Cross-page locks make a queued plan edit use the latest imported plan',async()=>{
   let queue=Promise.resolve();const locks={request(name,fn){assert.equal(name,'rci:local-data');const task=queue.then(fn);queue=task.catch(()=>{});return task;}};
