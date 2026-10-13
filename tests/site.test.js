@@ -90,4 +90,5 @@ test('Picker identifies previously selected and unassigned courses without dupli
  assert.throws(()=>Picker.choices(pickerData,p,5),/有效的学期/);
 });
 
+require('./community.test.js');
 console.log(count+' site checks passed');
