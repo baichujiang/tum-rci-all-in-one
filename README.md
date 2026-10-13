@@ -58,6 +58,8 @@ python3 -m http.server 8000 --directory dist
 
 打开 `http://localhost:8000`。构建不需要第三方依赖，发布目录是 `dist`。正式网站由 Vercel 从本仓库 main 构建发布。GitHub 用于维护；学生使用固定网站入口。
 
+完整发布检查可运行 `node scripts/verify_site.js`，它依次执行上述 Node 回归、静态构建和站点检查。Vercel 使用同一脚本，构建命令保持在平台的 256 字符限制内。
+
 | 路径 | 用途 |
 |---|---|
 | `content/navigation.json` | 常用网站展示、问答、检索同义词与合并资源的显示记录 |

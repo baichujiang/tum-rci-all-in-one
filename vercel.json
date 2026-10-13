@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "node tests/core.test.js && node tests/interactions.test.js && node tests/backup.test.js && node tests/backup-ui.test.js && node tests/favorites.test.js && node tests/search.test.js && node tests/routes.test.js && node tests/portals.test.js && node tests/checklist.test.js && node tests/build.test.js && node scripts/build_site.js && node tests/site.test.js",
+  "buildCommand": "node scripts/verify_site.js",
   "outputDirectory": "dist",
   "installCommand": "echo No third-party dependencies",
   "trailingSlash": true,

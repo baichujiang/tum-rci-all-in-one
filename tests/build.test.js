@@ -9,6 +9,11 @@ function manifest(dir){
  return files.sort(([a],[b])=>a.localeCompare(b));
 }
 try{
+ const deployment=JSON.parse(fs.readFileSync(path.join(root,'vercel.json'),'utf8'));
+ assert(deployment.buildCommand.length<=256,'Vercel build commands must fit the deployment schema limit');
+ const releaseScript=deployment.buildCommand.match(/^node (scripts\/[a-z_-]+\.js)$/);
+ assert(releaseScript&&fs.existsSync(path.join(root,releaseScript[1])),'The release command must reference an existing local verification script');
+ console.log('PASS Release build command fits the platform schema and resolves its local script');
  for(const folder of ['scripts','assets','site3','content','data','guides'])fs.cpSync(path.join(root,folder),path.join(fixture,folder),{recursive:true});
  const first=build();assert.equal(first.status,0,first.stderr);const original=manifest(path.join(fixture,'dist'));
  const navFile=path.join(fixture,'content/navigation.json'),nav=JSON.parse(fs.readFileSync(navFile,'utf8'));
@@ -55,5 +60,5 @@ try{
  assert(!fs.readdirSync(fixture).some(name=>name.startsWith('.site-build-')),'Data validation builds must also clean their staging files');
  console.log('PASS Invalid elective credits, groups, module paths and empty names preserve the last complete site');
  console.log('PASS Valid fractional ECTS remain supported without changing canonical course facts');
- console.log('6 build checks passed');
+ console.log('7 build checks passed');
 }finally{fs.rmSync(fixture,{recursive:true,force:true});}
