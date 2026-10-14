@@ -744,7 +744,7 @@
     ],
     "curriculum_version": "20241",
     "academic_year": "2026/27",
-    "review_date": "2026-10-14",
+    "review_date": "2026-10-15",
     "term": "WiSe/SoSe",
     "language": "DE/EN",
     "recognition_status": "official_public_curriculum",
@@ -754,7 +754,7 @@
     "module_detail_id": "1772070",
     "metadata_verification": "See course-verification.json for per-field current handbook status",
     "offering_verification": "Handbook recurrence only; actual semester availability not established",
-    "automatic_recommendation_eligible": true
+    "automatic_recommendation_eligible": false
   },
   {
     "module_code": "MW1340",
@@ -1980,12 +1980,12 @@
     "curriculum_id": 5271,
     "academic_year": "2026/27",
     "study_year_id": 1623,
-    "review_date": "2026-10-14",
+    "review_date": "2026-10-15",
     "recognition_status": "official_public_curriculum",
     "term": "SoSe",
     "language": "EN",
     "metadata_verification": "See course-verification.json for per-field current handbook status",
-    "automatic_recommendation_eligible": false,
+    "automatic_recommendation_eligible": true,
     "offering_verification": "Handbook recurrence only; actual semester availability not established"
   },
   {
@@ -2027,7 +2027,7 @@
     "curriculum_id": 5271,
     "academic_year": "2026/27",
     "study_year_id": 1623,
-    "review_date": "2026-10-14",
+    "review_date": "2026-10-15",
     "recognition_status": "official_public_curriculum",
     "term": "SoSe",
     "language": "EN",
@@ -2638,12 +2638,12 @@
     "curriculum_id": 5271,
     "academic_year": "2026/27",
     "study_year_id": 1623,
-    "review_date": "2026-10-14",
+    "review_date": "2026-10-15",
     "recognition_status": "official_public_curriculum",
     "term": "WiSe/SoSe",
     "language": "EN",
     "metadata_verification": "See course-verification.json for per-field current handbook status",
-    "automatic_recommendation_eligible": false,
+    "automatic_recommendation_eligible": true,
     "offering_verification": "Handbook recurrence only; actual semester availability not established"
   },
   {
@@ -4154,7 +4154,7 @@
     "curriculum_id": 5271,
     "academic_year": "2026/27",
     "study_year_id": 1623,
-    "review_date": "2026-10-14",
+    "review_date": "2026-10-15",
     "recognition_status": "official_public_curriculum",
     "term": "不定期",
     "language": "EN",

@@ -30,6 +30,25 @@ test('Unknown prerequisites, irregular occurrence and old selected academic year
  const c=map.get('CIT323007'),unsafe={...c,verification:{...c.verification,fields:{...c.verification.fields,prerequisites:undefined}}};assert.equal(E.recommendationEligible(unsafe),false);
  assert.equal(E.recommendationEligible({...c,verification:undefined,automatic_recommendation_eligible:undefined}),false);
 });
+test('Bilingual handbook corrections preserve evidence, warning text and the unresolved-course gate',()=>{
+ for(const code of ['ED150047','EI7417']){
+  const c=map.get(code),v=c.verification;assert(E.recommendationEligible(c),code);
+  assert.equal(v.source_values.prerequisites_default,'-');assert(v.source_values.prerequisites_translations.en.trim());
+  assert.equal(v.source_field_languages.prerequisites,'en');assert.equal(c.prerequisites.formal_exam_pass_gate_verified,false);
+ }
+ for(const code of audit.verification.pending_codes)assert.equal(E.recommendationEligible(map.get(code)),false,code);
+ assert.equal(map.get('ED160053').verification.source_field_status.prerequisites,'translation_conflict');
+ for(const code of ['EI70140','MW0538','IN2245']){assert(map.get(code).prerequisites.requires_confirmation);assert.equal(E.recommendationEligible(map.get(code)),false,code);}
+ assert(map.get('EI70140').prerequisites.summary_cn.includes('微积分'));
+ assert(map.get('MW0538').prerequisites.summary_cn.includes('一阶线性微分方程'));
+ const p=draft();p.preferences.languages=['EN'];p.preferences.desired=['ED150047','EI7417'];
+ const r=E.generate(p,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));assert(r.calculation.complete);
+ for(const code of p.preferences.desired){assert(r.plan.items.some(x=>x.code===code));assert(r.warnings.some(x=>x.startsWith(code+'：')),code);}
+ for(const code of ['ED160053','EI70140','MW0538']){
+  const requested=draft();requested.preferences.desired=[code];const result=E.generate(requested,courses,offerings);
+  assert(!result.ok,code);assert(result.reasons.some(x=>x.includes(code)),code);
+ }
+});
 test('Desired and manually selected unsafe future modules cannot bypass the same gate, even with dated teaching',()=>{
  for(const code of ['IN2002','IN2123','IN2076','IN2169','CIT4230002'])for(const mode of ['desired','selected']){
   const p=draft();if(mode==='desired')p.preferences.desired=[code];else p.items=[{code,status:'planned',semester:1,locked:false}];

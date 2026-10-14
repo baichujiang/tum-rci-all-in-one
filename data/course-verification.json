@@ -1412,51 +1412,7 @@
       "current_academic_year_selection_verified": true
     },
     "ED150047": {
-      "checked_on": "2026-10-14",
-      "fields": {
-        "identity": "verified",
-        "ects": "verified",
-        "groups": "verified",
-        "term": "verified",
-        "language": "verified",
-        "prerequisites": "pending"
-      },
-      "term": "SoSe",
-      "language": "EN",
-      "prerequisites": {
-        "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
-        "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4390489/study-year/1623",
-        "checked_on": "2026-10-14",
-        "source_field_name": "(Empfohlene) Voraussetzungen",
-        "semantics": "not_provided_or_current_unverified",
-        "requirement_strength": "not_provided",
-        "named_course_codes": [],
-        "formal_exam_pass_gate_verified": false,
-        "current_academic_year_selection_verified": true,
-        "requires_confirmation": false
-      },
-      "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
-      "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4390489/study-year/1623?$ctx=design=pl;header=max;lang=de",
-      "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4390489/study-year/1623",
-      "source_sha256": "0c5ceb3a096bfaa343487a4a8e551cb2cc49f0e2bb0238d8dca6d6703d252367",
-      "source_field_status": {
-        "term": "present",
-        "language": "present",
-        "prerequisites": "not_provided"
-      },
-      "source_values": {
-        "term": "Sommersemester",
-        "language": "Englisch"
-      },
-      "selected_semester_id": "207",
-      "selected_semester_label": "2026W",
-      "description_semester_id": "204",
-      "current_academic_year_selection_verified": true
-    },
-    "ED160053": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -1469,14 +1425,74 @@
       "language": "EN",
       "prerequisites": {
         "kind": "recommended",
-        "summary_cn": "需扎实的微分方程、线性代数和工程动力学知识；Matlab／Scilab 编程经验有帮助，所列课程是知识来源示例。",
-        "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4382063/study-year/1623",
-        "checked_on": "2026-10-14",
+        "summary_cn": "手册英语先修条目列出 ED150017 自主车辆基础的知识背景；未注明必须先通过其考试。",
+        "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4390489/study-year/1623",
+        "checked_on": "2026-10-15",
         "source_field_name": "(Empfohlene) Voraussetzungen",
         "semantics": "knowledge_preparation",
+        "requirement_strength": "knowledge_background",
+        "named_course_codes": [
+          "ED150017"
+        ],
+        "formal_exam_pass_gate_verified": false,
+        "current_academic_year_selection_verified": true,
+        "requires_confirmation": false,
+        "source_languages": [
+          "de",
+          "en"
+        ]
+      },
+      "automatic_recommendation_eligible": true,
+      "recommendation_note": "英语先修字段已对照；有知识准备提示，采用自动方案前需确认。",
+      "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4390489/study-year/1623?$ctx=design=pl;header=max;lang=EN",
+      "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4390489/study-year/1623",
+      "source_sha256": "0c5ceb3a096bfaa343487a4a8e551cb2cc49f0e2bb0238d8dca6d6703d252367",
+      "source_field_status": {
+        "term": "present",
+        "language": "present",
+        "prerequisites": "present"
+      },
+      "source_values": {
+        "term": "Sommersemester",
+        "language": "Englisch",
+        "prerequisites_default": "-",
+        "prerequisites_translations": {
+          "de": "-",
+          "en": "Foundations of Autonomous Vehicles [ED150017]"
+        }
+      },
+      "selected_semester_id": "207",
+      "selected_semester_label": "2026W",
+      "description_semester_id": "204",
+      "current_academic_year_selection_verified": true,
+      "bilingual_prerequisites_reviewed_on": "2026-10-15",
+      "source_field_languages": {
+        "prerequisites": "en"
+      }
+    },
+    "ED160053": {
+      "checked_on": "2026-10-15",
+      "fields": {
+        "identity": "verified",
+        "ects": "verified",
+        "groups": "verified",
+        "term": "verified",
+        "language": "verified",
+        "prerequisites": "pending"
+      },
+      "term": "SoSe",
+      "language": "EN",
+      "prerequisites": {
+        "kind": "pending",
+        "summary_cn": "需扎实的微分方程、线性代数和工程动力学知识。德英参考课程号分别为 MW9016／MW1939，编程例子分别为 Matlab／Scilab 和 Matlab／Python；参考课号与要求表述差异待教学团队确认，暂不自动推荐。",
+        "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4382063/study-year/1623",
+        "checked_on": "2026-10-15",
+        "source_field_name": "(Empfohlene) Voraussetzungen",
+        "semantics": "bilingual_difference_unresolved",
         "requirement_strength": "required_knowledge",
         "named_course_codes": [
           "MW9016",
+          "MW1939",
           "MW2098",
           "ED160054",
           "MW1995",
@@ -1485,26 +1501,39 @@
         ],
         "formal_exam_pass_gate_verified": false,
         "current_academic_year_selection_verified": true,
-        "requires_confirmation": true
+        "requires_confirmation": true,
+        "source_languages": [
+          "de",
+          "en"
+        ]
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "手册明确要求前置背景，个人准备尚未核验，暂不自动推荐。",
+      "recommendation_note": "德英先修参考课号及表述存在差异，待核实，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4382063/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4382063/study-year/1623",
-      "source_sha256": "041c97baf93b4f83262beebca33c677544794721a59cea6e0330bfac6ad72468",
+      "source_sha256": "e8323d630c1ef2dfc1b7d91927700f2524b309f17e7d57aa89c22542ec5911c8",
       "source_field_status": {
         "term": "present",
         "language": "present",
-        "prerequisites": "present"
+        "prerequisites": "translation_conflict"
       },
       "source_values": {
         "term": "Sommersemester",
-        "language": "Englisch"
+        "language": "Englisch",
+        "prerequisites_default": "Die Studierenden müssen eine fundierte Kenntnis von Differentialgleichungen, linearer Algebra und Technischer Dynamik haben. Zusätzlich ist Erfahrung in Programmierung (z.B. Matlab oder Scilab) erwünscht. Lehrveranstaltungen, die diese Basis abdecken, sind z.B.:\r\n-\tMW9016 Technische Mechanik  3\r\n-\tMW2098 Technische Dynamik (Engineering  Dynamics)\r\n-\tED160054 Multiphysikalische Interaktion in mechanischen Systemen\tMW1995 Experimentelle Schwingungsanalyse\r\n-\tMW1920 Maschinendynamik\r\n-\tMA9303 Höhere Mathematik 3\r\n",
+        "prerequisites_translations": {
+          "de": "Die Studierenden müssen eine fundierte Kenntnis von Differentialgleichungen, linearer Algebra und Technischer Dynamik haben. Zusätzlich ist Erfahrung in Programmierung (z.B. Matlab oder Scilab) erwünscht. Lehrveranstaltungen, die diese Basis abdecken, sind z.B.:\r\n-\tMW9016 Technische Mechanik  3\r\n-\tMW2098 Technische Dynamik (Engineering  Dynamics)\r\n-\tED160054 Multiphysikalische Interaktion in mechanischen Systemen\tMW1995 Experimentelle Schwingungsanalyse\r\n-\tMW1920 Maschinendynamik\r\n-\tMA9303 Höhere Mathematik 3\r\n",
+          "en": "Students should have a good general knowledge in differential equations, linear algebra and engineering dynamics. In addition, some experience with programming (e.g. in Matlab or Python) is useful. Example of courses covering such background knowledge  are:\r\n-\tMW1939 Technische Mechanik 3\r\n-\tMW2098 Technische Dynamik (Engineering Dynamics)\r\n-\tED160054 Multiphysical Interactions in mechanical Systems\r\n-\tMW1995  Experimentelle Schwingungsanalyse\r\n-\tMW1920 Maschinendynamik\r\n-\tMA9303 Höhere Mathematik 3\r\n"
+        }
       },
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "204",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "bilingual_prerequisites_reviewed_on": "2026-10-15",
+      "source_field_languages": {
+        "prerequisites": "de/en"
+      }
     },
     "ED180013": {
       "checked_on": "2026-10-14",
@@ -1693,7 +1722,7 @@
       "current_academic_year_selection_verified": true
     },
     "EI70140": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -1706,22 +1735,26 @@
       "language": "DE/EN",
       "prerequisites": {
         "kind": "recommended",
-        "summary_cn": "需动力系统、线性控制、线性代数和概率论基础。",
+        "summary_cn": "需动力系统、线性控制、微积分、线性代数和概率论基础；英语明确使用 required，个人知识准备需确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1772070/study-year/1623",
-        "checked_on": "2026-10-14",
+        "checked_on": "2026-10-15",
         "source_field_name": "(Empfohlene) Voraussetzungen",
         "semantics": "knowledge_preparation",
-        "requirement_strength": "knowledge_background",
+        "requirement_strength": "required_knowledge",
         "named_course_codes": [],
         "formal_exam_pass_gate_verified": false,
         "current_academic_year_selection_verified": true,
-        "requires_confirmation": false
+        "requires_confirmation": true,
+        "source_languages": [
+          "de",
+          "en"
+        ]
       },
-      "automatic_recommendation_eligible": true,
-      "recommendation_note": "资料已对照；有知识准备提示，采用自动方案前需确认。",
+      "automatic_recommendation_eligible": false,
+      "recommendation_note": "手册明确要求前置背景，个人准备尚未核验，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1772070/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1772070/study-year/1623",
-      "source_sha256": "7d839a4a6f2364457b779027a30d1bfc51cc67bbf783b232b6789d2ccbccbb74",
+      "source_sha256": "78120e08e8839af4b66973f557b44c7a55a025efdb1beaf246b6979ea17d22ed",
       "source_field_status": {
         "term": "present",
         "language": "present",
@@ -1729,12 +1762,21 @@
       },
       "source_values": {
         "term": "Wintersemester/Sommersemester",
-        "language": "Deutsch/Englisch"
+        "language": "Deutsch/Englisch",
+        "prerequisites_default": "Grundkenntnisse: Dynamische Systeme, lineare Regelungssysteme, lineare Algebra, Wahrscheinlichkeitstheorie ",
+        "prerequisites_translations": {
+          "de": "Grundkenntnisse: Dynamische Systeme, lineare Regelungssysteme, lineare Algebra, Wahrscheinlichkeitstheorie ",
+          "en": "Basic knowledge of dynamic systems, linear control theory, calculus, linear algebra, and probability theory is required.\r\n"
+        }
       },
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "203",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "bilingual_prerequisites_reviewed_on": "2026-10-15",
+      "source_field_languages": {
+        "prerequisites": "de/en"
+      }
     },
     "EI70270": {
       "checked_on": "2026-10-14",
@@ -2136,48 +2178,61 @@
       "current_academic_year_selection_verified": true
     },
     "EI7417": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
         "groups": "verified",
         "term": "verified",
         "language": "verified",
-        "prerequisites": "pending"
+        "prerequisites": "verified"
       },
       "term": "WiSe/SoSe",
       "language": "EN",
       "prerequisites": {
-        "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "kind": "recommended",
+        "summary_cn": "建议具备控制工程、电机、Matlab／Simulink 及 C 编程基础；建议另修电机与电力电子、高级控制和非线性控制课程。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/979262/study-year/1623",
-        "checked_on": "2026-10-14",
+        "checked_on": "2026-10-15",
         "source_field_name": "(Empfohlene) Voraussetzungen",
-        "semantics": "not_provided_or_current_unverified",
-        "requirement_strength": "not_provided",
+        "semantics": "knowledge_preparation",
+        "requirement_strength": "knowledge_background",
         "named_course_codes": [],
         "formal_exam_pass_gate_verified": false,
         "current_academic_year_selection_verified": true,
-        "requires_confirmation": false
+        "requires_confirmation": false,
+        "source_languages": [
+          "de",
+          "en"
+        ]
       },
-      "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
-      "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/979262/study-year/1623?$ctx=design=pl;header=max;lang=de",
+      "automatic_recommendation_eligible": true,
+      "recommendation_note": "英语先修字段已对照；有知识准备提示，采用自动方案前需确认。",
+      "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/979262/study-year/1623?$ctx=design=pl;header=max;lang=EN",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/979262/study-year/1623",
       "source_sha256": "fee56f27a4cccfd54fb2e14cb7d8f45db68080f8f52bf40fb2c1b3eb01c2a2ee",
       "source_field_status": {
         "term": "present",
         "language": "present",
-        "prerequisites": "not_provided"
+        "prerequisites": "present"
       },
       "source_values": {
         "term": "Wintersemester/Sommersemester",
-        "language": "Englisch"
+        "language": "Englisch",
+        "prerequisites_default": "-",
+        "prerequisites_translations": {
+          "de": "-",
+          "en": "Basic knowledge of: \r\n- Control engineering (desirable) \r\n- Electric machines (desirable) \r\n- Matlab/Simulink (desirable) \r\n- Programming skills in C (desirable) \r\n\r\nIt is recommended to participate in addition to following modules: \r\n- Electrical Machines and Power Electronics \r\n- Advanced Control \r\n- Nonlinear Control\r\n"
+        }
       },
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "188",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "bilingual_prerequisites_reviewed_on": "2026-10-15",
+      "source_field_languages": {
+        "prerequisites": "en"
+      }
     },
     "EI74371": {
       "checked_on": "2026-10-14",
@@ -3973,7 +4028,7 @@
       "current_academic_year_selection_verified": true
     },
     "IN2245": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -3986,22 +4041,26 @@
       "language": "EN",
       "prerequisites": {
         "kind": "recommended",
-        "summary_cn": "建议具备多元分析、线性代数、动态规划和基本数据结构知识。",
+        "summary_cn": "需多元分析、线性代数、动态规划和基本数据结构知识；德语写“推荐”，英语称 requirements，个人准备及要求强度需向教学团队确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/672354/study-year/1623",
-        "checked_on": "2026-10-14",
+        "checked_on": "2026-10-15",
         "source_field_name": "(Empfohlene) Voraussetzungen",
         "semantics": "knowledge_preparation",
-        "requirement_strength": "knowledge_background",
+        "requirement_strength": "required_knowledge",
         "named_course_codes": [],
         "formal_exam_pass_gate_verified": false,
         "current_academic_year_selection_verified": true,
-        "requires_confirmation": false
+        "requires_confirmation": true,
+        "source_languages": [
+          "de",
+          "en"
+        ]
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "手册注明不定期开课，未来学期不能据此推算，暂不自动推荐。",
+      "recommendation_note": "不定期开课，且德英知识准备要求表述不同；待个人确认，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/672354/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/672354/study-year/1623",
-      "source_sha256": "5555e3bce3e318694058e3b97719d68590682a7e7faab6e30675a55ad7db2753",
+      "source_sha256": "cfd31436cbd39a1acd19125a6fb57803ef8fa2309ccaed8965074642a6a9ae5f",
       "source_field_status": {
         "term": "present",
         "language": "present",
@@ -4009,12 +4068,21 @@
       },
       "source_values": {
         "term": "Unregelmäßig",
-        "language": "Englisch"
+        "language": "Englisch",
+        "prerequisites_default": "Als Voraussetzungen wird Grundwissen der Mathematik (insbesondere multivariate Analysis und lineare Algebra) sowie Grundwissen der Informatik (insbesondere dynamische Programmierung und einfache Datenstrukturen) empfohlen.",
+        "prerequisites_translations": {
+          "de": "Als Voraussetzungen wird Grundwissen der Mathematik (insbesondere multivariate Analysis und lineare Algebra) sowie Grundwissen der Informatik (insbesondere dynamische Programmierung und einfache Datenstrukturen) empfohlen.",
+          "en": "The requirements for the class are knowledge in basic mathematics, in particular multivariate analysis and linear algebra, and in basic computer science, in particular dynamic programming and basic data structures."
+        }
       },
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "183",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "bilingual_prerequisites_reviewed_on": "2026-10-15",
+      "source_field_languages": {
+        "prerequisites": "de/en"
+      }
     },
     "IN2246": {
       "checked_on": "2026-10-14",
@@ -5989,7 +6057,7 @@
       "current_academic_year_selection_verified": true
     },
     "MW0538": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -6002,19 +6070,23 @@
       "language": "DE",
       "prerequisites": {
         "kind": "recommended",
-        "summary_cn": "需控制工程和线性代数基础；建议具备机电系统理论知识。",
+        "summary_cn": "需控制工程、线性代数及一阶线性微分方程知识；建议具备机电系统理论知识。德英两版均明确要求前述基础，个人准备需确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/261275/study-year/1623",
-        "checked_on": "2026-10-14",
+        "checked_on": "2026-10-15",
         "source_field_name": "(Empfohlene) Voraussetzungen",
         "semantics": "knowledge_preparation",
-        "requirement_strength": "knowledge_background",
+        "requirement_strength": "required_knowledge",
         "named_course_codes": [],
         "formal_exam_pass_gate_verified": false,
         "current_academic_year_selection_verified": true,
-        "requires_confirmation": false
+        "requires_confirmation": true,
+        "source_languages": [
+          "de",
+          "en"
+        ]
       },
-      "automatic_recommendation_eligible": true,
-      "recommendation_note": "资料已对照；有知识准备提示，采用自动方案前需确认。",
+      "automatic_recommendation_eligible": false,
+      "recommendation_note": "手册明确要求前置背景，个人准备尚未核验，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/261275/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/261275/study-year/1623",
       "source_sha256": "e21c9c56e15f7b02742f7eaa8b7b0599c2280acfa14d51148418786b2e9c057a",
@@ -6025,12 +6097,21 @@
       },
       "source_values": {
         "term": "Sommersemester",
-        "language": "Deutsch"
+        "language": "Deutsch",
+        "prerequisites_default": "Vorausgesetzt wird der Stoff des Grundlagenmoduls \"Regelungstechnik\".\n\nVorausgesetzt werden auch Grundlagen der linearen Algebra aus dem Moduls \"Höhere Mathematik 1-3\"\n\nDas Modul \"Systemtheorie in der Mechatronik\" wird empfohlen.\n \n",
+        "prerequisites_translations": {
+          "de": "Vorausgesetzt wird der Stoff des Grundlagenmoduls \"Regelungstechnik\".\n\nVorausgesetzt werden auch Grundlagen der linearen Algebra aus dem Moduls \"Höhere Mathematik 1-3\"\n\nDas Modul \"Systemtheorie in der Mechatronik\" wird empfohlen.\n \n",
+          "en": "The contents of the basic module \"Automatic Control\" are required as well as basic knowledge of linear algebra and first order linear differential equations as taught in \"Höhere Mathematik\".\n\nThe module \"Systems Theory in Mechatronics\" is recommended.\n \n\n"
+        }
       },
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "179",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "bilingual_prerequisites_reviewed_on": "2026-10-15",
+      "source_field_languages": {
+        "prerequisites": "de/en"
+      }
     },
     "MW0539": {
       "checked_on": "2026-10-14",
@@ -6956,5 +7037,6 @@
       "description_semester_id": "180",
       "current_academic_year_selection_verified": true
     }
-  }
+  },
+  "bilingual_prerequisites_reviewed_on": "2026-10-15"
 }

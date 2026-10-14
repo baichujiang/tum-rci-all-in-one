@@ -4,6 +4,7 @@ from pathlib import Path
 import concurrent.futures, subprocess, json, xml.etree.ElementTree as E, re, time, hashlib
 
 import argparse, datetime
+from handbook_fields import resolve_values
 parser=argparse.ArgumentParser(description='Fetch official RCI handbooks for the frozen 2026/27 membership snapshot; never edits recommendation decisions.')
 parser.add_argument('--output', required=True, type=Path, help='Evidence directory outside the public repository')
 args=parser.parse_args()
@@ -48,7 +49,12 @@ def fetch(item):
   record['source_fields']=fields
   def select(label):return next((x for x in fields if x['label']==label),None)
   for key,label in [('turnus','Turnus'),('language','Sprache'),('prerequisite','(Empfohlene) Voraussetzungen'),('module_level','Modulniveau'),('assessment','Beschreibung der Studien-/Prüfungsleistungen')]:
-   x=select(label);record[key+'_field_present']=x is not None;record[key+'_raw']=x['value'] if x else None;record[key+'_translations']=x['values'] if x else None;record[key+'_status']='missing_field' if x is None else 'blank' if not norm(x['value']) else 'not_provided' if norm(x['value']).lower() in ['-','--','–','—','not specified','nicht angegeben'] else 'present'
+   x=select(label);resolved=resolve_values(x['values'] if x else None)
+   record[key+'_field_present']=x is not None
+   record[key+'_raw']=resolved['value'];record[key+'_default_raw']=x['values']['value'] if x else None
+   record[key+'_translations']=x['values'] if x else None;record[key+'_status']=resolved['status']
+   record[key+'_selected_language']=resolved['selected_language'];record[key+'_default_status']=resolved['default_status']
+   record[key+'_language_values']=resolved['language_values']
   raw_prereq=norm(record['prerequisite_raw'])
   record['prerequisite_semantics']='recommended_background_field' if record['prerequisite_field_present'] else 'unverified'
   if record['prerequisite_status']=='present' and re.fullmatch(r'(keine\.?|keine voraussetzungen\.?|none\.?|no prerequisites\.?|no prior knowledge required\.?|there are no prerequisites\.?|es werden keine inhaltlichen voraussetzungen benötigt\.?)',raw_prereq,re.I):record['prerequisite_status']='explicit_none'
