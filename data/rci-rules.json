@@ -1,7 +1,7 @@
 {
   "id": "rci-fpso-2024-amendment-2025",
   "applicableFrom": "2025/26冬季",
-  "checkedOn": "2026-10-13",
+  "checkedOn": "2026-10-14",
   "humanReview": "pending",
   "core": 43,
   "thesis": 30,
@@ -65,5 +65,12 @@
       "from": "2025/26冬季",
       "conditionalCreditShift": true
     }
+  ],
+  "modeled_scope": "学分结构、受支持批次、模块二选一和标准进度的规划模拟",
+  "not_modeled": [
+    "J个人语言资格和课程重叠认定",
+    "同名或等价课程及本科已计入课程的自动核验",
+    "正式先修、具体研讨与实践课题、报名与名额",
+    "个人学分认定、实际期限账户与批准决定"
   ]
 }

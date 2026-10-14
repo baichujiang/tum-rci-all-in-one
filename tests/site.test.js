@@ -121,7 +121,7 @@ test('Picker searches course names, spaced codes and existing ML synonyms',()=>{
 });
 test('Other-season option reveals conflicts and domain filtering remains scoped',()=>{
  assert(Picker.choices(pickerData,pickerPlan,1,{otherTerms:true}).some(x=>x.code==='ED160028'));
- assert(Picker.choices(pickerData,pickerPlan,2,{group:'I'}).every(x=>x.course.section_2025[0]==='I'));
+ assert(Picker.choices(pickerData,pickerPlan,2,{group:'I'}).every(x=>(x.course.allowed_groups||[x.course.section_2025[0]]).includes('I')));
  assert(Picker.choices(pickerData,pickerPlan,1,{group:'core'}).every(x=>'ABCDE'.includes(x.course.section_2025[0])));
 });
 test('Searching a known course reveals it across seasons without an extra filter step',()=>{
@@ -144,6 +144,30 @@ test('Restricted service cards preserve direct access and provide verified offic
    const links=[...s.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].filter(m=>m[1].includes('data-portal-help="'+id+'"'));
    assert(links.length,file+' '+id);for(const link of links){assert(link[1].includes('href="'+help.url+'"'));assert(link[2].includes(label));assert(link[1].includes('noopener noreferrer'));}
   }
+ }
+});
+
+test('Retired timetable tools are absent from the public page, assets and exports',()=>{
+ const page=fs.readFileSync(path.join(dist,'planner/index.html'),'utf8'),sharing=fs.readFileSync(path.join(dist,'assets/plan-sharing.js'),'utf8');
+ for(const value of ['weekly-timetable','optional-time-tools','timetable.js','calendar.js','timetable-core.js'])assert(!page.includes(value),value);
+ for(const file of ['timetable.js','calendar.js','timetable-core.js'])assert(!fs.existsSync(path.join(dist,'assets',file)),file);
+ assert(!sharing.includes('rows:times'));assert(page.includes('assets/course-context.js'));
+});
+test('Current catalogue metadata supports winter Deep Learning and both IN2060 categories',()=>{
+ const dl=index.docs.find(x=>x.code==='IN2346'),rt=pickerData.courses.find(x=>x.module_code==='IN2060');assert(dl.term.includes('WiSe'));assert(dl.term.includes('SoSe'));assert.deepEqual(rt.allowed_groups,['G','I']);
+ assert(Picker.choices(pickerData,pickerPlan,1,{group:'I'}).some(x=>x.code==='IN2060'));assert(Picker.choices(pickerData,pickerPlan,1,{query:'IN2346'}).some(x=>x.code==='IN2346'));
+ const p=Core.validatePlan({...pickerPlan,cohort:'2026/27冬季',items:[{code:'IN2060',status:'passed',semester:1,group:'I'}]},pickerData.courses);assert.equal(Core.calculate(p,pickerData.courses,true).totals.I,6);assert.equal(Core.calculate(p,pickerData.courses,true).totals.G,0);
+ for(const code of ['MW2352','IN2404','WI000159','IN9003'])assert.equal(pickerData.courses.find(x=>x.module_code===code).automatic_recommendation_eligible,false);
+ assert(!JSON.stringify(pickerData.offerings).includes('sessions'));assert(pickerData.catalogAudit.coverage.GHI.omitted_distinct_modules>0);
+});
+
+test('Compiled catalogue plans satisfy verified numerical rules across original and amended cohorts',()=>{
+ const engine=require('../assets/planning-engine');
+ for(const [cohort,conditional] of [['2024夏季',false],['2026/27冬季',false],['2026/27冬季',true]]){
+  const p=Core.validatePlan({version:2,cohort,conditional,items:[]},pickerData.courses),r=engine.generate(p,pickerData.courses,pickerData.offerings);assert(r.ok,JSON.stringify(r.reasons));assert(r.calculation.complete);assert.equal(r.calculation.allocated,120);assert.equal(r.calculation.buckets[1][2],conditional?36:41);
+  for(const code of ['IN2228','IN2406','IN2064','IN2107','IN2106','IN2320'])assert(r.plan.items.some(x=>x.code===code),code);
+  assert.equal(r.plan.items.filter(x=>['IN2067','ED160028'].includes(x.code)).length,1);assert.equal(r.plan.items.some(x=>x.code==='ED140014'),conditional);assert.equal(new Set(r.plan.items.map(x=>x.code)).size,r.plan.items.length);
+  assert(Core.progression(r.plan,pickerData.courses).every(x=>x.met));for(const n of Core.schedule(r.plan,pickerData.courses).semesters){assert(n.credits<=32);assert(n.items.length<=6);}
  }
 });
 

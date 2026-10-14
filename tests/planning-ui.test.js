@@ -1,7 +1,7 @@
 /* Execute the actual preview UI to protect cancelled jobs and passed grades. */
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const C=require('../assets/core'),E=require('../assets/planning-engine'),T=require('../assets/timetable-core'),S=require('../site3/search');
+const C=require('../assets/core'),E=require('../assets/planning-engine'),T=require('../assets/course-context'),S=require('../site3/search');
 const courses=C.csv(fs.readFileSync(path.join(__dirname,'../data/courses_legal_2025.csv'),'utf8'));
 const source=fs.readFileSync(path.join(__dirname,'../site3/planning-controls.js'),'utf8');
 const copy=x=>JSON.parse(JSON.stringify(x)),tick=()=>new Promise(resolve=>setImmediate(resolve));
@@ -14,7 +14,7 @@ async function harness(){
  class Worker{constructor(){this.terminated=false;workers.push(this);}postMessage(input){this.input=copy(input);}terminate(){this.terminated=true;}}
  const U={base:'',persisted:true,data:async()=>({courses,names:{},synonyms:[]}),plan:async()=>{planReads++;if(planGate)await planGate;return copy(plan);},updatePlan:async fn=>{const next=await fn(copy(plan));if(next)plan=C.validatePlan(next,courses);return plan;},toast(){}};
  const nodes={'planning-controls':box,'auto-plan-dialog':dialog,'auto-plan-result':result,'preference-results':choices};
- vm.runInNewContext(source,{window:{RCIUI:U,RCI:C,RCIPlanning:E,RCITimetable:T,RCISearch:S,addEventListener(){}},document:{getElementById:id=>nodes[id]},Worker,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id)});
+ vm.runInNewContext(source,{window:{RCIUI:U,RCI:C,RCIPlanning:E,RCICourseContext:T,RCISearch:S,addEventListener(){}},document:{getElementById:id=>nodes[id]},Worker,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id)});
  await tick();
  const generate=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-generate'})}});
  return {workers,timers,dialog,result,apply,generate,getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},planReads:()=>planReads,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};

@@ -87,7 +87,7 @@ async function addCourse(code,semester=0,{moveExisting=false}={}){
   if(replaced?.status==='passed')throw new Error(`已修 ${other} 与这门课二选一，不能替换已修成绩。若记录有误，请先在已修列表取消该记录。`);
   const target=semester||(!previous&&replaced?.semester)||0;
   if(target){
-   const offer=window.RCITimetable?window.RCITimetable.offering(p,course,target,d.details||{}):C.offering(course,C.semesterSeason(p.timeline,target));
+   const offer=window.RCICourseContext?window.RCICourseContext.offering(p,course,target,d.offerings||{}):C.offering(course,C.semesterSeason(p.timeline,target));
    if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,target)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
   }
   if(replaced&&!await confirmAction('这两门课是二选一',`计划已有 ${d.names[other]||other}（${other}）。改选 ${d.names[code]||code} 后，会移除原课程，学分不会重复计入。`,'改选这门课'))return null;
@@ -118,7 +118,7 @@ async function moveCourse(code,semester){
   if(previous.semester===semester){result={kind:'unchanged',code,semester};return null;}
   const d=await data(),course=d.courses.find(c=>c.module_code===code);
   if(semester&&course){
-   const offer=window.RCITimetable?window.RCITimetable.offering(p,course,semester,d.details||{}):C.offering(course,C.semesterSeason(p.timeline,semester));
+   const offer=window.RCICourseContext?window.RCICourseContext.offering(p,course,semester,d.offerings||{}):C.offering(course,C.semesterSeason(p.timeline,semester));
    if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,semester)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
   }
   const applied={...previous,semester};
@@ -301,7 +301,7 @@ if(app){
  function updateURL(){const p=new URLSearchParams();for(const [k,v] of [['q',q.value.trim()],['kind',kind.closest('label').hidden?'':kind.value],['task',task.value],['group',sg?.value],['term',term?.value],['saved',sf.checked?'1':''],['semester',selectedSemester?String(selectedSemester):'']])if(v)p.set(k,v);history.replaceState(null,'',location.pathname+(p.size?'?'+p:'')+location.hash);}
  function render(){
   if(!index)return;let results=window.RCISearch.search(index.docs,q.value,index.synonyms,{kind:kind.value,task:task.value});
-  if(sg?.value)results=results.filter(d=>sg.value==='core'?'ABCDE'.includes(d.group):sg.value==='professional'?'GHI'.includes(d.group):d.group===sg.value);
+  if(sg?.value)results=results.filter(d=>sg.value==='core'?'ABCDE'.includes(d.group):sg.value==='professional'?'GHI'.includes(d.group):(d.groups||[d.group]).includes(sg.value));
   if(term?.value)results=results.filter(d=>d.term?.includes(term.value));if(sf.checked)results=results.filter(d=>favoriteKey(d));
   $('#result-count').textContent=`${q.value.trim()?'“'+q.value.trim()+'”：':''}找到 ${results.length} ${app.dataset.mode==='courses'?'门课程':'条内容'}${sf.checked?' · 仅收藏':''}`;
   const hasFilters=!!(q.value.trim()||(!kind.closest('label').hidden&&kind.value)||task.value||sg?.value||term?.value||sf.checked);

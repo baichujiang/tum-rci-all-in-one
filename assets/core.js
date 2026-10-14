@@ -41,7 +41,7 @@
     catch (_) { return ''; }
   }
   function validatePlan(raw, courses) {
-    if (!raw || ![2,3].includes(raw.version) || !Array.isArray(raw.items) || raw.items.length > 250) throw new Error('不是有效的学分计划文件（支持 v2 / v3）');
+    if (!raw || ![2,3,4].includes(raw.version) || !Array.isArray(raw.items) || raw.items.length > 250) throw new Error('不是有效的学分计划文件（支持 v2 / v3 / v4）');
     if (typeof raw.conditional !== 'boolean' || typeof raw.cohort !== 'string' || !['unknown', 'older', ...cohorts].includes(raw.cohort)) throw new Error('批次或补修设置无效');
     const conditionalConfirmed=raw.conditionalConfirmed ?? (raw.version===2&&cohorts.includes(raw.cohort)?true:raw.conditional);
     if(typeof conditionalConfirmed!=='boolean')throw new Error('个人补修确认状态无效');
@@ -106,23 +106,24 @@
       if(merged.minECTS>merged.maxECTS||merged.minExams>merged.maxExams)throw new Error('单学期负担下限不能高于上限');
       workload.semesters[key]=bounds;
     }
+    // Retired time settings remain inert, so old backups and plans round-trip losslessly.
     const tt=raw.timetable ?? {}, events=tt.events ?? [], replaced=tt.replaced ?? [];
-    if(!tt||typeof tt!=='object'||Array.isArray(tt)||!Array.isArray(events)||events.length>500||!Array.isArray(replaced)||replaced.length>250)throw new Error('周课表设置无效');
+    if(!tt||typeof tt!=='object'||Array.isArray(tt)||!Array.isArray(events)||events.length>500||!Array.isArray(replaced)||replaced.length>250)throw new Error('旧版时间记录无效');
     const eventIds=new Set();
     const normalizedEvents=events.map(event=>{
-      if(!event||typeof event.id!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(event.id)||eventIds.has(event.id)||typeof event.title!=='string'||!event.title.trim()||event.title.length>160||!Number.isInteger(event.semester)||event.semester<1||event.semester>12||!Number.isInteger(event.day)||event.day<0||event.day>6||!Number.isInteger(event.start)||!Number.isInteger(event.end)||event.start<0||event.end>1440||event.start>=event.end)throw new Error('课表事件须有唯一编号、名称、有效学期及开始结束时间');
+      if(!event||typeof event.id!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(event.id)||eventIds.has(event.id)||typeof event.title!=='string'||!event.title.trim()||event.title.length>160||!Number.isInteger(event.semester)||event.semester<1||event.semester>12||!Number.isInteger(event.day)||event.day<0||event.day>6||!Number.isInteger(event.start)||!Number.isInteger(event.end)||event.start<0||event.end>1440||event.start>=event.end)throw new Error('旧版时间事件须有唯一编号、名称、有效学期及开始结束时间');
       eventIds.add(event.id);
-      if(event.code!==undefined && (!used.has(event.code)&&!known.has(event.code)))throw new Error('课表事件的模块未知');
+      if(event.code!==undefined && (!used.has(event.code)&&!known.has(event.code)))throw new Error('旧版时间事件的模块未知');
       if(event.allowOverlap!==undefined && typeof event.allowOverlap!=='boolean')throw new Error('事件重叠设置无效');
       if(event.room!==undefined && (typeof event.room!=='string'||event.room.length>160))throw new Error('教室信息无效');
       if(!['course','blocked','personal'].includes(event.kind??'personal'))throw new Error('事件类型无效');
       return {id:event.id,title:event.title.trim(),semester:event.semester,day:event.day,start:event.start,end:event.end,kind:event.kind??'personal',room:event.room??'',allowOverlap:event.allowOverlap??false,...(event.code?{code:event.code}:{})};
     });
     const normalizedReplaced=replaced.map(value=>{
-      if(!value||!known.has(value.code)||!Number.isInteger(value.semester)||value.semester<1||value.semester>12)throw new Error('课表替代设置无效');
+      if(!value||!known.has(value.code)||!Number.isInteger(value.semester)||value.semester<1||value.semester>12)throw new Error('旧版时间替代记录无效');
       return {code:value.code,semester:value.semester};
     });
-    return {version:3, cohort:raw.cohort, conditional:raw.conditional, conditionalConfirmed,timeline:{count:timeline.count, start:timeline.start}, items,
+    return {version:4, cohort:raw.cohort, conditional:raw.conditional, conditionalConfirmed,timeline:{count:timeline.count, start:timeline.start}, items,
       preferences:{desired,excluded,languages:[...new Set(languages)],...flags,startSemester},workload,timetable:{events:normalizedEvents,replaced:normalizedReplaced}};
   }
   function semesterSeason(timeline, number) {
@@ -222,7 +223,7 @@
     const start=plan.preferences.startSemester,earned=plan.items.filter(x=>x.status==='passed'),foundation=['IN2067','ED160028','IN2228','IN2406','IN2064'];
     const rows=[{semester:2,label:'A/B/C 至少通过一门',required:1},...[3,4,5,6].map((semester,i)=>({semester,label:'累计通过的课程学分',required:(i+1)*30}))];
     return rows.map(row=>{
-      const historical=row.semester<start,items=plan.items.filter(x=>x.status==='passed'?(!historical||x.semester>0&&x.semester<=row.semester):!historical&&x.semester>0&&x.semester<=row.semester);
+      const historical=row.semester<start,items=plan.items.filter(x=>x.status==='passed'?(x.semester>0?x.semester<=row.semester:!historical):!historical&&x.semester>0&&x.semester<=row.semester);
       const value=row.semester===2?items.filter(x=>foundation.includes(x.code)).length:calculate({...plan,items,preferences:{...plan.preferences,desired:[],excluded:[]},timetable:{events:[],replaced:[]}},courses).allocated;
       const unknown=historical&&earned.some(x=>x.semester===0);
       return {...row,value,historical,unknown,met:value>=row.required,exception:plan.preferences.deadlineException};

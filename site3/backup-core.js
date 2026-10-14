@@ -45,7 +45,7 @@ function prepare(current,incoming,mode,courses){
   if(kept)notes.push(`${kept} 门重复课程保留当前设备的安排与状态。`);
   if(moved)notes.push(`起始冬夏季节不同，${moved} 门新增课程放入待分配。`);
   plan={...p,timeline:{...p.timeline,count},items};
-  notes.push('想选／排除、语言、负担、固定时间与周课表保留当前设备设置；替换模式会采用备份的全部设置。');
+  notes.push('想选／排除、语言、负担、固定学期及兼容记录保留当前设备设置；替换模式会采用备份的全部设置。');
  }
  const result=state({plan,favorites:saves===null?current.favorites:mode==='merge'?[...new Set([...current.favorites,...saves])]:saves},courses);
  return {...result,notes,legacy:incoming.legacy};

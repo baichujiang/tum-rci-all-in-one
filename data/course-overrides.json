@@ -1,0 +1,39 @@
+{
+  "checkedOn": "2026-10-14",
+  "curriculumVersion": "20241",
+  "academicYear": "2026/27",
+  "source": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=&pStpKnotenNr=",
+  "courses": {
+    "IN2060": {
+      "allowed_groups": [
+        "G",
+        "I"
+      ],
+      "current_metadata_source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/261091/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    },
+    "IN2346": {
+      "current_term": "WiSe/SoSe",
+      "current_metadata_source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1334293/study-year/1623?$ctx=design=pl;header=max;lang=de"
+    },
+    "MW2352": {
+      "current_catalog_status": "needs_review",
+      "automatic_recommendation_eligible": false,
+      "current_metadata_source": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=&pStpKnotenNr="
+    },
+    "IN2404": {
+      "current_catalog_status": "needs_review",
+      "automatic_recommendation_eligible": false,
+      "current_metadata_source": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=&pStpKnotenNr="
+    },
+    "WI000159": {
+      "current_catalog_status": "needs_review",
+      "automatic_recommendation_eligible": false,
+      "current_metadata_source": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=&pStpKnotenNr="
+    },
+    "IN9003": {
+      "current_catalog_status": "needs_review",
+      "automatic_recommendation_eligible": false,
+      "current_metadata_source": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=&pStpKnotenNr="
+    }
+  }
+}

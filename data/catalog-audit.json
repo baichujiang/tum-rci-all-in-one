@@ -1,0 +1,74 @@
+{
+  "checked_on": "2026-10-14",
+  "curriculum_version": "20241",
+  "curriculum_id": 5271,
+  "academic_year": "2026/27",
+  "study_year_id": 1623,
+  "source_page_count": 14,
+  "source_tree_rows": 4097,
+  "source_scope": "Fixed-ECTS Modulknoten under G/H/I/J, excluding Anerkennung recognition placeholders; not all core/thesis/conditional/recognition/topic nodes, not current lecture offerings or personal eligibility.",
+  "category_memberships": 586,
+  "distinct_module_codes": 581,
+  "distinct_module_handbook_ids": 581,
+  "category_counts": {
+    "G": 70,
+    "H": 27,
+    "I": 61,
+    "J": 428
+  },
+  "dataset_legal_rows": 35,
+  "dataset_additional_rows": 34,
+  "dataset_distinct_module_codes": 69,
+  "dataset_matching_full_tree_module_codes": 64,
+  "dataset_matching_ects_mismatches": 0,
+  "new_records_matching_current_tree": 34,
+  "multi_category_codes": {
+    "IN2060": [
+      "G Computation",
+      "I Systems and Control"
+    ],
+    "IN2068": [
+      "G Computation",
+      "H Mechanics"
+    ],
+    "CIT433050": [
+      "H Mechanics",
+      "I Systems and Control"
+    ],
+    "WZ1339": [
+      "H Mechanics",
+      "I Systems and Control"
+    ],
+    "MW2261": [
+      "H Mechanics",
+      "I Systems and Control"
+    ]
+  },
+  "coverage": {
+    "GHI": {
+      "official_distinct_modules": 153,
+      "dataset_distinct_modules": 49,
+      "matching_distinct_modules": 47,
+      "omitted_distinct_modules": 106,
+      "statutory_only_codes": [
+        "IN2404",
+        "MW2352"
+      ]
+    },
+    "J": {
+      "official_distinct_modules": 428,
+      "dataset_distinct_modules": 11,
+      "matching_distinct_modules": 9,
+      "omitted_distinct_modules": 419,
+      "statutory_only_codes": [
+        "IN9003",
+        "WI000159"
+      ]
+    }
+  },
+  "limitations": [
+    "目录成员不等于个人资格或当期开课",
+    "J语言资格、同名或等价课程去重、正式先修、实际课题与名额、个人认定和批准尚未完整建模",
+    "现有自动规划仅在已收录的可推荐模块内搜索，不证明全局最优"
+  ]
+}
