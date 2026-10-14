@@ -6,6 +6,10 @@ const group=c=>c.allocation_group??c.section_2025?.[0]??c.group;
 const code=c=>c.module_code??c.code;
 const credits=c=>Number(c.ects);
 const bounds=(p,n)=>({...p.workload,...p.workload.semesters[n]});
+function recommendationEligible(c){
+ const v=c.verification;
+ return c.automatic_recommendation_eligible!==false&&(!v?!'GHI'.includes(group(c)):v.automatic_recommendation_eligible===true&&v.current_academic_year_selection_verified===true&&['WiSe','SoSe','WiSe/SoSe'].includes(v.term)&&!v.prerequisites?.requires_confirmation&&['identity','ects','groups','term','language','prerequisites'].every(k=>v.fields?.[k]==='verified')&&['none','recommended'].includes(v.prerequisites?.kind));
+}
 function languageOK(p,c,offerings,n){
  const value=T.offering(p,c,n,offerings).dated?.language??c.current_language??c.language_legal_annex??'DE/EN';
  return p.preferences.languages.some(l=>value.split('/').includes(l));
@@ -38,7 +42,7 @@ function completeSelections(p,courses,base,offerings){
 }
 function completeAllocation(p,courses,base,offerings){
  const selected=new Set(base.map(x=>x.code)),calc=C.calculate({...p,items:base},courses),target=p.conditional?36:41;
- const pool=courses.filter(c=>!selected.has(code(c))&&!p.preferences.excluded.includes(code(c))&&c.automatic_recommendation_eligible!==false&&'GHIJ'.includes(group(c))&&Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,c,offerings,n)&&T.offering(p,c,n,offerings).state!=='conflict'))
+ const pool=courses.filter(c=>!selected.has(code(c))&&!p.preferences.excluded.includes(code(c))&&recommendationEligible(c)&&'GHIJ'.includes(group(c))&&Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,c,offerings,n)&&T.offering(p,c,n,offerings).state!=='conflict'))
   .flatMap(c=>(c.allowed_groups||[group(c)]).map(k=>({...c,allocation_group:k})));
  const choices={};
  for(const k of ['G','H','I','J'])choices[k]=subsets(pool.filter(c=>group(c)===k),Math.max(k==='J'?6:target,0)+10).filter(x=>x.credits+calc.totals[k]>=(k==='J'?6:5));
@@ -85,6 +89,8 @@ function generate(raw,courses,offerings={},options={}){
  const blocked=required.filter(c=>p.preferences.excluded.includes(c)&&!passed.some(x=>x.code===c));
  if(blocked.length)return fail(`必修课程不能排除：${blocked.join('、')}。请调整偏好。`);
  for(const c of required)add(c);
+ const unresolved=base.filter(x=>x.status==='planned'&&known.has(x.code)&&!recommendationEligible(known.get(x.code)));
+ if(unresolved.length)return fail(`这些已选／想选课程暂不能自动安排：${unresolved.map(x=>x.code+'（'+(known.get(x.code).recommendation_note||'资料或个人条件待核实')+'）').join('、')} 已有手动记录保留。请先取消想选并从未来方案移出；确认资料、开课或个人准备后可继续使用手动看板。`);
  if(!p.conditional&&used.has('ED140014'))return fail('计划含控制补修课程，但补修设置未开启。请按个人录取条件核对。');
  const noLanguage=base.filter(x=>x.status!=='passed'&&!Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,known.get(x.code)||x,offerings,n)));
  if(noLanguage.length)return fail(`这些已选／必修课程不符合授课语言：${noLanguage.map(x=>x.code).join('、')}。双语模块表示目录语言，具体班次仍须核对。`);
@@ -148,6 +154,10 @@ function generate(raw,courses,offerings={},options={}){
  if(best.items.some(x=>x.custom))warnings.push('包含自行录入课程，学分归类与认定需要学校确认。');
  const uncertain=best.items.filter(x=>x.status==='planned'&&known.get(x.code)?.current_catalog_status==='needs_review');
  if(uncertain.length)warnings.push('已选模块的当期目录状态待复核：'+uncertain.map(x=>x.code).join('、')+'；未据此确认可报名或可计入。');
+ for(const x of best.items.filter(x=>x.status==='planned')){
+  const c=known.get(x.code),prerequisites=c?.prerequisites;
+  if(prerequisites&&prerequisites.kind!=='none')warnings.push(`${x.code}：${prerequisites.summary_cn} 方案未判断你的知识准备或个人报名资格，请采用前核对手册。`);
+ }
  if(best.items.some(x=>x.status==='planned'&&['IN2106','IN2107','IN2257'].includes(x.code)))warnings.push('研讨／实践模块这里只分配学分，尚未选定具体课题或获得名额；不同实践模块不能复用同一实际课题。');
  const thesisItem=best.items.find(x=>x.status==='planned'&&x.code==='IN2320');
  if(thesisItem&&best.items.some(x=>x.status==='planned'&&x.code!=='IN2320'&&x.semester===thesisItem.semester))warnings.push('论文与其他课程在同一学期：须保证论文通常作为最后一项考核；提前开题需申请批准，请核对个人时间安排。');
@@ -156,5 +166,5 @@ function generate(raw,courses,offerings={},options={}){
  const finish=Math.max(start,...best.items.filter(x=>x.status==='planned').map(x=>x.semester));
  return {ok:true,plan:best,finish,nodes,warnings,removed:excludedSelected.map(x=>x.code),added:best.items.filter(x=>!p.items.some(y=>y.code===x.code)).map(x=>x.code),moved:best.items.filter(x=>x.status==='planned'&&p.items.some(y=>y.code===x.code&&y.semester!==x.semester)).map(x=>x.code),calculation:C.calculate(best,courses),passed:C.calculate(best,courses,true)};
 }
-const api={generate,bounds,languageOK};if(node)module.exports=api;else root.RCIPlanning=api;
+const api={generate,bounds,languageOK,recommendationEligible};if(node)module.exports=api;else root.RCIPlanning=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

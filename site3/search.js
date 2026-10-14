@@ -30,6 +30,9 @@ function search(docs,query,groups=[],filter={}){
   if(normalize(d.code)===q)score+=1000;
   if(title===q||aliases.includes(q))score+=100;
   else if(title.includes(q))score+=55;
+  // A generic question's course/course-module filler is removed by terms().
+  // Prefer the exact subject over a longer advanced course sharing that subject.
+  if(gs.length===1&&gs[0].some(t=>title===t||aliases.includes(t)))score+=55;
   if(d.kind==='guide')score+=8;
   if(d.direct && (title===q||aliases.includes(q)))score+=90;
   if(d.historical)score-=20;

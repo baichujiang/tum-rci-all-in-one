@@ -153,7 +153,7 @@
  .course-semester-context>label{font-size:12px;gap:5px;color:var(--muted)}
  .course-semester-context select{width:100%;min-width:0;max-width:none;font-size:14px;min-height:40px;padding:7px 8px}
  .course-toolbar .course-semester-context>.text-link{display:none}
- .course-toolbar>.catalog-note{grid-column:1/-1;grid-row:2;margin:0;padding:0;background:transparent;border-radius:0;font-size:13px}
+ .course-toolbar>.catalog-note{grid-column:1/-1;grid-row:auto;margin:0;padding:0;background:transparent;border-radius:0;font-size:13px}
  .catalog-note summary{font-size:12px;color:var(--muted);min-height:24px;font-weight:400}
  .catalog-note p{font-size:14px;margin:10px 0}
  .courses-page #result-count{font-size:13px!important;margin:0 0 14px}
@@ -327,7 +327,7 @@
  .course-toolbar>.searchbar{grid-column:1;grid-row:1}
  .course-toolbar>.course-semester-context{grid-column:2;grid-row:1}
  .course-toolbar>.filterbar{grid-column:1;grid-row:2}
- .course-toolbar>.catalog-note{grid-column:1/-1;grid-row:3}
+ .course-toolbar>.catalog-note{grid-column:1/-1;grid-row:auto}
  #planner{grid-template-columns:minmax(0,1fr) 285px;gap:20px}
  .portal-title-actions>span{display:none}
  .home>.entry-hero{grid-template-columns:minmax(0,1fr) 270px;gap:24px}

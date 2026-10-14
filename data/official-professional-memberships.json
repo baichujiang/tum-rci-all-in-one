@@ -1,0 +1,2625 @@
+{
+  "curriculum_version": "20241",
+  "academic_year": "2026/27",
+  "study_year_id": 1623,
+  "checked_on": "2026-10-14",
+  "source": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=&pStpKnotenNr=",
+  "modules": [
+    {
+      "module_code": "CIT323007",
+      "name": "A Practical Introduction to Data Science",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "4860420"
+      ],
+      "source_node_ids": [
+        "4941923"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2076",
+      "name": "Advanced Computer Architecture",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456672"
+      ],
+      "source_node_ids": [
+        "3871680"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2389",
+      "name": "Advanced Deep Learning for Computer Vision: Dynamic Vision",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "2809077"
+      ],
+      "source_node_ids": [
+        "3871929"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2390",
+      "name": "Advanced Deep Learning for Computer Vision: Visual Computing",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "2808965"
+      ],
+      "source_node_ids": [
+        "3871937"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "CIT433027",
+      "name": "Advanced Deep Learning for Robotics",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3893427"
+      ],
+      "source_node_ids": [
+        "3942754"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "CIT4230003",
+      "name": "Advanced Machine Learning: Deep Generative Models",
+      "ects": 3.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3471254"
+      ],
+      "source_node_ids": [
+        "3872102"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "CIT4230002",
+      "name": "Advanced Natural Language Processing",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3391371"
+      ],
+      "source_node_ids": [
+        "3872092"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN1503",
+      "name": "Advanced Programming",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "454189"
+      ],
+      "source_node_ids": [
+        "3872041"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2309",
+      "name": "Advanced Topics of Software Engineering",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1060130"
+      ],
+      "source_node_ids": [
+        "3871717"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2345",
+      "name": "Algorithmen für Uncertainty Quantification",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1333663"
+      ],
+      "source_node_ids": [
+        "3872000"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2001",
+      "name": "Algorithms for Scientific Computing",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456346"
+      ],
+      "source_node_ids": [
+        "3871768"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2002",
+      "name": "Algorithms for Scientific Computing II",
+      "ects": 4.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456348"
+      ],
+      "source_node_ids": [
+        "3871763"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2058",
+      "name": "Anwendungen Wissenbasierter Methoden",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456521"
+      ],
+      "source_node_ids": [
+        "3871695"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "EI7649",
+      "name": "Approximate Dynamic Programming and Reinforcement Learning",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1137454"
+      ],
+      "source_node_ids": [
+        "3871922"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2403",
+      "name": "Artificial Intelligence in Medicine",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "2930921"
+      ],
+      "source_node_ids": [
+        "3872036"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2408",
+      "name": "Artificial Intelligence in Medicine II",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3126243"
+      ],
+      "source_node_ids": [
+        "3872048"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2018",
+      "name": "Augmented Reality",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456372"
+      ],
+      "source_node_ids": [
+        "3871685"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN3470",
+      "name": "Ausgewählte Themen aus dem Bereich Sicherheit und Datenschutz",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1498142"
+      ],
+      "source_node_ids": [
+        "3871995"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2041",
+      "name": "Automata and Formal Languages",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456400"
+      ],
+      "source_node_ids": [
+        "3871700"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2356",
+      "name": "Autonomes Fahren",
+      "ects": 3.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1446290"
+      ],
+      "source_node_ids": [
+        "3871797"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2124",
+      "name": "Basic Mathematical Methods for Imaging and Visualization",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "480825"
+      ],
+      "source_node_ids": [
+        "3871668"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2359",
+      "name": "Blockchain-based Systems Engineering",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1616748"
+      ],
+      "source_node_ids": [
+        "3871866"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2028",
+      "name": "Business Analytics and Machine Learning",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "2863073"
+      ],
+      "source_node_ids": [
+        "3872005"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "CIT423014",
+      "name": "CAMP 1 – AI in Computational Medicine and Surgery",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "4860074"
+      ],
+      "source_node_ids": [
+        "4936264"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2410",
+      "name": "Causality",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3138501"
+      ],
+      "source_node_ids": [
+        "3872060"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2227",
+      "name": "Compilerbau I",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "520233"
+      ],
+      "source_node_ids": [
+        "3871607"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2189",
+      "name": "Computer Architecture and Networks",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1386210"
+      ],
+      "source_node_ids": [
+        "3871773"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2246",
+      "name": "Computer Vision I: Variational Methods",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "672363"
+      ],
+      "source_node_ids": [
+        "3871743"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2375",
+      "name": "Computer Vision III: Detection, Segmentation, and Tracking",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1733754"
+      ],
+      "source_node_ids": [
+        "3871878"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "CIT423008",
+      "name": "Computer-Assisted Interventions & Therapy",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "4723380"
+      ],
+      "source_node_ids": [
+        "4936859"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "CIT323000",
+      "name": "Concepts of C++ Programming",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "4110214"
+      ],
+      "source_node_ids": [
+        "4291805"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2060",
+      "name": "Echtzeitsysteme",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation",
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "261091"
+      ],
+      "source_node_ids": [
+        "3871673",
+        "3872358"
+      ],
+      "source_page": [
+        6,
+        9
+      ]
+    },
+    {
+      "module_code": "IN2381",
+      "name": "Einführung in Quantum Computing",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1816255"
+      ],
+      "source_node_ids": [
+        "3871905"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2031",
+      "name": "Einsatz und Realisierung von Datenbanksystemen",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "261475"
+      ],
+      "source_node_ids": [
+        "3871790"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2400",
+      "name": "Fortgeschrittene Konzepte des Quantum Computing",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "2981021"
+      ],
+      "source_node_ids": [
+        "3872097"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2084",
+      "name": "Fortgeschrittene Themen des Softwaretests",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "261731"
+      ],
+      "source_node_ids": [
+        "3871614"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "CIT433021",
+      "name": "Fundamentals of Foundation Models",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3838717"
+      ],
+      "source_node_ids": [
+        "4387324"
+      ],
+      "source_page": [
+        6
+      ]
+    },
+    {
+      "module_code": "IN2133",
+      "name": "Grundlagen von Computer Vision",
+      "ects": 4.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "473871"
+      ],
+      "source_node_ids": [
+        "3871712"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2169",
+      "name": "Guided Research",
+      "ects": 10.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "458261"
+      ],
+      "source_node_ids": [
+        "3871945"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2369",
+      "name": "Industrielle Bildverarbeitung",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1629494"
+      ],
+      "source_node_ids": [
+        "3871890"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2022",
+      "name": "Informatikanwendungen in der Medizin II",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456378"
+      ],
+      "source_node_ids": [
+        "3871733"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2346",
+      "name": "Introduction to Deep Learning",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1334293"
+      ],
+      "source_node_ids": [
+        "3871754"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2409",
+      "name": "Inverse Problems in Medical Imaging",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3126247"
+      ],
+      "source_node_ids": [
+        "3872053"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2245",
+      "name": "Kombinatorische Optimierung in Computer Vision",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "672354"
+      ],
+      "source_node_ids": [
+        "3871738"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "CIT4330001",
+      "name": "Machine Learning and IT-Security",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3272052"
+      ],
+      "source_node_ids": [
+        "3872067"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "EI70360",
+      "name": "Machine Learning and Optimization",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1743545"
+      ],
+      "source_node_ids": [
+        "3872072"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2357",
+      "name": "Machine Learning for Computer Vision",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1446338"
+      ],
+      "source_node_ids": [
+        "3871871"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2323",
+      "name": "Machine Learning for Graphs and Sequential Data",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1799629"
+      ],
+      "source_node_ids": [
+        "3871850"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "CIT433058",
+      "name": "Machine Learning for Multi-Robot Exploration",
+      "ects": 3.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "4860326"
+      ],
+      "source_node_ids": [
+        "4966537"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2392",
+      "name": "Machine Learning for 3D Geometry",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "2808442"
+      ],
+      "source_node_ids": [
+        "3871960"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2098",
+      "name": "Mobile verteilte Systeme",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "460548"
+      ],
+      "source_node_ids": [
+        "3871619"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2010",
+      "name": "Modelling and Simulation",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456362"
+      ],
+      "source_node_ids": [
+        "3871817",
+        "3885063"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "CIT423009",
+      "name": "Multi-modal AI in Medicine",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "4723346"
+      ],
+      "source_node_ids": [
+        "4966528"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2081",
+      "name": "Muster in der Softwaretechnik",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "473855"
+      ],
+      "source_node_ids": [
+        "3871590"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2361",
+      "name": "Natural Language Processing",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1493755"
+      ],
+      "source_node_ids": [
+        "3871845"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2161",
+      "name": "Netzwerke für den Zahlungsverkehr",
+      "ects": 3.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "458249"
+      ],
+      "source_node_ids": [
+        "3871778"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN0019",
+      "name": "Numerisches Programmieren",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "454055"
+      ],
+      "source_node_ids": [
+        "3871661"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2147",
+      "name": "Parallele Programmierung",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "457062"
+      ],
+      "source_node_ids": [
+        "3871783"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2355",
+      "name": "Robotic 3D Vision",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1433527"
+      ],
+      "source_node_ids": [
+        "3871896"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2005",
+      "name": "Scientific Computing I",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "456354"
+      ],
+      "source_node_ids": [
+        "3871988"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2178",
+      "name": "Security Engineering",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "460596"
+      ],
+      "source_node_ids": [
+        "3871626"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2068",
+      "name": "Sensorgeführte Robotische Manipulation und Lokomotion",
+      "ects": 3.0,
+      "accepted_sections": [
+        "G Computation",
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261771"
+      ],
+      "source_node_ids": [
+        "3871656",
+        "3872143"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2241",
+      "name": "Social Computing",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "654521"
+      ],
+      "source_node_ids": [
+        "3872012"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "CIT4230004",
+      "name": "Statistical Foundations of Learning",
+      "ects": 8.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "3474598"
+      ],
+      "source_node_ids": [
+        "3872082"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "CIT423007",
+      "name": "Trustworthy AI for Medicine",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "4723360"
+      ],
+      "source_node_ids": [
+        "4936980"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2236",
+      "name": "Virtuelle Physik: Moderne Modellierungstechnik und ihr Einsatz in der Computersimulation",
+      "ects": 4.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "611935"
+      ],
+      "source_node_ids": [
+        "3871690"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2026",
+      "name": "Visual Data Analytics",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1528428"
+      ],
+      "source_node_ids": [
+        "3871983"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2123",
+      "name": "3D Computer Vision II",
+      "ects": 5.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "480776"
+      ],
+      "source_node_ids": [
+        "3871631"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2354",
+      "name": "3D Scanning & Motion Capture",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "1412259"
+      ],
+      "source_node_ids": [
+        "3871807"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "IN2111",
+      "name": "3D User Interfaces",
+      "ects": 6.0,
+      "accepted_sections": [
+        "G Computation"
+      ],
+      "module_detail_ids": [
+        "473857"
+      ],
+      "source_node_ids": [
+        "3871636"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW1902",
+      "name": "Automatisierungstechnik",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "767672"
+      ],
+      "source_node_ids": [
+        "3872208"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "ED150039",
+      "name": "Autonomous Vehicles: Motion Planning & Decision Making",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "4064369"
+      ],
+      "source_node_ids": [
+        "4966997"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW1817",
+      "name": "Biomechanik - Grundlagen und Modellbildung",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "707109"
+      ],
+      "source_node_ids": [
+        "3872184"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "WZ8101",
+      "name": "Bionik",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "558964"
+      ],
+      "source_node_ids": [
+        "3872132"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW2466",
+      "name": "Elektrische Antriebstechnik in der Automatisierungstechnik - Auswahl und Auslegung",
+      "ects": 3.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "2632105"
+      ],
+      "source_node_ids": [
+        "3872244"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "ED150018",
+      "name": "Entwicklung und Design nützlicher autonomer Fahrzeuge",
+      "ects": 3.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "3426057"
+      ],
+      "source_node_ids": [
+        "3872292"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0612",
+      "name": "Finite Elemente",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261127"
+      ],
+      "source_node_ids": [
+        "4440753"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0837",
+      "name": "Fundamentals of Flight Control",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "2796311"
+      ],
+      "source_node_ids": [
+        "3872271"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "ED150017",
+      "name": "Grundlagen Autonomer Fahrzeuge",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "3426050"
+      ],
+      "source_node_ids": [
+        "3872285"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW1911",
+      "name": "Grundlagen der Fahrzeugtechnik",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "767694"
+      ],
+      "source_node_ids": [
+        "3872203"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "LRG6302",
+      "name": "Introduction to Micro Air Vehicles",
+      "ects": 3.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "2728743"
+      ],
+      "source_node_ids": [
+        "3872249"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0038",
+      "name": "Mechatronische Gerätetechnik",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261249"
+      ],
+      "source_node_ids": [
+        "3872177"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW1922",
+      "name": "Messtechnik und medizinische Assistenzsysteme",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "768290"
+      ],
+      "source_node_ids": [
+        "3872148"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0003",
+      "name": "Methods of Product Development",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "1607098"
+      ],
+      "source_node_ids": [
+        "3872264"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0080",
+      "name": "Mikrotechnische Sensoren/Aktoren",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261269"
+      ],
+      "source_node_ids": [
+        "3872120"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0084",
+      "name": "Montage, Handhabung und Industrieroboter",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261279"
+      ],
+      "source_node_ids": [
+        "3872113"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0085",
+      "name": "Multidisciplinary Design Optimization",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261281"
+      ],
+      "source_node_ids": [
+        "3872170"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0620",
+      "name": "Nichtlineare Finite-Element-Methoden",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261289"
+      ],
+      "source_node_ids": [
+        "4440765"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0850",
+      "name": "Nichtlineare Kontinuumsmechanik",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261291"
+      ],
+      "source_node_ids": [
+        "4440758"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "CIT433050",
+      "name": "Nichtlineare Regelungssysteme",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics",
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "4715091"
+      ],
+      "source_node_ids": [
+        "4768555",
+        "4768586"
+      ],
+      "source_page": [
+        7,
+        9
+      ]
+    },
+    {
+      "module_code": "ED160053",
+      "name": "Numerische Methoden in der Strukturdynamik",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "4382063"
+      ],
+      "source_node_ids": [
+        "4541066"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW1860",
+      "name": "On-Orbit Dynamics and Robotics",
+      "ects": 3.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "729169"
+      ],
+      "source_node_ids": [
+        "3872165"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW0262",
+      "name": "Praktikum Automatisierungstechnik",
+      "ects": 4.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "261875"
+      ],
+      "source_node_ids": [
+        "3872191"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "WZ1339",
+      "name": "Robotics and Automation in Agriculture",
+      "ects": 3.0,
+      "accepted_sections": [
+        "H Mechanics",
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "2641265"
+      ],
+      "source_node_ids": [
+        "3872254",
+        "3873101"
+      ],
+      "source_page": [
+        7,
+        9
+      ]
+    },
+    {
+      "module_code": "EI04021",
+      "name": "Simulation mechatronischer Systeme",
+      "ects": 5.0,
+      "accepted_sections": [
+        "H Mechanics"
+      ],
+      "module_detail_ids": [
+        "1710985"
+      ],
+      "source_node_ids": [
+        "3872231"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW2261",
+      "name": "Space Communication & Operations",
+      "ects": 3.0,
+      "accepted_sections": [
+        "H Mechanics",
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1106030"
+      ],
+      "source_node_ids": [
+        "3872259",
+        "3873106"
+      ],
+      "source_page": [
+        7,
+        9
+      ]
+    },
+    {
+      "module_code": "IN2257",
+      "name": "Zusätzliches Master-Praktikum",
+      "ects": 10.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1248713"
+      ],
+      "source_node_ids": [
+        "3872498"
+      ],
+      "source_page": [
+        7
+      ]
+    },
+    {
+      "module_code": "MW1420",
+      "name": "Advanced Control",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "559547"
+      ],
+      "source_node_ids": [
+        "3873141"
+      ],
+      "source_page": [
+        8
+      ]
+    },
+    {
+      "module_code": "CIT433034",
+      "name": "Advanced Multi-Fingered Robotic Hands: Dextrous Manipulation and Learning AI",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "4167869"
+      ],
+      "source_node_ids": [
+        "4167940"
+      ],
+      "source_page": [
+        8
+      ]
+    },
+    {
+      "module_code": "IN2376",
+      "name": "Advanced Robot Control and Learning",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1734236"
+      ],
+      "source_node_ids": [
+        "3873075"
+      ],
+      "source_page": [
+        8
+      ]
+    },
+    {
+      "module_code": "CIT433037",
+      "name": "Advanced Robot Learning and Decision-Making",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "4388109"
+      ],
+      "source_node_ids": [
+        "4440748"
+      ],
+      "source_page": [
+        8
+      ]
+    },
+    {
+      "module_code": "MW2388",
+      "name": "Angewandte Biorobotik",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1521757"
+      ],
+      "source_node_ids": [
+        "3872493"
+      ],
+      "source_page": [
+        8
+      ]
+    },
+    {
+      "module_code": "LRG6300",
+      "name": "Autonome Systeme",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "2636606"
+      ],
+      "source_node_ids": [
+        "3873053"
+      ],
+      "source_page": [
+        8
+      ]
+    },
+    {
+      "module_code": "IN2318",
+      "name": "Autonomous Navigation for Flying Robots",
+      "ects": 2.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1126210"
+      ],
+      "source_node_ids": [
+        "3872405"
+      ],
+      "source_page": [
+        8
+      ]
+    },
+    {
+      "module_code": "ED150047",
+      "name": "AV Perception",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "4390489"
+      ],
+      "source_node_ids": [
+        "4541034"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT436000",
+      "name": "Beinroboter",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3939503"
+      ],
+      "source_node_ids": [
+        "3944159"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI7263",
+      "name": "Biologically-Inspired Learning for Humanoid Robots",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "808887"
+      ],
+      "source_node_ids": [
+        "3873070"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2222",
+      "name": "Cognitive Systems",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "487482"
+      ],
+      "source_node_ids": [
+        "3873116"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT4330014",
+      "name": "Control for Robotics: from Optimal Control to Reinforcement Learning",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3436129"
+      ],
+      "source_node_ids": [
+        "3873162"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2305",
+      "name": "Cyber-Physical Systems",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "977331"
+      ],
+      "source_node_ids": [
+        "3872365"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2061",
+      "name": "Einführung in die digitale Signalverarbeitung",
+      "ects": 7.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "456531"
+      ],
+      "source_node_ids": [
+        "3872313"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "LRG6301",
+      "name": "Einführung in ROS (Robot Operating System)",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "2706938"
+      ],
+      "source_node_ids": [
+        "3873089"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI0610",
+      "name": "Elektrische Antriebe - Grundlagen und Anwendungen",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "929670"
+      ],
+      "source_node_ids": [
+        "3872437"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "ED180013",
+      "name": "Energie Informatik",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3254891"
+      ],
+      "source_node_ids": [
+        "4966977"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT433025",
+      "name": "Entrepreneurial Opportunities in 6G Communication Network Technologies (Lecture Series)",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3844196"
+      ],
+      "source_node_ids": [
+        "4291753"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2383",
+      "name": "Formale Methoden für Cyber-Physical Systems",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1865608"
+      ],
+      "source_node_ids": [
+        "3873048"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI7623",
+      "name": "Fortgeschrittene Konzepte der Wahrnehmung für Robotersysteme",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "889358"
+      ],
+      "source_node_ids": [
+        "3872420"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2371",
+      "name": "Fundamentals of Human-Centered Robotics",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1698301"
+      ],
+      "source_node_ids": [
+        "3873004"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI7210",
+      "name": "Humanoid Robotic Systems",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "553160"
+      ],
+      "source_node_ids": [
+        "3872338"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI7231",
+      "name": "Humanoid Sensors and Actuators",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "616730"
+      ],
+      "source_node_ids": [
+        "3873043"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI70630",
+      "name": "HW/SW Codesign",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1743552"
+      ],
+      "source_node_ids": [
+        "3873028"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT433039",
+      "name": "Intelligent Robots with a Sense of Smell",
+      "ects": 7.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "4388214"
+      ],
+      "source_node_ids": [
+        "4398281"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI71107",
+      "name": "Intelligente Verfahren in der Elektromobilität",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3054466"
+      ],
+      "source_node_ids": [
+        "4291800"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT3330001",
+      "name": "Introduction to Emerging Computing Technologies",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3287082"
+      ],
+      "source_node_ids": [
+        "3873174"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT3330000",
+      "name": "Introduction to Mobile Robotics",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3308453"
+      ],
+      "source_node_ids": [
+        "3873126"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT4330000",
+      "name": "Introduction to Soft Robotics",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3210672"
+      ],
+      "source_node_ids": [
+        "3873152"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2292",
+      "name": "Introduction to Surgical Robotics",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "936739"
+      ],
+      "source_node_ids": [
+        "3872377"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT433031",
+      "name": "Machine Learning for Electronic Design Automation and Manufacturing",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "4040185"
+      ],
+      "source_node_ids": [
+        "4169151"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "ED110071",
+      "name": "Master Seminar - Artificial Intelligence und Machine Learning Trends in der Robotik",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3145891"
+      ],
+      "source_node_ids": [
+        "3873084"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "MW0141",
+      "name": "Model Based Systems Engineering",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3583926"
+      ],
+      "source_node_ids": [
+        "3885033"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT433060",
+      "name": "Model Predictive Control",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "4860651"
+      ],
+      "source_node_ids": [
+        "4966533"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT4330007",
+      "name": "Modelling and Control of Legged Robots",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3395087"
+      ],
+      "source_node_ids": [
+        "3873157"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "MW0573",
+      "name": "Moderne Methoden der Regelungstechnik",
+      "ects": 4.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "261981"
+      ],
+      "source_node_ids": [
+        "3872454"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "MW0538",
+      "name": "Moderne Methoden der Regelungstechnik 1",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "261275"
+      ],
+      "source_node_ids": [
+        "3872298"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "MW0539",
+      "name": "Moderne Methoden der Regelungstechnik 2",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "261277"
+      ],
+      "source_node_ids": [
+        "3872392"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI7408",
+      "name": "Multi-Sensory Based Robot Dynamic Manipulation",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "973806"
+      ],
+      "source_node_ids": [
+        "3872410"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI70270",
+      "name": "Neuroprosthetics",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "2664285"
+      ],
+      "source_node_ids": [
+        "3873121"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2405",
+      "name": "Neuroprosthetics: Artificial Limbs",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3018441"
+      ],
+      "source_node_ids": [
+        "3873131"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "MW1808",
+      "name": "Nonlinear Control",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "704894"
+      ],
+      "source_node_ids": [
+        "3873013"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI70140",
+      "name": "Optimal Control and Decision Making",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1772070"
+      ],
+      "source_node_ids": [
+        "3873038"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI7495",
+      "name": "Power Electronics and Drives for Electric Vehicles",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3454082"
+      ],
+      "source_node_ids": [
+        "3885028"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2308",
+      "name": "Programmierung und Regelung für Mensch-Roboterinteraktion",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "977264"
+      ],
+      "source_node_ids": [
+        "3872370"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI7417",
+      "name": "Project Course Drive Systems and Power Electronics",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "979262"
+      ],
+      "source_node_ids": [
+        "3872459"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2373",
+      "name": "Regelung moderner Leichtbauroboter",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1711618"
+      ],
+      "source_node_ids": [
+        "3872999"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI5111",
+      "name": "Regelungs- und Steuerungstechnik 2",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "261353"
+      ],
+      "source_node_ids": [
+        "3872331"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "MW1340",
+      "name": "Reglerimplementierung auf Mikrocontrollern",
+      "ects": 4.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "615185"
+      ],
+      "source_node_ids": [
+        "3872326"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "MW1619",
+      "name": "Rennsporttechnik",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "674195"
+      ],
+      "source_node_ids": [
+        "4291731"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2138",
+      "name": "Robot Motion Planning",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "473874"
+      ],
+      "source_node_ids": [
+        "3873111"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "MW1325",
+      "name": "Steuerung autonomer Systeme",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "539841"
+      ],
+      "source_node_ids": [
+        "3872348"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI74371",
+      "name": "Technik autonomer Systeme",
+      "ects": 6.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "1351980"
+      ],
+      "source_node_ids": [
+        "3872430"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "IN2210",
+      "name": "Tracking and Detection in Computer Vision",
+      "ects": 7.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "487473"
+      ],
+      "source_node_ids": [
+        "3872343"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "CIT4330017",
+      "name": "Trustworthy Machine Learning Systems",
+      "ects": 3.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "3573501"
+      ],
+      "source_node_ids": [
+        "3873169"
+      ],
+      "source_page": [
+        9
+      ]
+    },
+    {
+      "module_code": "EI7391",
+      "name": "Vernetzte Regelungssysteme",
+      "ects": 5.0,
+      "accepted_sections": [
+        "I Systems and Control"
+      ],
+      "module_detail_ids": [
+        "957640"
+      ],
+      "source_node_ids": [
+        "3872382"
+      ],
+      "source_page": [
+        9
+      ]
+    }
+  ]
+}

@@ -17,11 +17,11 @@
     "J": 428
   },
   "dataset_legal_rows": 35,
-  "dataset_additional_rows": 34,
-  "dataset_distinct_module_codes": 69,
-  "dataset_matching_full_tree_module_codes": 64,
+  "dataset_additional_rows": 140,
+  "dataset_distinct_module_codes": 175,
+  "dataset_matching_full_tree_module_codes": 170,
   "dataset_matching_ects_mismatches": 0,
-  "new_records_matching_current_tree": 34,
+  "new_records_matching_current_tree": 140,
   "multi_category_codes": {
     "IN2060": [
       "G Computation",
@@ -47,9 +47,9 @@
   "coverage": {
     "GHI": {
       "official_distinct_modules": 153,
-      "dataset_distinct_modules": 49,
-      "matching_distinct_modules": 47,
-      "omitted_distinct_modules": 106,
+      "dataset_distinct_modules": 155,
+      "matching_distinct_modules": 153,
+      "omitted_distinct_modules": 0,
       "statutory_only_codes": [
         "IN2404",
         "MW2352"
@@ -67,8 +67,80 @@
     }
   },
   "limitations": [
-    "目录成员不等于个人资格或当期开课",
-    "J语言资格、同名或等价课程去重、正式先修、实际课题与名额、个人认定和批准尚未完整建模",
-    "现有自动规划仅在已收录的可推荐模块内搜索，不证明全局最优"
-  ]
+    "专业选修G/H/I目录成员已完整收录，但目录成员不等于个人资格或当期开课",
+    "空白先修、学年错误、未提供周期不视为已核实；不定期、明确前置背景或导师条件未确认的模块不自动推荐",
+    "普通知识背景随方案提示，不推断TUMonline报名硬门槛；J语言资格、实际课题、个人认定和等价去重仍需确认",
+    "自动规划在可推荐模块与计算预算内搜索，不证明全局最优"
+  ],
+  "additional_professional_modules": 106,
+  "verification": {
+    "scope": "All 153 distinct current professional G/H/I modules; static annex records outside current tree remain unverified and disabled. J expansion is not included.",
+    "checked_on": "2026-10-14",
+    "fully_verified": 137,
+    "pending": 16,
+    "automatic_recommendation_eligible": 113,
+    "new_106_fully_verified": 93,
+    "new_106_pending": 13,
+    "new_106_automatic_recommendation_eligible": 77,
+    "pending_codes": [
+      "ED150047",
+      "EI5111",
+      "EI7417",
+      "IN2002",
+      "IN2058",
+      "IN2123",
+      "IN2133",
+      "IN2138",
+      "IN2161",
+      "IN2189",
+      "IN2222",
+      "IN2383",
+      "IN3470",
+      "LRG6302",
+      "MW1325",
+      "MW1911"
+    ],
+    "not_automatically_recommended_codes": [
+      "CIT323000",
+      "CIT4230002",
+      "CIT4330001",
+      "CIT433027",
+      "CIT433058",
+      "CIT433060",
+      "CIT436000",
+      "ED150047",
+      "ED160053",
+      "EI04021",
+      "EI0610",
+      "EI5111",
+      "EI7391",
+      "EI7417",
+      "EI74371",
+      "EI7495",
+      "EI7623",
+      "IN2002",
+      "IN2058",
+      "IN2076",
+      "IN2123",
+      "IN2133",
+      "IN2138",
+      "IN2161",
+      "IN2169",
+      "IN2189",
+      "IN2222",
+      "IN2245",
+      "IN2246",
+      "IN2318",
+      "IN2345",
+      "IN2369",
+      "IN2383",
+      "IN2389",
+      "IN2390",
+      "IN3470",
+      "LRG6302",
+      "MW1325",
+      "MW1340",
+      "MW1911"
+    ]
+  }
 }

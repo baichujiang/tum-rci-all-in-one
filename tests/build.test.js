@@ -25,7 +25,7 @@ try{
  fs.writeFileSync(navFile,JSON.stringify(nav));
  const prefixed=build({BASE_PATH:'/rci',SITE_URL:'https://rci.example.invalid'});assert.equal(prefixed.status,0,prefixed.stderr);
  const info=JSON.parse(fs.readFileSync(path.join(fixture,'dist/build-info.json'),'utf8'));
- assert.equal(info.base,'/rci');assert.equal(info.pages,112);assert.equal(info.searchRecords,282);
+ assert.equal(info.base,'/rci');assert.equal(info.pages,218);assert.equal(info.searchRecords,388);
  assert(fs.readFileSync(path.join(fixture,'dist/sitemap.xml'),'utf8').includes('https://rci.example.invalid/rci/guides/matching/'));
  console.log('PASS A following valid build publishes a complete prefixed site without temporary files');
  const published=digest(manifest(path.join(fixture,'dist')));
@@ -51,11 +51,11 @@ try{
   assert.equal(digest(manifest(path.join(fixture,'dist'))),published);
   const validation=spawnSync('python3',['scripts/validate_repo.py'],{cwd:fixture,encoding:'utf8'});assert.notEqual(validation.status,0,'Offline validation must also reject invalid course facts');
  }
- const fractional=facts.map(row=>row.module_code==='IN2076'?{...row,ects:'5.5'}:row);
+ const fractional=facts.map(row=>row.module_code==='IN9003'?{...row,ects:'5.5'}:row);
  fs.writeFileSync(factsFile,[fields,...fractional.map(row=>fields.map(field=>row[field]))].map(row=>row.map(quoted).join(',')).join('\n')+'\n');
  const decimalBuild=build();assert.equal(decimalBuild.status,0,decimalBuild.stderr);
  const decimalValidation=spawnSync('python3',['scripts/validate_repo.py'],{cwd:fixture,encoding:'utf8'});assert.equal(decimalValidation.status,0,decimalValidation.stderr);
- assert.equal(C.calculate({version:2,cohort:'unknown',conditional:false,items:[{code:'IN2076',status:'planned'}]},fractional).allocated,5.5);
+ assert.equal(C.calculate({version:2,cohort:'unknown',conditional:false,items:[{code:'IN9003',status:'planned'}]},fractional).allocated,5.5);
  fs.writeFileSync(factsFile,factsText);
  assert(!fs.readdirSync(fixture).some(name=>name.startsWith('.site-build-')),'Data validation builds must also clean their staging files');
  console.log('PASS Invalid elective credits, groups, module paths and empty names preserve the last complete site');

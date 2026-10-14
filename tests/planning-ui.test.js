@@ -2,7 +2,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const C=require('../assets/core'),E=require('../assets/planning-engine'),T=require('../assets/course-context'),S=require('../site3/search');
-const courses=C.csv(fs.readFileSync(path.join(__dirname,'../data/courses_legal_2025.csv'),'utf8'));
+const courses=require('../scripts/load-courses')();
 const source=fs.readFileSync(path.join(__dirname,'../site3/planning-controls.js'),'utf8');
 const copy=x=>JSON.parse(JSON.stringify(x)),tick=()=>new Promise(resolve=>setImmediate(resolve));
 function element(){return {innerHTML:'',hidden:false,handlers:{},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];}};}
