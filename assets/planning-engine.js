@@ -71,6 +71,8 @@ function generate(raw,courses,offerings={},options={}){
  if(!p.conditionalConfirmed)return fail('先按个人录取通知确认是否有入学补修要求，再自动规划。');
  if((p.cohort.endsWith('夏季')?'summer':'winter')!==p.timeline.start)return fail('入学批次与第1学期起始季节不一致，请先调整学期设置，再自动规划。');
  if(p.conditional&&!C.amended(p.cohort))return fail('2024 原规则批次的个人入学附加考试不能套用 K=5、选修36的减免。请先向学校核对；现有手动计划与记录仍保留。');
+ const collisions=p.items.filter(x=>x.custom&&x.status==='planned'&&known.has(x.code));
+ if(collisions.length)return fail('这些自录课程的代码现已出现在官方目录：'+collisions.map(x=>x.code).join('、')+'。原名称、学分、分类与状态保留；自动规划不会自行改成目录记录。请核对个人认定后，继续手动安排，或明确移除自录项再加入官方记录。');
  const passed=p.items.filter(x=>x.status==='passed');
  const latestPassed=Math.max(0,...passed.map(x=>x.semester));
  if(latestPassed>p.preferences.startSemester)return fail(`已修记录包含第 ${latestPassed} 学期通过的课程，不能从更早学期重排未来课程。请把开始规划学期调整到第 ${latestPassed} 学期或之后，并核对记录。`);

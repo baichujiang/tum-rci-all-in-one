@@ -9,6 +9,7 @@ function term(plan,semester){
  return {season,year,key:year===null?'':`${year}-${season}`,label:year===null?C.semesterLabel(plan.timeline,semester):season==='winter'?`${year}/${String(year+1).slice(2)} 冬季`:`${year} 夏季`};
 }
 function offering(plan,course,semester,offerings={}){
+ if(course?.custom)return {...C.offering(null,term(plan,semester).season),dated:null};
  const dated=offerings[course?.module_code]?.offerings?.[term(plan,semester).key];
  if(dated)return {state:dated.available===false?'conflict':'compatible',label:dated.available===false?'本学期确认不开课':'已核对本学期开课',dated,source:dated.source};
  return {...C.offering(course,term(plan,semester).season),dated:null};

@@ -4,11 +4,11 @@
 const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,e=C.esc,box=document.getElementById('plan-exports');if(!box)return;
 let db;try{db=await U.data();}catch(_){return;}
 box.innerHTML='<div class="inline-actions"><button class="button secondary" type="button" data-plan-xlsx>导出 Excel</button><button class="button secondary" type="button" data-plan-print>打印／保存 PDF</button><button class="quiet" type="button" data-plan-link>生成分享链接</button><button class="quiet" type="button" data-backup-open>完整备份与恢复</button></div><div id="plan-share-output" hidden><label>分享链接（含课程、已修和选课偏好）<textarea readonly rows="3" aria-label="个人计划分享链接"></textarea></label><p class="meta">任何得到链接的人都可读取其中的计划。链接内容在浏览器解码，不上传到本站服务器；收藏不会包含在链接中。</p></div>';
-const getName=(code,p)=>db.courses.find(c=>c.module_code===code)?.module_name_legal_2025||p.items.find(x=>x.code===code)?.name||code;
+const getName=(code,p)=>p.items.find(x=>x.code===code&&x.custom)?.name||db.courses.find(c=>c.module_code===code)?.module_name_legal_2025||p.items.find(x=>x.code===code)?.name||code;
 function sheets(p){
  const rows=[['模块代码','原文名称','中文参考名','ECTS','计入领域','状态','学期','固定学期']];
- for(const x of p.items){const c=db.courses.find(c=>c.module_code===x.code);rows.push([x.code,getName(x.code,p),db.names[x.code]||'',Number(c?.ects??x.ects),x.group||c?.section_2025[0],x.status==='passed'?'已修通过':'未来计划',x.status==='passed'?'已修':x.semester?T.term(p,x.semester).label:'待分配',x.locked?'是':'否']);}
- const settings=[['设置','值'],['入学批次',p.cohort],['控制理论补修',p.conditional?'是':'否'],['想选',p.preferences.desired.join(', ')],['排除',p.preferences.excluded.join(', ')],['语言',p.preferences.languages.join('/')],['全局学分',`${p.workload.minECTS}–${p.workload.maxECTS}`],['全局考核',`${p.workload.minExams}–${p.workload.maxExams}`],['规则','2024 FPSO + 2025-02-11 修订；模拟结果不等于学校认可'],['数据核验','2026-10-13；实际开课和课程认定以个人TUMonline为准']];
+ for(const x of p.items){const c=x.custom?null:db.courses.find(c=>c.module_code===x.code);rows.push([x.code,getName(x.code,p),x.custom?'':db.names[x.code]||'',Number(c?.ects??x.ects),x.group||c?.section_2025[0],x.status==='passed'?'已修通过':'未来计划',x.status==='passed'?'已修':x.semester?T.term(p,x.semester).label:'待分配',x.locked?'是':'否']);}
+ const settings=[['设置','值'],['入学批次',p.cohort],['控制理论补修',p.conditional?'是':'否'],['想选',p.preferences.desired.join(', ')],['排除',p.preferences.excluded.join(', ')],['语言',p.preferences.languages.join('/')],['全局学分',`${p.workload.minECTS}–${p.workload.maxECTS}`],['全局考核',`${p.workload.minExams}–${p.workload.maxExams}`],['规则','2024 FPSO + 2025-02-11 修订；模拟结果不等于学校认可'],['数据核验','专业选修2026-10-14；规则2026-10-13；实际开课和个人认定以TUMonline为准']];
  return [{name:'毕业计划',rows},{name:'规划条件',rows:settings}];
 }
 box.addEventListener('click',async event=>{const b=event.target.closest('button');if(!b)return;try{

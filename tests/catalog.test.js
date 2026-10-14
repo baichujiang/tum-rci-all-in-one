@@ -4,6 +4,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const root=path.resolve(__dirname,'..'),load=require('../scripts/load-courses'),C=require('../assets/core'),E=require('../assets/planning-engine');
 const courses=load(),source=require('../data/official-professional-memberships.json'),evidence=require('../data/course-verification.json'),audit=require('../data/catalog-audit.json'),offerings=require('../data/teaching-offerings.json');
 const map=new Map(courses.map(c=>[c.module_code,c]));
+const B=require('../site3/backup-core');
 const draft=()=>C.validatePlan({version:2,cohort:'2026/27冬季',conditional:false,items:[]},courses);
 let count=0;const test=(name,fn)=>{fn();count++;console.log('PASS',name);};
 test('All 153 official professional modules and 158 memberships are present with exact ECTS',()=>{
@@ -24,6 +25,7 @@ test('Every professional module has field-level evidence and unsupported facts c
 test('Unknown prerequisites, irregular occurrence and old selected academic year are disabled',()=>{
  for(const code of ['IN2002','IN2133','IN2138','IN2058','EI5111','IN2076','CIT323000','IN2123','IN2169','CIT4230002'])assert.equal(E.recommendationEligible(map.get(code)),false,code);
  assert.equal(map.get('IN2123').current_term,'待核实');assert.equal(map.get('IN2123').verification.selected_semester_label,'2014S');
+ assert.equal(C.offering(map.get('IN2123'),'winter').state,'unknown');assert.equal(C.offering(map.get('IN2123'),'summer').state,'unknown');
  assert.equal(map.get('WZ1339').prerequisites.kind,'none');assert.equal(map.get('MW0085').prerequisites.kind,'recommended');
  const c=map.get('CIT323007'),unsafe={...c,verification:{...c.verification,fields:{...c.verification.fields,prerequisites:undefined}}};assert.equal(E.recommendationEligible(unsafe),false);
  assert.equal(E.recommendationEligible({...c,verification:undefined,automatic_recommendation_eligible:undefined}),false);
@@ -39,6 +41,14 @@ test('Already passed uncertain modules survive automatic planning and are never 
  const p=draft();p.items=[{code:'IN2076',status:'passed',semester:0},{code:'IN2002',status:'passed',semester:0}];const r=E.generate(p,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));
  for(const code of ['IN2076','IN2002'])assert.deepEqual(r.plan.items.find(x=>x.code===code),C.validatePlan(p,courses).items.find(x=>x.code===code));assert(r.calculation.complete);
  for(const code of r.added.filter(code=>'GHI'.includes(map.get(code).section_2025[0])))assert(E.recommendationEligible(map.get(code)),code);
+});
+test('New catalogue identities cannot overwrite a legacy custom recognition record or its backup',()=>{
+ const old={version:4,cohort:'2026/27冬季',conditional:false,conditionalConfirmed:true,items:[{code:'CIT323007',name:'已认定的自录课程',group:'H',ects:7.5,custom:true,status:'passed',semester:1,locked:false}]};
+ const p=C.validatePlan(old,courses);assert.equal(p.version,5);assert.deepEqual(p.items,old.items);assert.equal(C.calculate(p,courses,true).totals.H,7.5);assert.equal(C.calculate(p,courses,true).totals.G,0);assert.equal(C.calculate(p,courses,true).custom,1);
+ const parsed=B.parse(JSON.stringify(B.create({plan:p,favorites:[]},courses)),courses);assert.deepEqual(parsed.plan.items,old.items);
+ const r=E.generate(p,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));assert.deepEqual(r.plan.items.find(x=>x.code==='CIT323007'),old.items[0]);assert.equal(r.plan.items.filter(x=>x.code==='CIT323007').length,1);
+ const future=C.validatePlan({...old,items:[{...old.items[0],status:'planned'}]},courses);assert.equal(C.schedule(future,courses).semesters[0].credits,7.5);const before=JSON.stringify(future),blocked=E.generate(future,courses,offerings);assert(!blocked.ok);assert(blocked.reasons.some(x=>x.includes('自录课程')));assert.equal(JSON.stringify(future),before);
+ const Picker=require('../site3/course-picker'),view=Picker.choices({courses,names:{}},future,2,{group:'H',query:'CIT323007'})[0];assert(view);assert.equal(view.title,old.items[0].name);assert.equal(view.course.ects,7.5);assert.deepEqual(view.course.allowed_groups,['H']);
 });
 test('Expanded plans honor English, pinned semesters, desired new courses, progress and K minima',()=>{
  for(const conditional of [false,true]){

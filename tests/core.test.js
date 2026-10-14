@@ -31,7 +31,7 @@ test('Editorial source records are auditable and translations cover modules',()=
 test('Code normalization prevents case and whitespace duplicates',()=>assert.throws(()=>C.validatePlan(add(draft(),'IN2067',' in2067 '),courses)));
 test('Old v2 plans keep courses, passed states and custom credits as unassigned',()=>{
  const old=add(draft(),'IN2067');old.items[0].status='passed';old.items.push(custom('OLD1','G',5.5));
- const p=C.validatePlan(old,courses);assert.equal(p.version,4);assert.deepEqual(p.timeline,{count:4,start:'winter'});
+ const p=C.validatePlan(old,courses);assert.equal(p.version,5);assert.deepEqual(p.timeline,{count:4,start:'winter'});
  assert.equal(p.items[0].status,'passed');assert.equal(p.items[1].ects,5.5);assert(p.items.every(x=>x.semester===0));
  assert.equal(C.schedule(p,courses).unassigned.credits,5.5);
 });

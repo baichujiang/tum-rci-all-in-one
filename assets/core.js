@@ -41,7 +41,7 @@
     catch (_) { return ''; }
   }
   function validatePlan(raw, courses) {
-    if (!raw || ![2,3,4].includes(raw.version) || !Array.isArray(raw.items) || raw.items.length > 250) throw new Error('不是有效的学分计划文件（支持 v2 / v3 / v4）');
+    if (!raw || ![2,3,4,5].includes(raw.version) || !Array.isArray(raw.items) || raw.items.length > 250) throw new Error('不是有效的学分计划文件（支持 v2 / v3 / v4 / v5）');
     if (typeof raw.conditional !== 'boolean' || typeof raw.cohort !== 'string' || !['unknown', 'older', ...cohorts].includes(raw.cohort)) throw new Error('批次或补修设置无效');
     const conditionalConfirmed=raw.conditionalConfirmed ?? (raw.version===2&&cohorts.includes(raw.cohort)?true:raw.conditional);
     if(typeof conditionalConfirmed!=='boolean')throw new Error('个人补修确认状态无效');
@@ -58,7 +58,7 @@
       if (!Number.isInteger(semester) || semester < 0 || semester > (x.status==='passed'?12:timeline.count)) throw new Error('课程安排的学期超出规划范围');
       if (x.locked !== undefined && typeof x.locked !== 'boolean') throw new Error('固定课程设置无效');
       const extra = {locked:x.locked ?? false};
-      if (known.has(code)) {
+      if (known.has(code) && !(x.custom===true && 'GHIJ'.includes(known.get(code).section_2025?.[0]))) {
         const groups=known.get(code).allowed_groups;
         if(groups?.length>1&&x.group!==undefined){if(!groups.includes(x.group))throw new Error('此模块不能计入所选领域');extra.group=x.group;}
         return {code, status:x.status, semester, ...extra};
@@ -123,7 +123,7 @@
       if(!value||!known.has(value.code)||!Number.isInteger(value.semester)||value.semester<1||value.semester>12)throw new Error('旧版时间替代记录无效');
       return {code:value.code,semester:value.semester};
     });
-    return {version:4, cohort:raw.cohort, conditional:raw.conditional, conditionalConfirmed,timeline:{count:timeline.count, start:timeline.start}, items,
+    return {version:5, cohort:raw.cohort, conditional:raw.conditional, conditionalConfirmed,timeline:{count:timeline.count, start:timeline.start}, items,
       preferences:{desired,excluded,languages:[...new Set(languages)],...flags,startSemester},workload,timetable:{events:normalizedEvents,replaced:normalizedReplaced}};
   }
   function semesterSeason(timeline, number) {
@@ -135,7 +135,7 @@
   function offering(course, season) {
     const term = course?.current_term || course?.term_legal_annex;
     if (term === '自主安排') return {state:'flexible', label:'自主安排'};
-    if (!term || term === '不定期') return {state:'unknown', label:term || '季节待确认'};
+    if (!['WiSe','SoSe','WiSe/SoSe'].includes(term)) return {state:'unknown', label:term || '季节待确认'};
     const seasons = term.split('/');
     const label = term.replace('WiSe', '冬季').replace('SoSe', '夏季');
     return {state:seasons.includes(season === 'winter' ? 'WiSe' : 'SoSe') ? 'compatible' : 'conflict', label};
@@ -146,8 +146,8 @@
     const bucket = (number) => {
       const season = number ? semesterSeason(plan.timeline, number) : null;
       const items = plan.items.filter(x => x.status !== 'passed' && x.semester === number);
-      const credits = items.reduce((n, x) => n + Number(known.get(x.code)?.ects ?? x.ects), 0);
-      return {number, season, items, credits, conflicts:season ? items.filter(x => offering(known.get(x.code), season).state === 'conflict').map(x => x.code) : []};
+      const credits = items.reduce((n, x) => n + Number(x.custom?x.ects:known.get(x.code)?.ects ?? x.ects), 0);
+      return {number, season, items, credits, conflicts:season ? items.filter(x => offering(x.custom?null:known.get(x.code), season).state === 'conflict').map(x => x.code) : []};
     };
     return {unassigned:bucket(0), semesters:Array.from({length:plan.timeline.count}, (_, i) => bucket(i + 1))};
   }
@@ -159,7 +159,7 @@
     const chosen = [];
     for (const item of plan.items) {
       if (onlyPassed && item.status !== 'passed') continue;
-      const course = known.get(item.code);
+      const course = item.custom ? undefined : known.get(item.code);
       const group = item.group || course?.section_2025[0];
       const ects = course ? Number(course.ects) : item.ects;
       raw += ects; chosen.push(item.code);

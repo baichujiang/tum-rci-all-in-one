@@ -48,6 +48,13 @@ async function test(name,fn){await fn();tests++;console.log('PASS',name);}
   assert.deepEqual(h.stored().items[0],{...initial.items[0],semester:2,locked:false});
   await h.U.undoCourse(change);assert.deepEqual(h.stored().items,C.validatePlan(initial,courses).items);
  });
+ await test('A custom record whose code is now in the catalogue keeps its recognition and skips catalogue season prompts',async()=>{
+  const initial=draft();initial.items=[{code:'IN2060',name:'原有自录认定',ects:7.5,group:'H',status:'planned',custom:true,semester:1}];
+  const h=harness(initial);h.control.confirm=false;const change=await h.U.moveCourse('IN2060',2);
+  assert.equal(change.kind,'moved');assert.equal(h.confirmations(),0);assert.equal(h.stored().items[0].ects,7.5);assert.equal(h.stored().items[0].group,'H');
+  const changed=h.stored();changed.items[0].ects=8;changed.items[0].name='重新核对的自录认定';h.externalPlan(changed);
+  await assert.rejects(h.U.undoCourse(change),/其他调整/);assert.equal(h.stored().items[0].ects,8);assert.equal(h.stored().items[0].name,'重新核对的自录认定');
+ });
  await test('Cancelling a seasonal mismatch leaves storage untouched; confirmation allows it',async()=>{
   const h=harness();h.control.confirm=false;
   assert.equal((await h.U.moveCourse('IN2064',2)).kind,'cancelled');
