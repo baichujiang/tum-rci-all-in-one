@@ -46,4 +46,12 @@ test('Module recommendation opt-out rejects desired future records while preserv
  const limited=courses.map(c=>c.module_code==='IN2060'?{...c,automatic_recommendation_eligible:false,current_catalog_status:'needs_review'}:c),p=draft();let r=E.generate(p,limited,details);assert(r.ok);assert(!r.plan.items.some(x=>x.code==='IN2060'));
  p.preferences.desired=['IN2060'];const before=JSON.stringify(p);r=E.generate(p,limited,details);assert(!r.ok);assert(r.reasons.some(x=>x.includes('暂不能自动安排')));assert.equal(JSON.stringify(p),before);
 });
+test('Hint-only standard deadlines permit a seventh-semester simulation without asserting administrative approval',()=>{
+ const baseline=E.generate(draft(),courses,details);assert(baseline.ok);
+ const subset=courses.filter(c=>baseline.plan.items.some(x=>x.code===c.module_code)),p=draft();p.timeline.count=7;
+ p.items=baseline.plan.items.map(x=>x.code==='IN2320'?{...x,semester:7,locked:true}:{...x,status:'passed',semester:0,locked:false});
+ const strict=E.generate(p,subset,details);assert(!strict.ok);
+ p.preferences.deadlineException=true;const before=JSON.stringify(p),r=E.generate(p,subset,details);assert(r.ok,JSON.stringify(r.reasons));assert.equal(r.finish,7);assert.equal(JSON.stringify(p),before);
+ assert.equal(C.progression(r.plan,subset).find(x=>x.semester===6).met,false);assert(r.warnings.some(x=>x.includes('只提示标准进度期限')));assert(!r.warnings.some(x=>x.includes('获批延期')));
+});
 console.log(`${count} planning checks passed`);

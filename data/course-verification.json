@@ -1508,7 +1508,7 @@
         ]
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "德英先修参考课号及表述存在差异，待核实，暂不自动推荐。",
+      "recommendation_note": "德英先修参考课号及措辞不同，待核实，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/4382063/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4382063/study-year/1623",
       "source_sha256": "e8323d630c1ef2dfc1b7d91927700f2524b309f17e7d57aa89c22542ec5911c8",
@@ -1533,6 +1533,27 @@
       "bilingual_prerequisites_reviewed_on": "2026-10-15",
       "source_field_languages": {
         "prerequisites": "de/en"
+      },
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册德英版本仍分别引用 MW9016 与 MW1939，且知识要求措辞不同。教学团队页面列 MW1939，但未解释两代码关系；不能自行认定等价或取消知识要求。",
+        "unresolved_fields": [
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4382063/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "55e5a2397d4da8674b22022d75352ad7590cd498a16150965ec56c6eea8bec8d"
+          },
+          {
+            "title": "应用力学教学团队课程说明",
+            "url": "https://www.mec.ed.tum.de/en/am/teaching/",
+            "scope_cn": "列出ED160053及MW1939，但未解释手册两种参考代码关系。"
+          }
+        ]
       }
     },
     "ED180013": {
@@ -1678,7 +1699,7 @@
       "current_academic_year_selection_verified": true
     },
     "EI5111": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -1691,7 +1712,7 @@
       "language": "待核实",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "官方德英先修字段未提供内容；这不等于没有知识准备或报名条件，仍需教学团队确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/261353/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -1703,7 +1724,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "周期、语言、先修待核实，暂不自动推荐。",
+      "recommendation_note": "周期、语言与先修均未提供，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/261353/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/261353/study-year/1623",
       "source_sha256": "9ac69108622a917fc7883c13184495d3383d3c701547017b58f7915df086f8d8",
@@ -1719,7 +1740,25 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "156",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册的开课周期、授课语言、先修三项在德英版本均为“-”；未找到匹配 EI5111 代码的当期补充说明，不能借用近似名称模块的数据。",
+        "unresolved_fields": [
+          "term",
+          "language",
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/261353/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "baad2cfd53d0a352139c4c3c72cde8bed3c632d95a81c7f52ae0aa29e0d4f0a6"
+          }
+        ]
+      }
     },
     "EI70140": {
       "checked_on": "2026-10-15",
@@ -2560,7 +2599,7 @@
       "current_academic_year_selection_verified": true
     },
     "IN2002": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -2573,7 +2612,7 @@
       "language": "EN",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "完整手册德英先修均为“-”；找到的数值方法先修说明属于2009/10学年，不能当作2026/27已确认条件。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/456348/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -2585,7 +2624,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "recommendation_note": "当前先修未提供，历史说明不能代替当期条件，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/456348/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/456348/study-year/1623",
       "source_sha256": "08241e83d0177f0658c53965572cf0ad93edd20f32328774591eb2597cd04ab7",
@@ -2601,7 +2640,33 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "176",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册德英先修均为“-”；找到的数值方法先修说明属于2009/10学年，不能当作2026/27已确认条件。",
+        "unresolved_fields": [
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/456348/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "834fc47e1f11b4eba7386f4886a586bff2445cba0dc7bcedc83aa19392a0562c"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://www5.in.tum.de/wiki/index.php/Algorithmen_des_Wissenschaftlichen_Rechnens_II_-_Winter_09",
+            "scope_cn": "历史或补充页面，未补足当前缺项。"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://www.cs.cit.tum.de/en/sccs/teaching/winter-semester-26-27/",
+            "scope_cn": "历史或补充页面，未补足当前缺项。"
+          }
+        ]
+      }
     },
     "IN2005": {
       "checked_on": "2026-10-14",
@@ -2977,7 +3042,7 @@
       "current_academic_year_selection_verified": true
     },
     "IN2058": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -3004,7 +3069,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "周期待核实，暂不自动推荐。",
+      "recommendation_note": "开课周期未提供，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/456521/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/456521/study-year/1623",
       "source_sha256": "9fe921a0a3f905b7111bbe5a051a27d83983c4d8bdc487338dce0338f716c7bc",
@@ -3020,7 +3085,28 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "182",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "手册语言和知识背景已有内容，但开课周期在德英版本均为“-”；当前目录成员身份不能证明每冬、每夏或不定期开课。",
+        "unresolved_fields": [
+          "term"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/456521/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "834fc88d108c540413d8c4c2b42084d60eadf562eb318ed867fb0fbed72eccca"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P004949177",
+            "scope_cn": "历史或补充页面，未补足当前缺项。"
+          }
+        ]
+      }
     },
     "IN2060": {
       "checked_on": "2026-10-14",
@@ -3393,7 +3479,7 @@
       "current_academic_year_selection_verified": true
     },
     "IN2123": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -3406,7 +3492,7 @@
       "language": "待核实",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "2026/27 请求只返回 2014 夏季描述，当前先修待核实；历史描述列举离散结构、3D 视觉、概率、线性代数和分析知识。",
+        "summary_cn": "2026/27手册请求实际选中2014S，现有教师页也为旧学期；当前开课周期、语言及先修无法用这些历史记录确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/480776/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -3424,7 +3510,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "当前学年手册未核实：接口选择 2014S；周期、语言、先修待核实，暂不自动推荐。",
+      "recommendation_note": "手册实际选中2014S，当前周期、语言及先修待核实，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/480776/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/480776/study-year/1623",
       "source_sha256": "eb3f097d39ff34f2840d3fc8d05fa8f27601b7e1b559913ff08d607c24877c33",
@@ -3440,7 +3526,30 @@
       "selected_semester_id": "180",
       "selected_semester_label": "2014S",
       "description_semester_id": "175",
-      "current_academic_year_selection_verified": false
+      "current_academic_year_selection_verified": false,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "2026/27手册请求实际选中2014S，现有教师页也为旧学期；当前开课周期、语言及先修无法用这些历史记录确认。",
+        "unresolved_fields": [
+          "term",
+          "language",
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/480776/180",
+            "scope_cn": "IN2123实际选中2014S；其他模块选中2026W。",
+            "source_sha256": "326c499a90152c1e1040bb4ccda16ea61fc0560301df06b124c063991f9d7e5e"
+          },
+          {
+            "title": "旧版3D Computer Vision II课程页",
+            "url": "https://campar.in.tum.de/Chair/TeachingWs11Cv2.html",
+            "scope_cn": "2011/12冬季的历史资料，不作为当前周期／先修证明。"
+          }
+        ]
+      }
     },
     "IN2124": {
       "checked_on": "2026-10-14",
@@ -3493,7 +3602,7 @@
       "current_academic_year_selection_verified": true
     },
     "IN2133": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -3506,7 +3615,7 @@
       "language": "EN",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "完整手册先修为 Not specified；2026/27冬季课程页的预备知识与参与条件也为空。当前教师页未声明先修，且大纲链接误指另一门课，不能移植其要求。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/473871/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -3518,7 +3627,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "recommendation_note": "当期课程存在，但知识准备与参与条件未提供，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/473871/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/473871/study-year/1623",
       "source_sha256": "b7743bac2cb497b54629a833cfc7fab51aa8ef55001deeb21e7bf780d91b608a",
@@ -3534,10 +3643,36 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "196",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册先修为 Not specified；2026/27冬季课程页的预备知识与参与条件也为空。当前教师页未声明先修，且大纲链接误指另一门课，不能移植其要求。",
+        "unresolved_fields": [
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/473871/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "1e651577b2b3e9c333d4b96a998cebd7dd79b9375fc7144684a90db5bd174473"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://mvp.in.tum.de/courses/vision/",
+            "scope_cn": "可确认新的官方教师入口及2026/27冬季课程存在；旧教学文档链接404，新页syllabus却误链到另一门课2024夏季大纲。"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://mvp.in.tum.de/courses/motion/syllabus.html",
+            "scope_cn": "历史或补充页面，未补足当前缺项。"
+          }
+        ]
+      }
     },
     "IN2138": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -3550,7 +3685,7 @@
       "language": "EN",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "完整手册先修为 Not specified；教师页提供2026夏季课程及2024夏季大纲，但没有可核实的先修声明。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/473874/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -3562,7 +3697,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "recommendation_note": "先修未明确提供，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/473874/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/473874/study-year/1623",
       "source_sha256": "12fc7be020ff9bbc348299c202599b63b96ebcfdbf7ae4331f9a3cd361a4e8a6",
@@ -3578,7 +3713,28 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "196",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册先修为 Not specified；教师页提供2026夏季课程及2024夏季大纲，但没有可核实的先修声明。",
+        "unresolved_fields": [
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/473874/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "370bf4a4e624f247d07ebb5495ad1867a6925d07e514a0b80c85f5096c47975a"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://mvp.in.tum.de/courses/motion/",
+            "scope_cn": "历史或补充页面，未补足当前缺项。"
+          }
+        ]
+      }
     },
     "IN2147": {
       "checked_on": "2026-10-14",
@@ -3627,7 +3783,7 @@
       "current_academic_year_selection_verified": true
     },
     "IN2161": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -3640,7 +3796,7 @@
       "language": "EN",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "完整手册德英先修均为“-”；2020教学存档提到加密基础，只能作带日期的历史参考，不能当作当前已确认条件。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/458249/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -3652,7 +3808,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "recommendation_note": "当前先修未提供，历史加密背景说明效力待确认，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/458249/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/458249/study-year/1623",
       "source_sha256": "61ef7061b0ed274133f61a7b627b7423343dfc727dbc32596f194ec01a7f7511",
@@ -3668,7 +3824,33 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "175",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册德英先修均为“-”；2020教学存档提到加密基础，只能作带日期的历史参考，不能当作当前已确认条件。",
+        "unresolved_fields": [
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/458249/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "5b4dc8113053be3717b03a86e35ffbfe731795e956d5666481a2076dabf69645"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://webarchiv.typo3.tum.de/static/IN/ls-os/os/studium-und-lehre/ss20/netzwerke-fuer-den-zahlungsverkehr/index.html",
+            "scope_cn": "历史或补充页面，未补足当前缺项。"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://www.moodle.tum.de/course/info.php?id=100766",
+            "scope_cn": "历史或补充页面，未补足当前缺项。"
+          }
+        ]
+      }
     },
     "IN2169": {
       "checked_on": "2026-10-14",
@@ -3761,20 +3943,20 @@
       "current_academic_year_selection_verified": true
     },
     "IN2189": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
         "groups": "verified",
-        "term": "verified",
+        "term": "pending",
         "language": "verified",
         "prerequisites": "pending"
       },
-      "term": "WiSe",
+      "term": "待核实",
       "language": "EN",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "官方德英先修字段未提供内容，当前知识准备要求待教学团队确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1386210/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -3786,12 +3968,12 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "recommendation_note": "冬季周期与近年不定期开设提示不一致，且先修为空，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1386210/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1386210/study-year/1623",
       "source_sha256": "6074a0bfdbf133a6be6d6bd52fc163d9a42ec4a398aac820f36a8332f2c350e2",
       "source_field_status": {
-        "term": "present",
+        "term": "conflicting_official_sources",
         "language": "present",
         "prerequisites": "not_provided"
       },
@@ -3802,7 +3984,40 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "187",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "手册写冬季，但当前CSE官方模块目录注明近年不定期开设；先修仍为空。开课周期及先修均待核实，不保证每冬开课。",
+        "unresolved_fields": [
+          "term",
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/1386210/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "fa72b3f80293d1ceca8e021c55b352c18d1d16236568341e79ef8b46c3e707cc"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://www.cit.tum.de/cit/studium/studiengaenge/master-computational-science-engineering/modules/",
+            "scope_cn": "当前CSE官方目录对 IN2189 明示近年不定期开设，不能只展示冬季而暗示每冬必开。当前教师目录与2020旧课页均没有可补的先修声明。"
+          },
+          {
+            "title": "官方教学补充资料",
+            "url": "https://www.ce.cit.tum.de/en/caps/lehre/ws20/vorlesungen/computer-architecture-and-networks/",
+            "scope_cn": "历史或补充页面，未补足当前缺项。"
+          }
+        ]
+      },
+      "offering_reliability": {
+        "status": "irregular_recent_years",
+        "note_cn": "CSE官方目录注明近年不定期开设；手册的冬季周期不保证当期实际开课。",
+        "source_url": "https://www.cit.tum.de/cit/studium/studiengaenge/master-computational-science-engineering/modules/",
+        "checked_on": "2026-10-15"
+      }
     },
     "IN2210": {
       "checked_on": "2026-10-14",
@@ -3849,7 +4064,7 @@
       "current_academic_year_selection_verified": true
     },
     "IN2222": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -3862,7 +4077,7 @@
       "language": "DE/EN",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "官方德英先修字段未提供内容；这不等于没有知识准备或报名条件，仍需教学团队确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/487482/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -3874,7 +4089,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "recommendation_note": "先修未提供，公开课程简介不能证明无先修，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/487482/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/487482/study-year/1623",
       "source_sha256": "f38ea31694746c203fda2d3cfa2bb6b7ede21e3cec2f240b40dfb52f8b66596b",
@@ -3890,7 +4105,28 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "206",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册德英先修均为“-”；2026夏季Moodle公开简介确认课程身份，但没有知识准备或参与条件声明。",
+        "unresolved_fields": [
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/487482/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "21526aa0de2e8cef12a9efd8c7e0dee9d59526b5dbf64e373666b7ac9e45a5a0"
+          },
+          {
+            "title": "Cognitive Systems课程公开简介",
+            "url": "https://www.moodle.tum.de/course/info.php?id=116578",
+            "scope_cn": "2026夏季课程身份，不含先修声明。"
+          }
+        ]
+      }
     },
     "IN2227": {
       "checked_on": "2026-10-14",
@@ -5096,48 +5332,93 @@
       "current_academic_year_selection_verified": true
     },
     "IN2383": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
         "groups": "verified",
         "term": "verified",
         "language": "verified",
-        "prerequisites": "pending"
+        "prerequisites": "verified"
       },
       "term": "WiSe",
       "language": "EN",
       "prerequisites": {
-        "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
-        "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1865608/study-year/1623",
-        "checked_on": "2026-10-14",
-        "source_field_name": "(Empfohlene) Voraussetzungen",
-        "semantics": "not_provided_or_current_unverified",
-        "requirement_strength": "not_provided",
-        "named_course_codes": [],
+        "kind": "recommended",
+        "summary_cn": "2026/27冬季英语课程页列出 Cyber-Physical Systems（IN2305）的知识准备。模块手册与德语课程栏未提供内容；未注明必须先通过IN2305考试。",
+        "source_url": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses/950943729?$ctx=lang=EN",
+        "checked_on": "2026-10-15",
+        "source_field_name": "Previous knowledge expected",
+        "semantics": "knowledge_preparation",
+        "requirement_strength": "knowledge_background",
+        "named_course_codes": [
+          "IN2305"
+        ],
         "formal_exam_pass_gate_verified": false,
         "current_academic_year_selection_verified": true,
         "requires_confirmation": false
       },
-      "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "automatic_recommendation_eligible": true,
+      "recommendation_note": "已补当期英语课程页的IN2305知识准备；采用方案前需确认背景。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1865608/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1865608/study-year/1623",
       "source_sha256": "46e4d26e49a31131a0f4b6782e4b5fc0e2f2d7b50d837dcb553e1640f38093f1",
       "source_field_status": {
         "term": "present",
         "language": "present",
-        "prerequisites": "not_provided"
+        "prerequisites": "present_in_current_course",
+        "handbook_prerequisites": "not_provided"
       },
       "source_values": {
         "term": "Wintersemester",
-        "language": "Englisch"
+        "language": "Englisch",
+        "handbook_prerequisites": "-",
+        "current_course_prerequisites": "Cyber-Physical Systems (IN2305)"
       },
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "192",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "resolved",
+        "summary_cn": "当期英语课程页明确列 IN2305 的知识准备；德语课程页及模块手册为空，补充依据单独保留，不推断必须先通过该考试。",
+        "unresolved_fields": [],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/1865608/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "56ee4808fa5b914efb588c2ea398eb574660a9326718b57d18cebf1c82a4d4ac"
+          },
+          {
+            "title": "2026/27冬季英语课程说明",
+            "url": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses/950943729?$ctx=lang=EN",
+            "scope_cn": "未登录可读；Previous knowledge expected明确列IN2305，参与条件栏为空。"
+          }
+        ]
+      },
+      "source_field_languages": {
+        "prerequisites": "en_current_course"
+      },
+      "field_sources": {
+        "prerequisites": {
+          "source_url": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.tm.cp/student/courses/950943729?$ctx=lang=EN",
+          "source_type": "official_current_course",
+          "module_code": "IN2383",
+          "course_id": "950943729",
+          "academic_year": "2026/27",
+          "semester": "2026-winter",
+          "checked_on": "2026-10-15",
+          "source_field_name": "Previous knowledge expected",
+          "source_field_value": "Cyber-Physical Systems (IN2305)",
+          "source_language": "en",
+          "public_access_verified": true,
+          "module_identity_verified": true,
+          "snapshot_sha256": "614d49de081049357f285e084f2feb2ba4f468fd8cb7618937578acbbaa9cbbd",
+          "snapshot_path": "data/course-field-evidence/IN2383-2026-winter.json"
+        }
+      }
     },
     "IN2389": {
       "checked_on": "2026-10-14",
@@ -5573,7 +5854,7 @@
       "current_academic_year_selection_verified": true
     },
     "IN3470": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -5586,7 +5867,7 @@
       "language": "待核实",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "官方德英先修字段未提供内容；这不等于没有知识准备或报名条件，仍需教学团队确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1498142/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -5598,7 +5879,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "周期、语言、先修待核实，暂不自动推荐。",
+      "recommendation_note": "周期、语言与先修未提供，不能套用另一代码课程，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/1498142/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1498142/study-year/1623",
       "source_sha256": "9b871276efb3011db41e4e24d5db262a2a9e70769c29606a1abe63de1fabc462",
@@ -5614,7 +5895,35 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "189",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册周期、语言、先修均为空；找到的 IN3470 教师页是2024主题。2026相似课程为 CIT333003、6 ECTS，不能替换本模块的5 ECTS或移植其条件。",
+        "unresolved_fields": [
+          "term",
+          "language",
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/1498142/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "7afab0b7c94e4f095be7733dd26159d2338bd7ff5458346443a1ec5d702de6ed"
+          },
+          {
+            "title": "IN3470旧主题课程页",
+            "url": "https://net.cit.tum.de/teaching/ss24/acds.html",
+            "scope_cn": "2024夏季主题与条件，不能冒充2026/27已确认信息。"
+          },
+          {
+            "title": "2026夏季相似课程页",
+            "url": "https://net.cit.tum.de/teaching/ss26/cds.html",
+            "scope_cn": "模块代码为CIT333003、6 ECTS，不能与IN3470混同。"
+          }
+        ]
+      }
     },
     "LRG6300": {
       "checked_on": "2026-10-14",
@@ -5705,7 +6014,7 @@
       "current_academic_year_selection_verified": true
     },
     "LRG6302": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -5718,7 +6027,7 @@
       "language": "EN",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "官方德英先修字段未提供内容；这不等于没有知识准备或报名条件，仍需教学团队确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/2728743/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -5730,7 +6039,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "recommendation_note": "两份官方手册先修栏均为空，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/2728743/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/2728743/study-year/1623",
       "source_sha256": "19df98d970e8985e3e17186022ef2f77471f0151bd01bf99f91188371bd4afb7",
@@ -5746,7 +6055,28 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "194",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册德英先修均为空；另查2025-12-15官方Aerospace模块手册，同一栏仍为空，不能推断没有知识或报名条件。",
+        "unresolved_fields": [
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/2728743/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "b4711acdc3a99a760d717d535708667241fa4a47db967100b9899786d6d91eeb"
+          },
+          {
+            "title": "官方Aerospace模块手册",
+            "url": "https://www.ed.tum.de/fileadmin/w00byg/ed/03_Studium/Aerospace_B._Sc/Modulhandbuch/WiSe25/Modulhandbuch_BScAerospace_SPO-202501_DE_2025-12-15.pdf",
+            "scope_cn": "2025-12-15生成；LRG6302先修栏仍为空。"
+          }
+        ]
+      }
     },
     "MW0003": {
       "checked_on": "2026-10-14",
@@ -6378,7 +6708,7 @@
       "current_academic_year_selection_verified": true
     },
     "MW1325": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -6391,7 +6721,7 @@
       "language": "待核实",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "官方德英先修字段未提供内容；这不等于没有知识准备或报名条件，仍需教学团队确认。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/539841/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -6403,7 +6733,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "周期、语言、先修待核实，暂不自动推荐。",
+      "recommendation_note": "周期、语言与先修均未提供，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/539841/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/539841/study-year/1623",
       "source_sha256": "0b6ce44a118259386cc3363022d4a83aa91eb7febb5556921f8de3cec3d639b9",
@@ -6419,7 +6749,25 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "178",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册周期、语言、先修在德英版本均为空；没有找到可绑定 MW1325 编码的当期补充说明，不能推断停开或无先修。",
+        "unresolved_fields": [
+          "term",
+          "language",
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/539841/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "257464f888b1bdb1bf9c5eee854ced7e29af0d28f621e511b2f1d546fdff4a6d"
+          }
+        ]
+      }
     },
     "MW1340": {
       "checked_on": "2026-10-14",
@@ -6730,7 +7078,7 @@
       "current_academic_year_selection_verified": true
     },
     "MW1911": {
-      "checked_on": "2026-10-14",
+      "checked_on": "2026-10-15",
       "fields": {
         "identity": "verified",
         "ects": "verified",
@@ -6743,7 +7091,7 @@
       "language": "DE",
       "prerequisites": {
         "kind": "pending",
-        "summary_cn": "手册先修字段未提供明确内容，需向教学团队核实；这不等于没有先修或报名限制。",
+        "summary_cn": "模块手册与2026/27冬季课程页的知识准备栏均为空；不能视为明确无先修。",
         "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/767694/study-year/1623",
         "checked_on": "2026-10-14",
         "source_field_name": "(Empfohlene) Voraussetzungen",
@@ -6755,7 +7103,7 @@
         "requires_confirmation": false
       },
       "automatic_recommendation_eligible": false,
-      "recommendation_note": "先修待核实，暂不自动推荐。",
+      "recommendation_note": "模块手册及当期课程先修均未提供，暂不自动推荐。",
       "source": "https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/slc.cm.reg/student/modules/detail/light/767694/study-year/1623?$ctx=design=pl;header=max;lang=de",
       "source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/767694/study-year/1623",
       "source_sha256": "ee8e5041a9a4ffa5891080a3f54994b1b63298639a1719ec1ccbe8ec1839e27a",
@@ -6771,7 +7119,33 @@
       "selected_semester_id": "207",
       "selected_semester_label": "2026W",
       "description_semester_id": "191",
-      "current_academic_year_selection_verified": true
+      "current_academic_year_selection_verified": true,
+      "follow_up_review": {
+        "checked_on": "2026-10-15",
+        "outcome": "unresolved",
+        "summary_cn": "完整手册先修为空；2026/27冬季课程页的预备知识和参与条件也为空，教学团队公开页面未补充。其英语课程标题还误写另一模块代码，不用于改写身份。",
+        "unresolved_fields": [
+          "prerequisites"
+        ],
+        "sources": [
+          {
+            "title": "TUMonline完整模块说明",
+            "url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/767694/207",
+            "scope_cn": "选中2026W，复核德语及英语字段。",
+            "source_sha256": "991cb2e0c0ec740f25a60ba67554664a0f42624207a814e40f5a815191b67e54"
+          },
+          {
+            "title": "2026/27冬季课程详情",
+            "url": "https://campus.tum.de/tumonline/pages/slc.tm.cp/course/950940412",
+            "scope_cn": "当前课程先前知识与参与条件均为“-”；英语标题模块代码有差异。"
+          },
+          {
+            "title": "车辆技术教学团队说明",
+            "url": "https://www.mos.ed.tum.de/en/ftm/teaching/courses/basics-of-automotive-technology/",
+            "scope_cn": "公开页面为2026夏季线上版本，未补先修。"
+          }
+        ]
+      }
     },
     "MW1922": {
       "checked_on": "2026-10-14",

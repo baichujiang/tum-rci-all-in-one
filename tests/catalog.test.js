@@ -56,6 +56,36 @@ test('Desired and manually selected unsafe future modules cannot bypass the same
   assert(!r.ok,code+' '+mode);assert(r.reasons.some(x=>x.includes(code)));assert.equal(JSON.stringify(p),before);
  }
 });
+test('All remaining pending modules have specific evidence and stay blocked in every future-input path',()=>{
+ const follow=audit.verification.pending_follow_up_review;assert.equal(follow.reviewed_codes.length,15);assert.deepEqual(follow.resolved_codes,['IN2383']);assert.equal(follow.unresolved_codes.length,14);
+ for(const code of follow.unresolved_codes){
+  const c=map.get(code),r=c.verification.follow_up_review;assert.equal(r.outcome,'unresolved',code);assert(r.summary_cn.length>30,code);assert(r.unresolved_fields.length,code);assert(r.sources.every(s=>C.safeURL(s.url)),code);
+  const unsafe={...c,automatic_recommendation_eligible:true,verification:{...c.verification,automatic_recommendation_eligible:true,fields:Object.fromEntries(Object.keys(c.verification.fields).map(k=>[k,'verified']))}};
+  assert.equal(E.recommendationEligible(unsafe),false,code+' unresolved evidence cannot be overwritten by flags');
+  for(const mode of ['desired','selected']){
+   const p=draft();if(mode==='desired')p.preferences.desired=[code];else p.items=[{code,status:'planned',semester:1,locked:false}];const before=JSON.stringify(p);
+   const result=E.generate(p,courses,{...offerings,[code]:{offerings:{'2026-winter':{available:true,language:'EN'}}}});
+   assert(!result.ok,code+' '+mode);assert(result.reasons.some(x=>x.includes(code)));assert.equal(JSON.stringify(p),before);
+  }
+ }
+ const p=draft();p.items=follow.unresolved_codes.map(code=>({code,status:'passed',semester:0}));const r=E.generate(p,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));
+ for(const item of p.items)assert.equal(r.plan.items.find(x=>x.code===item.code).status,'passed');
+ assert.equal(map.get('IN2189').verification.fields.term,'pending');assert.equal(C.offering(map.get('IN2189'),'winter').state,'unknown');
+});
+test('An explicit public current-course source resolves IN2383 without fabricating an exam-pass requirement',()=>{
+ const crypto=require('node:crypto'),c=map.get('IN2383'),v=c.verification,s=v.field_sources.prerequisites;
+ assert.equal(v.source_field_status.handbook_prerequisites,'not_provided');assert.equal(v.fields.prerequisites,'verified');assert.equal(v.follow_up_review.outcome,'resolved');assert.equal(s.module_code,c.module_code);assert.equal(s.academic_year,'2026/27');
+ const raw=fs.readFileSync(path.join(root,s.snapshot_path));assert.equal(crypto.createHash('sha256').update(raw).digest('hex'),s.snapshot_sha256);const snapshot=JSON.parse(raw);assert(snapshot.anonymous);assert(snapshot.identity_visible);assert(snapshot.latest_rci_version_visible);assert.equal(snapshot.previous_knowledge,'Cyber-Physical Systems (IN2305)');
+ assert.equal(c.prerequisites.formal_exam_pass_gate_verified,false);assert.deepEqual(c.prerequisites.named_course_codes,['IN2305']);assert(E.recommendationEligible(c));
+ assert(!E.recommendationEligible({...c,verification:{...v,field_sources:{}}}));
+ const p=draft();p.preferences.desired=['IN2383'];const r=E.generate(p,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));assert(r.plan.items.some(x=>x.code==='IN2383'));assert(r.warnings.some(x=>x.startsWith('IN2383：')&&x.includes('IN2305')));assert(r.calculation.complete);
+});
+test('Latest official rule audit preserves numeric contracts and distinguishes thesis dates from credits',()=>{
+ const rules=require('../data/rci-rules.json');assert.equal(rules.humanReview,'pending');
+ assert.deepEqual([rules.core,rules.professional,rules.interdisciplinary,rules.thesis],[43,41,6,30]);assert.equal(rules.core+rules.conditionalProfessional+rules.interdisciplinary+rules.thesis+rules.conditionalControl,120);
+ assert.equal(rules.domainMinimum,5);assert.equal(rules.thesis_conditions.normal_duration_months,6);assert.equal(rules.thesis_conditions.normal_duration_is_maximum,true);assert.equal(rules.thesis_conditions.universal_start_credit_threshold,null);
+ assert.equal(rules.source_registry_review.rci_records,15);assert.equal(rules.source_registry_review.apso_records,27);assert.equal(rules.source_registry_review.rci_latest_legal_date,'2025-02-11');assert.equal(rules.source_registry_review.apso_latest_legal_date,'2025-12-16');
+});
 test('Already passed uncertain modules survive automatic planning and are never silently scheduled again',()=>{
  const p=draft();p.items=[{code:'IN2076',status:'passed',semester:0},{code:'IN2002',status:'passed',semester:0}];const r=E.generate(p,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));
  for(const code of ['IN2076','IN2002'])assert.deepEqual(r.plan.items.find(x=>x.code===code),C.validatePlan(p,courses).items.find(x=>x.code===code));assert(r.calculation.complete);

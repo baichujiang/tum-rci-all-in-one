@@ -25,6 +25,13 @@ module.exports=function loadCourses(root=path.resolve(__dirname,'..')){
   if(!c||Number(c.ects)!==m.ects||!v)throw Error('Current membership or verification missing: '+m.module_code);
   const fields=['identity','ects','groups','term','language','prerequisites'];
   if(fields.some(k=>!['verified','pending'].includes(v.fields?.[k])))throw Error('Invalid field verification: '+m.module_code);
+  const review=v.follow_up_review;
+  if(review&&(!['resolved','unresolved'].includes(review.outcome)||!review.checked_on||!review.summary_cn||!review.sources?.length||review.sources.some(s=>!C.safeURL(s.url))))throw Error('Invalid follow-up evidence: '+m.module_code);
+  if(v.source_field_status?.prerequisites==='present_in_current_course'){
+   const s=v.field_sources?.prerequisites;
+   if(!s||s.module_code!==m.module_code||s.source_type!=='official_current_course'||s.academic_year!==evidence.academic_year||!s.public_access_verified||!s.module_identity_verified||!C.safeURL(s.source_url)||!s.source_field_value?.trim()||!/^[a-f0-9]{64}$/.test(s.snapshot_sha256||''))throw Error('Current-course prerequisite evidence missing: '+m.module_code);
+  }
+  if(v.automatic_recommendation_eligible&&review?.outcome==='unresolved')throw Error('Unresolved follow-up cannot be recommended: '+m.module_code);
   if(v.automatic_recommendation_eligible&&(fields.some(k=>v.fields[k]!=='verified')||v.current_academic_year_selection_verified!==true||!['WiSe','SoSe','WiSe/SoSe'].includes(v.term)||!['none','recommended'].includes(v.prerequisites?.kind)||v.prerequisites?.requires_confirmation||!C.safeURL(v.source_api)||!/^\w{64}$/.test(v.source_sha256||'')))throw Error('Unresolved module cannot be recommended: '+m.module_code);
   if(v.source&&!C.safeURL(v.source))throw Error('Invalid handbook source: '+m.module_code);
   c.allowed_groups=m.accepted_sections.map(x=>x[0]);

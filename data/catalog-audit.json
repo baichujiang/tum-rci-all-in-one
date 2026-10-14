@@ -76,12 +76,12 @@
   "verification": {
     "scope": "All 153 distinct current professional G/H/I modules; static annex records outside current tree remain unverified and disabled. J expansion is not included.",
     "checked_on": "2026-10-15",
-    "fully_verified": 138,
-    "pending": 15,
-    "automatic_recommendation_eligible": 113,
-    "new_106_fully_verified": 94,
-    "new_106_pending": 12,
-    "new_106_automatic_recommendation_eligible": 79,
+    "fully_verified": 139,
+    "pending": 14,
+    "automatic_recommendation_eligible": 114,
+    "new_106_fully_verified": 95,
+    "new_106_pending": 11,
+    "new_106_automatic_recommendation_eligible": 80,
     "pending_codes": [
       "ED160053",
       "EI5111",
@@ -93,7 +93,6 @@
       "IN2161",
       "IN2189",
       "IN2222",
-      "IN2383",
       "IN3470",
       "LRG6302",
       "MW1325",
@@ -131,7 +130,6 @@
       "IN2318",
       "IN2345",
       "IN2369",
-      "IN2383",
       "IN2389",
       "IN2390",
       "IN3470",
@@ -172,6 +170,47 @@
         "MW1325",
         "MW1911"
       ]
+    },
+    "pending_follow_up_review": {
+      "checked_on": "2026-10-15",
+      "reviewed_codes": [
+        "ED160053",
+        "EI5111",
+        "IN2002",
+        "IN2058",
+        "IN2123",
+        "IN2133",
+        "IN2138",
+        "IN2161",
+        "IN2189",
+        "IN2222",
+        "IN2383",
+        "IN3470",
+        "LRG6302",
+        "MW1325",
+        "MW1911"
+      ],
+      "resolved_codes": [
+        "IN2383"
+      ],
+      "unresolved_codes": [
+        "ED160053",
+        "EI5111",
+        "IN2002",
+        "IN2058",
+        "IN2123",
+        "IN2133",
+        "IN2138",
+        "IN2161",
+        "IN2189",
+        "IN2222",
+        "IN3470",
+        "LRG6302",
+        "MW1325",
+        "MW1911"
+      ],
+      "fresh_full_module_pages": 15,
+      "dated_offering_does_not_bypass_gate": true
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "id": "rci-fpso-2024-amendment-2025",
   "applicableFrom": "2025/26冬季",
-  "checkedOn": "2026-10-14",
+  "checkedOn": "2026-10-15",
   "humanReview": "pending",
   "core": 43,
   "thesis": 30,
@@ -34,7 +34,7 @@
       "url": "https://www.tum.de/fileadmin/user_upload_87/gi32rab/Robotics_Cognition_Intelligence_MA_Neufassung_30012024.pdf"
     },
     {
-      "title": "2025-02-11 修订 · §43 + 附件",
+      "title": "2025-02-11 修订 · §36a(2) + 附件K与学分调整",
       "url": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P008777873"
     },
     {
@@ -46,7 +46,7 @@
       "url": "https://www.cit.tum.de/cit/studium/studiengaenge/master-robotics-cognition-intelligence/"
     },
     {
-      "title": "APSO §10 · 学业进度期限",
+      "title": "现行APSO（含2025-12-16修订）· §10标准进度",
       "url": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P009252245"
     }
   ],
@@ -71,6 +71,24 @@
     "J个人语言资格和课程重叠认定",
     "同名或等价课程及本科已计入课程的自动核验",
     "正式先修、具体研讨与实践课题、报名与名额",
-    "个人学分认定、实际期限账户与批准决定"
-  ]
+    "个人学分认定、实际期限账户与批准决定",
+    "论文出题、交稿日期与六个月期限、实际考核顺序、提前开题及延期批准",
+    "标准进度未达成后的补考或最终不通过等行政后果及个人期限例外"
+  ],
+  "source_registry_review": {
+    "checkedOn": "2026-10-15",
+    "endpoint": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen/statute.html",
+    "rci_records": 15,
+    "rci_latest_legal_date": "2025-02-11",
+    "apso_records": 27,
+    "apso_latest_legal_date": "2025-12-16"
+  },
+  "thesis_conditions": {
+    "ects": 30,
+    "normal_duration_months": 6,
+    "normally_last_assessment": true,
+    "early_start_requires_approval": true,
+    "universal_start_credit_threshold": null,
+    "normal_duration_is_maximum": true
+  }
 }

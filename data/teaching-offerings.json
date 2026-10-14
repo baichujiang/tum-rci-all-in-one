@@ -152,5 +152,27 @@
         "note": "公开教学记录确认此学期提供该模块。具体报名与名额请在 TUMonline 核对。"
       }
     }
+  },
+  "IN2133": {
+    "offerings": {
+      "2026-winter": {
+        "available": true,
+        "language": "EN",
+        "source": "https://campus.tum.de/tumonline/pages/slc.tm.cp/course/950940777",
+        "checkedOn": "2026-10-15",
+        "note": "当期官方课程页确认开课与语言；不能覆盖未核实先修，也不证明未来学期可报名。"
+      }
+    }
+  },
+  "IN2383": {
+    "offerings": {
+      "2026-winter": {
+        "available": true,
+        "language": "EN",
+        "source": "https://campus.tum.de/tumonline/pages/slc.tm.cp/course/950943729",
+        "checkedOn": "2026-10-15",
+        "note": "当期官方课程页确认开课与语言；不能覆盖未核实先修，也不证明未来学期可报名。"
+      }
+    }
   }
 }
