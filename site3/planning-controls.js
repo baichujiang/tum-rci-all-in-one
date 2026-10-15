@@ -1,6 +1,7 @@
 /* Plan actions and on-demand settings. Personal records stay browser-local. MIT. */
 (async function(){
 'use strict';
+const desktopPlanning=window.matchMedia?.('(min-width: 961px)');
 const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,E=window.RCIPlanning,e=C.esc,box=document.getElementById('planning-controls');if(!box)return;
 let db,p,query='',mode='passed',worker=null,preparing=false,searchTimer=null,generation=0,preview=null,expected='',original=null,renderId=0,autoIntent=false;
 const dialog=document.getElementById('auto-plan-dialog'),result=document.getElementById('auto-plan-result');
@@ -19,7 +20,7 @@ function settingsHTML(){return `
    <label>第1学期的季节<select id="plan-start-term"><option value="winter" ${p.timeline.start==='winter'?'selected':''}>冬季学期</option><option value="summer" ${p.timeline.start==='summer'?'selected':''}>夏季学期</option></select></label>
    <label>录取通知是否要求补修<select id="controls-conditional-status"><option value="unknown" ${!p.conditionalConfirmed?'selected':''}>尚未确认</option><option value="no" ${p.conditionalConfirmed&&!p.conditional?'selected':''}>已核对：不需要补修</option><option value="yes" ${p.conditionalConfirmed&&p.conditional?'selected':''}>已核对：需要补修</option></select></label>
   </div>
-  <p class="meta">120 ECTS 分 ${p.timeline.count} 学期，平均 ${Number((120/p.timeline.count).toFixed(1))} ECTS／学期。缩短规划时，超出范围的课程会保留在「待分配」。</p>
+  <p class="meta">120 ECTS 分 ${p.timeline.count} 学期，平均 ${Number((120/p.timeline.count).toFixed(1))} ECTS／学期。${desktopPlanning?.matches?'缩短规划时，超出范围的课程会移到第 1 学期。':'缩短规划时，超出范围的课程会保留在「待分配」。'}</p>
  </section>
  <details id="planning-preference-settings"><summary>语言与学期负担</summary>
   <form id="planning-preferences">
@@ -56,7 +57,7 @@ async function render(){
  const active=document.activeElement,focus=active?.id?{id:active.id,start:active.selectionStart,end:active.selectionEnd}:active?.form?.id&&active.name?{form:active.form.id,name:active.name,value:active.value}:null;
  const calc=C.calculate(p,db.courses,true);
  document.getElementById('plan-context').innerHTML=`<button id="plan-open-settings" type="button" class="plan-context-button" data-open-settings aria-haspopup="dialog">${e(p.cohort==='unknown'?'确认入学批次':p.cohort==='older'?'其他入学批次':p.cohort)} · ${p.timeline.count} 个学期 <span class="context-edit">设置</span></button><span class="context-divider" aria-hidden="true"></span><button id="plan-open-passed" type="button" class="plan-context-button" data-open-preferences="passed" aria-haspopup="dialog">已修 ${calc.allocated} ECTS</button><button id="plan-open-preferences" type="button" class="plan-context-button" data-open-preferences="desired" aria-haspopup="dialog">选课偏好${p.preferences.desired.length+p.preferences.excluded.length?' · '+(p.preferences.desired.length+p.preferences.excluded.length):''}</button><span class="plan-save-state${U.persisted?'':' is-temporary'}">${U.persisted?'自动保存在此浏览器':'仅本页有效，请导出备份'}</span>`;
- document.getElementById('plan-add-course').dataset.pickSemester=String(p.preferences.startSemester);
+ document.getElementById('plan-add-course').dataset.pickSemester=String(desktopPlanning?.matches?1:p.preferences.startSemester);
  document.getElementById('plan-settings-content').innerHTML=settingsHTML();
  document.getElementById('course-preferences-content').innerHTML=preferencesHTML();
  box.querySelector('[data-clear]').hidden=!p.items.length;
@@ -99,8 +100,8 @@ box.addEventListener('change',async event=>{
    const count=Number(el.value);
    await U.updatePlan(async p=>{
     const displaced=p.items.filter(x=>x.status==='planned'&&x.semester>count);
-    if(displaced.length&&!await U.confirmAction(`改为 ${count} 个学期？`,`${displaced.length} 门课会移到「待分配」，课程和学分都会保留。`,'保留课程并调整')){await render();return null;}
-    return {...p,timeline:{...p.timeline,count},preferences:{...p.preferences,startSemester:Math.min(count,p.preferences.startSemester)},items:p.items.map(x=>x.status==='planned'&&x.semester>count?{...x,semester:0}:x)};
+    if(displaced.length&&!await U.confirmAction(`改为 ${count} 个学期？`,`${displaced.length} 门课会移到${desktopPlanning?.matches?'第 1 学期':'「待分配」'}，课程和学分都会保留。`,'保留课程并调整')){await render();return null;}
+    return {...p,timeline:{...p.timeline,count},preferences:{...p.preferences,startSemester:Math.min(count,p.preferences.startSemester)},items:p.items.map(x=>x.status==='planned'&&x.semester>count?{...x,semester:desktopPlanning?.matches?1:0}:x)};
    });
   }
   if(el.closest('#semester-workload')&&el.name==='semester'){const b=E.bounds(p,Number(el.value));for(const key of ['minECTS','maxECTS','minExams','maxExams'])el.form.elements[key].value=b[key];}
@@ -129,7 +130,7 @@ box.addEventListener('click',async event=>{
     return {...p,items:[...p.items.filter(x=>x.code!==code),{...(p.items.find(x=>x.code===code)||{code,semester:0}),status:'passed',locked:false}]};
    });U.toast('已记录；学分统计已更新。');
   }
-  if(b.hasAttribute('data-forget'))await U.updatePlan(p=>b.dataset.kind==='passed'?{...p,items:p.items.map(x=>x.code===b.dataset.forget?{...x,status:'planned',locked:false,semester:0}:x)}:{...p,preferences:{...p.preferences,[b.dataset.kind]:p.preferences[b.dataset.kind].filter(c=>c!==b.dataset.forget)}});
+  if(b.hasAttribute('data-forget'))await U.updatePlan(p=>b.dataset.kind==='passed'?{...p,items:p.items.map(x=>x.code===b.dataset.forget?{...x,status:'planned',locked:false,semester:desktopPlanning?.matches?1:0}:x)}:{...p,preferences:{...p.preferences,[b.dataset.kind]:p.preferences[b.dataset.kind].filter(c=>c!==b.dataset.forget)}});
   if(b.hasAttribute('data-reset-workload')){const n=box.querySelector('#semester-workload [name="semester"]').value;dirtyForms.delete('semester-workload');await U.updatePlan(p=>{const semesters={...p.workload.semesters};delete semesters[n];return {...p,workload:{...p.workload,semesters}};});}
   if(b.hasAttribute('data-generate'))await generate();
  }catch(error){U.toast(error.message);}

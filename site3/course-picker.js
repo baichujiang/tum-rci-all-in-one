@@ -22,7 +22,7 @@ function notice(message,change){$('#picker-status').textContent=message;if(chang
 async function render(){
  if(!dialog.open)return;
  const id=++renderId;db=db||await U.data();const p=await U.plan();if(id!==renderId||!dialog.open)return;
- if(semester>p.timeline.count){semester=0;notice('原目标学期已移除，请重新选择学期。',null);}
+ if(semester>p.timeline.count){semester=root.matchMedia?.('(min-width: 961px)').matches?1:0;notice(semester?'原目标学期已移除，已切换到第 1 学期。':'原目标学期已移除，请重新选择学期。',null);}
  target.innerHTML='<option value="0" disabled>请选择学期</option>'+Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}">${C.semesterLabel(p.timeline,i+1)}</option>`).join('');target.value=semester;
  $('#picker-title').textContent=semester?`为第 ${semester} 学期添加课程`:'添加课程';
  if(!semester){results.innerHTML='<p class="empty">先选择课程要放到哪个学期。</p>';$('#picker-results-count').textContent='';$('#picker-credits').textContent='尚未选择学期';return;}

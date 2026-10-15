@@ -11,14 +11,14 @@ const defaults={query:'',group:'',term:'',language:'',selection:''};
 let checks=0;
 async function test(name,fn){await fn();checks++;console.log('PASS',name);}
 function element(){return {value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,handlers:{},dataset:{},children:[],addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];},focus(){this.focused=true;},contains(){return false;},getBoundingClientRect(){return {top:200,bottom:240};}};}
-async function harness(search=''){
+async function harness(search='',desktop=false){
  let plan=empty(),lastURL='',fail=false;
  const nodes={},calls=[],events={};
  for(const id of ['course-target-semester','page-search','group-filter','term-filter','directory-language','directory-selection','results','result-count','directory-undo','directory-status','directory-feedback','more-results','directory-subcategories','directory-active-filters','directory-filter-count','reset-filters','directory-target-credits','catalog-filter-options'])nodes['#'+id]=element();
  nodes['form']=element();nodes['[data-directory-clear-query]']=element();nodes['#catalog-filter-options'].querySelector=()=>element();
  const box=element();box.querySelector=s=>nodes[s];
  const U={base:'',persisted:true,data:async()=>data,plan:async()=>copy(plan),addCourse:async(code,semester,options)=>{calls.push({code,semester,options});if(fail)throw new Error('保存失败');const previous=plan.items.find(x=>x.code===code);plan.items=plan.items.filter(x=>x.code!==code);plan.items.push({code,semester,status:'planned'});events['rci:planchange']?.();return {kind:previous?'moved':'added',code,semester,previous};},undoCourse:async change=>{plan.items=plan.items.filter(x=>x.code!==change.code);if(change.previous)plan.items.push(change.previous);events['rci:planchange']?.();}};
- vm.runInNewContext(source,{RCI:C,RCISearch:S,RCIUI:U,document:{getElementById:()=>box,addEventListener(){},activeElement:null},location:{search,pathname:'/courses/',hash:''},history:{replaceState(_a,_b,url){lastURL=url;}},URLSearchParams,setTimeout,clearTimeout,addEventListener:(type,fn)=>events[type]=fn});
+ vm.runInNewContext(source,{matchMedia:()=>({matches:desktop,addEventListener(){}}),RCI:C,RCISearch:S,RCIUI:U,document:{getElementById:()=>box,addEventListener(){},activeElement:null},location:{search,pathname:'/courses/',hash:''},history:{replaceState(_a,_b,url){lastURL=url;}},URLSearchParams,setTimeout,clearTimeout,addEventListener:(type,fn)=>events[type]=fn});
  await tick();
  const click=async(attrs,id)=>{const b={id,dataset:{},disabled:false,hasAttribute:key=>key in attrs};for(const [key,value] of Object.entries(attrs))b.dataset[key.replace(/^data-/,'').replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=value;await box.handlers.click({target:{closest:()=>b}});await tick();};
  return {nodes,calls,click,plan:()=>copy(plan),url:()=>lastURL,setPlan:async p=>{plan=p;await events['rci:planchange']();await tick();},fail:()=>{fail=true;}};
@@ -67,9 +67,17 @@ async function harness(search=''){
   const sync=app.slice(app.indexOf('async function syncPlanWidgets(){'),app.indexOf("window.addEventListener('rci:planchange',syncPlanWidgets)"));
   for(const owned of [false,true]){
    const p=empty();p.items=[{code:'IN2064',status:'planned',semester:1}];const badge={textContent:'0',classList:{contains:()=>true}},target={innerHTML:'owned',hasAttribute:()=>owned},context={hidden:true};
-   const sandbox={C,currentPlan:null,selectedSemester:1,plan:async()=>p,data:async()=>data,$:s=>({'#course-target-semester':target,'#course-semester-context':context}[s]),document:{querySelectorAll:s=>s==='[data-plan-count]'?[badge]:[]},syncAddButtons(){}};
+   const sandbox={C,desktopPlanning:{matches:false},currentPlan:null,selectedSemester:1,plan:async()=>p,data:async()=>data,$:s=>({'#course-target-semester':target,'#course-semester-context':context}[s]),document:{querySelectorAll:s=>s==='[data-plan-count]'?[badge]:[]},syncAddButtons(){}};
    vm.runInNewContext(sync+';this.run=syncPlanWidgets',sandbox);await sandbox.run();assert.equal(badge.textContent,1);assert.equal(badge.hidden,false);assert.equal(target.innerHTML==='owned',owned);if(!owned)assert.equal(context.hidden,false);
   }
+ });
+ await test('Desktop zero and removed destinations fall back to semester one without offering unassigned',async()=>{
+  const h=await harness('?semester=0',true);
+  assert.equal(h.nodes['#course-target-semester'].value,'1');assert(!h.nodes['#course-target-semester'].innerHTML.includes('value="0"'));
+  await h.click({'data-directory-add':'IN2064'});assert.equal(h.calls[0].semester,1);
+  h.nodes['#course-target-semester'].value='3';await h.nodes['#course-target-semester'].handlers.change();
+  const p=h.plan();p.timeline.count=2;await h.setPlan(p);
+  assert.equal(h.nodes['#course-target-semester'].value,'1');assert(h.nodes['#directory-status'].textContent.includes('第 1 学期'));
  });
  console.log(`${checks} course directory checks passed`);
 })().catch(error=>{console.error(error);process.exitCode=1;});

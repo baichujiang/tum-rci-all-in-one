@@ -3,7 +3,7 @@
 'use strict';
 const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,e=C.esc,box=document.getElementById('planner');if(!box)return;
 let db,known,renderId=0,draggedCode=null,dragFrame=0,dragX=0,boardScrollOwner=null;
-const domainNames=C.courseGroups;
+const domainNames=C.courseGroups,desktopPlanning=window.matchMedia?.('(min-width: 961px)');
 try{db=await U.data();known=new Map(db.courses.map(c=>[c.module_code,c]));await render();}catch(err){box.innerHTML='<div class="empty"><h2>暂时无法读取计划</h2><p>'+e(err.message)+'。已有记录没有覆盖，请先备份再重试。</p><button class="button" type="button" data-backup-open>备份与恢复</button> <a class="button secondary" href="'+U.base+'/courses/">先浏览课程</a></div>';return;}
 function progress(calc){return calc.buckets.map(([name,value,target],i)=>`<div class="progress-row"><div><span>${e(name)}<small class="original-label">${e(C.creditOriginalNames[i])}</small></span><b>${Math.min(value,target)} / ${target}</b></div><progress max="${target}" value="${Math.min(value,target)}" aria-label="${e(name)} ${e(C.creditOriginalNames[i])} ${Math.min(value,target)} / ${target} ECTS"></progress></div>`).join('');}
 function gaps(calc,p){
@@ -15,7 +15,7 @@ function gaps(calc,p){
  return links||'<p>规划已覆盖本模型的学分要求。课程认定请在学校系统核对。</p>';
 }
 function semesterOptions(p,selected,course){
- return `<option value="0" ${selected===0?'selected':''}>待分配</option>`+Array.from({length:p.timeline.count},(_,i)=>{
+ return (desktopPlanning?.matches?'':`<option value="0" ${selected===0?'selected':''}>待分配</option>`)+Array.from({length:p.timeline.count},(_,i)=>{
   const n=i+1,season=C.semesterSeason(p.timeline,n),conflict=C.offering(course,season).state==='conflict';
   return `<option value="${n}" ${selected===n?'selected':''}>第 ${n} · ${season==='winter'?'冬季':'夏季'}${conflict?'（目录不符）':''}</option>`;
  }).join('');
@@ -77,7 +77,8 @@ async function render(){
  const openDetails=[...box.querySelectorAll('details[open]')].map(el=>el.id);
  const summaryOpen=box.querySelector('#summary-gaps')?.open;
  const boardLeft=box.querySelector('.board-courses-scroll')?.scrollLeft||0;
- const p=await U.plan();if(id!==renderId)return;
+ let p=await U.plan();if(id!==renderId)return;
+ if(desktopPlanning?.matches&&p.items.some(x=>x.status==='planned'&&x.semester===0)){await U.assignUnscheduled();if(id!==renderId)return;p=await U.plan();if(id!==renderId)return;}
  const calc=C.calculate(p,db.courses),schedule=C.schedule(p,db.courses);
  const future=p.items.filter(x=>x.status==='planned'),assigned=future.length-schedule.unassigned.items.length;
  const unassigned=schedule.unassigned.items.length?`<details class="unassigned-courses" id="unassigned" data-drop-semester="0" aria-labelledby="unassigned-title"><summary class="unassigned-heading" id="unassigned-title">待分配 <span>${schedule.unassigned.items.length} 门 · ${schedule.unassigned.credits} ECTS</span><small>展开安排</small></summary><div class="unassigned-grid">${schedule.unassigned.items.map(x=>row(x,p)).join('')}</div></details>`:'';
@@ -98,6 +99,7 @@ async function render(){
 }
 window.addEventListener('rci:planchange',()=>render().catch(err=>U.toast(err.message)));
 window.addEventListener('resize',()=>syncBoard());
+desktopPlanning?.addEventListener('change',()=>render().catch(err=>U.toast(err.message)));
 if(window.ResizeObserver)new ResizeObserver(()=>syncBoard()).observe(box);
 box.addEventListener('dragstart',ev=>{
  const item=ev.target.closest('[data-plan-course]');
@@ -156,7 +158,7 @@ box.addEventListener('submit',async ev=>{
  try{
   const f=new FormData(ev.target),code=String(f.get('code')).trim().toUpperCase();
   if(known.has(code))throw new Error('此模块已在目录里，请从课程页添加');
-  await U.updatePlan(p=>({...p,items:[...p.items,{code,name:String(f.get('name')),ects:Number(f.get('ects')),group:f.get('group'),status:'planned',custom:true}]}));
+  await U.updatePlan(p=>({...p,items:[...p.items,{code,name:String(f.get('name')),ects:Number(f.get('ects')),group:f.get('group'),status:'planned',custom:true,semester:desktopPlanning?.matches?1:0}]}));
   await render();box.querySelector('#custom-plan').reset();
   if(U.persisted)U.toast('选修已加入，实际认定请向学校确认。');
  }catch(err){U.toast(err.message);}

@@ -37,7 +37,7 @@ let db,plan,semester=null,limit=24,renderId=0,debounce=null,lastChange=null,focu
 const pending=new Set(),desktopMedia=root.matchMedia?.('(min-width: 961px)');
 function updateDesktopLabels(){if(desktopMedia)for(const option of term.querySelectorAll('[data-desktop-label]')){option.dataset.originalLabel??=option.textContent;option.textContent=desktopMedia.matches?option.dataset.desktopLabel:option.dataset.originalLabel;}}
 updateDesktopLabels();
-desktopMedia?.addEventListener('change',()=>{updateDesktopLabels();render();});
+desktopMedia?.addEventListener('change',()=>{updateDesktopLabels();update();});
 query.value=(params.get('q')||'').slice(0,160);group.value=params.get('group')||'';term.value=params.get('term')||'';language.value=params.get('language')||'';selection.value=params.get('selection')||'';
 if(params.has('semester')){const n=Number(params.get('semester'));semester=Number.isInteger(n)&&n>=0&&n<=12?n:0;}
 function state(){return {query:query.value,group:group.value,term:term.value,language:language.value,selection:selection.value};}
@@ -63,10 +63,13 @@ function render(){
  if(focusAfter){const buttons=[...results.querySelectorAll('[data-directory-add]')],index=buttons.findIndex(b=>b.dataset.directoryAdd===focusAfter),own=buttons[index];(own&&!own.disabled?own:own?.closest('article').querySelector('h2 a')||buttons.slice(index+1).find(b=>!b.disabled)||count).focus({preventScroll:true});focusAfter=null;}
 }
 async function refresh(){
- const id=++renderId;db=db||await U.data();const next=await U.plan();if(id!==renderId)return;plan=next;
- if(semester===null)semester=plan.preferences.startSemester;
- if(semester>plan.timeline.count){semester=0;notice('原目标学期已移除，已切换为待分配。',null);}
- target.innerHTML=Array.from({length:plan.timeline.count},(_,i)=>`<option value="${i+1}">${e(C.semesterLabel(plan.timeline,i+1))}</option>`).join('')+'<option value="0">先选课，稍后分配</option>';target.value=String(semester);target.disabled=false;
+ const id=++renderId;db=db||await U.data();let next=await U.plan();if(id!==renderId)return;
+ if(desktopMedia?.matches&&next.items.some(x=>x.status==='planned'&&x.semester===0)){await U.assignUnscheduled();if(id!==renderId)return;next=await U.plan();if(id!==renderId)return;}
+ plan=next;
+ if(semester===null)semester=desktopMedia?.matches?1:plan.preferences.startSemester;
+ if(desktopMedia?.matches&&semester===0)semester=1;
+ if(semester>plan.timeline.count){semester=desktopMedia?.matches?1:0;notice(desktopMedia?.matches?'原目标学期已移除，已切换到第 1 学期。':'原目标学期已移除，已切换为待分配。',null);}
+ target.innerHTML=Array.from({length:plan.timeline.count},(_,i)=>`<option value="${i+1}">${e(C.semesterLabel(plan.timeline,i+1))}</option>`).join('')+(desktopMedia?.matches?'':'<option value="0">先选课，稍后分配</option>');target.value=String(semester);target.disabled=false;
  const items=plan.items.filter(x=>x.status!=='passed'&&x.semester===semester),ects=items.reduce((n,item)=>n+Number(item.custom?item.ects:db.courses.find(c=>c.module_code===item.code)?.ects||0),0);
  $('#directory-target-credits').textContent=semester?`${ects} ECTS`:'待分配';
  render();

@@ -5,11 +5,11 @@ const root=path.resolve(__dirname,'..'),C=require('../assets/core.js');
 const courses=C.csv(fs.readFileSync(path.join(root,'data/courses_legal_2025.csv'),'utf8'));
 const source=fs.readFileSync(path.join(root,'site3/app.js'),'utf8').split('const savedRaw=')[0]+'})();';
 const draft=()=>({version:2,cohort:'2026/27冬季',conditional:false,timeline:{count:4,start:'winter'},items:[{code:'IN2064',status:'planned',semester:1}]});
-function harness(initial=draft()){
+function harness(initial=draft(),desktop=false){
  let stored=JSON.stringify(initial),writes=0,events=0,confirmations=0;
  const control={confirm:true,quota:false};
  const toast={replaceChildren(){},append(){},contains(){return false;}};
- const window={RCILocalLock:require('../site3/local-lock'),RCI:C,confirm(){confirmations++;if(control.onConfirm)control.onConfirm();return control.confirm;},dispatchEvent(ev){assert.equal(ev.type,'rci:planchange');events++;}};
+ const window={matchMedia:()=>({matches:desktop}),RCILocalLock:require('../site3/local-lock'),RCI:C,confirm(){confirmations++;if(control.onConfirm)control.onConfirm();return control.confirm;},dispatchEvent(ev){assert.equal(ev.type,'rci:planchange');events++;}};
  const context={window,navigator:{locks:{request:(_name,work)=>work()}},URLSearchParams,location:{search:''},document:{querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;return null;},createElement(){return {addEventListener(){}};}},localStorage:{getItem(){return stored;},setItem(key,value){assert.equal(key,'rci:v2:plan');if(control.quota)throw new Error('quota');stored=value;writes++;}},fetch:async url=>{assert.equal(url,'/assets/planner-data.json');return {ok:true,json:async()=>({courses,names:{}})};},Event:function(type){this.type=type;},setTimeout(){return 0;},clearTimeout(){}};
  vm.runInNewContext(source,context,{filename:'site3/app.js'});
  return {U:window.RCIUI,control,stored:()=>JSON.parse(stored),externalPlan:value=>{stored=JSON.stringify(value);},writes:()=>writes,events:()=>events,confirmations:()=>confirmations};
@@ -97,6 +97,21 @@ async function test(name,fn){await fn();tests++;console.log('PASS',name);}
   const initial=draft();initial.items=[{code:'IN2067',status:'planned',semester:1,locked:true}];const h=harness(initial);
   h.control.confirm=false;assert.equal((await h.U.addCourse('ED160028',2,{moveExisting:true})).kind,'cancelled');assert.equal(h.writes(),0);
   h.control.confirm=true;const change=await h.U.addCourse('ED160028',2,{moveExisting:true});assert.equal(change.kind,'replaced');assert.equal(h.stored().items[0].code,'ED160028');await h.U.undoCourse(change);assert.deepEqual(h.stored().items,C.validatePlan(initial,courses).items);
+ });
+ await test('Desktop default additions go to the first semester while narrow-screen defaults remain compatible',async()=>{
+  const initial=draft();initial.items=[];
+  const desktop=harness(initial,true),added=await desktop.U.addCourse('IN2064');
+  assert.equal(added.semester,1);assert.equal(desktop.stored().items[0].semester,1);
+  await desktop.U.undoCourse(added);assert.equal(desktop.stored().items.length,0);
+  const narrow=harness(initial);assert.equal((await narrow.U.addCourse('IN2064')).semester,0);
+ });
+ await test('Assigning legacy future records preserves custom recognition and passed history and is idempotent',async()=>{
+  const initial=draft();initial.items=[{code:'IN2064',status:'passed',semester:0},{code:'OWN101',name:'旧认定',ects:7.5,group:'H',status:'planned',custom:true,semester:0},{code:'IN2228',status:'planned',semester:2}];
+  const h=harness(initial,true),before=C.validatePlan(initial,courses);
+  await h.U.assignUnscheduled();
+  assert.deepEqual(h.stored().items,before.items.map(x=>x.status==='planned'&&x.semester===0?{...x,semester:1}:x));
+  assert.equal(h.stored().items.find(x=>x.code==='IN2064').semester,0);
+  const writes=h.writes();await h.U.assignUnscheduled();assert.equal(h.writes(),writes);
  });
  console.log(`${tests} plan interaction checks passed`);
 })().catch(err=>{console.error(err);process.exitCode=1;});

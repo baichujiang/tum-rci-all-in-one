@@ -4,6 +4,7 @@
 const C=window.RCI,esc=C.esc,base=document.querySelector('meta[name="rci-base"]').content;
 const B=window.RCIBackup;
 const $=s=>document.querySelector(s),full=p=>base+p;
+const desktopPlanning=window.matchMedia?.('(min-width: 961px)');
 let timer,dbPromise,sessionPlan=null,currentPlan=null,planPersisted=true;
 let planQueue=Promise.resolve();
 let recoveryBlocked=false,recoveryBefore=null,recoveryPromise=null,storageUnavailable=false;
@@ -75,7 +76,7 @@ function updatePlan(change){
  planQueue=task;return task;
 }
 async function addCourse(code,semester=0,{moveExisting=false}={}){
- code=String(code).trim().toUpperCase();let result={kind:'cancelled'};
+ code=String(code).trim().toUpperCase();if(desktopPlanning?.matches&&semester===0)semester=1;let result={kind:'cancelled'};
  await updatePlan(async p=>{
   const d=await data(),course=d.courses.find(c=>c.module_code===code);
   if(!course)throw new Error('没有找到这门课程，请刷新目录重试。');
@@ -101,7 +102,7 @@ async function undoCourse(change){
  return updatePlan(p=>{
   const item=p.items.find(x=>x.code===change.code);
   if(!item||item.semester!==change.semester||item.status!==change.applied.status||(item.locked??false)!==(change.applied.locked??false)||item.group!==change.applied.group||['custom','name','ects'].some(k=>item[k]!==change.applied[k]))throw new Error('这门课已有其他调整，请在学期卡片中修改。');
-  const fit=x=>({...x,semester:x.status==='passed'||x.semester<=p.timeline.count?x.semester:0});
+  const fit=x=>({...x,semester:x.status==='passed'?x.semester:x.semester>0&&x.semester<=p.timeline.count?x.semester:desktopPlanning?.matches?1:0});
   const items=p.items.filter(x=>x.code!==change.code);
   if(change.previous)items.push(fit(change.previous));
   if(change.replaced)items.push(fit(change.replaced));
@@ -109,7 +110,7 @@ async function undoCourse(change){
  });
 }
 async function moveCourse(code,semester){
- code=String(code).trim().toUpperCase();let result={kind:'cancelled'};
+ code=String(code).trim().toUpperCase();if(desktopPlanning?.matches&&semester===0)semester=1;let result={kind:'cancelled'};
  await updatePlan(async p=>{
   if(!Number.isInteger(semester)||semester<0||semester>p.timeline.count)throw new Error('目标学期已调整，请重新选择。');
   const previous=p.items.find(x=>x.code===code);
@@ -126,6 +127,9 @@ async function moveCourse(code,semester){
   return {...p,items:p.items.map(x=>x.code===code?applied:x)};
  });
  return result;
+}
+function assignUnscheduled(){
+ return updatePlan(p=>p.items.some(x=>x.status==='planned'&&x.semester===0)?{...p,items:p.items.map(x=>x.status==='planned'&&x.semester===0?{...x,semester:1}:x)}:null);
 }
 const savePlan=p=>updatePlan(()=>p);
 async function clearPlan(){
@@ -144,7 +148,7 @@ function confirmAction(title,description,confirmLabel){
  dialog.returnValue='cancel';dialog.showModal();
  return new Promise(resolve=>dialog.addEventListener('close',()=>resolve(dialog.returnValue==='confirm'),{once:true}));
 }
-window.RCIUI={toast,read,store,data,plan,savePlan,clearPlan,updatePlan,empty,base,confirmAction,addCourse,moveCourse,undoCourse,get persisted(){return planPersisted;}};
+window.RCIUI={toast,read,store,data,plan,savePlan,clearPlan,updatePlan,empty,base,confirmAction,addCourse,moveCourse,undoCourse,assignUnscheduled,get persisted(){return planPersisted;}};
 
 const savedRaw=read('rci:v2:saves',[]);
 let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);
@@ -222,10 +226,10 @@ function syncAddButtons(){
 async function syncPlanWidgets(){
  try{
   const [p,d]=await Promise.all([plan(),data()]);currentPlan=p;const calc=C.calculate(p,d.courses);
-  if(selectedSemester>p.timeline.count)selectedSemester=0;
+  if(selectedSemester>p.timeline.count||desktopPlanning?.matches&&selectedSemester===0)selectedSemester=desktopPlanning?.matches?1:0;
   const target=$('#course-target-semester');
   if(target&&!target.hasAttribute('data-directory-target')){
-   target.innerHTML='<option value="0">先选课，稍后分配</option>'+Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}">${C.semesterLabel(p.timeline,i+1)}</option>`).join('');target.value=selectedSemester;
+   target.innerHTML=(desktopPlanning?.matches?'':'<option value="0">先选课，稍后分配</option>')+Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}">${C.semesterLabel(p.timeline,i+1)}</option>`).join('');target.value=selectedSemester;
    $('#course-semester-context').hidden=false;
   }
   document.querySelectorAll('[data-plan-count]').forEach(el=>{el.textContent=p.items.length;el.hidden=el.classList.contains('plan-badge')&&!p.items.length;});
@@ -240,6 +244,7 @@ async function syncPlanWidgets(){
  }catch(_){document.querySelectorAll('[data-plan-description]').forEach(el=>{el.textContent='已有计划暂时无法读取，请到计划页查看并备份。';});}
 }
 window.addEventListener('rci:planchange',syncPlanWidgets);
+desktopPlanning?.addEventListener('change',syncPlanWidgets);
 
 // A small website directory: direct links stay usable if enhancement fails.
 if($('#portal-controls')){
