@@ -47,4 +47,9 @@ test('Long aliases and Chinese names do not discard a meaningful numeric suffix'
  assert.equal(S.search(docs,'machine learning',nav.synonyms)[0]?.code,'IN2064');
 });
 test('Full-width alphabet input receives the same abbreviation normalization',()=>assert.equal(S.search(docs,'ＭＬ',nav.synonyms)[0]?.code,'IN2064'));
+test('German accents stay in one word and synonyms cannot consume a noun prefix',()=>{
+ const d={id:'CLA21023',code:'CLA21023',kind:'course',title:'Entspannt Prüfungen bestehen',summary:'',body:'',aliases:[],tasks:['study']};
+ assert.equal(S.search([d],d.title,nav.synonyms)[0]?.id,d.id);assert.equal(S.search([d],'Prüfungen',nav.synonyms)[0]?.id,d.id);
+ assert(S.terms(d.title,nav.synonyms).some(g=>g.includes('prüfungen')));
+});
 console.log(count+' keyword search checks passed');

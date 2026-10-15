@@ -8,6 +8,7 @@ const credits=c=>Number(c.ects);
 const bounds=(p,n)=>({...p.workload,...p.workload.semesters[n]});
 function recommendationEligible(c){
  const v=c.verification;
+ if(group(c)==='J'&&(!v||v.fields?.eligibility!=='verified'||v.fields?.counting!=='verified'||v.eligibility?.requires_confirmation||v.eligibility?.reviewed_source_sha256!==v.source_sha256||c.j_constraints?.is_language_course))return false;
  if(v?.follow_up_review?.outcome==='unresolved')return false;
  if(v?.source_field_status?.prerequisites==='present_in_current_course'){
   const s=v.field_sources?.prerequisites;
@@ -19,6 +20,15 @@ function languageOK(p,c,offerings,n){
  const value=T.offering(p,c,n,offerings).dated?.language??c.current_language??c.language_legal_annex??'DE/EN';
  return p.preferences.languages.some(l=>value.split('/').includes(l));
 }
+// Preserve credit/season shapes before filling the remaining bounded search slots.
+function diverse(list,limit,key){
+ const groups=new Map();for(const item of list){const k=key(item);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(item);}
+ const result=[];for(let index=0;result.length<limit;index++){let added=false;for(const bucket of groups.values())if(bucket[index]){result.push(bucket[index]);added=true;if(result.length===limit)break;}if(!added)break;}return result;
+}
+const shape=set=>set.map(c=>credits(c)+':'+(c.current_term??c.term_legal_annex??'unknown')).sort().join('|');
+function selectionShapes(list,known){
+ return diverse(list.sort((a,b)=>a.extra-b.extra||a.items.length-b.items.length),240,x=>shape(x.items.filter(i=>i.status!=='passed'&&group(known.get(i.code)||i)==='J').map(i=>known.get(i.code)||i)));
+}
 // Keep several distinct subsets per credit sum, so seasonal/category alternatives survive.
 function subsets(pool,max,keep=12){
  let sums=new Map([[0,[[]]]]);
@@ -26,9 +36,9 @@ function subsets(pool,max,keep=12){
   const next=new Map([...sums].map(([n,sets])=>[n,[...sets]]));
   for(const [n,sets] of sums){const amount=n+credits(c)*2;if(amount>max*2)continue;
    const bucket=next.get(amount)||[];
-   for(const set of sets)bucket.push([...set,c]);
+   for(const set of sets)if(!c.j_constraints?.recognition_family||!set.some(x=>x.j_constraints?.recognition_family===c.j_constraints.recognition_family))bucket.push([...set,c]);
    bucket.sort((a,b)=>a.length-b.length||a.map(code).join().localeCompare(b.map(code).join()));
-   next.set(amount,bucket.slice(0,keep));
+   next.set(amount,diverse(bucket,keep,shape));
   }sums=next;
  }return [...sums].flatMap(([n,sets])=>sets.map(items=>({credits:n/2,items})));
 }
@@ -42,15 +52,17 @@ function completeSelections(p,courses,base,offerings){
   if(item.status==='passed'||item.group!==undefined||!allowed||allowed.length<2)continue;
   variants=variants.flatMap(items=>allowed.map(k=>items.map(x=>x.code===item.code?{...x,group:k}:x))).slice(0,64);
  }
- return variants.flatMap(items=>completeAllocation(p,courses,items,offerings))
-  .sort((a,b)=>a.extra-b.extra||a.items.length-b.items.length).slice(0,240);
+ return selectionShapes(variants.flatMap(items=>completeAllocation(p,courses,items,offerings)),known);
 }
 function completeAllocation(p,courses,base,offerings){
+ const known=new Map(courses.map(c=>[code(c),c]));
  const selected=new Set(base.map(x=>x.code)),calc=C.calculate({...p,items:base},courses),target=p.conditional?36:41;
- const pool=courses.filter(c=>!selected.has(code(c))&&!p.preferences.excluded.includes(code(c))&&recommendationEligible(c)&&'GHIJ'.includes(group(c))&&Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,c,offerings,n)&&T.offering(p,c,n,offerings).state!=='conflict'))
+ const baseFamilies=new Set(base.filter(x=>!x.custom).map(x=>known.get(x.code)?.j_constraints?.recognition_family).filter(Boolean)),passedCodes=new Set(base.filter(x=>x.status==='passed').map(x=>x.code));
+ const pool=courses.filter(c=>!selected.has(code(c))&&!p.preferences.excluded.includes(code(c))&&recommendationEligible(c)&&(!c.j_constraints?.recognition_family||!baseFamilies.has(c.j_constraints.recognition_family))&&!(c.j_constraints?.incompatible_with||[]).some(x=>passedCodes.has(x))&&'GHIJ'.includes(group(c))&&Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,c,offerings,n)&&T.offering(p,c,n,offerings).state!=='conflict'))
   .flatMap(c=>(c.allowed_groups||[group(c)]).map(k=>({...c,allocation_group:k})));
  const choices={};
  for(const k of ['G','H','I','J'])choices[k]=subsets(pool.filter(c=>group(c)===k),Math.max(k==='J'?6:target,0)+10).filter(x=>x.credits+calc.totals[k]>=(k==='J'?6:5));
+ if(calc.totals.J>=6)choices.J=[{credits:0,items:[]}];
  if(Object.values(choices).some(x=>!x.length))return [];
  let combinations=[{credits:0,items:[]}];
  for(const k of ['G','H','I']){
@@ -66,8 +78,8 @@ function completeAllocation(p,courses,base,offerings){
  professionals.sort((a,b)=>a.credits-b.credits||a.items.length-b.items.length);
  choices.J.sort((a,b)=>a.credits-b.credits||a.items.length-b.items.length);
  const combos=[];
- for(const pro of professionals.slice(0,100))for(const j of choices.J.slice(0,12))combos.push({extra:pro.credits+j.credits,items:[...base,...pro.items,...j.items].map(x=>x.module_code?{code:code(x),status:'planned',semester:0,locked:false,...(x.allowed_groups?.length>1?{group:x.allocation_group}:{})}:x)});
- return combos.sort((a,b)=>a.extra-b.extra||a.items.length-b.items.length).slice(0,240);
+ for(const pro of professionals.slice(0,100))for(const j of diverse(choices.J,12,x=>shape(x.items)))combos.push({extra:pro.credits+j.credits,items:[...base,...pro.items,...j.items].map(x=>x.module_code?{code:code(x),status:'planned',semester:0,locked:false,...(x.allowed_groups?.length>1?{group:x.allocation_group}:{})}:x)});
+ return selectionShapes(combos,known);
 }
 function generate(raw,courses,offerings={},options={}){
  const p=C.validatePlan(raw,courses),known=new Map(courses.map(c=>[code(c),c])),reasons=[],warnings=[];
@@ -98,6 +110,8 @@ function generate(raw,courses,offerings={},options={}){
  for(const c of required)add(c);
  const unresolved=base.filter(x=>x.status==='planned'&&known.has(x.code)&&!recommendationEligible(known.get(x.code)));
  if(unresolved.length)return fail(`这些已选／想选课程暂不能自动安排：${unresolved.map(x=>x.code+'（'+(known.get(x.code).recommendation_note||'资料或个人条件待核实')+'）').join('、')} 已有手动记录保留。请先取消想选并从未来方案移出；确认资料、开课或个人准备后可继续使用手动看板。`);
+ const countingConflicts=C.calculate({...p,items:base},courses).countingIssues;
+ if(countingConflicts.length)return fail(countingConflicts.join(' '));
  if(!p.conditional&&used.has('ED140014'))return fail('计划含控制补修课程，但补修设置未开启。请按个人录取条件核对。');
  const noLanguage=base.filter(x=>x.status!=='passed'&&!Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,known.get(x.code)||x,offerings,n)));
  if(noLanguage.length)return fail(`这些已选／必修课程不符合授课语言：${noLanguage.map(x=>x.code).join('、')}。双语模块表示目录语言，具体班次仍须核对。`);

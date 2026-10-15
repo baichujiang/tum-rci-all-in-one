@@ -7,17 +7,19 @@ import argparse, datetime
 from handbook_fields import resolve_values
 parser=argparse.ArgumentParser(description='Fetch official RCI handbooks for the frozen 2026/27 membership snapshot; never edits recommendation decisions.')
 parser.add_argument('--output', required=True, type=Path, help='Evidence directory outside the public repository')
+parser.add_argument('--manifest', type=Path, help='Optional official membership snapshot with a modules array')
+parser.add_argument('--full', action='store_true', help='Read the full detail DTO after resolving the selected semester')
 args=parser.parse_args()
 ROOT=args.output.resolve(); ROOT.mkdir(parents=True,exist_ok=True)
 project=Path(__file__).resolve().parents[1]
 if ROOT==project or project in ROOT.parents: raise SystemExit('Evidence output must be outside the public repository')
-snapshot=json.loads((project/'data/official-professional-memberships.json').read_text())
+snapshot=json.loads((args.manifest or project/'data/official-professional-memberships.json').read_text())
 SOURCE_DATE=datetime.date.today().isoformat()
 bycode={}
 for row in snapshot['modules']:
  item={'code':row['module_code'],'title':row['name'],'credits':row['ects'],'memberships':[{'section':s,'credits':row['ects'],'node_ids':row['source_node_ids'],'source_pages':row['source_page']} for s in row['accepted_sections']],'ids':set(row['module_detail_ids'])}
  bycode[item['code']]=item
-assert len(bycode)==153, len(bycode)
+if not args.manifest: assert len(bycode)==153, len(bycode)
 
 def lang_values(el):
  if el is None: return {'value':None,'translations':{}}
@@ -42,6 +44,17 @@ def fetch(item):
   raw=path.read_bytes();record['raw_sha256']=hashlib.sha256(raw).hexdigest()
   root=E.fromstring(raw);d=root.find('.//moduleTemplateDetailDto')
   if d is None:raise RuntimeError('No moduleTemplateDetailDto in response')
+  if args.full:
+   selected=d.findtext('selectedSemesterId')
+   if not selected or not selected.isdigit():raise RuntimeError('No selected semester for full detail')
+   record.update({'selection_source_url':url,'selection_sha256':record['raw_sha256'],'selection_xml_path':str(path)})
+   url=f'https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/{id}/{selected}'
+   full_path=ROOT/(id+'.full.xml')
+   response=subprocess.run(['curl','--fail','--silent','--show-error','--location','--max-time','40','--retry','1',url,'-o',str(full_path)],capture_output=True,text=True)
+   if response.returncode:raise RuntimeError('Full detail fetch failed: '+response.stderr.strip())
+   raw=full_path.read_bytes();record.update({'source_url':url,'raw_xml_path':str(full_path),'raw_sha256':hashlib.sha256(raw).hexdigest()})
+   root=E.fromstring(raw);d=root.find('.//moduleTemplateDetailDto')
+   if d is None:raise RuntimeError('No full moduleTemplateDetailDto in response')
   record.update({'title':value(d.find('name')),'title_translations':lang_values(d.find('name')),'credits':float(d.findtext('credits/value')) if d.findtext('credits/value') else None,'credit_variation_hint':lang_values(d.find('credits/hint')),'identification':d.findtext('identification'),'response_module_id':d.findtext('id'),'selected_semester_id':d.findtext('selectedSemesterId'),'selected_semester_label':'2026W' if d.findtext('selectedSemesterId')=='207' else None,'is_fallback_active':d.findtext('isFallbackActive'),'description_id':d.findtext('nodeDescription/id'),'description_semester_id':d.findtext('nodeDescription/semesterId'),'description_status':{'key':d.findtext('nodeDescription/nodeDescriptionStatusDto/key'),'name':value(d.find('nodeDescription/nodeDescriptionStatusDto/name'))},'description_valid_from_semester':semester(d.find('validFromSemester')),'description_valid_from_field_present':d.find('validFromSemester') is not None,'links':[x.attrib for x in root.findall('.//link')]})
   fields=[]
   for field in d.findall('nodeDescription/nodeDescriptionGroupingDtos/nodeDescriptionValueDtos'):
@@ -60,7 +73,7 @@ def fetch(item):
   if record['prerequisite_status']=='present' and re.fullmatch(r'(keine\.?|keine voraussetzungen\.?|none\.?|no prerequisites\.?|no prior knowledge required\.?|there are no prerequisites\.?|es werden keine inhaltlichen voraussetzungen benötigt\.?)',raw_prereq,re.I):record['prerequisite_status']='explicit_none'
   record['identity_matches']=record['identification']==record['code'] and record['response_module_id']==id
   record['title_matches']=norm(record['title'])==norm(record['expected_title'])
-  record['credits_match_curriculum']=record['credits'] is not None and all(record['credits']==float(m['credits']) for m in record['accepted_memberships'])
+  record['credits_match_curriculum']=record['credits'] is not None and all(m['credits'] is not None and record['credits']==float(m['credits']) for m in record['accepted_memberships'])
   record['current_academic_year_selection_verified']=record['selected_semester_id']=='207' and record['is_fallback_active']=='false'
   if record['selected_semester_id']!='207':
    semester_url=next((x['href'] for x in record['links'] if x.get('name')=='availableSemesters'),None)

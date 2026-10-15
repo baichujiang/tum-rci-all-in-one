@@ -1,0 +1,322 @@
+{
+  "checked_on": "2026-10-15",
+  "scope": "Full DE/EN module evidence review, no individual admission or seat approval",
+  "humanReview": "pending",
+  "reviews": [
+    {
+      "code": "CIT443037",
+      "source_sha256": "070e3480b4fbeb036772684fadedec8c74abcd590aa7e0d0f96313998c0d1884",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "跨医学、计算机和管理的混合团队是课程组织方式；未写只限某学位、须预先组队、申请或选拔。"
+    },
+    {
+      "code": "CIT443038",
+      "source_sha256": "1c761bfcc88825cbb5e1bf7480e01cfe102b12ebc88c7ebc76b1f31f436748eb",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "论文主题与内容须在准备前与教师商定，属于本课考核安排；未写报名许可或已通过课程要求。"
+    },
+    {
+      "code": "CLA10226",
+      "source_sha256": "b7c758c1df3a60304370094fb27de3a36365515300512a13a53ee420f8150d12",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "两天的互动工作坊及后续线上活动是学习安排；无申请、预先组队或特定学位准入句。"
+    },
+    {
+      "code": "CLA11207",
+      "source_sha256": "0c5930d555f556456121fb34b819b3cb835ef539d2825d10c759ad4a356067d3",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "博物馆现场讨论与作品报告是课程和考试安排；无额外准入限制。"
+    },
+    {
+      "code": "CLA20221",
+      "source_sha256": "21a60494c9e1a76ee7d8409d8d5820b0819b702da4ff7cedaca86325edd1826c",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "展示可单人或两人完成，未要求报名时已有团队；无额外准入限制。"
+    },
+    {
+      "code": "CLA20817",
+      "source_sha256": "eb3acef691068f4a3e23baf3350fe814a619a9037addf03701e35cf93b2bdd25",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "中期任务是可改善成绩的激励，不是入课或考试报名先修；无额外准入限制。"
+    },
+    {
+      "code": "CLA21102",
+      "source_sha256": "76440094f8260ab124b7f62f6bba698f6884781c1be4df91dd42f2e3509a5463",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "文献阅读、报告和讨论属于课内学习与考核，无额外准入限制。"
+    },
+    {
+      "code": "CLA21212",
+      "source_sha256": "e2bdfac749e5fc7edb237ec9659485a0c0cd8bee84783201f44e3ff49fd90f79",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "绘画练习、个人和小组作业均为课内安排；无申请或预先组队要求。"
+    },
+    {
+      "code": "CLA31212",
+      "source_sha256": "5dd5669f12a99c2fe359b0ce9a2fb28718d7c2e7cf027c8846561cd6f610fa1e",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "绘画练习、个人和小组作业均为课内安排；无申请或预先组队要求。"
+    },
+    {
+      "code": "CLA90331",
+      "source_sha256": "1b1824a446eff7c80a356874f5116fce0714bdcc3de0afac5342e88a65329679",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "须完成自选项目，项目草案在项目管理工作坊后两周内提交；这是本模块通过条件，不是前置课程或报名申请。"
+    },
+    {
+      "code": "ED00471",
+      "source_sha256": "70347a24f6c5f3f79aec204a6247c331b75c58171ec45232bc89ce737ed4adf2",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "历史讲座系列明确可单独选读，未要求先修系列其他模块或特定学位。"
+    },
+    {
+      "code": "ED00472",
+      "source_sha256": "f84940f06418dcc1de159a411182470b35ab64627a97f522a5bfc3542dfa72d9",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "历史讲座系列明确可单独选读，未要求先修系列其他模块或特定学位。"
+    },
+    {
+      "code": "ED00473",
+      "source_sha256": "3c9c44e0c850890c9457bd1aa7bf0a3a94c95808f9a213f88af79738736c8f3c",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "历史讲座系列明确可单独选读，未要求先修系列其他模块或特定学位。"
+    },
+    {
+      "code": "ED0179",
+      "source_sha256": "a4fdd04430d20dfcfe13bffab38c57cffd1744b220b42497d81e922098f95b0e",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "在线作业参与要求针对本课成绩及口试补考，不是参加本模块的先修要求；Bachelor 层次本身不是只限本科生。"
+    },
+    {
+      "code": "ED0312",
+      "source_sha256": "3b70e07a351ae22c4ce7ba25aa549acef6ed27a0903a257481816a57c1d69ab1",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "博物馆中的个人或小组项目是本课教学安排，无额外准入限制。"
+    },
+    {
+      "code": "ED0341",
+      "source_sha256": "6033cd36154a39bf8bbcf6af93b59cea96254e18a27fff541843721eddb2fa56",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "每周阅读和课堂展示是课程内要求；Master 层次未限定某个硕士学位。"
+    },
+    {
+      "code": "ED120117",
+      "source_sha256": "64cc64002798675812ceed7b2a15007368fb6b753bf03ba5eb0eee2023d55f66",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "二至三人的跨学科团队由课程组织，未要求申请时自带团队或某特定专业。"
+    },
+    {
+      "code": "ED150040",
+      "source_sha256": "ad2de69e657d5501606328f3e119fe96f067a0346c72b14f80a3f7aec897bf4e",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "明确面向不同学科开放，跨学校组队、车辆编程练习是学习内容，未要求既有编程知识或申请选拔。"
+    },
+    {
+      "code": "EI04015",
+      "source_sha256": "3bb8f8b3eb5b6d8b75c48a63f6235c35791dbb66cb82afd60ff81d7a50d12f7e",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "工程师和科学家属于课程主题和受众描述，无只限特定学位、个人筛选或先修要求。"
+    },
+    {
+      "code": "IN9006",
+      "source_sha256": "c16b12330bd0b493aa6035823c24fcdad76c04991b7ef544f587faec3d202c2b",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "三至四人的团队在课程中组成，无预先组队或创业项目准入要求。"
+    },
+    {
+      "code": "IN9011",
+      "source_sha256": "4645ed2fbb6fdcd4bcb3ad2784d7b10648a3fc1df2adaf7ca045bf356faf89bf",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "工作坊、小组工作与案例学习是课内教学方式，无额外准入限制。"
+    },
+    {
+      "code": "IN9017",
+      "source_sha256": "fde754c41705df3ffdd859d70fc5683aa57aaf6d0e22a73bc1dae8365e3363ca",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "小组商业创意在课程中开发，无需已有公司或预先组队；Bachelor 层次不等同仅限本科生。"
+    },
+    {
+      "code": "POL70056",
+      "source_sha256": "c233c6885793d415489e55b93f7725c12a793cdbb10ab6d42fccf256287e002d",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "理论单元、案例和三篇论文是本课学习考核；未要求先修伦理课程或特定学位。"
+    },
+    {
+      "code": "SOT10069",
+      "source_sha256": "e751c44cdc924a941dc863624637fae4c5c776ea20f50cddfefb21af32e82f2a",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "心理学入门及 Moodle 学习活动未附带特定学位、职业身份或先修要求。"
+    },
+    {
+      "code": "SOT10084",
+      "source_sha256": "8c78c688028ee4f56ff6077eba9f347414fefd109032da7bf921e246a965f926",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "跨学科小组制作游戏原型属于课程活动；面向青少年的游戏使用对象不是学生准入人群。"
+    },
+    {
+      "code": "SOT53404",
+      "source_sha256": "591e6a74b8cbce6e31dccc9bd1074d8940c65d1aa0f808f75b121d12455f91f1",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "内容明确面向 TUM 各部分的学生，考试资源许可属于考试安排，无额外准入限制。"
+    },
+    {
+      "code": "SOT53406",
+      "source_sha256": "2eef1c27bc1d0d592812b32dfade01daf67c2a8b405470fcc1ca7b7cc01f54ff",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "定期到课、预读和参与讨论是课程内要求，不是报名先修；annotation 明确本课是 SOT86076 的讲座子集。"
+    },
+    {
+      "code": "SOT82531",
+      "source_sha256": "cb622de31276d501bdbd020b8133bad234869c93be55b6793e55b0590a648a2d",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "法律方法和基本概念在课程中教授，无必须已修法律或技术模块的句子。"
+    },
+    {
+      "code": "SOT82533",
+      "source_sha256": "baaeae32daea050f57b16655535bcf855acc06dadd626c42b15feb6f9ca05253",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "研讨题目在开课时分配，导师辅导属于本课支持；无申请、许可或已通过课程要求。"
+    },
+    {
+      "code": "SOT86060",
+      "source_sha256": "dfa9a4cd6c85f6d7ece6053e74fc1e87928783dbd7b1f20ea3908edac117386e",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "硕士讲座与笔试不附带特定学位或申请准入；与六学分版内容重叠应按家族避免重复计分。"
+    },
+    {
+      "code": "SOT86061",
+      "source_sha256": "21e8bef988ba3b4db6189e962119397abb7cb989cc8c4c6d89ee846bb8b40d5d",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "案例作业和展示是本课考核；无申请或先修要求，与三学分版内容重叠应避免共同计分。"
+    },
+    {
+      "code": "SOT86062",
+      "source_sha256": "584eb53fe575f958af09cfe35d3e216306175f7d9abecb3d31faeeb907c0a200",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "硕士讲座与笔试不附带特定学位或申请准入；与六学分版内容重叠应按家族避免重复计分。"
+    },
+    {
+      "code": "SOT86063",
+      "source_sha256": "78b4bc772b0471c028b4ef62abbdee9f8c9ac29485bc3567f5e8c098608167cc",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "展示带来的成绩加分不构成入课要求；无申请或先修要求，与三学分版应避免共同计分。"
+    },
+    {
+      "code": "SOT86066",
+      "source_sha256": "3676a50946a180d2743778ef69a3b7df66645af816404ba598883cd5dc62cf66",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "德英字段一致，机器学习与编程只是推荐且明确非硬性要求；完整课程说明未发现额外申请或限定学位。"
+    },
+    {
+      "code": "SOT86072",
+      "source_sha256": "b456e55a071faf2eefc424589b23dbb7d0a1ca68f4de66b9e0cb3fdf5df882e9",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "Application Project 表示应用项目；与公共部门协作和跨学科团队是课内组织，无报名申请或特定专业限制。"
+    },
+    {
+      "code": "SOT86076",
+      "source_sha256": "48b076811869115b41b9b6c025c1687d5a924415ce4681bfb8d00bf7d14e8b81",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "定期到课、预读及小组数据工作是本课安排，无额外准入限制；与 SOT53406 存在明确子集重叠。"
+    },
+    {
+      "code": "SOT86082",
+      "source_sha256": "c93505602148c9f151a69ecb9a516b2d80800b63e2e385156a006e7310ca72c2",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "国际治理讲座和辅导课未附带特定学位、申请或先修要求。"
+    },
+    {
+      "code": "SOT86083",
+      "source_sha256": "8ca856027f42636d98be9fdb4c8dfe61cd2c6c87fced1c73c07372321dbde65d",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "开公司概念和法律分析在课程内分组练习，无需已有企业、预先团队或申请。"
+    },
+    {
+      "code": "SOT86085",
+      "source_sha256": "a746110f39ba80fe962135c72d8dd70618d22693d39e50a4c9813f1e9d1cf0d5",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "明确为跨学科受众设计，小组数据作业属于课程内考核，无额外准入限制。"
+    },
+    {
+      "code": "SOT86087",
+      "source_sha256": "4abdd2e1d9086f75e81c8f80f94b8beedeeb897cc99356609dc731dc80db7262",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "讲座与辅导课、案例和讨论未附带特定学位、申请或先修要求。"
+    },
+    {
+      "code": "SOT86402",
+      "source_sha256": "045f2215fd651d59dde025b9b86bd658bee0736d82ce92d626b61f0960aa623c",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "明确面向不同学术背景的硕士生，不限定某一学位；无额外准入限制。"
+    },
+    {
+      "code": "SOT86611",
+      "source_sha256": "2ba433ee161d4b5303fedd07376b1c7af0d7c8a019efe13260c5a86fec216d2b",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "展示与报告是本课 portfolio 考核；concentration area 是授课内容背景，未限定选课专业或申请。"
+    },
+    {
+      "code": "SOT87318",
+      "source_sha256": "53d4688242c7c28c5ec635ca887aa69227a0069b4812e4003a14687639eb7d22",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "研究戏剧、定性研究及小组展示是在本课学习和完成的任务，无预先技能、团队或申请要求。"
+    },
+    {
+      "code": "SZ1102",
+      "source_sha256": "ecb064bf59a29e91e6e589ae4d636d2fc8d0734ecb19aa2877a4f7a96362a37e",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "德英手册均明确原则上向所有TUM学生开放；EuroTeQ是目标群而非准入限制，属于跨文化沟通课，不套英语语言学习C2门槛。"
+    },
+    {
+      "code": "WI001056_1",
+      "source_sha256": "271d83f1baf4400e0ab79f212aa8121bf8d2c40a992c63ff9e17cf1f73e41e64",
+      "auto_candidate_supported": true,
+      "bilingual_checked": true,
+      "reason_cn": "微观宏观经济学入门讲座、练习与考试均未附带特定学位或先修要求。"
+    }
+  ]
+}

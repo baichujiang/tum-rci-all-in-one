@@ -59,6 +59,7 @@
       if (x.locked !== undefined && typeof x.locked !== 'boolean') throw new Error('固定课程设置无效');
       const extra = {locked:x.locked ?? false};
       if (known.has(code) && !(x.custom===true && 'GHIJ'.includes(known.get(code).section_2025?.[0]))) {
+        if(!Number.isFinite(Number(known.get(code).ects))||Number(known.get(code).ects)<=0)throw new Error(code+' 的官方目录学分尚未核实；请先核对学校认定，再以自录选修记录实际学分。');
         const groups=known.get(code).allowed_groups;
         if(groups?.length>1&&x.group!==undefined){if(!groups.includes(x.group))throw new Error('此模块不能计入所选领域');extra.group=x.group;}
         return {code, status:x.status, semester, ...extra};
@@ -71,7 +72,7 @@
     if (!preferences || typeof preferences !== 'object' || Array.isArray(preferences)) throw new Error('选课偏好无效');
     const codes = key => {
       const list = preferences[key] ?? [];
-      if (!Array.isArray(list) || list.length > 250 || list.some(c => typeof c !== 'string' || !known.has(c) && !used.has(c))) throw new Error('偏好中有未知课程');
+      if (!Array.isArray(list) || list.length > Math.max(250,courses.length) || list.some(c => typeof c !== 'string' || !known.has(c) && !used.has(c))) throw new Error('偏好中有未知课程');
       return [...new Set(list)];
     };
     const desired=codes('desired'), excluded=codes('excluded');
@@ -155,7 +156,8 @@
     plan = validatePlan(plan, courses);
     const known = new Map(courses.map(c => [c.module_code, c]));
     const totals = {core:0, G:0, H:0, I:0, J:0, thesis:0, K:0};
-    let raw = 0, custom = 0;
+    let raw = 0, custom = 0, languageCredits = 0;
+    const families=new Map(),languageLevels=new Map(),languageCourses=new Map(),countingIssues=[];
     const chosen = [];
     for (const item of plan.items) {
       if (onlyPassed && item.status !== 'passed') continue;
@@ -166,7 +168,30 @@
       if (item.custom) custom++;
       if ('ABCDE'.includes(group)) totals.core += ects;
       else if (group === 'F') totals.thesis += ects;
-      else if (group in totals) totals[group] += ects;
+      else if (group in totals) {
+        const family=course?.j_constraints?.recognition_family;
+        if(group==='J'&&family){
+          const previous=families.get(family);
+          if(previous){totals.J+=Math.max(0,ects-previous.ects);countingIssues.push(course.j_constraints.recognition_family_kind==='wtg_same_title'?'J 同一课程的不同学分版本只能计入一次：'+previous.code+'、'+item.code+'；请保留一门计入。':'J 已知内容重叠：'+previous.code+'、'+item.code+'；本模型暂只计入一种，实际认可需学校核对。');families.set(family,{code:previous.code,ects:Math.max(previous.ects,ects)});}
+          else {totals.J+=ects;families.set(family,{code:item.code,ects});}
+        }else totals[group] += ects;
+        if(group==='J'&&course?.j_constraints?.is_language_course){
+          languageCredits+=ects;
+          const coverage=course.j_constraints.language_level_coverage||[],target=course.j_constraints.language_target;
+          if(coverage.length){if(!languageCourses.has(target))languageCourses.set(target,[]);languageCourses.get(target).push({ects,coverage});}
+          for(const level of coverage){const key=target+':'+level,previous=languageLevels.get(key);if(previous&&previous!==item.code)countingIssues.push('J 语言课程级别重叠：'+previous+'、'+item.code+'；A1至B2的重叠级别不能重复计入，本模型按不重叠组合计分，请核对个人认可。');else languageLevels.set(key,item.code);}
+        }
+      }
+    }
+    for(const entries of languageCourses.values()){
+      const levels=[...new Set(entries.flatMap(x=>x.coverage))],bits=new Map(levels.map((x,i)=>[x,1<<i]));let sums=new Map([[0,0]]);
+      for(const entry of entries){const mask=entry.coverage.reduce((n,x)=>n|bits.get(x),0),next=new Map(sums);for(const [used,ects] of sums)if(!(used&mask))next.set(used|mask,Math.max(next.get(used|mask)||0,ects+entry.ects));sums=next;}
+      const duplicated=entries.reduce((n,x)=>n+x.ects,0)-Math.max(...sums.values());totals.J-=duplicated;languageCredits-=duplicated;
+    }
+    if(languageCredits>6){totals.J-=languageCredits-6;countingIssues.push('J 语言课程合计最多计入 6 ECTS；不重叠语言课共 '+languageCredits+' ECTS，超出部分未计入。');}
+    for(const item of plan.items.filter(x=>(!onlyPassed||x.status==='passed')&&!x.custom))for(const code of known.get(item.code)?.j_constraints?.incompatible_with||[]){
+      const previous=plan.items.find(x=>x.code===code&&x.status==='passed');
+      if(previous&&(item.status==='planned'||!item.semester||!previous.semester||previous.semester<=item.semester))countingIssues.push(item.code+' 不得在已通过 '+code+' 后再选；请核对实际通过顺序与认可，原记录保留。');
     }
     const target = plan.conditional && amended(plan.cohort) ? 36 : 41;
     const professional = totals.G + totals.H + totals.I;
@@ -177,13 +202,14 @@
     if (plan.conditional && amended(plan.cohort)) buckets.push(['控制理论补修 K', totals.K, 5]);
     const allocated = buckets.reduce((n, [, value, required]) => n + Math.min(value, required), 0);
     const gaps = buckets.filter(([, value, required]) => value < required).map(([label, value, required]) => `${label}还差 ${required - value} ECTS`);
+    gaps.push(...new Set(countingIssues));
     for (const group of ['G', 'H', 'I']) if (totals[group] < 5) gaps.push(`${group} 领域最低 5 ECTS，还差 ${5 - totals[group]}`);
     const supported = cohorts.includes(plan.cohort);
     if (!supported) gaps.unshift('未选择受支持的入学批次：不作规则达成判断');
     if(!plan.conditionalConfirmed)gaps.unshift('个人录取补修条件尚未确认：不作规则达成判断');
     if(plan.conditional&&!amended(plan.cohort))gaps.unshift('2024 原规则批次的个人入学附加考试需单独核对，不能套用 2025 K 学分减免');
     if (!plan.conditional && totals.K > 0) gaps.push('ED140014 未按补修计入：请核对个人录取要求');
-    return {raw, allocated, buckets, totals, professional, gaps, supported, custom,
+    return {raw, allocated, buckets, totals, professional, gaps, supported, custom,countingIssues:[...new Set(countingIssues)],
       complete: supported && gaps.length === 0, chosen};
   }
   // Escaped Markdown subset for our own guides only. Never execute raw HTML.

@@ -1,27 +1,27 @@
 {
-  "checked_on": "2026-10-14",
+  "checked_on": "2026-10-15",
   "curriculum_version": "20241",
   "curriculum_id": 5271,
   "academic_year": "2026/27",
   "study_year_id": 1623,
   "source_page_count": 14,
   "source_tree_rows": 4097,
-  "source_scope": "Fixed-ECTS Modulknoten under G/H/I/J, excluding Anerkennung recognition placeholders; not all core/thesis/conditional/recognition/topic nodes, not current lecture offerings or personal eligibility.",
-  "category_memberships": 586,
-  "distinct_module_codes": 581,
-  "distinct_module_handbook_ids": 581,
+  "source_scope": "All actual G/H/I/J module identities under current public tree, including one J module with missing curriculum ECTS; recognition placeholders excluded. Not personal eligibility or current lecture registration.",
+  "category_memberships": 587,
+  "distinct_module_codes": 582,
+  "distinct_module_handbook_ids": 582,
   "category_counts": {
     "G": 70,
     "H": 27,
     "I": 61,
-    "J": 428
+    "J": 429
   },
   "dataset_legal_rows": 35,
-  "dataset_additional_rows": 140,
-  "dataset_distinct_module_codes": 175,
-  "dataset_matching_full_tree_module_codes": 170,
+  "dataset_additional_rows": 560,
+  "dataset_distinct_module_codes": 595,
+  "dataset_matching_full_tree_module_codes": 582,
   "dataset_matching_ects_mismatches": 0,
-  "new_records_matching_current_tree": 140,
+  "new_records_matching_current_tree": 560,
   "multi_category_codes": {
     "IN2060": [
       "G Computation",
@@ -56,13 +56,20 @@
       ]
     },
     "J": {
-      "official_distinct_modules": 428,
-      "dataset_distinct_modules": 11,
-      "matching_distinct_modules": 9,
-      "omitted_distinct_modules": 419,
+      "official_distinct_modules": 429,
+      "dataset_distinct_modules": 431,
+      "matching_distinct_modules": 429,
+      "omitted_distinct_modules": 0,
       "statutory_only_codes": [
         "IN9003",
         "WI000159"
+      ],
+      "official_fixed_credit_modules": 428,
+      "missing_curriculum_ects_codes": [
+        "CLA31307"
+      ],
+      "handbook_ects_conflict_codes": [
+        "SOT10082"
       ]
     }
   },
@@ -74,7 +81,7 @@
   ],
   "additional_professional_modules": 106,
   "verification": {
-    "scope": "All 153 distinct current professional G/H/I modules; static annex records outside current tree remain unverified and disabled. J expansion is not included.",
+    "scope": "All 153 distinct current professional G/H/I modules. J verification is reported separately under j_verification; historical annex-only records remain disabled.",
     "checked_on": "2026-10-15",
     "fully_verified": 139,
     "pending": 14,
@@ -212,5 +219,21 @@
       "fresh_full_module_pages": 15,
       "dated_offering_does_not_bypass_gate": true
     }
+  },
+  "fixed_credit_category_memberships": 586,
+  "dataset_current_file_rows": 140,
+  "dataset_interdisciplinary_added_rows": 420,
+  "j_verification": {
+    "checked_on": "2026-10-15",
+    "reviewed_modules": 429,
+    "new_fixed_credit_modules": 419,
+    "new_missing_credit_modules": 1,
+    "fully_verified_metadata": 280,
+    "pending_metadata": 149,
+    "automatic_recommendation_eligible": 45,
+    "not_automatically_recommended": 384,
+    "language_modules": 156,
+    "full_current_handbooks": 429,
+    "recognition_family_count": 32
   }
 }

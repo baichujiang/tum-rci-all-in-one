@@ -37,6 +37,24 @@ module.exports=function loadCourses(root=path.resolve(__dirname,'..')){
   c.allowed_groups=m.accepted_sections.map(x=>x[0]);
   Object.assign(c,{current_term:v.term,current_language:v.language,verification:v,prerequisites:v.prerequisites,automatic_recommendation_eligible:v.automatic_recommendation_eligible===true,recommendation_note:v.recommendation_note,current_metadata_source:v.source||c.current_metadata_source,current_catalog_status:fields.every(k=>v.fields[k]==='verified')?'verified':'needs_review'});
  }
+ const jSource=JSON.parse(read('data/official-interdisciplinary-memberships.json'));
+ const jEvidence=JSON.parse(read('data/interdisciplinary-verification.json'));
+ const jDecisions=JSON.parse(read('data/interdisciplinary-review-decisions.json'));
+ const jRuleIds=new Set(JSON.parse(read('data/j-rules.json')).rules.map(r=>r.id));
+ for(const m of jSource.modules){
+  const v=jEvidence.courses[m.module_code],fields=['identity','ects','groups','term','language','prerequisites','eligibility','counting'];
+  if(!v||fields.some(k=>!['verified','pending'].includes(v.fields?.[k]))||!C.safeURL(v.source)||!C.safeURL(v.source_api)||!/^[a-f0-9]{64}$/.test(v.source_sha256||''))throw Error('Invalid J module evidence: '+m.module_code);
+  if(v.automatic_recommendation_eligible&&(fields.some(k=>v.fields[k]!=='verified')||v.current_academic_year_selection_verified!==true||v.eligibility?.requires_confirmation||v.eligibility?.reviewed_source_sha256!==v.source_sha256||v.j_constraints?.is_language_course||!['WiSe','SoSe','WiSe/SoSe'].includes(v.term)||!['none','recommended'].includes(v.prerequisites?.kind)))throw Error('Unsupported J recommendation: '+m.module_code);
+  const decision=jDecisions.reviews.find(d=>d.code===m.module_code);
+  if(v.automatic_recommendation_eligible&&(!decision?.auto_candidate_supported||!decision.bilingual_checked||decision.source_sha256!==v.source_sha256))throw Error('J recommendation lacks matching reviewed source: '+m.module_code);
+  if(v.curriculum_ects!==m.ects||v.fields.ects==='verified'&&v.handbook_ects!==m.ects||!v.j_constraints?.policy_rule_ids?.every(id=>jRuleIds.has(id)))throw Error('J credits or rule binding invalid: '+m.module_code);
+  if(!m.module_detail_ids?.length||m.module_detail_ids.length!==1||!m.module_detail_urls?.every(C.safeURL)||!v.review_reasons_cn?.length||!v.counting_sources?.length||v.counting_sources.some(s=>!C.safeURL(s.url)))throw Error('Incomplete J source binding: '+m.module_code);
+  const ects=m.ects===null?'待核实':String(m.ects);
+  const patch={ects,current_term:v.term,current_language:v.language,allowed_groups:['J'],verification:v,prerequisites:v.prerequisites,j_constraints:v.j_constraints,automatic_recommendation_eligible:v.automatic_recommendation_eligible===true,recommendation_note:v.recommendation_note,current_metadata_source:v.source,current_catalog_status:fields.every(k=>v.fields[k]==='verified')?'verified':'needs_review',offering_url:m.current_offering_urls?.[0]};
+  const c=courses.find(x=>x.module_code===m.module_code);
+  if(c){if(m.ects!==null&&Number(c.ects)!==m.ects)throw Error('Existing J curriculum ECTS changed: '+m.module_code);Object.assign(c,patch);}
+  else courses.push({module_code:m.module_code,module_name_legal_2025:m.name,section_2025:'J Support Electives',term_legal_annex:v.term,language_legal_annex:v.language,type:'扩展选修',notes_cn:'官方公开 RCI 20241、2026/27 学年 J 类模块。列入目录不等于已满足个人资格、获得名额或学校认可。',rule_cohort:'2024夏季起 · 请核对个人TUMonline归类',source_regulation:v.source,last_reviewed:v.checked_on,catalog_source:'current',...patch});
+ }
  if(new Set(courses.map(c=>c.module_code)).size!==courses.length)throw Error('Duplicate module code in current catalog');
  return courses;
 };

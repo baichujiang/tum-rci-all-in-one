@@ -1,0 +1,804 @@
+{
+  "checked_on": "2026-10-15",
+  "academic_year": "2026/27",
+  "curriculum_version": "20241",
+  "humanReview": "pending",
+  "sources": [
+    {
+      "id": "RCI",
+      "title": "RCI官方学习计划与J说明",
+      "url": "https://www.cit.tum.de/cit/studium/studiengaenge/master-robotics-cognition-intelligence/studienplaene/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "CIT",
+      "title": "CIT跨学科基础：资格与计入",
+      "url": "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "CIT_EN",
+      "title": "CIT英文说明：语言学分上限",
+      "url": "https://www.cit.tum.de/en/cit/studies/students/support-electives/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "RECOGNITION",
+      "title": "CIT成绩认可说明",
+      "url": "https://www.cit.tum.de/cit/studium/studierende/pruefungsangelegenheiten-module/informatik/anerkennungen/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "SZ_REGISTER",
+      "title": "语言中心报名条件",
+      "url": "https://www.sprachenzentrum.tum.de/sz/anmeldung/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "SZ_FAQ",
+      "title": "语言中心常见问题",
+      "url": "https://www.sprachenzentrum.tum.de/sz/faq/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "SZ_ENGLISH",
+      "title": "英语课程与分班",
+      "url": "https://www.sprachenzentrum.tum.de/sz/sprachen/englisch/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "SZ_ICC",
+      "title": "语言中心跨文化沟通",
+      "url": "https://www.sprachenzentrum.tum.de/sz/intercultural-communication/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "WTG",
+      "title": "WTG教学项目",
+      "url": "https://www.sot.tum.de/wtg/startseite/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "WTG_CATALOG",
+      "title": "WTG课程目录",
+      "url": "https://www.sot.tum.de/wtg/lehrveranstaltungen/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "WTG_REGISTER",
+      "title": "WTG报名程序",
+      "url": "https://www.sot.tum.de/wtg/lehrveranstaltungen/infos-zur-anmeldung/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "WTG_FAQ",
+      "title": "WTG参与及学分",
+      "url": "https://www.sot.tum.de/wtg/faq4studis/",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "PROJECTS",
+      "title": "TUM项目周",
+      "url": "https://www.tum.de/studium/studienangebot/key-skill-programs/projektwochen",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "FPSO",
+      "title": "RCI现行FPSO",
+      "url": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P008780294",
+      "checked_on": "2026-10-15"
+    },
+    {
+      "id": "APSO",
+      "title": "现行APSO：重复计入",
+      "url": "https://www.tum.de/studium/im-studium/das-studium-organisieren/satzungen-ordnungen?tx_in2tumstatutedatabase_pi1%5Baction%5D=download&tx_in2tumstatutedatabase_pi1%5Bcontroller%5D=Statute&tx_in2tumstatutedatabase_pi1%5BfileId%5D=P009252245",
+      "checked_on": "2026-10-15"
+    }
+  ],
+  "rules": [
+    {
+      "id": "J_MIN_6",
+      "scope": "degree",
+      "summary_zh": "J至少6ECTS；未发现J整体最高6ECTS的规则。",
+      "source_ids": [
+        "FPSO",
+        "RCI"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "numeric",
+      "minimum_ects": 6,
+      "maximum_ects": null
+    },
+    {
+      "id": "J_NOT_PROFESSIONAL_SUBSTITUTE",
+      "scope": "degree",
+      "summary_zh": "J多修不能据此减少GHI法定最低41或条件36；规划桶封顶6不是法律最高值。",
+      "source_ids": [
+        "FPSO"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "numeric"
+    },
+    {
+      "id": "J_MEMBERSHIP",
+      "scope": "all_modules",
+      "summary_zh": "须有适用RCI目录J归属或官方明确允许的渠道；跨学院本身不构成认可依据。",
+      "source_ids": [
+        "RCI",
+        "CIT"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "source_gate"
+    },
+    {
+      "id": "J_ONE_MODULE_ONCE",
+      "scope": "all_modules",
+      "summary_zh": "同一模块在本专业仅计一次；同码多分支去重。",
+      "source_ids": [
+        "APSO"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "exact_code"
+    },
+    {
+      "id": "J_BACHELOR_COUNTED",
+      "scope": "all_modules",
+      "summary_zh": "本科已计入的二选一/选修模块不可再选入硕士。",
+      "source_ids": [
+        "APSO",
+        "RECOGNITION"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "personal_confirmation",
+      "not_a_blanket_ban_on_all_prior_mandatory_achievement_recognition": true
+    },
+    {
+      "id": "J_SIMILARITY_REVIEW",
+      "scope": "all_modules",
+      "summary_zh": "专业相近或标题相似不能直接判为违法重复；明确等价、替代和实际重复计入需个人/学校核对。",
+      "source_ids": [
+        "APSO",
+        "CIT"
+      ],
+      "verification": "conservative product guard; not a new legal conclusion",
+      "enforcement": "engineering_guard",
+      "automatic_degree_name_blacklist": false
+    },
+    {
+      "id": "LANG_PROVIDER",
+      "scope": "language_courses",
+      "summary_zh": "语言课须为TUM语言中心或交换期间TUM伙伴高校课程。",
+      "source_ids": [
+        "CIT"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "source_gate"
+    },
+    {
+      "id": "LANG_MAX_6",
+      "scope": "language_courses",
+      "summary_zh": "每个学位语言课最多计6ECTS，含专业语言课。",
+      "source_ids": [
+        "CIT_EN"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "numeric",
+      "maximum_ects": 6
+    },
+    {
+      "id": "LANG_DE_RCI_C12",
+      "scope": "german_language_courses",
+      "summary_zh": "RCI德语最低C1.2，覆盖一般Informatik低等级允许。",
+      "source_ids": [
+        "RCI"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "level_gate",
+      "minimum_level": "C1.2"
+    },
+    {
+      "id": "LANG_DE_PERSONAL",
+      "scope": "german_language_courses",
+      "summary_zh": "德语须非母语且本科不是德语授课；个人资料不能由国籍单独推断。",
+      "source_ids": [
+        "CIT"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "personal_confirmation"
+    },
+    {
+      "id": "LANG_EN_C2",
+      "scope": "english_language_courses",
+      "summary_zh": "硕士英语须C2，C1–C2课程明确不能计入。",
+      "source_ids": [
+        "CIT"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "level_gate",
+      "accepted_level": "C2",
+      "explicitly_excluded_ranges": [
+        "C1-C2"
+      ]
+    },
+    {
+      "id": "LANG_OTHER_NATIVE",
+      "scope": "other_language_courses",
+      "summary_zh": "其他语言可选各级，但不得为本人母语。",
+      "source_ids": [
+        "CIT"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "personal_confirmation"
+    },
+    {
+      "id": "LANG_LOW_LEVEL_OVERLAP",
+      "scope": "language_courses",
+      "summary_zh": "A1至B2同语言重叠级别仅计一次；整级覆盖半级。",
+      "source_ids": [
+        "CIT"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "level_coverage"
+    },
+    {
+      "id": "LANG_ADVANCED_DIFFERENT_FOCUS",
+      "scope": "language_courses",
+      "summary_zh": "C1起同级可计不同内容课程；这不取消RCI德语/硕士英语门槛。",
+      "source_ids": [
+        "CIT"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "content_review"
+    },
+    {
+      "id": "LANG_PERSONAL_ELIGIBILITY",
+      "scope": "language_courses",
+      "summary_zh": "未核对个人适用、分班、历史语言计分、课程条件时不自动补入；英语母语一律禁认未找到明确通用条文。",
+      "source_ids": [
+        "CIT",
+        "SZ_REGISTER"
+      ],
+      "verification": "conservative product guard; not a new legal conclusion",
+      "enforcement": "engineering_guard"
+    },
+    {
+      "id": "WTG_CREDIT_BEARING",
+      "scope": "wtg_modules",
+      "summary_zh": "WTG可计带ECTS且可在本学位修读的课；无ECTS参加证不能当学分。",
+      "source_ids": [
+        "CIT",
+        "WTG_FAQ"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "source_gate"
+    },
+    {
+      "id": "WTG_SAME_TITLE",
+      "scope": "wtg_modules",
+      "summary_zh": "同名仅学分数不同的版本最多计一种；不要求必须评成绩等级；正式合格且授ECTS的不评分课程也可认可。",
+      "source_ids": [
+        "CIT"
+      ],
+      "verification": "verified official rule",
+      "enforcement": "family_max_one"
+    },
+    {
+      "id": "J_MODULE_CONDITIONS",
+      "scope": "all_modules",
+      "summary_zh": "推荐背景不能改写成必须先通过某考试；明确申请、学位、导师、选拔等须分别核对。",
+      "source_ids": [
+        "SZ_REGISTER",
+        "WTG_REGISTER",
+        "PROJECTS"
+      ],
+      "verification": "conservative product guard; not a new legal conclusion",
+      "enforcement": "engineering_guard"
+    },
+    {
+      "id": "J_SOURCE_COMPLETENESS",
+      "scope": "all_modules",
+      "summary_zh": "身份/当前学年/学分/分类/周期/双语条件有未知、冲突或不定期，不自动补入。",
+      "source_ids": [
+        "RCI"
+      ],
+      "verification": "conservative product guard; not a new legal conclusion",
+      "enforcement": "engineering_guard"
+    },
+    {
+      "id": "J_SEAT_NOT_GUARANTEED",
+      "scope": "all_modules",
+      "summary_zh": "认可资格与获位分开；名额未知时只可作有条件候选，正式选拔/导师条件未确认者不自动补入。",
+      "source_ids": [
+        "SZ_REGISTER",
+        "WTG_REGISTER",
+        "WTG_FAQ"
+      ],
+      "verification": "conservative product guard; not a new legal conclusion",
+      "enforcement": "engineering_guard"
+    },
+    {
+      "id": "J_RECOGNIZED_PASSED_PRESERVE",
+      "scope": "all_modules",
+      "summary_zh": "保留已获认可的已修/自录记录；新门槛控制未来补入，不静默删除历史。",
+      "source_ids": [],
+      "verification": "conservative product guard; not a new legal conclusion",
+      "enforcement": "engineering_guard"
+    },
+    {
+      "id": "J_LANGUAGE_CLASSIFICATION",
+      "scope": "all_modules",
+      "summary_zh": "语言学习目标与授课语言分开；SZ前缀、英文授课或项目周分支不能单独决定语言资格。",
+      "source_ids": [
+        "SZ_ICC"
+      ],
+      "verification": "conservative product guard; not a new legal conclusion",
+      "enforcement": "engineering_guard"
+    }
+  ],
+  "minimum_ects": 6,
+  "overall_maximum_ects": null,
+  "language_maximum_ects": 6,
+  "recognition_families": [
+    {
+      "id": "wtg-cla10121",
+      "codes": [
+        "CLA10121",
+        "CLA20121"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Leitbild Nachhaltigkeit",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/676154/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/676157/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla10222",
+      "codes": [
+        "CLA10222",
+        "CLA20222"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Strategien für die Zukunft",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/679824/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/679848/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla10231",
+      "codes": [
+        "CLA10231",
+        "CLA20231"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Mensch und Menschenbilder",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1253060/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/828865/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla10234",
+      "codes": [
+        "CLA10234",
+        "CLA20234"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Menschenrechte in der Gegenwart",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/811968/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/811971/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla10563",
+      "codes": [
+        "CLA10563",
+        "CLA20563"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Was hält eine Gesellschaft zusammen?",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/800872/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/800875/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20201",
+      "codes": [
+        "CLA20201",
+        "CLA30201"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Komplexe Systeme",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/676106/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/676109/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20202",
+      "codes": [
+        "CLA20202",
+        "CLA30202",
+        "CLA40202"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Geist - Gehirn - Maschine",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675718/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675721/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1063322/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20207",
+      "codes": [
+        "CLA20207",
+        "CLA30207"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Grundprobleme der Wissenschaftstheorie",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675724/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/663809/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20210",
+      "codes": [
+        "CLA20210",
+        "CLA30210"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Technikphilosophie",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/679950/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/679953/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20221",
+      "codes": [
+        "CLA20221",
+        "CLA30221"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Handeln trotz Nichtwissen",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675730/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675733/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20230",
+      "codes": [
+        "CLA20230",
+        "CLA30230"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Ethik und Verantwortung",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675587/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675590/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20267",
+      "codes": [
+        "CLA20267",
+        "CLA30267"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Kommunikation und Präsentation",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/676097/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/676100/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20322",
+      "codes": [
+        "CLA20322",
+        "CLA30322"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Zufall, Glück und Katastrophen",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/693315/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/693318/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20333",
+      "codes": [
+        "CLA20333",
+        "CLA30333"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Neue Medien - politische, soziale und kulturelle Implikationen",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1176444/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1136986/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20420",
+      "codes": [
+        "CLA20420",
+        "CLA30420"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Integration of Technology into Society",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675742/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/675745/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20542",
+      "codes": [
+        "CLA20542",
+        "CLA30542"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Medienethik",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/694860/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/694863/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20564",
+      "codes": [
+        "CLA20564",
+        "CLA30564"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Was ist Leben?",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/693302/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/693305/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20617",
+      "codes": [
+        "CLA20617",
+        "CLA30617"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Medien - Informatik - Internet",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/676133/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/676138/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20713",
+      "codes": [
+        "CLA20713",
+        "CLA30713"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Mobilität. Technik und Bewegung im kulturellen Raum",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/729429/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/729432/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20720",
+      "codes": [
+        "CLA20720",
+        "CLA30720"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Technik im Alltag",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/730139/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/730248/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20721",
+      "codes": [
+        "CLA20721",
+        "CLA30721"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Wissenschaftstheorie der Ingenieurwissenschaften",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/730312/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/730315/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla20811",
+      "codes": [
+        "CLA20811",
+        "CLA30811"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Politik verstehen 1: Theorien der Macht",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/817924/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1352835/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla21010",
+      "codes": [
+        "CLA21010",
+        "CLA31010"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Kollektives Handeln in soziotechnischen Systemen",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/981571/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/981671/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla21109",
+      "codes": [
+        "CLA21109",
+        "CLA31109"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Was kann ich wissen? - Klassiker der Erkenntnistheorie",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1057421/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1187595/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla21212",
+      "codes": [
+        "CLA21212",
+        "CLA31212"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Visuelle Gestaltung für die Wissensgesellschaft",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1051792/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1052720/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla21314",
+      "codes": [
+        "CLA21314",
+        "CLA31314"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Einführung ins philosophische Denken",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1142954/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1275820/study-year/1623"
+      ]
+    },
+    {
+      "id": "wtg-cla21601",
+      "codes": [
+        "CLA21601",
+        "CLA31601"
+      ],
+      "kind": "wtg_same_title",
+      "title": "Ethik und Verantwortung II",
+      "source_urls": [
+        "https://www.cit.tum.de/cit/studium/studierende/ueberfachliche-grundlagen/",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1352394/study-year/1623",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1495708/study-year/1623"
+      ]
+    },
+    {
+      "id": "J-data-regulation-law",
+      "codes": [
+        "SOT86060",
+        "SOT86061"
+      ],
+      "kind": "overlap_guard",
+      "title": "Data Regulation & Law",
+      "source_urls": [
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4108928/207",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4106880/207"
+      ]
+    },
+    {
+      "id": "J-ai-regulation-law",
+      "codes": [
+        "SOT86062",
+        "SOT86063"
+      ],
+      "kind": "overlap_guard",
+      "title": "AI Regulation & Law",
+      "source_urls": [
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4106581/207",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4106608/207"
+      ]
+    },
+    {
+      "id": "J-open-data-open-science",
+      "codes": [
+        "SOT53406",
+        "SOT86076"
+      ],
+      "kind": "overlap_guard",
+      "title": "Open Data - Open Science",
+      "source_urls": [
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4275569/207",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4025095/207"
+      ]
+    },
+    {
+      "id": "overlap-variant-1",
+      "codes": [
+        "SOT86065",
+        "SOT86066"
+      ],
+      "kind": "overlap_guard",
+      "title": "Machine Learning and Society",
+      "source_urls": [
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/3844312/207",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/3844317/207"
+      ]
+    },
+    {
+      "id": "overlap-variant-2",
+      "codes": [
+        "SOT86074",
+        "SOT86097"
+      ],
+      "kind": "overlap_guard",
+      "title": "Aligning Generative AI to Social Values",
+      "source_urls": [
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4025086/207",
+        "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4096730/207"
+      ]
+    }
+  ],
+  "explicit_cross_code_exclusions": [
+    {
+      "id": "MGT001445-after-MGT001407",
+      "target_code": "MGT001445",
+      "if_previously_passed_code": "MGT001407",
+      "source_url": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/4390086/207",
+      "status": "explicit module statement",
+      "scope": "directional previous-pass exclusion; no claim both historical records should be deleted"
+    }
+  ],
+  "personal_checks_not_automated": [
+    "母语与本科授课语言",
+    "已用于本科学位的限选或选修",
+    "分班／团队／选拔／导师批准与报名名额",
+    "未列明的等价或内容重叠、个人学校认可决定"
+  ]
+}

@@ -7,11 +7,11 @@ const phrasePattern=s=>[...s].map(c=>c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).jo
 function terms(query,groups){
  const q=normalize(query);let rest=String(query).normalize('NFKC').toLowerCase().replace(/\b(how|do|does|i|we|where|what|is|are|the|a|an|to|can|please|find|need|course|courses|module)\b/gi,' ').replace(/\b(in|ed|mw|ei|wi)\s+(\d+)\b/gi,'$1$2').replace(/[\p{P}\p{Z}\s]+/gu,' ');const out=[];
  [...groups].sort((a,b)=>Math.max(...b.map(x=>normalize(x).length))-Math.max(...a.map(x=>normalize(x).length))).forEach(g=>{
-  const ns=g.map(normalize).filter(Boolean);const hits=ns.filter(x=>normalize(rest).includes(x) && (!/^[a-z0-9]+$/.test(x) || new RegExp('(^|[^a-z0-9])'+phrasePattern(x)+'([^a-z0-9]|$)','i').test(rest)));
+  const ns=g.map(normalize).filter(Boolean);const hits=ns.filter(x=>normalize(rest).includes(x) && (!/^[\p{Script=Latin}0-9]+$/u.test(x) || new RegExp('(^|[^\\p{L}\\p{N}])'+phrasePattern(x)+'([^\\p{L}\\p{N}]|$)','iu').test(rest)));
   if(hits.length){out.push(ns);hits.forEach(x=>{rest=rest.replace(new RegExp(phrasePattern(x),'gu'),' ');});}
  });
  rest=rest.replace(/(请问|我想要|我想|我要|怎样|怎么|如何|哪里|在哪|什么|需要|可以|能不能|有没有|找到|一下|请|的|了|吗|呢|是)/g,' ');
- const parts=rest.match(/[a-z0-9._-]+|[\u3400-\u9fff]+/gi)||[];
+ const parts=rest.match(/[\p{Script=Latin}\p{M}0-9._-]+|[\u3400-\u9fff]+/gu)||[];
  for(const x of parts)if(!stop.test(x)&&(x.length>1||/^\d$/.test(x)))out.push([x]);
  return out.length?out:[[q]];
 }

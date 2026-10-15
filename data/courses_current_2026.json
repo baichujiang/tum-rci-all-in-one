@@ -802,7 +802,7 @@
     ],
     "curriculum_version": "20241",
     "academic_year": "2026/27",
-    "review_date": "2026-10-13",
+    "review_date": "2026-10-15",
     "term": "WiSe/SoSe",
     "language": "EN",
     "recognition_status": "official_public_curriculum",
@@ -810,9 +810,9 @@
       "J Support Electives"
     ],
     "module_detail_id": "4569738",
-    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "metadata_verification": "Current full official module DTO, 2026/27; see interdisciplinary-verification.json",
     "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
-    "automatic_recommendation_eligible": true
+    "automatic_recommendation_eligible": false
   },
   {
     "module_code": "SOT46401",
@@ -830,7 +830,7 @@
     ],
     "curriculum_version": "20241",
     "academic_year": "2026/27",
-    "review_date": "2026-10-13",
+    "review_date": "2026-10-15",
     "term": "SoSe",
     "language": "EN",
     "recognition_status": "official_public_curriculum",
@@ -838,9 +838,9 @@
       "J Support Electives"
     ],
     "module_detail_id": "4025776",
-    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "metadata_verification": "Current full official module DTO, 2026/27; see interdisciplinary-verification.json",
     "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
-    "automatic_recommendation_eligible": true
+    "automatic_recommendation_eligible": false
   },
   {
     "module_code": "SOT87317",
@@ -858,7 +858,7 @@
     ],
     "curriculum_version": "20241",
     "academic_year": "2026/27",
-    "review_date": "2026-10-13",
+    "review_date": "2026-10-15",
     "term": "SoSe",
     "language": "EN",
     "recognition_status": "official_public_curriculum",
@@ -866,9 +866,9 @@
       "J Support Electives"
     ],
     "module_detail_id": "3907351",
-    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "metadata_verification": "Current full official module DTO, 2026/27; see interdisciplinary-verification.json",
     "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
-    "automatic_recommendation_eligible": true
+    "automatic_recommendation_eligible": false
   },
   {
     "module_code": "IN9017",
@@ -886,7 +886,7 @@
     ],
     "curriculum_version": "20241",
     "academic_year": "2026/27",
-    "review_date": "2026-10-13",
+    "review_date": "2026-10-15",
     "term": "SoSe",
     "language": "DE",
     "recognition_status": "official_public_curriculum",
@@ -894,7 +894,7 @@
       "J Support Electives"
     ],
     "module_detail_id": "473910",
-    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "metadata_verification": "Current full official module DTO, 2026/27; see interdisciplinary-verification.json",
     "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
     "automatic_recommendation_eligible": true
   },
@@ -914,7 +914,7 @@
     ],
     "curriculum_version": "20241",
     "academic_year": "2026/27",
-    "review_date": "2026-10-13",
+    "review_date": "2026-10-15",
     "term": "SoSe",
     "language": "EN",
     "recognition_status": "official_public_curriculum",
@@ -922,7 +922,7 @@
       "J Support Electives"
     ],
     "module_detail_id": "3844317",
-    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "metadata_verification": "Current full official module DTO, 2026/27; see interdisciplinary-verification.json",
     "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
     "automatic_recommendation_eligible": true
   },
@@ -942,7 +942,7 @@
     ],
     "curriculum_version": "20241",
     "academic_year": "2026/27",
-    "review_date": "2026-10-13",
+    "review_date": "2026-10-15",
     "term": "WiSe",
     "language": "EN",
     "recognition_status": "official_public_curriculum",
@@ -950,7 +950,7 @@
       "J Support Electives"
     ],
     "module_detail_id": "1175362",
-    "metadata_verification": "TUMonline rendered module handbook, 2026/27 study-year, title identity verified",
+    "metadata_verification": "Current full official module DTO, 2026/27; see interdisciplinary-verification.json",
     "offering_verification": "module handbook recurrence; actual semester offering/time not independently verified",
     "automatic_recommendation_eligible": true
   },
