@@ -40,6 +40,8 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   const initial=draft([{code:'IN2064',status:'passed',semester:1},{code:'OWN1',name:'示例认定',ects:7.5,group:'G',custom:true,status:'planned',semester:2}]),h=await harness(initial);
   const segments=[...h.html().matchAll(/data-credit-share="([\d.]+)" max="([\d.]+)" value="([\d.]+)"/g)].map(m=>m.slice(1).map(Number));
   assert.deepEqual(segments,[[43,43,8],[41,41,7.5],[6,6,0],[30,30,0]]);
+  assert.deepEqual([...h.html().matchAll(/<progress[^>]*data-credit-category="([^"]+)"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
+  assert.deepEqual([...h.html().matchAll(/class="credit-legend-item[^>]*data-credit-category="([^"]+)" tabindex="0"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
   assert.equal(segments.reduce((n,x)=>n+x[0],0),120);assert(h.html().includes('credit-category-thesis'));assert(h.html().includes('已规划（含已修）'));
   assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
  });
@@ -47,6 +49,7 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   const initial=C.validatePlan({...draft([]),conditional:true,conditionalConfirmed:true,items:[{code:'OWN1',name:'原有认定',ects:30,group:'G',custom:true,status:'passed',semester:1},{code:'OWN2',name:'另一项认定',ects:30,group:'H',custom:true,status:'planned',semester:2}]},courses),h=await harness(initial);
   const segments=[...h.html().matchAll(/data-credit-share="([\d.]+)" max="([\d.]+)" value="([\d.]+)"/g)].map(m=>m.slice(1).map(Number));
   assert.deepEqual(segments,[[43,43,0],[36,36,36],[6,6,0],[30,30,0],[5,5,0]]);assert.equal(segments.reduce((n,x)=>n+x[0],0),120);
+  assert.equal([...h.html().matchAll(/data-credit-category="remediation"/g)].length,2);
   assert(h.html().includes('credit-category-remediation'));assert.deepEqual(h.plan(),initial);assert.equal(h.writes(),0);
   const legacy=await harness(C.validatePlan({...initial,cohort:'2024夏季'},courses));
   assert(legacy.html().includes('data-credit-share="41"'));assert(!legacy.html().includes('credit-category-remediation'));
