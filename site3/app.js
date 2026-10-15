@@ -109,21 +109,24 @@ async function undoCourse(change){
   return {...p,items};
  });
 }
-async function moveCourse(code,semester){
- code=String(code).trim().toUpperCase();if(desktopPlanning?.matches&&semester===0)semester=1;let result={kind:'cancelled'};
+async function moveCourse(code,semester,{editPassedSemester=false}={}){
+ code=String(code).trim().toUpperCase();let result={kind:'cancelled'};
  await updatePlan(async p=>{
-  if(!Number.isInteger(semester)||semester<0||semester>p.timeline.count)throw new Error('目标学期已调整，请重新选择。');
   const previous=p.items.find(x=>x.code===code);
   if(!previous)throw new Error('这门课已不在计划中，请重新选择。');
-  if(previous.status==='passed')throw new Error('这门课已修通过，不需要安排到未来学期。');
-  if(previous.semester===semester){result={kind:'unchanged',code,semester};return null;}
+  const editingPassed=desktopPlanning?.matches&&editPassedSemester&&previous.status==='passed';
+  if(previous.status==='passed'&&!editingPassed)throw new Error('这门课已修通过，请在计划中调整通过学期。');
+  if(editPassedSemester&&!editingPassed)throw new Error('课程状态已更新，请重新选择通过学期。');
+  const target=desktopPlanning?.matches&&!editingPassed&&semester===0?1:semester;
+  if(!Number.isInteger(target)||target<0||target>(editingPassed?12:p.timeline.count))throw new Error('目标学期已调整，请重新选择。');
+  if(previous.semester===target){result={kind:'unchanged',code,semester:target};return null;}
   const d=await data(),course=d.courses.find(c=>c.module_code===code);
-  if(semester&&course&&!previous.custom){
-   const offer=window.RCICourseContext?window.RCICourseContext.offering(p,course,semester,d.offerings||{}):C.offering(course,C.semesterSeason(p.timeline,semester));
-   if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,semester)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
+  if(!editingPassed&&target&&course&&!previous.custom){
+   const offer=window.RCICourseContext?window.RCICourseContext.offering(p,course,target,d.offerings||{}):C.offering(course,C.semesterSeason(p.timeline,target));
+   if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,target)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
   }
-  const applied={...previous,semester};
-  result={kind:'moved',code,semester,previous,applied,replaced:null};
+  const applied={...previous,semester:target};
+  result={kind:'moved',code,semester:target,previous,applied,replaced:null};
   return {...p,items:p.items.map(x=>x.code===code?applied:x)};
  });
  return result;

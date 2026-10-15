@@ -20,9 +20,15 @@ function semesterOptions(p,selected,course){
   return `<option value="${n}" ${selected===n?'selected':''}>第 ${n} · ${season==='winter'?'冬季':'夏季'}${conflict?'（目录不符）':''}</option>`;
  }).join('');
 }
+function passedSemesterOptions(p,selected){
+ return `<option value="0" ${selected===0?'selected':''}>通过学期未记录</option>`+Array.from({length:12},(_,i)=>{
+  const n=i+1;
+  return `<option value="${n}" ${selected===n?'selected':''}>${e(C.semesterLabel(p.timeline,n))}${n>p.timeline.count?'（规划范围外）':''}</option>`;
+ }).join('');
+}
 function row(x,p){
  const c=x.custom?null:known.get(x.code),title=c?c.module_name_legal_2025:x.name,translation=c?db.names[x.code]||'':'',credits=c?c.ects:x.ects;
- if(desktopPlanning?.matches&&x.status==='passed')return `<details class="plan-row scheduled-row course-card is-passed" id="plan-course-${e(x.code)}" data-plan-course="${e(x.code)}" draggable="false"><summary class="course-card-summary" id="plan-course-toggle-${e(x.code)}" aria-label="${e(title)}，${e(credits)} ECTS，已通过"><span class="course-card-title">${e(title)}</span><span class="course-card-credits">${e(credits)} <small>ECTS</small></span><span class="course-passed-state">✓ 已通过</span></summary><div class="course-card-actions">${translation?`<p class="course-card-translation">${e(translation)}</p>`:''}<p class="course-card-meta">${e(x.code)} · ${x.semester?`第 ${x.semester} 学期通过`:'通过学期未记录'}${x.custom?' · 自录认定':''}${c?`<a class="text-link" href="${U.base}/courses/${e(x.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(title)} 课程详情（新标签页）">课程详情 ↗</a>`:''}</p><button class="quiet" type="button" data-unpass="${e(x.code)}">改为待修</button></div></details>`;
+ if(desktopPlanning?.matches&&x.status==='passed')return `<details class="plan-row scheduled-row course-card is-passed" id="plan-course-${e(x.code)}" data-plan-course="${e(x.code)}" draggable="true"><summary class="course-card-summary" id="plan-course-toggle-${e(x.code)}" aria-label="${e(title)}，${e(credits)} ECTS，已通过，可调整通过学期"><span class="course-drag" aria-hidden="true">⠿</span><span class="course-card-title">${e(title)}</span><span class="course-card-credits">${e(credits)} <small>ECTS</small></span><span class="course-passed-state">✓ 已通过</span></summary><div class="course-card-actions">${translation?`<p class="course-card-translation">${e(translation)}</p>`:''}<p class="course-card-meta">${e(x.code)} · ${x.semester?`第 ${x.semester} 学期通过`:'通过学期未记录'}${x.custom?' · 自录认定':''}${c?`<a class="text-link" href="${U.base}/courses/${e(x.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(title)} 课程详情（新标签页）">课程详情 ↗</a>`:''}</p><div class="row-controls"><label><span>通过学期</span><select data-semester="${e(x.code)}" aria-label="${e(title)} 通过学期">${passedSemesterOptions(p,x.semester)}</select></label></div><button class="quiet" type="button" data-unpass="${e(x.code)}">改为待修</button></div></details>`;
  const season=x.semester?C.semesterSeason(p.timeline,x.semester):null,offer=T?T.offering(p,c,x.semester,db.offerings||{}):C.offering(c,season),conflict=!!season&&offer.state==='conflict';
  return `<details class="plan-row scheduled-row course-card${conflict?' has-conflict':''}" id="plan-course-${e(x.code)}" data-plan-course="${e(x.code)}" draggable="true"><summary class="course-card-summary" id="plan-course-toggle-${e(x.code)}" aria-label="${e(title)}，${e(credits)} ECTS，调整学期${conflict?'，目录季节不符':''}"><span class="course-drag" aria-hidden="true">⠿</span><span class="course-card-title">${e(title)}</span><span class="course-card-credits">${e(credits)} <small>ECTS</small></span>${conflict?'<span class="course-card-alert">冬夏季节需核对</span>':''}</summary><div class="course-card-actions">${translation?`<p class="course-card-translation">${e(translation)}</p>`:''}<p class="course-card-meta">${e(x.code)} · ${e(offer.label)}${x.custom?' · 认定待确认':''}${c?`<a class="text-link" href="${U.base}/courses/${e(x.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(title)} 课程详情（新标签页）">课程详情 ↗</a>`:''}</p><div class="row-controls">${c?.allowed_groups?.length>1?`<label>计入领域<select data-allocation="${e(x.code)}">${c.allowed_groups.map(k=>`<option value="${k}" ${(x.group||c.section_2025[0])===k?'selected':''}>${e(C.courseGroups[k])}</option>`).join('')}</select></label>`:''}<label><span>${x.semester?'移动到':'安排到'}</span><select data-semester="${e(x.code)}" aria-label="${e(title)} 安排学期">${semesterOptions(p,x.semester,c)}</select></label></div>${conflict?`<p class="season-warning">目录仅${e(offer.label)}开课，与当前${season==='winter'?'冬季':'夏季'}安排不符。请核对实际开课。</p>`:offer.state==='unknown'?'<p class="season-unknown">开课季节需另行确认。</p>':''}<label class="check"><input type="checkbox" data-lock="${e(x.code)}" ${x.locked?'checked':''} ${!x.semester?'disabled':''}>自动规划时固定此学期</label><button class="quiet" type="button" data-passed="${e(x.code)}">记为已修通过</button><button class="quiet remove-course" data-remove="${e(x.code)}" aria-label="移除 ${e(title)}">从计划移除</button></div></details>`;
 }
@@ -63,14 +69,17 @@ function autoScrollDrag(){
 }
 async function moveCourse(code,semester){
  const wasEditing=document.getElementById('plan-course-'+code)?.open;
- const change=await U.moveCourse(code,semester);
+ const before=await U.plan(),editingPassed=desktopPlanning?.matches&&before.items.some(x=>x.code===code&&x.status==='passed');
+ const change=await U.moveCourse(code,semester,{editPassedSemester:!!editingPassed});
  if(change.kind==='cancelled'){await render();return;}
  if(change.kind==='moved'||change.kind==='unchanged'){
+  await render();
   const card=document.getElementById('plan-course-'+code);if(card){card.open=false;if(wasEditing)card.querySelector('summary').focus({preventScroll:true});}
+  if(editingPassed)card?.scrollIntoView({block:'nearest',behavior:'smooth'});
  }
  if(change.kind!=='moved'||!U.persisted)return;
- const p=await U.plan(),destination=semester?C.semesterLabel(p.timeline,semester):'待分配';
- U.toast(`已移到${destination}。`,{label:'撤销',run:async()=>{await U.undoCourse(change);if(U.persisted)U.toast('已恢复原来的学期安排。');}});
+ const p=await U.plan(),destination=change.semester?C.semesterLabel(p.timeline,change.semester):editingPassed?'未记录':'待分配';
+ U.toast(editingPassed?`通过学期已改为${destination}。`:`已移到${destination}。`,{label:'撤销',run:async()=>{await U.undoCourse(change);if(U.persisted)U.toast(editingPassed?'已恢复原来的通过学期。':'已恢复原来的学期安排。');}});
 }
 async function changeStatus(code,status){
  let before,after;

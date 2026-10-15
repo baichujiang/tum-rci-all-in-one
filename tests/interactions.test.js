@@ -87,6 +87,32 @@ async function test(name,fn){await fn();tests++;console.log('PASS',name);}
   await assert.rejects(h.U.moveCourse('IN2067',1),/已修/);
   assert.deepEqual(h.stored(),initial);assert.equal(h.writes(),0);assert.equal((await h.U.plan()).items[0].semester,5);
  });
+ await test('Explicit desktop corrections move a passed grade without future workload or current-season prompts',async()=>{
+  const initial=draft();initial.items=[{code:'IN2064',status:'passed',semester:1,locked:true}];const h=harness(initial,true),before=C.validatePlan(initial,courses);
+  h.control.confirm=false;const change=await h.U.moveCourse(' in2064 ',2,{editPassedSemester:true});
+  assert.equal(change.kind,'moved');assert.deepEqual(h.stored().items,[{...before.items[0],semester:2}]);assert.equal(h.confirmations(),0);
+  assert.equal(C.calculate(h.stored(),courses,true).allocated,8);assert(C.schedule(h.stored(),courses).semesters.every(x=>x.credits===0));
+  assert.equal((await h.U.addCourse('IN2064',3,{moveExisting:true})).kind,'unchanged');assert.equal(h.stored().items[0].semester,2);
+  await h.U.undoCourse(change);assert.deepEqual(h.stored().items,before.items);
+  const unknown=await h.U.moveCourse('IN2064',0,{editPassedSemester:true});assert.equal(h.stored().items[0].semester,0);assert.equal(h.stored().items[0].status,'passed');
+  await h.U.undoCourse(unknown);assert.deepEqual(h.stored().items,before.items);
+ });
+ await test('Historical corrections preserve custom recognition, all twelve valid semesters and safe undo after shortening the plan',async()=>{
+  const initial=draft();initial.items=[{code:'OWN101',name:'原有认定',ects:7.5,group:'H',custom:true,status:'passed',semester:6}];const h=harness(initial,true),before=C.validatePlan(initial,courses);
+  for(const semester of [-1,13,1.5,NaN])await assert.rejects(h.U.moveCourse('OWN101',semester,{editPassedSemester:true}),/目标学期/);
+  assert.equal(h.writes(),0);
+  const change=await h.U.moveCourse('OWN101',12,{editPassedSemester:true});assert.deepEqual(h.stored().items,[{...before.items[0],semester:12}]);
+  await h.U.updatePlan(p=>({...p,timeline:{...p.timeline,count:2}}));await h.U.undoCourse(change);
+  assert.equal(h.stored().timeline.count,2);assert.deepEqual(h.stored().items,before.items);
+  const next=await h.U.moveCourse('OWN101',1,{editPassedSemester:true}),latest=h.stored();latest.items[0].status='planned';h.externalPlan(latest);
+  await assert.rejects(h.U.undoCourse(next),/其他调整/);assert.equal(h.stored().items[0].status,'planned');
+ });
+ await test('Passed-semester editing requires a current passed record and leaves narrow-screen behavior unchanged',async()=>{
+  const initial=draft(),h=harness(initial,true);
+  await assert.rejects(h.U.moveCourse('IN2064',2,{editPassedSemester:true}),/状态已更新/);assert.equal(h.writes(),0);
+  initial.items[0].status='passed';const narrow=harness(initial);
+  await assert.rejects(narrow.U.moveCourse('IN2064',2,{editPassedSemester:true}),/已修/);assert.equal(narrow.writes(),0);
+ });
  await test('Directory direct add and move can undo while preserving all previous records',async()=>{
   const h=harness(),before=C.validatePlan(draft(),courses),added=await h.U.addCourse('IN2346',1,{moveExisting:true});
   assert.equal(added.kind,'added');assert.equal(h.stored().items.length,2);await h.U.undoCourse(added);assert.deepEqual(h.stored().items,before.items);
