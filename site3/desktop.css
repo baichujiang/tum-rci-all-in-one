@@ -78,7 +78,7 @@
  .section-title h2{font-size:20px}
  .section-title>span{font-size:13px}
 
- /* Homepage: a compact opening, with community access in its own section. */
+ /* Homepage: a compact opening alongside the community invitation. */
  .home>.entry-hero{grid-template-columns:minmax(0,1fr) 300px;gap:32px;padding:24px 0 20px;align-items:center}
  .home>.entry-hero h1{font-size:28px;line-height:1.45;margin-bottom:8px}
  .home>.entry-hero h1 br{display:block}
