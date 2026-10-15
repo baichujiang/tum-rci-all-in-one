@@ -224,7 +224,7 @@ async function syncPlanWidgets(){
   const [p,d]=await Promise.all([plan(),data()]);currentPlan=p;const calc=C.calculate(p,d.courses);
   if(selectedSemester>p.timeline.count)selectedSemester=0;
   const target=$('#course-target-semester');
-  if(target&&!previous?.custom){
+  if(target&&!target.hasAttribute('data-directory-target')){
    target.innerHTML='<option value="0">先选课，稍后分配</option>'+Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}">${C.semesterLabel(p.timeline,i+1)}</option>`).join('');target.value=selectedSemester;
    $('#course-semester-context').hidden=false;
   }

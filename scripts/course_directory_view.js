@@ -1,0 +1,22 @@
+'use strict';
+const D=require('../site3/course-directory');
+module.exports=function courseDirectoryView({courses,names,base=''}){
+ const e=require('../assets/core').esc;
+ return `<header class="catalog-heading"><div><h1>选课程</h1><p>选好学期，找到课程，点一下加入。</p></div><a class="catalog-plan-link" href="${base}/planner/">我的计划 <span class="plan-badge" data-plan-count hidden>0</span><span aria-hidden="true">→</span></a></header>
+ <div id="course-directory">
+  <div class="catalog-toolbar" aria-label="搜索、筛选与目标学期">
+   <div class="catalog-search-row">
+    <form class="catalog-search" role="search"><label class="sr-only" for="page-search">搜索课程</label><span class="catalog-search-symbol" aria-hidden="true">⌕</span><input id="page-search" type="search" placeholder="课程名或代码，如 机器学习、IN2064" autocomplete="off" maxlength="160"><button type="button" class="quiet" data-directory-clear-query aria-label="清除搜索" hidden>×</button></form>
+    <div id="course-semester-context" class="catalog-target"><label for="course-target-semester">加入到</label><select id="course-target-semester" data-directory-target disabled aria-label="加入课程的目标学期"><option value="0">先选课，稍后分配</option></select><span id="directory-target-credits" class="catalog-target-credits"></span></div>
+   </div>
+   <div class="catalog-filter-row"><div class="catalog-categories" role="group" aria-label="课程类别">${[['','全部'],['core','必修'],['professional','专业选修'],['J','跨学科']].map(([key,label])=>`<button type="button" class="catalog-chip" data-course-category="${key}" aria-pressed="${key===''}">${label}</button>`).join('')}</div><details id="catalog-filter-options" class="catalog-filter-options"><summary>筛选 <span id="directory-filter-count" hidden></span><span aria-hidden="true">⌄</span></summary><div class="catalog-filter-fields"><label>具体领域<select id="group-filter"><option value="">全部</option><option value="core">必修 A–E</option><option value="professional">专业选修 G/H/I</option>${Object.entries(require('../assets/core').courseGroups).map(([key,label])=>`<option value="${key}">${e(label)}</option>`).join('')}</select></label><label>目录季节<select id="term-filter"><option value="">全年</option><option value="WiSe">冬季</option><option value="SoSe">夏季</option></select></label><label>授课语言<select id="directory-language"><option value="">不限</option><option value="EN">英语</option><option value="DE">德语</option></select></label><label>计划状态<select id="directory-selection"><option value="">全部</option><option value="unselected">未加入</option><option value="selected">已加入／已修</option></select></label><button type="button" class="button secondary" data-directory-close-filters>完成筛选</button></div></details></div>
+   <div id="directory-subcategories" class="catalog-subcategories" role="group" aria-label="专业选修领域" hidden>${[['professional','全部专业选修'],['G','G 计算'],['H','H 机械'],['I','I 系统与控制']].map(([key,label])=>`<button type="button" data-course-category="${key}" aria-pressed="false">${label}</button>`).join('')}</div>
+   <div id="directory-active-filters" class="catalog-active-filters" aria-label="已应用的筛选" hidden></div>
+  </div>
+  <div class="catalog-results-heading"><p id="result-count" role="status" aria-live="polite" tabindex="-1">正在读取 ${courses.length} 门课程…</p><button type="button" class="quiet" id="reset-filters" hidden>清除筛选</button></div>
+  <div class="catalog-feedback" id="directory-feedback" hidden><span id="directory-status" role="status" aria-live="polite"></span><button type="button" class="quiet" id="directory-undo" hidden>撤销</button></div>
+  <div id="results" class="catalog-results">${courses.map(c=>D.card(D.view(c,null,names),null,0,{base,ready:false})).join('')}</div>
+  <button type="button" class="button secondary catalog-more" id="more-results" hidden>显示更多课程</button>
+  <details class="catalog-data-note"><summary>课程数据与选课说明</summary><p>加入本站计划用于安排学分和学期，不会向学校报名。目录季节不是未来开课或名额保证，实际授课及考试登记请到 <a class="text-link" href="https://campus.tum.de/" target="_blank" rel="noopener noreferrer">TUMonline ↗</a> 核对。</p><p>当前收录595条记录。2026/27官方G/H/I的153个不同模块与J的429个真实模块均已收录。资料、开课周期或个人条件未确认的课程暂停自动推荐；这不等于禁止手动选修。每门课的具体原因可在课程说明中查看。</p><a class="text-link" href="${base}/sources/">查看来源与核对范围 →</a></details>
+ </div>`;
+};

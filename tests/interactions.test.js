@@ -87,5 +87,16 @@ async function test(name,fn){await fn();tests++;console.log('PASS',name);}
   await assert.rejects(h.U.moveCourse('IN2067',1),/已修/);
   assert.deepEqual(h.stored(),initial);assert.equal(h.writes(),0);assert.equal((await h.U.plan()).items[0].semester,5);
  });
+ await test('Directory direct add and move can undo while preserving all previous records',async()=>{
+  const h=harness(),before=C.validatePlan(draft(),courses),added=await h.U.addCourse('IN2346',1,{moveExisting:true});
+  assert.equal(added.kind,'added');assert.equal(h.stored().items.length,2);await h.U.undoCourse(added);assert.deepEqual(h.stored().items,before.items);
+  const moved=await h.U.addCourse('IN2064',3,{moveExisting:true});assert.equal(moved.kind,'moved');assert.equal(h.stored().items[0].semester,3);await h.U.undoCourse(moved);assert.deepEqual(h.stored().items,before.items);
+  h.control.confirm=false;assert.equal((await h.U.addCourse('IN2064',2,{moveExisting:true})).kind,'cancelled');assert.deepEqual(h.stored().items,before.items);
+ });
+ await test('Undoing a confirmed Robotics alternative restores the previous choice and semester',async()=>{
+  const initial=draft();initial.items=[{code:'IN2067',status:'planned',semester:1,locked:true}];const h=harness(initial);
+  h.control.confirm=false;assert.equal((await h.U.addCourse('ED160028',2,{moveExisting:true})).kind,'cancelled');assert.equal(h.writes(),0);
+  h.control.confirm=true;const change=await h.U.addCourse('ED160028',2,{moveExisting:true});assert.equal(change.kind,'replaced');assert.equal(h.stored().items[0].code,'ED160028');await h.U.undoCourse(change);assert.deepEqual(h.stored().items,C.validatePlan(initial,courses).items);
+ });
  console.log(`${tests} plan interaction checks passed`);
 })().catch(err=>{console.error(err);process.exitCode=1;});
