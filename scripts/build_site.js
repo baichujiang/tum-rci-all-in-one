@@ -96,7 +96,7 @@ const uniqueResources=[...resourceGroups.values()].map(records=>{
 shell('/','常用网站，一步直达。','常用网站入口与 RCI 选课、学分规划。',V.home(),{home:true});
 shell('/feedback/','快速反馈','提出缺少的网站入口、功能建议或使用问题。',V.feedback(),{noindex:true});
 shell('/favorites/','我的收藏','收藏的网站和资料，直接打开继续使用。',V.favorites(),{noindex:true});
-shell('/study/','选课与学分','看懂学分结构，选课程并加入自己的计划。',V.study());
+shell('/study/','选课指南','看懂学分结构，选课程并加入自己的计划。',V.study());
 for(const t of nav.tasks){
  const selected=t.resources.map(id=>resourceMap.get(id)).filter(Boolean);
  shell('/tasks/'+t.id+'/',t.title,t.subtitle,`${intro(t.title,t.subtitle)}<div class="task-links">${nav.tasks.filter(x=>x.id!==t.id).map(x=>internal('/tasks/'+x.id+'/',x.title,'chip')).join('')}</div><div class="section-title"><h2>先找你的问题</h2></div><div class="card-grid">${t.guides.map(id=>guideCard(guideMap.get(id))).join('')}</div><div class="section-title"><h2>直接办事 / 常用入口</h2></div><div class="card-grid">${selected.map(resourceCard).join('')}</div><div class="next-panel">${t.id==='study'?internal('/courses/','打开课程目录','button desktop-legacy')+' '+internal('/planner/','我的学分计划','button secondary desktop-legacy'):t.id==='research'?internal('/research/','浏览研究组与课题','button'):internal('/search/?task='+t.id,'搜索这一类内容','button')}${internal('/resources/?task='+t.id,'更多相关资源 →','text-link')}</div>`);
