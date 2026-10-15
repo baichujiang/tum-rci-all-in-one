@@ -3,6 +3,18 @@
 'use strict';
 const entry=document.querySelector('[data-community]');
 if(!entry)return;
+const card=entry.closest('.community-card');
+const hero=card.parentElement;
+const desktopSlot=document.querySelector('[data-community-slot]');
+if(desktopSlot){
+ const desktop=window.matchMedia('(min-width:721px)');
+ function placeCard(){
+  const destination=desktop.matches?desktopSlot:hero;
+  if(card.parentElement!==destination)destination.append(card);
+ }
+ desktop.addEventListener('change',placeCard);
+ placeCard();
+}
 const expiresAt=Date.parse(entry.dataset.expiresAt);
 const active=entry.querySelector('[data-community-active]');
 const contact=entry.querySelector('[data-community-contact]');
