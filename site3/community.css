@@ -31,8 +31,5 @@
  .community-home-slot .community-entry[open]>summary .community-arrow{transform:rotate(-90deg)}
  .community-home-slot>.community-card:has(.community-entry[open]){border-bottom-color:var(--line);border-radius:10px;box-shadow:none}
  .community-home-slot .community-entry[open]>.community-content{width:300px;top:auto;bottom:calc(100% + 8px);left:auto;right:-1px;padding:16px 18px;border:1px solid var(--line);border-radius:10px;background:var(--white)}
- .bookmarks-section>.section-title{justify-content:flex-start;gap:12px}
- .bookmarks-section>.section-title>.backup-entry{min-height:30px;padding:3px 9px;border:1px solid var(--line);border-radius:6px;background:var(--white);color:var(--muted);font-weight:500}
- .bookmarks-section>.section-title>.backup-entry:hover{color:var(--green);background:var(--paper)}
 }
 @media(max-width:720px){.home>.entry-hero{grid-template-columns:1fr;gap:16px}.community-card{margin-top:0;padding:18px 20px}.community-card .community-description{margin-bottom:12px}.community-entry>summary{font-size:14px}.community-qr{max-width:280px}}

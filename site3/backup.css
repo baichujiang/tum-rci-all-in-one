@@ -13,5 +13,6 @@
 .backup-recovery-actions{display:flex;gap:10px;align-items:flex-end}.backup-recovery-actions label{flex:1;min-width:0;margin:0}.backup-recovery-actions button{flex:none}
 .backup-dialog details{font-size:12px;margin-top:18px}.backup-dialog details summary{cursor:pointer;min-height:36px}.backup-dialog .button:disabled{opacity:.55;cursor:not-allowed}
 .backup-entry{font-size:12px;white-space:nowrap}.bookmarks-section .section-title{gap:12px;flex-wrap:wrap}
+@media(min-width:721px){.home .backup-entry{display:none}}
 @media(max-width:600px){.backup-dialog{padding:20px;max-height:calc(100dvh - 28px)}.backup-heading h2{font-size:20px}.backup-dialog .button{font-size:12px}.backup-recovery-actions{align-items:stretch;flex-direction:column}.backup-entry{font-size:11px}}
 @media print{.backup-dialog,.backup-entry{display:none!important}}
