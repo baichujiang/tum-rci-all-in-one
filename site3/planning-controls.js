@@ -130,7 +130,7 @@ box.addEventListener('click',async event=>{
     return {...p,items:[...p.items.filter(x=>x.code!==code),{...(p.items.find(x=>x.code===code)||{code,semester:0}),status:'passed',locked:false}]};
    });U.toast('已记录；学分统计已更新。');
   }
-  if(b.hasAttribute('data-forget'))await U.updatePlan(p=>b.dataset.kind==='passed'?{...p,items:p.items.map(x=>x.code===b.dataset.forget?{...x,status:'planned',locked:false,semester:desktopPlanning?.matches?1:0}:x)}:{...p,preferences:{...p.preferences,[b.dataset.kind]:p.preferences[b.dataset.kind].filter(c=>c!==b.dataset.forget)}});
+  if(b.hasAttribute('data-forget'))await U.updatePlan(p=>b.dataset.kind==='passed'?{...p,items:p.items.map(x=>x.code===b.dataset.forget?{...x,status:'planned',locked:false,semester:desktopPlanning?.matches&&x.semester>0&&x.semester<=p.timeline.count?x.semester:desktopPlanning?.matches?1:0}:x)}:{...p,preferences:{...p.preferences,[b.dataset.kind]:p.preferences[b.dataset.kind].filter(c=>c!==b.dataset.forget)}});
   if(b.hasAttribute('data-reset-workload')){const n=box.querySelector('#semester-workload [name="semester"]').value;dirtyForms.delete('semester-workload');await U.updatePlan(p=>{const semesters={...p.workload.semesters};delete semesters[n];return {...p,workload:{...p.workload,semesters}};});}
   if(b.hasAttribute('data-generate'))await generate();
  }catch(error){U.toast(error.message);}

@@ -22,16 +22,18 @@ function semesterOptions(p,selected,course){
 }
 function row(x,p){
  const c=x.custom?null:known.get(x.code),title=c?c.module_name_legal_2025:x.name,translation=c?db.names[x.code]||'':'',credits=c?c.ects:x.ects;
+ if(desktopPlanning?.matches&&x.status==='passed')return `<details class="plan-row scheduled-row course-card is-passed" id="plan-course-${e(x.code)}" data-plan-course="${e(x.code)}" draggable="false"><summary class="course-card-summary" id="plan-course-toggle-${e(x.code)}" aria-label="${e(title)}，${e(credits)} ECTS，已通过"><span class="course-card-title">${e(title)}</span><span class="course-card-credits">${e(credits)} <small>ECTS</small></span><span class="course-passed-state">✓ 已通过</span></summary><div class="course-card-actions">${translation?`<p class="course-card-translation">${e(translation)}</p>`:''}<p class="course-card-meta">${e(x.code)} · ${x.semester?`第 ${x.semester} 学期通过`:'通过学期未记录'}${x.custom?' · 自录认定':''}${c?`<a class="text-link" href="${U.base}/courses/${e(x.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(title)} 课程详情（新标签页）">课程详情 ↗</a>`:''}</p><button class="quiet" type="button" data-unpass="${e(x.code)}">改为待修</button></div></details>`;
  const season=x.semester?C.semesterSeason(p.timeline,x.semester):null,offer=T?T.offering(p,c,x.semester,db.offerings||{}):C.offering(c,season),conflict=!!season&&offer.state==='conflict';
  return `<details class="plan-row scheduled-row course-card${conflict?' has-conflict':''}" id="plan-course-${e(x.code)}" data-plan-course="${e(x.code)}" draggable="true"><summary class="course-card-summary" id="plan-course-toggle-${e(x.code)}" aria-label="${e(title)}，${e(credits)} ECTS，调整学期${conflict?'，目录季节不符':''}"><span class="course-drag" aria-hidden="true">⠿</span><span class="course-card-title">${e(title)}</span><span class="course-card-credits">${e(credits)} <small>ECTS</small></span>${conflict?'<span class="course-card-alert">冬夏季节需核对</span>':''}</summary><div class="course-card-actions">${translation?`<p class="course-card-translation">${e(translation)}</p>`:''}<p class="course-card-meta">${e(x.code)} · ${e(offer.label)}${x.custom?' · 认定待确认':''}${c?`<a class="text-link" href="${U.base}/courses/${e(x.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(title)} 课程详情（新标签页）">课程详情 ↗</a>`:''}</p><div class="row-controls">${c?.allowed_groups?.length>1?`<label>计入领域<select data-allocation="${e(x.code)}">${c.allowed_groups.map(k=>`<option value="${k}" ${(x.group||c.section_2025[0])===k?'selected':''}>${e(C.courseGroups[k])}</option>`).join('')}</select></label>`:''}<label><span>${x.semester?'移动到':'安排到'}</span><select data-semester="${e(x.code)}" aria-label="${e(title)} 安排学期">${semesterOptions(p,x.semester,c)}</select></label></div>${conflict?`<p class="season-warning">目录仅${e(offer.label)}开课，与当前${season==='winter'?'冬季':'夏季'}安排不符。请核对实际开课。</p>`:offer.state==='unknown'?'<p class="season-unknown">开课季节需另行确认。</p>':''}<label class="check"><input type="checkbox" data-lock="${e(x.code)}" ${x.locked?'checked':''} ${!x.semester?'disabled':''}>自动规划时固定此学期</label><button class="quiet" type="button" data-passed="${e(x.code)}">记为已修通过</button><button class="quiet remove-course" data-remove="${e(x.code)}" aria-label="移除 ${e(title)}">从计划移除</button></div></details>`;
 }
 function semesterHeading(semester,p){
  const limits=window.RCIPlanning.bounds(p,semester.number),over=semester.credits>limits.maxECTS||semester.items.length>limits.maxExams;
- return `<div class="semester-heading ${semester.season}${over?' over-workload':''}" data-drop-semester="${semester.number}"><div><span class="season-tag">${semester.season==='winter'?'冬季':'夏季'}</span><h3 id="semester-title-${semester.number}">第 ${semester.number} 学期</h3></div><div class="semester-total"><b>${semester.credits}</b><span>ECTS · ${semester.items.length} 门</span><small class="workload-hint">上限 ${limits.maxECTS} ECTS / ${limits.maxExams} 项考核${over?' · 已超出':''}</small></div></div>`;
+ const items=semester.visibleItems||semester.items,passedCredits=semester.passedCredits||0;
+ return `<div class="semester-heading ${semester.season}${over?' over-workload':''}" data-drop-semester="${semester.number}"><div><span class="season-tag">${semester.season==='winter'?'冬季':'夏季'}</span><h3 id="semester-title-${semester.number}">第 ${semester.number} 学期</h3></div><div class="semester-total"><b>${semester.credits+passedCredits}</b><span>ECTS · ${items.length} 门</span>${items.length>semester.items.length?`<small class="semester-status-totals">已通过 ${passedCredits} · 待修 ${semester.credits} ECTS</small>`:''}<small class="workload-hint">${desktopPlanning?.matches?'待修上限':'上限'} ${limits.maxECTS} ECTS / ${limits.maxExams} 项考核${over?' · 已超出':''}</small></div></div>`;
 }
 function semesterCard(semester,p){
- const conflictCount=semester.conflicts.length;
- return `<section class="semester-card ${semester.season}" id="semester-${semester.number}" data-drop-semester="${semester.number}" aria-labelledby="semester-title-${semester.number}">${conflictCount?`<p class="semester-alert">${conflictCount} 门课程的目录季节与安排不符</p>`:''}<div class="semester-courses">${semester.items.length?semester.items.map(x=>row(x,p)).join(''):'<p class="semester-placeholder">还没有安排课程</p>'}</div><button type="button" class="semester-add text-link" data-pick-semester="${semester.number}" aria-haspopup="dialog" aria-label="为第 ${semester.number} 学期添加课程">＋ 添加课程</button></section>`;
+ const conflictCount=semester.conflicts.length,items=semester.visibleItems||semester.items;
+ return `<section class="semester-card ${semester.season}" id="semester-${semester.number}" data-drop-semester="${semester.number}" aria-labelledby="semester-title-${semester.number}">${conflictCount?`<p class="semester-alert">${conflictCount} 门课程的目录季节与安排不符</p>`:''}<div class="semester-courses">${items.length?items.map(x=>row(x,p)).join(''):'<p class="semester-placeholder">还没有安排课程</p>'}</div><button type="button" class="semester-add text-link" data-pick-semester="${semester.number}" aria-haspopup="dialog" aria-label="为第 ${semester.number} 学期添加课程">＋ 添加课程</button></section>`;
 }
 function summary(calc,p){
  const passed=C.calculate(p,db.courses,true).allocated;
@@ -70,6 +72,25 @@ async function moveCourse(code,semester){
  const p=await U.plan(),destination=semester?C.semesterLabel(p.timeline,semester):'待分配';
  U.toast(`已移到${destination}。`,{label:'撤销',run:async()=>{await U.undoCourse(change);if(U.persisted)U.toast('已恢复原来的学期安排。');}});
 }
+async function changeStatus(code,status){
+ let before,after;
+ await U.updatePlan(p=>{
+  before=p.items.find(x=>x.code===code);if(!before||before.status===status)return null;
+  after={...before,status,locked:false,semester:status==='passed'?before.semester:before.semester>0&&before.semester<=p.timeline.count?before.semester:1};
+  return {...p,items:p.items.map(x=>x.code===code?after:x)};
+ });
+ if(!after||!U.persisted)return;
+ await render();
+ const card=document.getElementById('plan-course-'+code);if(card){card.open=false;card.querySelector('summary').focus({preventScroll:true});}
+ U.toast(status==='passed'?'已标记通过，课程保留在计划中。':'已改为待修。',{label:'撤销',run:async()=>{
+  await U.updatePlan(p=>{
+   if(JSON.stringify(p.items.find(x=>x.code===code))!==JSON.stringify(after))throw new Error('课程已有后续修改，请手动调整状态。');
+   if(before.status==='planned'&&before.semester>p.timeline.count)throw new Error('原学期已不在规划范围，请手动调整状态。');
+   return {...p,items:p.items.map(x=>x.code===code?before:x)};
+  });
+  if(U.persisted)U.toast('已恢复原来的课程状态。');
+ }});
+}
 async function render(){
  const id=++renderId,active=document.activeElement;
  const focusKey=active?.id?{id:active.id}:active?.dataset.semester?{semester:active.dataset.semester}:active?.closest('#custom-plan')&&active.name?{customField:active.name,start:active.selectionStart,end:active.selectionEnd}:null;
@@ -81,8 +102,12 @@ async function render(){
  if(desktopPlanning?.matches&&p.items.some(x=>x.status==='planned'&&x.semester===0)){await U.assignUnscheduled();if(id!==renderId)return;p=await U.plan();if(id!==renderId)return;}
  const calc=C.calculate(p,db.courses),schedule=C.schedule(p,db.courses);
  const future=p.items.filter(x=>x.status==='planned'),assigned=future.length-schedule.unassigned.items.length;
+ const passed=p.items.filter(x=>x.status==='passed');
+ const semesters=desktopPlanning?.matches?schedule.semesters.map(n=>({...n,visibleItems:p.items.filter(x=>x.semester===n.number),passedCredits:passed.filter(x=>x.semester===n.number).reduce((sum,x)=>sum+Number(x.custom?x.ects:known.get(x.code)?.ects),0)})):schedule.semesters;
+ const otherPassed=desktopPlanning?.matches?passed.filter(x=>!x.semester||x.semester>p.timeline.count):[];
+ const history=otherPassed.length?`<section class="passed-history" aria-labelledby="passed-history-title"><h3 id="passed-history-title">其他已通过课程</h3><p class="meta">通过学期未记录，或在当前 ${p.timeline.count} 个学期之外。</p><div class="passed-history-grid">${otherPassed.map(x=>row(x,p)).join('')}</div></section>`:'';
  const unassigned=schedule.unassigned.items.length?`<details class="unassigned-courses" id="unassigned" data-drop-semester="0" aria-labelledby="unassigned-title"><summary class="unassigned-heading" id="unassigned-title">待分配 <span>${schedule.unassigned.items.length} 门 · ${schedule.unassigned.credits} ECTS</span><small>展开安排</small></summary><div class="unassigned-grid">${schedule.unassigned.items.map(x=>row(x,p)).join('')}</div></details>`:'';
- box.innerHTML=`${summary(calc,p)}<div class="planner-main"><div class="plan-tools semester-tools"><h2 id="semester-board-title">学期安排 <span>${future.length?`${assigned} / ${future.length} 门未来课程已分配`:'按自己的节奏安排课程'}</span></h2><div class="board-navigation" aria-label="查看其他学期"><button class="quiet" data-board-step="-1" aria-label="向左查看学期" aria-controls="semester-board-courses">←</button><button class="quiet" data-board-step="1" aria-label="向右查看学期" aria-controls="semester-board-courses">→</button></div></div>${unassigned}<p class="board-hint"><span class="board-drag-hint">${!p.items.length?'点「添加课程」开始，或试试自动规划。':'拖动课程，或点课程调整学期。'}</span><span class="board-swipe-hint">左右滑动查看其他学期。</span></p><div class="semester-board"><div class="board-headers"><div class="board-head-scroll"><div class="semester-head-track">${schedule.semesters.map(n=>semesterHeading(n,p)).join('')}</div></div></div><div class="board-courses-scroll" id="semester-board-courses" tabindex="0" role="region" aria-labelledby="semester-board-title"><div class="semester-grid">${schedule.semesters.map(semester=>semesterCard(semester,p)).join('')}</div></div></div><details id="custom-options" class="supplement"><summary>课程不在目录里？添加自己的选修</summary><p>仅支持 G/H/I/J 选修，归类与学分由你填写，认定需要学校确认。</p><form id="custom-plan" class="custom-form"><label>模块代码<input name="code" maxlength="60" required></label><label>课程名称<input name="name" maxlength="160" required></label><label>ECTS<input name="ects" type="number" min="0.5" max="30" step="0.5" required></label><label>所属领域<select name="group">${['G','H','I','J'].map(k=>`<option value="${k}">${e(C.courseGroups[k])}</option>`).join('')}</select></label><button class="button" type="submit">加入计划</button></form></details></div>`;
+ box.innerHTML=`${summary(calc,p)}<div class="planner-main"><div class="plan-tools semester-tools"><h2 id="semester-board-title">学期安排 <span>${desktopPlanning?.matches&&passed.length?`待修 ${future.length} 门 · 已通过 ${passed.length} 门`:future.length?`${assigned} / ${future.length} 门未来课程已分配`:'按自己的节奏安排课程'}</span></h2><div class="board-navigation" aria-label="查看其他学期"><button class="quiet" data-board-step="-1" aria-label="向左查看学期" aria-controls="semester-board-courses">←</button><button class="quiet" data-board-step="1" aria-label="向右查看学期" aria-controls="semester-board-courses">→</button></div></div>${unassigned}<p class="board-hint"><span class="board-drag-hint">${!p.items.length?'点「添加课程」开始，或试试自动规划。':'拖动课程，或点课程调整学期。'}</span><span class="board-swipe-hint">左右滑动查看其他学期。</span></p><div class="semester-board"><div class="board-headers"><div class="board-head-scroll"><div class="semester-head-track">${semesters.map(n=>semesterHeading(n,p)).join('')}</div></div></div><div class="board-courses-scroll" id="semester-board-courses" tabindex="0" role="region" aria-labelledby="semester-board-title"><div class="semester-grid">${semesters.map(semester=>semesterCard(semester,p)).join('')}</div></div></div>${history}<details id="custom-options" class="supplement"><summary>课程不在目录里？添加自己的选修</summary><p>仅支持 G/H/I/J 选修，归类与学分由你填写，认定需要学校确认。</p><form id="custom-plan" class="custom-form"><label>模块代码<input name="code" maxlength="60" required></label><label>课程名称<input name="name" maxlength="160" required></label><label>ECTS<input name="ects" type="number" min="0.5" max="30" step="0.5" required></label><label>所属领域<select name="group">${['G','H','I','J'].map(k=>`<option value="${k}">${e(C.courseGroups[k])}</option>`).join('')}</select></label><button class="button" type="submit">加入计划</button></form></details></div>`;
  box.querySelector('.semester-board').style.setProperty('--semester-count',String(p.timeline.count));
  box.querySelector('#summary-gaps').open=summaryOpen??false;
  const scrollers=[box.querySelector('.board-head-scroll'),box.querySelector('.board-courses-scroll')];
@@ -103,7 +128,7 @@ desktopPlanning?.addEventListener('change',()=>render().catch(err=>U.toast(err.m
 if(window.ResizeObserver)new ResizeObserver(()=>syncBoard()).observe(box);
 box.addEventListener('dragstart',ev=>{
  const item=ev.target.closest('[data-plan-course]');
- if(!item||ev.target.closest('a,button,select,input,label')){ev.preventDefault();return;}
+ if(!item||item.getAttribute('draggable')==='false'||ev.target.closest('a,button,select,input,label')){ev.preventDefault();return;}
  draggedCode=item.dataset.planCourse;dragX=ev.clientX;
  ev.dataTransfer.effectAllowed='move';ev.dataTransfer.setData('text/plain',draggedCode);
  item.classList.add('is-dragging');dragFrame=requestAnimationFrame(autoScrollDrag);
@@ -144,7 +169,11 @@ box.addEventListener('click',async ev=>{
    boardScrollOwner=scroller;
    scroller.scrollBy({left:Number(b.dataset.boardStep)*(column.getBoundingClientRect().width+14),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   }
-  if(b.hasAttribute('data-passed'))await U.updatePlan(p=>({...p,items:p.items.map(x=>x.code===b.dataset.passed?{...x,status:'passed',locked:false}:x)}));
+  if(b.hasAttribute('data-passed')){
+   if(desktopPlanning?.matches)await changeStatus(b.dataset.passed,'passed');
+   else await U.updatePlan(p=>({...p,items:p.items.map(x=>x.code===b.dataset.passed?{...x,status:'passed',locked:false}:x)}));
+  }
+  if(b.hasAttribute('data-unpass')&&desktopPlanning?.matches)await changeStatus(b.dataset.unpass,'planned');
   if(b.hasAttribute('data-remove')){
    let removed,related;
    await U.updatePlan(p=>{removed=p.items.find(x=>x.code===b.dataset.remove);related={desired:p.preferences.desired.includes(b.dataset.remove),excluded:p.preferences.excluded.includes(b.dataset.remove),events:p.timetable.events.filter(x=>x.code===b.dataset.remove)};if(!removed?.custom)return {...p,items:p.items.filter(x=>x.code!==b.dataset.remove)};return {...p,items:p.items.filter(x=>x.code!==b.dataset.remove),preferences:{...p.preferences,desired:p.preferences.desired.filter(code=>code!==b.dataset.remove),excluded:p.preferences.excluded.filter(code=>code!==b.dataset.remove)},timetable:{...p.timetable,events:p.timetable.events.filter(x=>x.code!==b.dataset.remove)}};});

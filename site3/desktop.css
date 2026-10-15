@@ -278,6 +278,15 @@
  .course-card-credits small{font-size:12px}
  .course-card-meta,.course-card-meta a{font-size:12px}
  .course-card-alert{font-size:12px;color:var(--warning)}
+ .semester-board .course-card.is-passed,.passed-history .course-card{background:var(--success-soft);border:1px solid #b6d5c1}
+ .course-card.is-passed>.course-card-summary:hover{background:#e2efe7}
+ .course-passed-state{grid-column:1/-1;color:var(--success);font-size:12px;font-weight:600}
+ .semester-status-totals{display:block;font-size:11px;color:var(--muted);margin-top:5px;white-space:normal}
+ .passed-history{margin-top:24px}
+ .passed-history h3{font-size:16px;margin:0 0 6px}
+ .passed-history>.meta{font-size:12px;color:var(--muted);margin:0 0 12px}
+ .passed-history-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+ .passed-history details.course-card{padding:0;border-radius:8px;overflow:hidden;margin:0;max-width:420px}
  .semester-board .course-card-actions .remove-course,.unassigned-grid .course-card-actions .remove-course{font-size:13px}
  .semester-board .scheduled-row .meta{font-size:12px!important;color:var(--muted);margin:5px 0 3px}
  .semester-board .offering-label,.offering-label{font-size:12px;color:var(--muted)}

@@ -21,7 +21,8 @@ async function harness(desktop=false){
  const generate=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-generate'})}});
  const finish=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-finish-settings'})}});
  const change=(id,value)=>box.handlers.change({target:{id,value,closest:()=>null}});
- return {nodes,preferences,workers,timers,dialog,result,apply,edit,settings,notice,generate,finish,change,getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},planReads:()=>planReads,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};
+ const forgetPassed=code=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-forget',dataset:{kind:'passed',forget:code}})}});
+ return {nodes,preferences,workers,timers,dialog,result,apply,edit,settings,notice,generate,finish,change,forgetPassed,getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},planReads:()=>planReads,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};
 }
 (async()=>{
  const h=await harness();await h.generate();const first=h.workers[0],oldTimeout=[...h.timers.values()][0],oldMessage=first.onmessage;
@@ -59,5 +60,9 @@ async function harness(desktop=false){
  assert(desired.result.innerHTML.includes('“想选”列表'));assert(desired.result.innerHTML.includes('查看想选记录'));assert(!desired.result.innerHTML.includes('查看已选课程'));
  await desired.result.handlers.click({target:{closest:()=>({dataset:{reviewRemediation:'desired'}})}});assert(desired.preferences.open);assert(desired.nodes['preference-search'].focused);assert.deepEqual(desired.getPlan().preferences.desired,['ED140014']);
  console.log('PASS Desired-only remediation conflicts open the corresponding preference without changing it');
- console.log('9 planning UI checks passed');
+ const revert=await harness(true),recorded=revert.getPlan();recorded.items=[{code:'IN2064',status:'passed',semester:3},{code:'IN2228',status:'passed',semester:6}];revert.setPlan(recorded);
+ await revert.forgetPassed('IN2064');assert.equal(revert.getPlan().items[0].semester,3);assert.equal(revert.getPlan().items[0].status,'planned');
+ await revert.forgetPassed('IN2228');assert.equal(revert.getPlan().items[1].semester,1);assert.equal(revert.getPlan().items.length,2);
+ console.log('PASS Cancelling passed status keeps an in-range semester and safely places out-of-range future records in semester one');
+ console.log('10 planning UI checks passed');
 })().catch(error=>{console.error(error);process.exitCode=1;});
