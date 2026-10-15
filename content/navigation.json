@@ -19,7 +19,7 @@
   "shortcuts": [
     {"id":"R010","label":"TUMonline","hint":"选课 · 考试报名 · 成绩","group":"courses","icon":"grid","access":"TUM 账号","aliases":["课表","报名考试","campus"]},
     {"id":"R128","label":"成绩排名查询","hint":"查看学期成绩排名","group":"courses","icon":"plan","access":"登录后查看","aliases":["排名","排名查询","成绩排名","学期排名","排名证明","Ranking","Rankings","Rangbescheinigung","DSSNAT","Digital School Services NAT"]},
-    {"id":"R137","label":"课程评价查询","hint":"MPIC 学生会 · 选课前参考","group":"courses","icon":"plan","access":"TUM 登录 · 仅供个人查看","aliases":["课程评价","教学评价","选课评价","evaluation","MPIC","课程质量"]},
+    {"id":"R137","label":"课程评价查询","hint":"MPIC 学生会 · 选课前参考","group":"courses","icon":"plan","access":"TUM 登录 · 仅供个人查看","desktop_access":"点击 Login → 选择 TUM-IdP；使用 TUM 账号，评价仅供个人查看。","aliases":["课程评价","教学评价","选课评价","evaluation","MPIC","课程质量"]},
     {"id":"R031","label":"Moodle","hint":"课件 · 作业 · 课程通知","group":"courses","icon":"book","access":"TUM 账号","aliases":["学习资料","讲义","slides"]},
     {"id":"R138","label":"考试专用 Moodle","hint":"Exam-TUM-Moodle · 指定考试","group":"courses","icon":"check","access":"按教学团队通知进入","aliases":["考试平台","考试 Moodle","Exam Moodle","在线考试","考试系统"]},
     {"id":"R030","label":"Matching System","hint":"申请实验课与研讨课名额","group":"courses","icon":"match","access":"TUM / 交换生登录","aliases":["实验课","研讨课","实习课","praktikum","seminar"]},
