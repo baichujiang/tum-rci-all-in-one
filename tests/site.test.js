@@ -53,7 +53,7 @@ test('Local backup UI is reachable from favorites and planner, with its dependen
   assert(scripts.indexOf('site.js')<scripts.indexOf('backup-ui.js'),p);
  }
  for(const p of ['index.html','favorites/index.html'])assert(fs.readFileSync(path.join(dist,p),'utf8').includes('data-backup-open'),p);
- const planner=fs.readFileSync(path.join(dist,'assets/planner.js'),'utf8');assert(planner.includes('data-backup-open'));assert(!planner.includes('plan-import'));
+ const planner=fs.readFileSync(path.join(dist,'planner/index.html'),'utf8');assert(planner.includes('id="plan-tools-dialog"'));assert(planner.includes('data-backup-open'));assert(!planner.includes('plan-import'));
 });
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
 test('course sources and status retained in static pages',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('2025'));assert(s.includes('历史整理'));assert(s.includes('campus.tum.de'));});

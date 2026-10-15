@@ -3,7 +3,7 @@
 'use strict';
 const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,e=C.esc,box=document.getElementById('plan-exports');if(!box)return;
 let db;try{db=await U.data();}catch(_){return;}
-box.innerHTML='<div class="inline-actions"><button class="button secondary" type="button" data-plan-xlsx>导出 Excel</button><button class="button secondary" type="button" data-plan-print>打印／保存 PDF</button><button class="quiet" type="button" data-plan-link>生成分享链接</button><button class="quiet" type="button" data-backup-open>完整备份与恢复</button></div><div id="plan-share-output" hidden><label>分享链接（含课程、已修和选课偏好）<textarea readonly rows="3" aria-label="个人计划分享链接"></textarea></label><p class="meta">任何得到链接的人都可读取其中的计划。链接内容在浏览器解码，不上传到本站服务器；收藏不会包含在链接中。</p></div>';
+box.innerHTML='<div class="plan-export-actions"><button class="plan-tool-row" type="button" data-plan-xlsx><span><b>导出 Excel</b><small>课程、学分和学期安排</small></span><span aria-hidden="true">↓</span></button><button class="plan-tool-row" type="button" data-plan-print><span><b>打印／保存 PDF</b><small>生成可打印的完整计划</small></span><span aria-hidden="true">↓</span></button><button class="plan-tool-row" type="button" data-plan-link><span><b>生成分享链接</b><small>分享当前计划，不包含收藏</small></span><span aria-hidden="true">↗</span></button></div><div id="plan-share-output" hidden><label>分享链接（含课程、已修和选课偏好）<textarea readonly rows="3" aria-label="个人计划分享链接"></textarea></label><p class="meta">任何得到链接的人都可读取其中的计划。链接内容在浏览器解码，不上传到本站服务器；收藏不会包含在链接中。</p></div>';
 const getName=(code,p)=>p.items.find(x=>x.code===code&&x.custom)?.name||db.courses.find(c=>c.module_code===code)?.module_name_legal_2025||p.items.find(x=>x.code===code)?.name||code;
 function sheets(p){
  const rows=[['模块代码','原文名称','中文参考名','ECTS','计入领域','状态','学期','固定学期']];

@@ -8,16 +8,20 @@ const copy=x=>JSON.parse(JSON.stringify(x)),tick=()=>new Promise(resolve=>setImm
 function element(){return {innerHTML:'',hidden:false,handlers:{},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];}};}
 async function harness(){
  let plan=C.validatePlan({version:2,cohort:'2026/27冬季',conditional:false,items:[]},courses),nextTimer=0,planGate=null,planReads=0;
- const timers=new Map(),workers=[],box=element(),dialog=element(),result=element(),apply=element(),cancel=element(),choices=element();
- dialog.querySelector=selector=>selector==='[data-apply-auto]'?apply:cancel;
- dialog.showModal=()=>{dialog.open=true;};dialog.close=()=>{dialog.open=false;dialog.handlers.close();};
+ const timers=new Map(),workers=[],box=element(),dialog=element(),result=element(),apply=element(),cancel=element(),edit=element(),choices=element();
+ const settings=element(),preferences=element(),tools=element(),finishSettings=element(),notice=element(),clear=element();
+ dialog.querySelector=selector=>({'[data-apply-auto]':apply,'[data-cancel-auto]':cancel,'[data-edit-auto-settings]':edit}[selector]);
+ settings.querySelector=()=>finishSettings;box.querySelector=()=>clear;
+ for(const panel of [dialog,settings,preferences,tools]){panel.showModal=()=>{panel.open=true;};panel.close=()=>{panel.open=false;panel.handlers.close?.();};}
  class Worker{constructor(){this.terminated=false;workers.push(this);}postMessage(input){this.input=copy(input);}terminate(){this.terminated=true;}}
- const U={base:'',persisted:true,data:async()=>({courses,names:{},synonyms:[]}),plan:async()=>{planReads++;if(planGate)await planGate;return copy(plan);},updatePlan:async fn=>{const next=await fn(copy(plan));if(next)plan=C.validatePlan(next,courses);return plan;},toast(){}};
- const nodes={'planning-controls':box,'auto-plan-dialog':dialog,'auto-plan-result':result,'preference-results':choices};
+ const U={base:'',persisted:true,data:async()=>({courses,names:{},synonyms:[]}),plan:async()=>{planReads++;if(planGate)await planGate;return copy(plan);},updatePlan:async fn=>{const next=await fn(copy(plan));if(next)plan=C.validatePlan(next,courses);return plan;},confirmAction:async()=>true,toast(){}};
+ const nodes={'planning-controls':box,'auto-plan-dialog':dialog,'auto-plan-result':result,'preference-results':choices,'plan-settings-dialog':settings,'course-preferences-dialog':preferences,'plan-tools-dialog':tools,'plan-context':element(),'plan-add-course':{dataset:{}},'plan-settings-content':element(),'course-preferences-content':element(),'plan-settings-notice':notice,'plan-cohort':{focus(){}},'controls-conditional-status':{focus(){}},'plan-start-term':{focus(){}}};
  vm.runInNewContext(source,{window:{RCIUI:U,RCI:C,RCIPlanning:E,RCICourseContext:T,RCISearch:S,addEventListener(){}},document:{getElementById:id=>nodes[id]},Worker,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id)});
  await tick();
  const generate=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-generate'})}});
- return {workers,timers,dialog,result,apply,generate,getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},planReads:()=>planReads,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};
+ const finish=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-finish-settings'})}});
+ const change=(id,value)=>box.handlers.change({target:{id,value,closest:()=>null}});
+ return {workers,timers,dialog,result,apply,edit,settings,notice,generate,finish,change,getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},planReads:()=>planReads,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};
 }
 (async()=>{
  const h=await harness();await h.generate();const first=h.workers[0],oldTimeout=[...h.timers.values()][0],oldMessage=first.onmessage;
@@ -33,5 +37,15 @@ async function harness(){
  const parallel=await harness(),release=parallel.holdPlan(),firstRequest=parallel.generate(),reads=parallel.planReads();
  await parallel.generate();assert.equal(parallel.planReads(),reads);release();await firstRequest;assert.equal(parallel.workers.length,1);parallel.dialog.close();
  console.log('PASS Rapid generate clicks reserve one request while the plan snapshot is still loading');
- console.log('3 planning UI checks passed');
+ const setup=await harness(),unknown=setup.getPlan();unknown.cohort='unknown';unknown.conditionalConfirmed=false;setup.setPlan(unknown);
+ await setup.generate();assert.equal(setup.workers.length,0);assert(setup.settings.open);assert(setup.notice.textContent.includes('补修要求'));
+ await setup.change('plan-cohort','2026/27冬季');await setup.change('controls-conditional-status','no');await setup.finish();
+ assert.equal(setup.settings.open,false);assert.equal(setup.workers.length,1);assert(setup.dialog.open);
+ console.log('PASS First-time automatic planning opens necessary settings, then continues directly to a preview');
+ await setup.edit.handlers.click();assert(setup.workers[0].terminated);assert.equal(setup.dialog.open,false);assert(setup.settings.open);assert.equal(setup.getPlan().items.length,0);
+ console.log('PASS Editing automatic conditions cancels the pending worker and leaves the saved plan untouched');
+ const shorter=await harness(),saved=shorter.getPlan();saved.items=[{code:'IN2064',status:'passed',semester:4},{code:'IN2228',status:'planned',semester:4}];shorter.setPlan(saved);
+ await shorter.change('plan-semester-count','2');const reduced=shorter.getPlan();assert.equal(reduced.timeline.count,2);assert.equal(reduced.items.find(x=>x.code==='IN2064').semester,4);assert.equal(reduced.items.find(x=>x.code==='IN2228').semester,0);
+ console.log('PASS Settings moved into the dialog retain historical passed semesters and unassign displaced future courses');
+ console.log('6 planning UI checks passed');
 })().catch(error=>{console.error(error);process.exitCode=1;});

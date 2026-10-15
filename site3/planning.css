@@ -1,4 +1,136 @@
-/* Planning tools extend the existing Chinese navigation and manual board. */
-.planning-workflow{margin-bottom:28px;padding:24px}.planning-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.planning-heading h2{margin:0 0 8px}.planning-heading p{margin:6px 0}.planning-workflow details{border-top:1px solid #dce5e0;margin-top:18px;padding-top:16px}.planning-workflow summary{font-weight:700;cursor:pointer;padding:6px 0}.preference-search{display:grid;grid-template-columns:180px 1fr;gap:14px;margin:16px 0}.preference-results{max-height:310px;overflow:auto;border:1px solid #dce5e0;border-radius:12px}.preference-result{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e6ece9}.preference-result:last-child{border:0}.preference-result small{display:block;color:#55675d;margin-top:5px}.preference-result button{flex-shrink:0}.preference-selections h3{font-size:16px;margin:18px 0 8px}.preference-selections h3 small{display:block;font-weight:400;color:#627166;font-size:12px;margin-top:5px}.preference-chip{display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px;padding:4px 6px 4px 12px;margin:4px 8px 4px 0;background:#edf4ef;border:1px solid #d7e4db;border-radius:8px;font-size:13px}.preference-chip small{color:#5e7064}.preference-chip button{min-width:36px;min-height:36px;padding:4px}.planning-workflow form{margin:16px 0;display:grid;gap:14px}.planning-workflow fieldset{border:1px solid #dce5e0;border-radius:10px;padding:14px}.planning-workflow .check{display:inline-flex;align-items:center;gap:8px}.planning-workflow input[type=checkbox]{width:18px;height:18px}.load-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.planning-workflow label{font-size:13px;font-weight:600;display:grid;gap:7px}.planning-workflow select,.planning-workflow input:not([type=checkbox]){padding:10px 12px;width:100%;background:#fff;border:1px solid #cbd8cf;border-radius:8px;color:#223b30;min-height:42px}.planning-workflow .button{justify-self:start}.workload-overrides{font-size:13px;color:#4e6757}.auto-plan-dialog{width:min(860px,calc(100vw - 32px));max-height:90vh;overflow:auto;border:1px solid #c8d8cd;border-radius:18px;padding:26px;box-shadow:0 20px 80px #19382d40}.auto-plan-dialog::backdrop{background:#112d236b}.auto-plan-dialog .dialog-actions{position:sticky;bottom:-26px;padding:16px 0;background:white;margin-top:20px}.auto-preview-semesters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.auto-preview-semesters section{border:1px solid #d8e4dc;border-radius:10px;padding:14px}.auto-preview-semesters h3{font-size:14px;margin:0}.auto-preview-semesters ul{padding-left:20px;font-size:13px}.auto-preview-semesters li{margin:8px 0}.auto-preview-semesters small{display:block;color:#63746a}.auto-result-total{font-size:18px}#plan-exports{padding:24px;margin-bottom:28px}#plan-share-output{margin-top:18px}#plan-share-output textarea{display:block;width:100%;margin:8px 0;word-break:break-all;font-size:12px;padding:12px;border:1px solid #bccfc1;border-radius:8px}#printable-plan{display:none}
-@media(max-width:700px){.planning-workflow,#plan-exports{padding:18px}.preference-search{grid-template-columns:1fr}.load-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.preference-result{padding:10px}.preference-result b{font-size:13px}.preference-result small{font-size:11px}.auto-preview-semesters{grid-template-columns:1fr}.auto-plan-dialog{padding:18px}.auto-plan-dialog .dialog-actions{bottom:-18px}.planning-heading .inline-actions{width:100%}.planning-heading .button{font-size:13px}.planning-workflow fieldset .check{margin-bottom:8px}}
-@media print{body>header,body>footer,.mobile-bottom-nav,.skip,#toast,dialog,#main>*{display:none!important}#main{width:100%;max-width:none;padding:0}#main>#printable-plan{display:block!important}#printable-plan[hidden]{display:block!important}#printable-plan table{width:100%;border-collapse:collapse;font-size:9px;word-break:break-word}#printable-plan th,#printable-plan td{border:1px solid #aaa;padding:5px;text-align:left}#printable-plan tr{break-inside:avoid}#printable-plan thead{display:table-header-group}#printable-plan h1{font-size:22px}#printable-plan h2{font-size:16px;break-after:avoid}#printable-plan p{font-size:10px}@page{size:A4 landscape;margin:12mm}}.progression-status{display:grid;gap:5px;margin:12px 0;font-size:11px;color:#796747}.progression-status .met{color:#3b7751}.admission-settings{display:flex;align-items:end;flex-wrap:wrap;gap:16px;margin:18px 0}.admission-settings label{max-width:310px;width:100%}.admission-settings>a{margin-bottom:10px}.workload-hint{display:block;font-size:10px;font-weight:400;color:#69796f;margin-top:5px;white-space:normal}.over-workload .workload-hint{color:#a36227;font-weight:600}.over-workload{box-shadow:inset 0 -3px #d9954e}@media(max-width:700px){}
+/* The semester board is the default workspace; secondary tools open on demand. */
+.plan-page-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0 0 12px}
+.plan-page-heading h1{font-size:32px;letter-spacing:-1px;line-height:1.25;margin:0 0 8px}
+.plan-page-heading p{font-size:14px;color:var(--muted);margin:0}
+.plan-primary-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.plan-primary-actions .button,.plan-more-button{min-height:44px;font-size:14px;white-space:nowrap}
+.plan-more-button{display:inline-flex;align-items:center;gap:8px;padding:10px 12px}
+.plan-more-button span{font-size:20px;line-height:1}
+.plan-context{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-bottom:22px;min-height:36px}
+.plan-context-button{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;padding:8px 0;min-height:36px;cursor:pointer}
+.plan-context-button:hover{color:var(--brand,var(--green));text-decoration:underline}
+.context-edit{color:var(--brand,var(--green));margin-left:8px}
+.context-divider{height:14px;border-left:1px solid var(--line)}
+.plan-save-state{margin-left:auto;font-size:12px;color:var(--muted)}
+.plan-save-state:before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:#4e8269;vertical-align:middle;margin-right:7px}
+.plan-save-state.is-temporary{color:#9b5e1f}.plan-save-state.is-temporary:before{background:#b47d37}
+.planner-page #planner{display:block;min-width:0}
+.plan-progress{border:1px solid var(--line);border-radius:12px;background:var(--white);padding:18px 22px 0;margin:0 0 24px;min-width:0}
+.plan-progress-main{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;align-items:center;padding-bottom:14px}
+.plan-progress .summary-overview h2{font-size:12px;font-weight:500;margin:0;color:var(--muted)}
+.plan-progress .summary-total{display:flex;align-items:baseline;gap:6px;margin:3px 0 0}
+.plan-progress .summary-total b{font-size:30px;letter-spacing:-1px;line-height:1.25;color:var(--ink)}
+.plan-progress .summary-total small{font-size:12px;color:var(--muted)}
+.plan-progress .summary-caption{font-size:11px;color:var(--muted);margin:3px 0 0}
+.plan-progress .summary-progress{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:22px}
+.plan-progress .progress-row{margin:0;min-width:0}
+.plan-progress .progress-row>div{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:12px;line-height:1.5;margin-bottom:7px}
+.plan-progress .progress-row b{font-size:12px;white-space:nowrap;font-weight:600}
+.plan-progress .original-label{display:none}
+.plan-progress progress{display:block;height:5px;width:100%;border:0;border-radius:6px;overflow:hidden}
+@media(min-width:701px){
+ .plan-progress-main{grid-template-columns:210px minmax(0,1fr)}
+ .plan-progress .summary-overview{display:flex;align-items:baseline;gap:10px}
+ .plan-progress .summary-overview h2{white-space:nowrap}
+ .plan-progress .summary-total{margin:0;white-space:nowrap}
+ .plan-progress .summary-total b{font-size:28px}
+ .plan-progress .summary-caption{display:none}
+}
+.plan-progress .summary-gaps{border-top:1px solid var(--line);padding:0;margin:0}
+.plan-progress .summary-gaps>summary{font-size:12px;min-height:36px;padding:9px 0;color:var(--muted);cursor:pointer}
+.plan-progress .summary-gaps[open]{padding-bottom:16px}
+.plan-progress .domain-minimums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 12px}
+.plan-progress .domain-minimums>span{display:grid;gap:5px;padding:10px;font-size:12px}
+.plan-progress .gaps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin:0}
+.plan-progress .summary-note,.progression-status{font-size:12px;color:var(--muted);line-height:1.7}
+.progression-status{display:grid;gap:5px;margin:12px 0}.progression-status p{margin:0 0 4px}.progression-status .met{color:#3b7751}
+.planner-page .semester-tools{margin:0 0 6px}
+.planner-page .semester-tools h2{font-size:18px;margin:0}
+.planner-page .semester-tools h2 span{font-size:12px;font-weight:400;color:var(--muted)}
+.planner-page .board-hint{margin:0 0 10px;font-size:12px}
+.planner-page .semester-heading:not(.over-workload) .workload-hint{display:none}
+.workload-hint{display:block;font-size:11px;font-weight:400;color:var(--muted);margin-top:5px;white-space:normal}
+.over-workload .workload-hint{color:#a36227;font-weight:600}.over-workload{box-shadow:inset 0 -3px #d9954e}
+.planner-page details.unassigned-courses{margin:10px 0;padding:0 14px;border:1px solid var(--line);background:var(--white);border-radius:10px}
+.unassigned-courses>summary.unassigned-heading{display:flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;font-size:13px;font-weight:600;margin:0}
+.unassigned-courses>summary:before{content:'▸';color:var(--muted)}.unassigned-courses[open]>summary:before{content:'▾'}
+.unassigned-heading>span{color:var(--muted);font-size:12px;font-weight:400}.unassigned-heading>small{font-size:12px;font-weight:400;color:var(--brand,var(--green));margin-left:auto}
+.unassigned-courses .unassigned-grid{padding:4px 0 14px}
+#custom-options:not([open]){display:none}
+.plan-dialog{width:min(680px,calc(100vw - 32px));max-height:88vh;max-height:88dvh;overflow:auto;border:1px solid var(--line);border-radius:16px;padding:0;background:var(--white);color:var(--ink);box-shadow:0 24px 90px #122a3a33}
+.plan-dialog::backdrop,.auto-plan-dialog::backdrop{background:#13263766;backdrop-filter:blur(2px)}
+.plan-dialog-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:22px 24px 18px;border-bottom:1px solid var(--line);background:var(--white)}
+.plan-dialog-heading h2{font-size:21px;line-height:1.4;margin:0 0 4px;letter-spacing:-.3px}
+.plan-dialog-heading p{font-size:13px;line-height:1.6;margin:0;color:var(--muted)}
+.plan-dialog-heading>.quiet{min-height:40px;flex-shrink:0;font-size:13px;padding:6px 9px}
+.plan-dialog-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;bottom:0;background:var(--white);padding:16px 24px;border-top:1px solid var(--line);z-index:2}
+.plan-dialog-footer .meta{margin:0;font-size:12px}
+#plan-settings-notice{margin:18px 24px 0;font-size:13px}
+.planning-workflow{padding:20px 24px}
+.planning-workflow h3{font-size:15px;margin:0 0 14px}
+.plan-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.planning-workflow label{font-size:13px;font-weight:500;display:grid;gap:7px}
+.planning-workflow select,.planning-workflow input:not([type=checkbox]){padding:10px 12px;width:100%;background:var(--white);border:1px solid var(--line);border-radius:8px;color:var(--ink);min-height:44px;font-size:14px;font-family:inherit}
+.planning-workflow .meta{font-size:12px;line-height:1.7;color:var(--muted)}
+.planning-workflow details{border-top:1px solid var(--line);margin-top:18px;padding-top:8px}
+.planning-workflow details>summary{font-size:14px;font-weight:600;cursor:pointer;min-height:44px;padding:10px 0}
+.planning-workflow details p{font-size:13px;line-height:1.8}
+.planning-workflow form{margin:12px 0;display:grid;gap:14px}
+.planning-workflow fieldset{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.planning-workflow legend{font-size:13px;font-weight:500}
+.planning-workflow .check{display:inline-flex;align-items:center;gap:8px;font-weight:400;margin:6px 14px 6px 0;line-height:1.6}
+.planning-workflow input[type=checkbox]{width:18px;height:18px;flex-shrink:0}
+.planning-workflow form>.meta{margin:0}
+.load-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.planning-workflow .button{justify-self:start;min-height:42px;font-size:13px}
+.workload-overrides{font-size:12px;color:var(--muted)}
+.preference-modes{display:flex;gap:4px;padding:4px;background:var(--paper);border:1px solid var(--line);border-radius:10px;margin-bottom:14px}
+.preference-modes button{flex:1;border:0;border-radius:7px;background:transparent;color:var(--muted);min-height:40px;padding:8px 10px;font-family:inherit;font-size:14px;cursor:pointer}
+.preference-modes button[aria-selected=true]{background:var(--white);color:var(--brand,var(--green));box-shadow:0 1px 4px #173a4b15;font-weight:600}
+.preference-modes button span{font-size:11px;margin-left:6px;opacity:.8}
+.preference-mode-help{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 16px}
+.preference-search-label{margin-bottom:7px}
+.preference-results{max-height:310px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:12px}
+.preference-result{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+.preference-result:last-child{border:0}.preference-result>span{min-width:0}.preference-result b{display:block;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.preference-result small{display:block;font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6}.preference-result button{flex-shrink:0;font-size:13px;min-height:40px}
+.preference-selections h3{font-size:14px;margin:18px 0 8px}.preference-selections h3 small{font-weight:400;color:var(--muted);font-size:11px;margin-left:8px}
+.preference-chip{display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px;padding:3px 5px 3px 10px;margin:4px 6px 4px 0;background:var(--paper);border:1px solid var(--line);border-radius:8px;font-size:12px;overflow-wrap:anywhere}
+.preference-chip small{color:var(--muted)}.preference-chip button{min-width:36px;min-height:36px;padding:4px}
+.plan-tools-dialog{width:min(520px,calc(100vw - 32px))}
+.plan-tool-row{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;padding:16px 24px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:var(--white);color:var(--ink);text-align:left;font:inherit;cursor:pointer;min-height:68px;text-decoration:none}
+.plan-tool-row:hover{background:var(--paper);text-decoration:none}.plan-tool-row b{display:block;font-size:14px;font-weight:600}.plan-tool-row small{display:block;font-size:12px;line-height:1.6;color:var(--muted);margin-top:3px}.plan-tool-row>span:last-child{color:var(--muted)}
+#plan-exports{padding:0;margin:0}.plan-storage-note{margin:18px 24px 8px;font-size:12px;line-height:1.7}.plan-clear-button{margin:0 14px 12px;color:#a34c41;min-height:40px;font-size:12px}
+#plan-share-output{padding:18px 24px;border-bottom:1px solid var(--line);font-size:13px}#plan-share-output textarea{display:block;width:100%;margin:8px 0;word-break:break-all;font-size:12px;padding:12px;border:1px solid var(--line);border-radius:8px}#plan-share-output .meta{font-size:12px}
+.auto-plan-dialog{width:min(860px,calc(100vw - 32px));max-height:90vh;max-height:90dvh;overflow:auto;border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--white);color:var(--ink);box-shadow:0 24px 90px #122a3a33}
+.auto-plan-dialog .plan-dialog-heading{padding:0 0 16px;margin-bottom:18px}
+.auto-plan-dialog .dialog-actions{position:sticky;bottom:-24px;padding:16px 0;background:var(--white);margin-top:20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.auto-plan-dialog [data-edit-auto-settings]{margin-right:auto;min-height:42px;font-size:13px}
+.auto-preview-semesters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.auto-preview-semesters section{border:1px solid var(--line);border-radius:10px;padding:14px}.auto-preview-semesters h3{font-size:14px;margin:0}.auto-preview-semesters ul{padding-left:20px;font-size:13px}.auto-preview-semesters li{margin:8px 0}.auto-preview-semesters small{display:block;color:var(--muted)}.auto-result-total{font-size:18px}#printable-plan{display:none}
+@media(max-width:700px){
+ .plan-page-heading{align-items:flex-start;flex-direction:column;gap:18px;margin-bottom:10px}.plan-page-heading h1{font-size:28px}.plan-page-heading p{font-size:13px}
+ .plan-primary-actions{width:100%;gap:8px}.plan-primary-actions .button{flex:1;justify-content:center;font-size:14px;padding:10px 12px}.plan-more-button{font-size:13px;padding:8px 5px}.plan-more-button span{display:none}
+ .plan-context{gap:0 14px;margin-bottom:16px}.plan-context-button{font-size:12px;min-height:38px}.plan-save-state{width:100%;margin:0;font-size:11px}.context-divider{display:none}
+ .plan-progress{padding:14px 16px 0;margin-bottom:18px}.plan-progress-main{grid-template-columns:1fr;gap:14px;padding-bottom:12px}.plan-progress .summary-overview{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.plan-progress .summary-overview h2{font-size:12px}.plan-progress .summary-total{margin:0}.plan-progress .summary-total b{font-size:26px}.plan-progress .summary-caption{margin-left:auto;font-size:11px}
+ .plan-progress .summary-progress{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px}.plan-progress .progress-row>div{font-size:11px;gap:4px;margin-bottom:5px}.plan-progress .progress-row b{font-size:11px}.plan-progress .summary-gaps>summary{font-size:11px;min-height:34px}.plan-progress .domain-minimums{grid-template-columns:1fr;gap:6px}.plan-progress .domain-minimums>span{display:flex;justify-content:space-between}.plan-progress .gaps{grid-template-columns:1fr}
+ .planner-page .semester-tools h2{font-size:17px}.planner-page .semester-tools h2 span{font-size:11px}.planner-page .board-hint{font-size:11px;line-height:1.7}.unassigned-heading>small{font-size:11px}.unassigned-heading>span{font-size:11px}
+ .plan-dialog-heading{padding:18px 18px 16px}.plan-dialog-heading h2{font-size:19px}.plan-dialog-heading p{font-size:12px}.plan-dialog-heading>.quiet{font-size:12px}.planning-workflow{padding:18px}.plan-dialog-footer{padding:14px 18px}.plan-dialog-footer .meta{font-size:11px}#plan-settings-notice{margin:16px 18px 0}
+ .plan-settings-grid{gap:14px}.planning-workflow select,.planning-workflow input:not([type=checkbox]){font-size:16px;padding:9px 10px}.planning-workflow label{font-size:12px}.planning-workflow details>summary{font-size:13px}
+ .preference-modes button{font-size:13px;padding:8px 5px}.preference-modes button span{font-size:10px;margin-left:4px}.preference-result{padding:12px 10px;gap:10px}.preference-result b{font-size:13px}.preference-result small{font-size:11px}.preference-result button{font-size:12px}.preference-results{max-height:35vh}
+ .plan-tool-row{padding:14px 18px}.plan-storage-note{margin:16px 18px 8px}.plan-clear-button{margin-left:8px}#plan-share-output{padding:16px 18px}
+ .auto-preview-semesters{grid-template-columns:1fr}.auto-plan-dialog{padding:18px}.auto-plan-dialog .dialog-actions{bottom:-18px}.auto-plan-dialog .dialog-actions .button{font-size:12px;padding:10px 12px}.auto-plan-dialog [data-edit-auto-settings]{font-size:12px}
+}
+@media(max-width:380px){.plan-settings-grid{grid-template-columns:1fr}.plan-progress .summary-caption{width:100%;margin:0}.unassigned-heading>small{display:none}.plan-dialog-footer{align-items:flex-start}.plan-dialog-footer .meta{max-width:130px}}
+@media(max-width:700px){
+ .plan-save-state:not(.is-temporary){display:none}
+ .plan-context{margin-bottom:12px}
+ .plan-progress{padding:12px 14px 0;margin-bottom:16px}
+ .plan-progress-main{gap:10px;padding-bottom:10px}
+ .planner-page .semester-tools{display:flex;align-items:center;gap:8px}
+ .planner-page .semester-tools h2{flex:1 1 auto;display:block;margin:0;min-width:0}
+ .planner-page .semester-tools h2 span{display:block;margin:3px 0 0;font-size:10px}
+ .planner-page .semester-tools .board-navigation{margin:0;flex-shrink:0}
+ .planner-page .semester-tools .board-navigation button{min-width:38px;min-height:42px}
+}
+@media print{body>header,body>footer,.mobile-bottom-nav,.skip,#toast,dialog,#main>*{display:none!important}dialog::backdrop{display:none!important}#main{width:100%;max-width:none;padding:0}#main>#printable-plan{display:block!important}#printable-plan[hidden]{display:block!important}#printable-plan table{width:100%;border-collapse:collapse;font-size:9px;word-break:break-word}#printable-plan th,#printable-plan td{border:1px solid #aaa;padding:5px;text-align:left}#printable-plan tr{break-inside:avoid}#printable-plan thead{display:table-header-group}#printable-plan h1{font-size:22px}#printable-plan h2{font-size:16px;break-after:avoid}#printable-plan p{font-size:10px}@page{size:A4 landscape;margin:12mm}}
+.picker-course-restriction{margin:6px 0 0;font-size:11px;color:#91602c}.picker-course-restriction summary{cursor:pointer;min-height:28px;line-height:1.7;padding:4px 0}.picker-course-restriction p{font-size:12px;line-height:1.7;color:var(--muted);margin:5px 0}.picker-show-more{display:block;margin:16px auto;font-size:13px}
