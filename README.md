@@ -18,7 +18,9 @@
 
 首版 Goal：**让学生一打开就知道在哪里点，点完知道下一步做什么，能顺畅地找到常用网站并完成自己的选课与学分规划。** 验收以入口清晰和实际操作顺畅为准，功能或资料数量不作为产品完成标准。
 
-[常用网站](https://tum-rci-all-in-one.vercel.app/) · [选课指南](https://tum-rci-all-in-one.vercel.app/study/) · [选课程](https://tum-rci-all-in-one.vercel.app/courses/) · [我的计划](https://tum-rci-all-in-one.vercel.app/planner/)
+[常用网站](https://tum-rci-all-in-one.vercel.app/) · [选课程](https://tum-rci-all-in-one.vercel.app/courses/) · [我的计划](https://tum-rci-all-in-one.vercel.app/planner/)
+
+电脑端将学分要求与选课指南并入「我的计划」：顶部进度显示个人学分结构，「选课与学分说明」按需查看规则、Matching 与考试报名步骤。顶部导航保留三个主入口；旧 `/study/` 链接进入计划页说明，窄屏原有指南保持可用。
 
 手机端有固定的常用网站、选课指南、我的计划入口。加入课程后按钮和学分同步更新；二选一课程可以确认改选，移除课程可以撤销。
 

@@ -43,6 +43,28 @@
 .plan-progress .domain-minimums>span{display:grid;gap:5px;padding:10px;font-size:12px}
 .plan-progress .gaps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin:0}
 .plan-progress .summary-note,.progression-status{font-size:12px;color:var(--muted);line-height:1.7}
+@media(min-width:961px){
+ .plan-dialog.plan-study-dialog{width:min(860px,calc(100vw - 64px))}
+ .plan-study-dialog>.plan-dialog-heading{align-items:center}
+ .plan-credit-help,.plan-study-sources,.plan-study-dialog>.selection-section{padding:0 24px 24px}
+ .plan-study-dialog .plan-credit-help{padding-top:20px}
+ .plan-credit-help h3,.plan-study-sources h3{font-size:16px;margin:0 0 8px}
+ .plan-credit-explanations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px;margin:16px 0}
+ .plan-credit-explanations dt{font-size:14px;font-weight:650}
+ .plan-credit-explanations dd{margin:4px 0 0;font-size:13px;color:var(--muted);line-height:1.7}
+ .plan-remediation-help{font-size:13px}
+ .plan-remediation-help>summary{min-height:36px;padding:6px 0;cursor:pointer;color:var(--brand)}
+ .plan-remediation-help p{margin:8px 0}
+ .plan-study-dialog>.selection-section{margin:0}
+ .plan-study-dialog .section-title{margin:0 0 12px}
+ .plan-study-dialog .section-title h2{font-size:16px}
+ .plan-study-dialog .selection-steps{gap:12px}
+ .plan-study-dialog .selection-steps article{padding:14px;gap:10px}
+ .plan-study-dialog .selection-steps h3{font-size:14px;margin:0 0 6px}
+ .plan-study-dialog .selection-steps p{font-size:13px;margin-bottom:8px}
+ .plan-study-dialog .selection-steps .text-link{font-size:13px}
+ .plan-study-sources{border-top:1px solid var(--line);padding-top:20px}
+}
 .progression-status{display:grid;gap:5px;margin:12px 0}.progression-status p{margin:0 0 4px}.progression-status .met{color:#3b7751}
 .planner-page .semester-tools{margin:0 0 6px}
 .planner-page .semester-tools h2{font-size:18px;margin:0}

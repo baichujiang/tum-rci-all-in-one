@@ -3,6 +3,10 @@
 .portal-card[data-desktop-only=true]{display:none}
 .course-toolbar{display:contents}
 
+@media screen and (min-width:721px){
+ .portal-search input:focus{outline:none;box-shadow:none}
+}
+
 @media screen and (min-width:961px){
  :root{
   --brand:#0065bd;--brand-hover:#00549e;--brand-soft:#eaf3fc;

@@ -1,6 +1,6 @@
 /* Stable dialog shells stay mounted while local plan records update. */
 'use strict';
-module.exports=function plannerView(){return `
+module.exports=function plannerView(studyHelp=''){return `
 <div id="planning-controls">
  <header class="plan-page-heading">
   <div><h1>我的计划</h1><p>选好课程，按学期安排。</p></div>
@@ -11,6 +11,10 @@ module.exports=function plannerView(){return `
   </div>
  </header>
  <div id="plan-context" class="plan-context"><p class="loading-state">正在读取计划…</p></div>
+ <dialog id="plan-study-dialog" class="plan-dialog plan-study-dialog" aria-labelledby="plan-study-title">
+  <header class="plan-dialog-heading"><h2 id="plan-study-title">选课与学分说明</h2><button type="button" class="quiet" data-close-study aria-label="关闭选课与学分说明">关闭</button></header>
+  ${studyHelp}
+ </dialog>
  <dialog id="plan-settings-dialog" class="plan-dialog" aria-labelledby="plan-settings-title">
   <header class="plan-dialog-heading"><div><h2 id="plan-settings-title">计划设置</h2><p>基本信息只需确认一次，之后随时可改。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭计划设置">关闭</button></header>
   <p id="plan-settings-notice" class="notice" role="status" hidden></p>

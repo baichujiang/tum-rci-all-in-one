@@ -206,4 +206,5 @@ test('Compiled catalogue plans satisfy verified numerical rules across original 
 });
 
 require('./community.test.js');
+require('./study-navigation.test.js');
 console.log(count+' site checks passed');
