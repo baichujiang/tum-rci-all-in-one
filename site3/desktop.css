@@ -108,7 +108,8 @@
  .bookmarks-section:has(#favorites-empty:not([hidden])) h2{font-size:15px}
  .bookmarks-section:has(#favorites-empty:not([hidden])) #favorites-app{flex:1;min-width:0}
  .inline-favorites .favorites-empty{padding:8px 12px;gap:0;border:0;border-radius:7px;background:var(--brand-soft);min-height:40px}
- .inline-favorites .favorites-empty .empty-symbol,.inline-favorites .favorites-empty h3{display:none}
+ .inline-favorites .favorites-empty .empty-symbol{display:none}
+ .inline-favorites .favorites-empty h3{display:block;font-size:13px;font-weight:500;color:var(--muted);margin:0}
  .inline-favorites .favorites-empty p{font-size:13px;color:var(--muted);margin:0}
  .inline-favorites .portal-card{background:var(--white);border-color:#bfd6ed}
  .inline-favorites .portal-link.shortcut{padding:16px 18px}

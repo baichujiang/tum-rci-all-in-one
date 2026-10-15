@@ -74,7 +74,10 @@
  .credit-segment-filled{color:#fff;clip-path:inset(0 calc(100% - var(--credit-filled,0%)) 0 0)}
  .credit-segment-compact .credit-segment-name{font-size:11px}
  .credit-segment-compact .credit-segment-copy>b,.credit-segment-compact .credit-segment-copy>b>small{font-size:11px}
- .credit-distribution-note{font-size:11px;color:var(--muted);line-height:1.5;margin:8px 0 0}
+ .plan-course-status{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:8px;font-size:13px;font-weight:600;line-height:22px}
+ .plan-course-status>span{display:inline-flex;align-items:baseline;gap:5px;padding:1px 8px;border-radius:5px;background:var(--brand-soft);color:var(--brand)}
+ .plan-course-status>.plan-course-status-passed{background:var(--success-soft);color:var(--success)}
+ .plan-course-status b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
  /* Link matching progress segments, legends and cards; pointer hover takes priority over keyboard focus. */
  #planner:not(:has(.is-dragging)):is(:has([data-credit-category="core"]:hover),:not(:has([data-credit-category]:hover)):has([data-credit-category="core"]:focus-visible,[data-credit-category="core"] :focus-visible)) [data-credit-category="core"],
  #planner:not(:has(.is-dragging)):is(:has([data-credit-category="professional"]:hover),:not(:has([data-credit-category]:hover)):has([data-credit-category="professional"]:focus-visible,[data-credit-category="professional"] :focus-visible)) [data-credit-category="professional"],

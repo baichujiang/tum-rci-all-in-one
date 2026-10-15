@@ -47,7 +47,7 @@ function render(){
  if(!db||!plan)return;
  const chosen=new Map(plan.items.map(x=>[x.code,x])),list=filter(db,plan,state());
  count.textContent=`${query.value.trim()?'“'+query.value.trim()+'” · ':''}${list.length} 门课程${desktopMedia?.matches&&list.length>limit?' · 已显示 '+limit+' 门':''}`;
- results.innerHTML=list.length?list.slice(0,limit).map(c=>card(c,chosen.get(c.code),semester,{base:U.base,busy:pending.has(c.code)})).join(''):'<div class="catalog-empty"><h2>没有找到对应课程</h2><p>试试课程代码，或清除筛选。</p><button type="button" class="button secondary" data-directory-reset>清除搜索与筛选</button></div>';
+ results.innerHTML=list.length?list.slice(0,limit).map(c=>card(c,chosen.get(c.code),semester,{base:U.base,busy:pending.has(c.code)})).join(''):'<div class="catalog-empty"><h2>没有找到对应课程</h2><p class="desktop-legacy">试试课程代码，或清除筛选。</p><button type="button" class="button secondary" data-directory-reset>清除搜索与筛选</button></div>';
  $('#more-results').hidden=list.length<=limit;
  $('[data-directory-clear-query]').hidden=!query.value;
  const active=category(group.value);

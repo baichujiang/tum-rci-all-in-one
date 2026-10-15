@@ -27,6 +27,17 @@ async function harness(initial,desktop=true){
 const card=(html,code)=>html.match(new RegExp('<details[^>]*id="plan-course-'+code+'"[\\s\\S]*?</details>'))?.[0];
 let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS',name);}
 (async()=>{
+ await test('Persistent course counts include passed history and update after status changes and undo',async()=>{
+  const codes=['IN2067','IN2064','IN2406','ED150039','IN2346','IN2106','MW0085','MW1808','IN2107','MW1420','CIT433037','IN2357','WI001056_1','IN2320'];
+  const initial=draft(codes.map(code=>({code,status:code==='IN2064'?'passed':'planned',semester:code==='IN2064'?6:2}))),h=await harness(initial);
+  const counts=html=>Object.fromEntries([...html.matchAll(/class="plan-course-status-(pending|passed)">[^<]+<b>(\d+)<\/b>/g)].map(m=>[m[1],Number(m[2])]));
+  assert.deepEqual(counts(h.html()),{pending:13,passed:1});assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
+  await h.click('data-passed','IN2346');assert.deepEqual(counts(h.html()),{pending:12,passed:2});
+  await h.toasts.at(-1).action.run();await tick();assert.deepEqual(counts(h.html()),{pending:13,passed:1});assert.deepEqual(h.plan(),initial);
+  await h.external({...initial,items:initial.items.map(x=>({...x,status:'passed'}))});assert.deepEqual(counts(h.html()),{pending:0,passed:14});
+  await h.external({...initial,items:[]});assert.deepEqual(counts(h.html()),{pending:0,passed:0});
+  const narrow=await harness(initial,false);assert(!narrow.html().includes('plan-course-status'));
+ });
  await test('Desktop hover categories follow the credit overview while preserving passed and custom recognition records',async()=>{
   const expected={IN2067:'core',IN2064:'core',IN2228:'core',IN2107:'core',IN2106:'core',IN2346:'professional',MW0085:'professional',MW1808:'professional',CIT433050:'professional',WI001056_1:'interdisciplinary',IN2320:'thesis',ED140014:'remediation',IN2060:'interdisciplinary'};
   const initial=draft(Object.keys(expected).map(code=>code==='IN2060'?{code,name:'原有跨学科认定',custom:true,group:'J',ects:3,status:'passed',semester:6}:{code,...(code==='CIT433050'?{group:'I'}:{}),status:code==='IN2064'?'passed':'planned',semester:code==='IN2064'?1:2})),h=await harness(initial);
@@ -42,7 +53,7 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   assert.deepEqual(segments,[[43,43,8],[41,41,7.5],[6,6,0],[30,30,0]]);
   assert.deepEqual([...h.html().matchAll(/<progress[^>]*data-credit-category="([^"]+)"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
   assert.deepEqual([...h.html().matchAll(/class="credit-segment[^>]*data-credit-category="([^"]+)" tabindex="0"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
-  assert.equal(segments.reduce((n,x)=>n+x[0],0),120);assert(h.html().includes('credit-category-thesis'));assert(h.html().includes('已规划（含已修）'));
+  assert.equal(segments.reduce((n,x)=>n+x[0],0),120);assert(h.html().includes('credit-category-thesis'));
   assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
  });
  await test('Credit distribution follows the active remediation rule and caps overfilled category progress',async()=>{

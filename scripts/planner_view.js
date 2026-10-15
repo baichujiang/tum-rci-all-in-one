@@ -22,7 +22,7 @@ module.exports=function plannerView(studyHelp=''){return `
   <footer class="plan-dialog-footer"><span class="meta">基本设置更改后自动保存</span><button type="button" class="button" data-finish-settings>完成</button></footer>
  </dialog>
  <dialog id="course-preferences-dialog" class="plan-dialog" aria-labelledby="course-preferences-title">
-  <header class="plan-dialog-heading"><div><h2 id="course-preferences-title">已修与选课偏好</h2><p>已修计入进度，想选与排除用于自动规划。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭已修与选课偏好">完成</button></header>
+  <header class="plan-dialog-heading"><div><h2 id="course-preferences-title">已修与选课偏好</h2><p class="desktop-legacy">已修计入进度，想选与排除用于自动规划。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭已修与选课偏好">完成</button></header>
   <div id="course-preferences-content" class="planning-workflow"></div>
  </dialog>
  <dialog id="plan-tools-dialog" class="plan-dialog plan-tools-dialog" aria-labelledby="plan-tools-title">
