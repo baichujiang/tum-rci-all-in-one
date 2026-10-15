@@ -61,29 +61,30 @@
  #planner .credit-category-interdisciplinary{--credit-color:#b88724;--credit-soft:#f5ecd5}
  #planner .credit-category-thesis{--credit-color:#8063a9;--credit-soft:#eae3f4}
  #planner .credit-category-remediation{--credit-color:#be6554;--credit-soft:#f7e3de}
- .credit-distribution{display:flex;gap:3px;border-radius:6px;overflow:hidden}
- .plan-progress .credit-distribution-progress{flex-basis:0;flex-shrink:1;min-width:0;width:0;height:16px;border-radius:0;background:var(--credit-soft);outline:2px solid var(--credit-active-color,transparent);outline-offset:-2px;filter:var(--credit-active-filter,none)}
+ .credit-distribution{display:flex;gap:3px;border-radius:8px;overflow:hidden}
+ .credit-segment{position:relative;flex-basis:0;flex-shrink:1;min-width:0;height:58px;overflow:hidden;background:var(--credit-soft);outline-offset:-3px;--credit-fill:color-mix(in srgb,var(--credit-color) 82%,#000)}
+ .plan-progress .credit-distribution-progress{position:absolute;inset:0;width:100%;height:100%;border-radius:0;background:var(--credit-soft);outline:2px solid var(--credit-active-color,transparent);outline-offset:-2px;filter:var(--credit-active-filter,none)}
  .credit-distribution-progress::-webkit-progress-bar{background:var(--credit-soft)}
- .credit-distribution-progress::-webkit-progress-value{background:var(--credit-color)}
- .credit-distribution-progress::-moz-progress-bar{background:var(--credit-color)}
- .credit-distribution-legend{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;margin-top:8px}
- .credit-legend-item{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;min-height:34px;padding:6px 8px;font-size:12px;line-height:1.5;border-radius:6px;outline-offset:3px}
- .credit-legend-label{display:flex;align-items:center;gap:6px;white-space:nowrap;color:var(--credit-active-ink,var(--muted));font-weight:var(--credit-active-weight,400)}
- .credit-legend-dot{width:7px;height:7px;border-radius:2px;flex:none;background:var(--credit-color)}
- .credit-legend-item>b{display:flex;align-items:baseline;justify-content:flex-end;gap:3px;padding:0;flex-shrink:0;font-size:13px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums;text-align:right}
- .credit-legend-item>b>small{font-size:12px;font-weight:400;color:var(--muted)}
- .credit-distribution-note{font-size:11px;color:var(--muted);line-height:1.5;margin:6px 8px 0}
+ .credit-distribution-progress::-webkit-progress-value{background:var(--credit-fill)}
+ .credit-distribution-progress::-moz-progress-bar{background:var(--credit-fill)}
+ .credit-segment-copy{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;color:var(--ink);line-height:1.4;pointer-events:none;white-space:nowrap}
+ .credit-segment-name{font-size:12px;font-weight:var(--credit-active-weight,550)}
+ .credit-segment-copy>b{font-size:14px;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.4}
+ .credit-segment-copy>b>small{font-size:12px;font-weight:400}
+ .credit-segment-filled{color:#fff;clip-path:inset(0 calc(100% - var(--credit-filled,0%)) 0 0)}
+ .credit-segment-compact .credit-segment-name{font-size:11px}
+ .credit-segment-compact .credit-segment-copy>b,.credit-segment-compact .credit-segment-copy>b>small{font-size:11px}
+ .credit-distribution-note{font-size:11px;color:var(--muted);line-height:1.5;margin:8px 0 0}
  /* Link matching progress segments, legends and cards; pointer hover takes priority over keyboard focus. */
  #planner:not(:has(.is-dragging)):is(:has([data-credit-category="core"]:hover),:not(:has([data-credit-category]:hover)):has([data-credit-category="core"]:focus-visible,[data-credit-category="core"] :focus-visible)) [data-credit-category="core"],
  #planner:not(:has(.is-dragging)):is(:has([data-credit-category="professional"]:hover),:not(:has([data-credit-category]:hover)):has([data-credit-category="professional"]:focus-visible,[data-credit-category="professional"] :focus-visible)) [data-credit-category="professional"],
  #planner:not(:has(.is-dragging)):is(:has([data-credit-category="interdisciplinary"]:hover),:not(:has([data-credit-category]:hover)):has([data-credit-category="interdisciplinary"]:focus-visible,[data-credit-category="interdisciplinary"] :focus-visible)) [data-credit-category="interdisciplinary"],
  #planner:not(:has(.is-dragging)):is(:has([data-credit-category="thesis"]:hover),:not(:has([data-credit-category]:hover)):has([data-credit-category="thesis"]:focus-visible,[data-credit-category="thesis"] :focus-visible)) [data-credit-category="thesis"],
- #planner:not(:has(.is-dragging)):is(:has([data-credit-category="remediation"]:hover),:not(:has([data-credit-category]:hover)):has([data-credit-category="remediation"]:focus-visible,[data-credit-category="remediation"] :focus-visible)) [data-credit-category="remediation"]{--credit-active-color:var(--credit-color);--credit-active-filter:brightness(.85);--credit-active-ink:var(--ink);--credit-active-weight:650;background:var(--credit-soft);border-color:var(--credit-color);box-shadow:inset 0 0 0 1px var(--credit-color)}
+ #planner:not(:has(.is-dragging)):is(:has([data-credit-category="remediation"]:hover),:not(:has([data-credit-category]:hover)):has([data-credit-category="remediation"]:focus-visible,[data-credit-category="remediation"] :focus-visible)) [data-credit-category="remediation"]{--credit-active-color:var(--credit-color);--credit-active-filter:brightness(.85);--credit-active-weight:650;background:var(--credit-soft);border-color:var(--credit-color);box-shadow:inset 0 0 0 1px var(--credit-color)}
  .planner-main .course-card[data-credit-category]>.course-card-summary:hover{background:transparent}
  @media(max-width:1200px){
   .plan-progress-main{grid-template-columns:136px minmax(0,1fr);gap:16px}
-  .credit-legend-item{display:grid;grid-template-columns:minmax(0,1fr);gap:2px}
-  .credit-legend-item>b{justify-content:flex-start;padding-left:13px}
+  .credit-segment-compact .credit-segment-name,.credit-segment-compact .credit-segment-copy>b,.credit-segment-compact .credit-segment-copy>b>small{font-size:10px}
  }
  .plan-dialog.plan-study-dialog{width:min(860px,calc(100vw - 64px))}
  .plan-study-dialog>.plan-dialog-heading{align-items:center}

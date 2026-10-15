@@ -41,7 +41,7 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   const segments=[...h.html().matchAll(/data-credit-share="([\d.]+)" max="([\d.]+)" value="([\d.]+)"/g)].map(m=>m.slice(1).map(Number));
   assert.deepEqual(segments,[[43,43,8],[41,41,7.5],[6,6,0],[30,30,0]]);
   assert.deepEqual([...h.html().matchAll(/<progress[^>]*data-credit-category="([^"]+)"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
-  assert.deepEqual([...h.html().matchAll(/class="credit-legend-item[^>]*data-credit-category="([^"]+)" tabindex="0"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
+  assert.deepEqual([...h.html().matchAll(/class="credit-segment[^>]*data-credit-category="([^"]+)" tabindex="0"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
   assert.equal(segments.reduce((n,x)=>n+x[0],0),120);assert(h.html().includes('credit-category-thesis'));assert(h.html().includes('已规划（含已修）'));
   assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
  });
