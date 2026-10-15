@@ -112,7 +112,7 @@ function generate(raw,courses,offerings={},options={}){
  if(unresolved.length)return fail(`这些已选／想选课程暂不能自动安排：${unresolved.map(x=>x.code+'（'+(known.get(x.code).recommendation_note||'资料或个人条件待核实')+'）').join('、')} 已有手动记录保留。请先取消想选并从未来方案移出；确认资料、开课或个人准备后可继续使用手动看板。`);
  const countingConflicts=C.calculate({...p,items:base},courses).countingIssues;
  if(countingConflicts.length)return fail(countingConflicts.join(' '));
- if(!p.conditional&&used.has('ED140014'))return fail('计划含控制补修课程，但补修设置未开启。请按个人录取条件核对。');
+ if(!p.conditional&&used.has('ED140014'))return {...fail('计划含控制补修课程，但补修设置未开启。请按个人录取条件核对。'),issue:'remediation-conflict'};
  const noLanguage=base.filter(x=>x.status!=='passed'&&!Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,known.get(x.code)||x,offerings,n)));
  if(noLanguage.length)return fail(`这些已选／必修课程不符合授课语言：${noLanguage.map(x=>x.code).join('、')}。双语模块表示目录语言，具体班次仍须核对。`);
  const choices=completeSelections(p,courses,base,offerings);

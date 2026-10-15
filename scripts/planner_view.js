@@ -34,7 +34,7 @@ module.exports=function plannerView(){return `
 <div id="planner"><p class="loading-state">正在读取你的课程…</p></div>
 <section id="printable-plan" hidden></section>
 <dialog id="auto-plan-dialog" class="auto-plan-dialog" aria-labelledby="auto-plan-title">
- <header class="plan-dialog-heading"><div><h2 id="auto-plan-title">自动方案预览</h2><p>先查看安排，采用后才会更新计划。</p></div></header>
+ <header class="plan-dialog-heading"><div><h2 id="auto-plan-title">自动方案预览</h2><p id="auto-plan-description">先查看安排，采用后才会更新计划。</p></div></header>
  <div id="auto-plan-result" aria-live="polite"></div>
  <div class="dialog-actions"><button type="button" class="quiet" data-edit-auto-settings>调整条件</button><button type="button" class="button secondary" data-cancel-auto>返回计划</button><button type="button" class="button" data-apply-auto hidden>采用这个方案</button></div>
 </dialog>`;};

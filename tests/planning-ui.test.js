@@ -15,13 +15,13 @@ async function harness(desktop=false){
  for(const panel of [dialog,settings,preferences,tools]){panel.showModal=()=>{panel.open=true;};panel.close=()=>{panel.open=false;panel.handlers.close?.();};}
  class Worker{constructor(){this.terminated=false;workers.push(this);}postMessage(input){this.input=copy(input);}terminate(){this.terminated=true;}}
  const U={base:'',persisted:true,data:async()=>({courses,names:{},synonyms:[]}),plan:async()=>{planReads++;if(planGate)await planGate;return copy(plan);},updatePlan:async fn=>{const next=await fn(copy(plan));if(next)plan=C.validatePlan(next,courses);return plan;},confirmAction:async()=>true,toast(){}};
- const nodes={'planning-controls':box,'auto-plan-dialog':dialog,'auto-plan-result':result,'preference-results':choices,'plan-settings-dialog':settings,'course-preferences-dialog':preferences,'plan-tools-dialog':tools,'plan-context':element(),'plan-add-course':{dataset:{}},'plan-settings-content':element(),'course-preferences-content':element(),'plan-settings-notice':notice,'plan-cohort':{focus(){}},'controls-conditional-status':{focus(){}},'plan-start-term':{focus(){}}};
+ const nodes={'planning-controls':box,'auto-plan-dialog':dialog,'auto-plan-result':result,'preference-results':choices,'plan-settings-dialog':settings,'course-preferences-dialog':preferences,'plan-tools-dialog':tools,'plan-context':element(),'plan-add-course':{dataset:{}},'plan-settings-content':element(),'course-preferences-content':element(),'plan-settings-notice':notice,'plan-cohort':{focus(){}},'controls-conditional-status':{focus(){this.focused=true;}},'auto-plan-title':element(),'auto-plan-description':element(),'preference-search':{focus(){this.focused=true;}},'plan-start-term':{focus(){}}};
  vm.runInNewContext(source,{window:{matchMedia:()=>({matches:desktop}),RCIUI:U,RCI:C,RCIPlanning:E,RCICourseContext:T,RCISearch:S,addEventListener(){}},document:{getElementById:id=>nodes[id]},Worker,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id)});
  await tick();
  const generate=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-generate'})}});
  const finish=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-finish-settings'})}});
  const change=(id,value)=>box.handlers.change({target:{id,value,closest:()=>null}});
- return {workers,timers,dialog,result,apply,edit,settings,notice,generate,finish,change,getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},planReads:()=>planReads,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};
+ return {nodes,preferences,workers,timers,dialog,result,apply,edit,settings,notice,generate,finish,change,getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},planReads:()=>planReads,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};
 }
 (async()=>{
  const h=await harness();await h.generate();const first=h.workers[0],oldTimeout=[...h.timers.values()][0],oldMessage=first.onmessage;
@@ -50,5 +50,14 @@ async function harness(desktop=false){
  const desktop=await harness(true);desktop.setPlan(saved);await desktop.change('plan-semester-count','2');
  assert.equal(desktop.getPlan().items.find(x=>x.code==='IN2064').semester,4);assert.equal(desktop.getPlan().items.find(x=>x.code==='IN2228').semester,1);
  console.log('PASS Desktop shortened plans retain courses in semester one without changing passed history');
- console.log('7 planning UI checks passed');
+ const conflict=await harness(true),conflicted=conflict.getPlan();conflicted.items=[{code:'ED140014',status:'planned',semester:1}];conflict.setPlan(conflicted);
+ const unchanged=conflict.getPlan();await conflict.generate();conflict.workers[0].onmessage({data:E.generate(conflict.workers[0].input.plan,courses)});
+ assert.equal(conflict.nodes['auto-plan-title'].textContent,'先核对补修要求');assert(conflict.result.innerHTML.includes('控制理论（ED140014）'));assert(conflict.result.innerHTML.includes('查看已选课程'));assert(conflict.result.innerHTML.includes('还没核对'));assert(conflict.result.innerHTML.includes('返回计划'));assert.equal(conflict.edit.textContent,'核对补修设置');assert(conflict.apply.hidden);
+ await conflict.edit.handlers.click();assert(conflict.settings.open);assert(conflict.nodes['controls-conditional-status'].focused);assert.deepEqual(conflict.getPlan(),unchanged);
+ console.log('PASS Remediation conflict explains both choices and focuses the setting without enabling it or removing a course');
+ const desired=await harness(true),wanted=desired.getPlan();wanted.preferences.desired=['ED140014'];desired.setPlan(wanted);await desired.generate();desired.workers[0].onmessage({data:E.generate(desired.workers[0].input.plan,courses)});
+ assert(desired.result.innerHTML.includes('“想选”列表'));assert(desired.result.innerHTML.includes('查看想选记录'));assert(!desired.result.innerHTML.includes('查看已选课程'));
+ await desired.result.handlers.click({target:{closest:()=>({dataset:{reviewRemediation:'desired'}})}});assert(desired.preferences.open);assert(desired.nodes['preference-search'].focused);assert.deepEqual(desired.getPlan().preferences.desired,['ED140014']);
+ console.log('PASS Desired-only remediation conflicts open the corresponding preference without changing it');
+ console.log('9 planning UI checks passed');
 })().catch(error=>{console.error(error);process.exitCode=1;});

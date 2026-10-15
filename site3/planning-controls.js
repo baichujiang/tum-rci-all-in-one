@@ -141,7 +141,35 @@ box.addEventListener('keydown',async event=>{
  mode=event.key==='Home'?modes[0]:event.key==='End'?modes[2]:modes[(index+(event.key==='ArrowRight'?1:2))%3];await render();document.getElementById('preference-tab-'+mode).focus({preventScroll:true});
 });
 for(const panel of [settings,preferences,tools])panel.addEventListener('click',event=>{if(event.target!==panel)return;const r=panel.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)panel.close();});
-dialog.querySelector('[data-edit-auto-settings]').addEventListener('click',()=>{dialog.close();openSettings(true,'调整后重新生成预览，现有计划保持不变。');});
+function autoHeading(title,description){
+ if(!desktopPlanning?.matches)return;
+ document.getElementById('auto-plan-title').textContent=title;
+ document.getElementById('auto-plan-description').textContent=description;
+}
+function remediationConflict(snapshot){
+ const item=snapshot.items.find(x=>x.code==='ED140014'),desired=snapshot.preferences.desired.includes('ED140014');
+ const places=[item?(item.status==='passed'?'已修记录':'已选课程'):'',desired?'“想选”列表':''].filter(Boolean).join('和');
+ const records=(item?`<button type="button" class="button secondary" data-review-remediation="${item.status==='passed'?'passed':'planned'}">${item.status==='passed'?'查看已修记录':'查看已选课程'}</button>`:'')+(desired?'<button type="button" class="button secondary" data-review-remediation="desired">查看想选记录</button>':'');
+ return `<p>${places}中有<b>控制理论（ED140014）</b>，但补修设置是<b>“不需要补修”</b>。</p><p>这里的“补修”指录取通知要求额外修读的课程。请按通知处理：</p><ul><li><b>通知要求补修：</b>点“核对补修设置”，选择“已核对：需要补修”，再生成方案。</li><li><b>通知没有这项要求：</b>${item?.status==='passed'?'这门课已记为已修，请先保留成绩，向 RCI 学业咨询核对归类。':'查看下面的课程记录，取消误加的课程及其“想选”记录，再生成方案。'}</li><li><b>还没核对：</b>先点“返回计划”继续手动安排，查清录取通知后再修改补修设置。</li></ul><div class="inline-actions">${records}</div><p class="meta"><a class="text-link" href="${U.base}/guides/conditional-control/" target="_blank" rel="noopener noreferrer">不确定是否需要补修？查看说明 ↗</a></p>`;
+}
+result.addEventListener('click',async event=>{
+ const b=event.target.closest('[data-review-remediation]');if(!b)return;
+ try{
+  const current=await U.plan(),item=current.items.find(x=>x.code==='ED140014');
+  dialog.close();
+  if(b.dataset.reviewRemediation==='planned'&&item?.status==='planned'){
+   const card=document.getElementById('plan-course-ED140014');
+   if(card){card.open=true;card.querySelector('summary').focus({preventScroll:true});card.scrollIntoView({block:'center',behavior:'smooth'});return;}
+  }
+  mode=b.dataset.reviewRemediation==='passed'?'passed':'desired';
+  query='ED140014';await render();openPlanDialog(preferences);document.getElementById('preference-search').focus();
+ }catch(error){U.toast(error.message);}
+});
+dialog.querySelector('[data-edit-auto-settings]').addEventListener('click',()=>{
+ const conflict=desktopPlanning?.matches&&preview?.issue==='remediation-conflict';
+ dialog.close();openSettings(true,conflict?'请对照录取通知核对补修要求。只有通知要求修读 ED140014 时，才选择“需要补修”。未核对时可选“尚未确认”，关闭设置后先手动安排。':'调整后重新生成预览，现有计划保持不变。');
+ if(conflict)document.getElementById('controls-conditional-status').focus();
+});
 async function generate(){
  if(worker||preparing)return;
  preparing=true;
@@ -152,6 +180,8 @@ async function generate(){
   openSettings(true,'自动规划前，请确认入学批次、起始季节和录取通知中的补修要求。');return;
  }
  original=snapshot;expected=JSON.stringify(original);preview=null;
+ autoHeading('自动方案预览','先查看安排，采用后才会更新计划。');
+ dialog.querySelector('[data-edit-auto-settings]').textContent='调整条件';
  result.innerHTML='<p role="status">正在检查课程、学分与学期约束…</p>';dialog.querySelector('[data-apply-auto]').hidden=true;dialog.showModal();
  if(typeof Worker==='undefined'){result.innerHTML='<p>这个浏览器不支持后台规划。请使用较新的浏览器；现有手动计划仍可使用。</p>';return;}
  const activeWorker=new Worker(U.base+'/assets/planning-worker.js');worker=activeWorker;
@@ -159,7 +189,16 @@ async function generate(){
  searchTimer=setTimeout(()=>{if(!finish())return;result.innerHTML='<p>本次搜索超时，没有修改计划。可减少固定条件或增加规划学期后重试。</p>';},25000);
  activeWorker.onerror=()=>{if(!finish())return;result.innerHTML='<p>自动规划暂时无法运行；现有记录没有修改。请刷新后重试。</p>';};
  activeWorker.onmessage=event=>{if(!finish())return;const r=event.data;preview=r;
-  if(!r.ok){result.innerHTML=`<h3>暂未生成可用方案</h3><ul>${r.reasons.map(x=>`<li>${e(x)}</li>`).join('')}</ul>`;return;}
+  if(!r.ok){
+   if(desktopPlanning?.matches&&r.issue==='remediation-conflict'){
+    autoHeading('先核对补修要求','现有计划没有修改。');
+    result.innerHTML=remediationConflict(original);dialog.querySelector('[data-edit-auto-settings]').textContent='核对补修设置';
+   }else{
+    autoHeading('暂未生成可用方案','现有计划没有修改。');
+    result.innerHTML=`${desktopPlanning?.matches?'':'<h3>暂未生成可用方案</h3>'}<ul>${r.reasons.map(x=>`<li>${e(x)}</li>`).join('')}</ul>`;
+   }
+   return;
+  }
   const s=C.schedule(r.plan,db.courses);
   result.innerHTML=`<p class="auto-result-total"><b>${r.calculation.allocated} / 120 ECTS</b> · 已修 ${r.passed.allocated} · 未来 ${r.plan.items.filter(x=>x.status==='planned').reduce((sum,x)=>sum+Number(x.custom?x.ects:db.courses.find(c=>c.module_code===x.code)?.ects??x.ects),0)} ECTS</p><p>安排至第 ${r.finish} 学期；新增 ${r.added.length} 门、移动 ${r.moved.length} 门、移除排除选修 ${(r.removed||[]).length} 门。固定课程与已修记录保留。${r.removed?.length?' 移除：'+r.removed.map(title).map(e).join('、')+'。':''}</p><div class="auto-preview-semesters">${s.semesters.filter(x=>x.number<=r.finish).map(n=>`<section><h3>${e(T.term(r.plan,n.number).label)} · ${n.credits} ECTS · ${n.items.length} 项考核</h3><ul>${n.items.map(x=>`<li>${e(title(x.code))} <small>${e(x.code)}${x.group?' · 计入 '+e(x.group):''}${x.locked?' · 固定':''}</small></li>`).join('')}</ul></section>`).join('')}</div>${r.warnings.length?`<div class="notice"><h3>采用前需要核对</h3><ul>${r.warnings.map(x=>`<li>${e(x)}</li>`).join('')}</ul></div>`:''}<p class="meta">此方案用于学分与学期规划。实际开课、名额、课表与考试登记请在个人 TUMonline 确认。</p><p class="meta">在当前目录与计算预算内优先找到较早完成的方案；未证明全局最优。确认会更新安排，可立即撤销。</p>`;
   dialog.querySelector('[data-apply-auto]').hidden=false;
