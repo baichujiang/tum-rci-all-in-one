@@ -27,6 +27,15 @@ async function harness(initial,desktop=true){
 const card=(html,code)=>html.match(new RegExp('<details[^>]*id="plan-course-'+code+'"[\\s\\S]*?</details>'))?.[0];
 let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS',name);}
 (async()=>{
+ await test('Desktop hover categories follow the credit overview while preserving passed and custom recognition records',async()=>{
+  const expected={IN2067:'core',IN2064:'core',IN2228:'core',IN2107:'core',IN2106:'core',IN2346:'professional',MW0085:'professional',MW1808:'professional',CIT433050:'professional',WI001056_1:'interdisciplinary',IN2320:'thesis',ED140014:'remediation',IN2060:'interdisciplinary'};
+  const initial=draft(Object.keys(expected).map(code=>code==='IN2060'?{code,name:'原有跨学科认定',custom:true,group:'J',ects:3,status:'passed',semester:6}:{code,...(code==='CIT433050'?{group:'I'}:{}),status:code==='IN2064'?'passed':'planned',semester:code==='IN2064'?1:2})),h=await harness(initial);
+  for(const [code,category] of Object.entries(expected)){
+   const shown=card(h.html(),code);assert(shown.includes(`data-credit-category="${category}"`),code);assert(shown.includes('credit-category-'+category),code);
+  }
+  assert(card(h.html(),'IN2064').includes('✓ 已通过'));assert(card(h.html(),'IN2060').includes('原有跨学科认定'));assert.deepEqual(h.plan(),initial);assert.equal(h.writes(),0);
+  const narrow=await harness(initial,false);assert(!narrow.html().includes('data-credit-category='));assert.equal(narrow.writes(),0);
+ });
  await test('Desktop credit segments use target weights and preserve fractional planned and passed credits',async()=>{
   const initial=draft([{code:'IN2064',status:'passed',semester:1},{code:'OWN1',name:'示例认定',ects:7.5,group:'G',custom:true,status:'planned',semester:2}]),h=await harness(initial);
   const segments=[...h.html().matchAll(/data-credit-share="([\d.]+)" max="([\d.]+)" value="([\d.]+)"/g)].map(m=>m.slice(1).map(Number));
