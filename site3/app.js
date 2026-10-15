@@ -245,16 +245,19 @@ window.addEventListener('rci:planchange',syncPlanWidgets);
 if($('#portal-controls')){
  $('#portal-controls').hidden=false;
  const directory=$('#websites'),input=$('#portal-search'),cards=[...directory.querySelectorAll('[data-portal]')];
+ const desktopMedia=window.matchMedia?.('(min-width: 961px)');
  const entries=cards.map(card=>({id:card.dataset.portal,kind:'resource',title:card.querySelector('h3').textContent,summary:card.querySelector('p').textContent,body:card.dataset.keywords.replace(/(?:[\w-]+\.)+[a-z]{2,}/gi,host=>host.replace(/\.[a-z]+$/i,'')),hosts:card.dataset.keywords.match(/(?:[\w-]+\.)+[a-z]{2,}/gi)||[],aliases:[],tasks:[]}));
  function filterPortals(){
   const q=window.RCISearch.normalize(input.value),matches=new Set(window.RCISearch.search(entries,input.value).map(d=>d.id));let count=0;
   if(q.length>3)for(const entry of entries)if(entry.hosts.some(host=>window.RCISearch.normalize(host).includes(q)))matches.add(entry.id);
-  for(const card of cards){card.hidden=!matches.has(card.dataset.portal);if(!card.hidden)count++;}
+  for(const card of cards){card.hidden=!!card.dataset.desktopOnly&&desktopMedia?.matches===false||!matches.has(card.dataset.portal);if(!card.hidden)count++;}
   directory.querySelectorAll('[data-portal-module]').forEach(section=>{section.hidden=!section.querySelector('[data-portal]:not([hidden])');});
   $('#portal-empty').hidden=count>0;
   $('#portal-status').textContent=q?`找到 ${count} 个网站`:'点星标，网站会直接出现在上方「我的收藏」。';
  }
  input.addEventListener('input',filterPortals);
+ desktopMedia?.addEventListener('change',filterPortals);
+ filterPortals();
  $('[data-portal-reset]').addEventListener('click',()=>{input.value='';filterPortals();input.focus();});
 }
 function dest(d){return d.direct?C.safeURL(d.url):/^\/[a-zA-Z0-9/?#&=._%+-]*$/.test(d.url)?full(d.url)+(d.kind==='course'&&selectedSemester?'?semester='+selectedSemester:''):full('/search/');}
@@ -273,22 +276,25 @@ const favoritesApp=$('#favorites-app');
 if(favoritesApp){
  let index=null,failed=false;
  const cards=[...favoritesApp.querySelectorAll('[data-portal]')],shortcutIds=new Set(cards.map(card=>card.dataset.portal));
+ const desktopMedia=window.matchMedia?.('(min-width: 961px)');
  function renderFavorites(){
-  const total=countFavorites([...saved]);
+  const excluded=new Set(cards.filter(card=>card.dataset.desktopOnly&&desktopMedia?.matches===false).map(card=>card.dataset.portal));
+  const visibleSaved=[...saved].filter(key=>!excluded.has(key)),total=countFavorites(visibleSaved);
   let websiteCount=0;
-  for(const card of cards){card.hidden=!saved.has(card.dataset.portal);if(!card.hidden)websiteCount++;}
+  for(const card of cards){card.hidden=excluded.has(card.dataset.portal)||!saved.has(card.dataset.portal);if(!card.hidden)websiteCount++;}
   const other=index?index.docs.flatMap(d=>{const key=[d.id,d.code,...(d.resource_ids||[])].find(k=>k&&!shortcutIds.has(k)&&saved.has(k));return key?[{doc:d,key}]:[];}):[];
   $('[data-favorites-section="websites"]').hidden=!websiteCount;
   $('[data-favorites-section="other"]').hidden=!other.length;
   $('#favorites-other').innerHTML=other.map(({doc,key})=>resultCard(doc,key,true)).join('');
   $('#favorites-loading').hidden=!!index||failed||!saved.size;
-  $('#favorites-empty').hidden=!!saved.size&&(!index||websiteCount+other.length>0);
+  $('#favorites-empty').hidden=!!total&&(!index||websiteCount+other.length>0);
   $('#favorites-status').textContent=failed&&total>websiteCount?'其他收藏暂时无法读取，请刷新重试。':index&&total>websiteCount+other.length?'部分旧收藏未找到对应内容，已显示可用的入口。':'';
   syncSaves();syncAddButtons();
  }
  renderFavorites();
  load('/assets/search-index.json').then(d=>{index=d;renderFavorites();}).catch(()=>{failed=true;renderFavorites();});
  window.addEventListener('rci:saveschange',renderFavorites);
+ desktopMedia?.addEventListener('change',renderFavorites);
 }
 const app=$('#search-app');
 if(app){

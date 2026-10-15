@@ -1,5 +1,6 @@
 /* Desktop UI. Existing narrow-screen layouts and all data/storage contracts stay intact. */
 .desktop-only{display:none}
+.portal-card[data-desktop-only=true]{display:none}
 .course-toolbar{display:contents}
 
 @media screen and (min-width:961px){
@@ -13,6 +14,7 @@
  }
  html{scroll-padding-top:88px}
  .desktop-only{display:revert}
+ .portal-card[data-desktop-only=true]{display:revert}
  .desktop-legacy,.header-actions,.study-nav{display:none!important}
  #search-app #results>.empty .actions>.text-link{display:none}
  /* Keep one explanation per task; live results, restrictions and errors remain visible. */

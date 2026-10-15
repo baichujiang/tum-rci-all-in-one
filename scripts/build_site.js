@@ -127,7 +127,7 @@ shell('/search/','搜索整个知识库','同时查问题、课程、官方入�
 shell('/courses/','选课程','搜索课程、筛选领域，直接加入选定学期。',require('./course_directory_view')({courses,names:ed.course_names_zh,base}));
 for(const r of uniqueResources){
  const records=resourceGroups.get(r.url.replace(/[/]$/,''));
- const aliases=[...new Set([...records.map(x=>x.title),...nav.shortcuts.filter(s=>records.some(x=>x.id===s.id)).map(s=>s.label)])];
+ const aliases=[...new Set([...records.map(x=>x.title),...nav.shortcuts.filter(s=>records.some(x=>x.id===s.id)).flatMap(s=>[s.label,s.desktop_label].filter(Boolean))])];
  if(r.id==='R069')aliases.push('ROS','ROS2','ROS 2','机器人操作系统');
  const tasks=nav.tasks.filter(t=>t.resources.some(id=>records.some(x=>x.id===id))||t.categories.some(c=>records.some(x=>x.category.startsWith(c)))).map(t=>t.id);
  docs.push({id:r.id,resource_ids:records.map(x=>x.id),kind:'resource',title:r.title,summary:r.description_cn,body:records.map(x=>x.description_cn+' '+x.publisher+' '+x.access).join(' '),aliases,url:r.url,tasks,status:(/历史|2023|2021/.test(r.title)?'历史资源 · ':'')+'入口原记录 '+(r.review_date||'无日期')+' · 未逐条重核',historical:/历史|2023|2021/.test(r.title),direct:true,cohort:r.access});

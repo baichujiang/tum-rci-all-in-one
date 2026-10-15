@@ -25,7 +25,7 @@ try{
  fs.writeFileSync(navFile,JSON.stringify(nav));
  const prefixed=build({BASE_PATH:'/rci',SITE_URL:'https://rci.example.invalid'});assert.equal(prefixed.status,0,prefixed.stderr);
  const info=JSON.parse(fs.readFileSync(path.join(fixture,'dist/build-info.json'),'utf8'));
- assert.equal(info.base,'/rci');assert.equal(info.pages,638);assert.equal(info.searchRecords,808);
+ assert.equal(info.base,'/rci');assert.equal(info.pages,638);assert.equal(info.searchRecords,809);
  assert(fs.readFileSync(path.join(fixture,'dist/sitemap.xml'),'utf8').includes('https://rci.example.invalid/rci/guides/matching/'));
  console.log('PASS A following valid build publishes a complete prefixed site without temporary files');
  const published=digest(manifest(path.join(fixture,'dist')));

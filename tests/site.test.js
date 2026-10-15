@@ -57,7 +57,24 @@ test('Local backup UI is reachable from favorites and planner, with its dependen
 });
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
 test('course sources and status retained in static pages',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('2025'));assert(s.includes('历史整理'));assert(s.includes('campus.tum.de'));});
-test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,144);assert.equal(info.courses,595);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
+test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,145);assert.equal(info.courses,595);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
+
+test('Desktop thesis entries distinguish coverage and keep the existing favorite identity',()=>{
+ for(const file of ['index.html','favorites/index.html']){
+  const s=fs.readFileSync(path.join(dist,file),'utf8');
+  const cards=[...s.matchAll(/<article class="portal-card" data-portal="([^"]+)"[^>]*>[\s\S]*?<\/article>/g)];
+  const group=cards.find(m=>m[1]==='R131'),board=cards.find(m=>m[1]==='R145');
+  assert(group,file);assert(board,file);
+  assert(group[0].includes('href="https://thesis.aet.cit.tum.de/"'));assert(group[0].includes('data-save="R131"'));
+  assert(group[0].includes('<span class="desktop-only">研究组论文题目</span>'));assert(group[0].includes('参与平台的研究组 · 非全校完整题库'));
+  assert(group[0].includes('<span class="desktop-legacy">找论文题目</span>'));
+  assert(board[0].includes('data-desktop-only="true"'));assert(board[0].includes('href="https://portal.mytum.de/schwarzesbrett/diplomarbeiten/"'));
+  assert(board[0].includes('全校论文题目公告栏'));assert(board[0].includes('跨学院发布 · 不保证收齐全部题目'));assert(board[0].includes('data-save="R145"'));
+ }
+ const board=S.search(index.docs,'Themenbörse',index.synonyms,{kind:'resource'})[0];assert.equal(board.id,'R145');assert.equal(board.direct,true);
+ assert.equal(S.search(index.docs,'研究组论文题目',index.synonyms,{kind:'resource'})[0].id,'R131');
+ assert.equal(index.docs.find(d=>d.id==='R131').url,'https://thesis.aet.cit.tum.de/');
+});
 
 // A public documentation page is not the application itself. Guard real destinations.
 const matchingSystem='https://matching-in.cit.tum.de/';
