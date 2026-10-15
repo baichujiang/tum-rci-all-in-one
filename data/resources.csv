@@ -7,7 +7,7 @@ R005,01_官方与法规,TUM RCI 项目详情（大学总网站）,https://www.tu
 R006,01_官方与法规,TUM 法规总数据库,https://www.tum.de/en/studies/during-your-studies/organizing-your-studies/statutes-regulations,TUM 官方,官方公开入口路径已核对；内容与个人适用规则未逐条复核,公开,每学期,2026-10-13,按专业及生效日找进一步修订
 R007,01_官方与法规,CIT School,https://www.cit.tum.de/en/cit/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,"School of Computation, Information and Technology 官方首页"
 R008,01_官方与法规,TUM 学习期间服务,https://www.tum.de/en/studies/during-your-studies/tum,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,选课、考试、重新注册等官方汇总
-R009,01_官方与法规,RCI 学业咨询,https://www.cit.tum.de/en/cit/studies/students/advising/informatics/,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,向专业协调员核实选修认定、特殊情况；RCI: rci@tum.de
+R009,01_官方与法规,RCI 学业咨询,https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/#c2289,TUM 官方,官方入口已对照（AI）· 待人工审核,公开联系说明,每学期,2026-10-15,直达 RCI 专业页 Kontakt 联系人区域。选课、学分与专业特殊情况先联系专业协调员 rci@tum.de；紧急情况按官网联系 Dr. Alexander Lenz。Informatics 总页的跨专业考试事务职责清单明确排除 Master RCI，请按 RCI 单独安排联系。
 R010,02_申请与语言,TUMonline (申请/选课/成绩单),https://campus.tum.de/,TUM,官方平台,TUM账号,每学期,2026-10-11,学期、课程、考试、成绩、费用；需登录
 R011,02_申请与语言,TUM 硕士申请步骤,https://www.tum.de/en/studies/application/master/application-master,TUM 官方,官方公开入口路径已核对；内容与个人适用规则未逐条复核,公开,每学期,2026-10-13,完成 TUMonline 正式申请
 R012,02_申请与语言,TUM 申请期限与学期日期,https://www.tum.de/en/studies/application/application-info-portal/dates-periods-and-deadlines,TUM 官方,官方页面已查阅,公开,每学期,2026-10-11,学期开始、讲座期间、缴费日期
@@ -144,3 +144,4 @@ R142,07_机器人与AI工具,Citavi / EndNote 校园许可与参考文献管理,
 R143,06_科研实验室与论文,TUM 图书馆文献检索与引用咨询预约,https://www.ub.tum.de/webform/terminanfrage-sprechstunden,TUM 图书馆,官方入口已对照（AI）· 待人工审核,公开预约申请表；等待团队回复,每学期,2026-10-13,提交文献检索、Systematic Review 系统综述、参考文献管理、引用或研究数据方面的具体问题，图书馆对应专家会联系安排咨询；面向已有基础知识、需要解决专业问题的学生与研究者。此入口提交预约请求，不是即时确认的日历。官方说明 https://www.ub.tum.de/sprechstunden
 R144,04_校内平台与日程,ProLehre Study Skills — 备考与学习方法,https://www.prolehre.tum.de/en/prolehre/studyskills/,TUM ProLehre,官方入口已对照（AI）· 待人工审核,公开说明；课程按活动要求报名,每学期,2026-10-13,学习方法、时间管理、考试准备的免费学生工作坊与自学 Moodle 课程；还可按页面邮件申请学习技巧的一对一建议。进入页面查看当前安排与报名方式，未核验实时名额或个人课程资格。
 R145,06_科研实验室与论文,TUM 全校论文题目公告栏（Themenbörse）,https://portal.mytum.de/schwarzesbrett/diplomarbeiten/,TUM 官方,官方入口已对照（AI）· 待人工审核,公开浏览；申请按发布方要求,持续更新,2026-10-15,跨学院发布本科与硕士毕业论文题目的公告栏；不保证收齐全校或 CIT 的全部题目，也未确认与 Thesis Management 自动同步。可结合研究组论文平台和研究组官网查找；是否适用于 RCI、当前名额及申请要求需向发布方确认。官方选题说明 https://www.tum.de/en/studies/graduation/theses/tips
+R146,01_官方与法规,Informatics 咨询总览（多专业）,https://www.cit.tum.de/en/cit/studies/students/advising/informatics/,TUM 官方,官方入口已对照（AI）· 待人工审核,公开说明,每学期,2026-10-15,Informatics 多专业咨询、支持服务及考试事务联系人总览。Program independent Responsibilities 明确排除 Master RCI，RCI 的专业协调与考试联系人单列；专业问题优先按 RCI 专业页联系 rci@tum.de。国际学生及无障碍支持等服务请按各自说明确认范围。

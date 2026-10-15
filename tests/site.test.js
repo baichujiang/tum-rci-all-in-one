@@ -57,7 +57,24 @@ test('Local backup UI is reachable from favorites and planner, with its dependen
 });
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
 test('course sources and status retained in static pages',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('2025'));assert(s.includes('历史整理'));assert(s.includes('campus.tum.de'));});
-test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,145);assert.equal(info.courses,595);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
+test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,146);assert.equal(info.courses,595);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
+
+test('RCI advising and existing favorites open the program contact while the general overview remains secondary',()=>{
+ const contact='https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/#c2289';
+ const overview='https://www.cit.tum.de/en/cit/studies/students/advising/informatics/';
+ for(const file of ['index.html','favorites/index.html']){
+  const s=fs.readFileSync(path.join(dist,file),'utf8');
+  const cards=[...s.matchAll(/<article class="portal-card" data-portal="([^"]+)"[^>]*>[\s\S]*?<\/article>/g)];
+  const advising=cards.filter(m=>m[1]==='R009');assert(advising.length,file);
+  for(const card of advising){assert(card[0].includes('href="'+contact+'"'));assert(card[0].includes('data-save="R009"'));assert(card[0].includes('RCI 专属联系 · rci@tum.de'));}
+  assert(!cards.some(m=>m[1]==='R146'),file);
+ }
+ assert.equal(index.docs.find(d=>d.id==='R009').url,contact);
+ const general=index.docs.find(d=>d.id==='R146');assert.equal(general.url,overview);assert(general.title.includes('Informatics 咨询总览'));assert(general.summary.includes('明确排除 Master RCI'));
+ assert.equal(S.search(index.docs,'Informatics 咨询总览',index.synonyms,{kind:'resource'})[0].id,'R146');
+ assert(fs.readFileSync(path.join(dist,'resources/index.html'),'utf8').includes('id="R146"'));
+ const guide=fs.readFileSync(path.join(dist,'guides/help/index.html'),'utf8');assert(guide.includes('href="'+contact+'"'));
+});
 
 test('Desktop thesis entries distinguish coverage and keep the existing favorite identity',()=>{
  for(const file of ['index.html','favorites/index.html']){

@@ -39,7 +39,7 @@
     {"id":"R136","label":"大文件传输","hint":"GigaMove · 生成下载链接","group":"research","icon":"arrow","access":"学校账号登录后上传","aliases":["GigaMove","大文件","文件传输","发送文件","下载链接","上传","共享"]},
     {"id":"R142","label":"Citavi / EndNote 许可","hint":"参考文献管理 · 插入引用","group":"research","icon":"book","access":"查看校园许可与激活步骤","aliases":["Citavi","EndNote","文献管理","参考文献","引用","引用格式","校园许可"]},
     {"id":"R143","label":"文献与引用咨询","hint":"图书馆专家 · 检索与综述","group":"research","icon":"help","access":"提交预约申请 · 等待回复","aliases":["文献咨询","引用咨询","检索咨询","Systematic Review","系统综述","预约咨询"]},
-    {"id":"R009","label":"RCI 学业咨询","hint":"选修认定 · 学分与特殊情况","group":"support","icon":"help","access":"公开说明","aliases":["协调员","选课咨询","学分认定"]},
+    {"id":"R009","label":"RCI 学业咨询","hint":"选修认定 · 学分与特殊情况","desktop_hint":"专业协调员 · 选课、学分与特殊情况","group":"support","icon":"help","access":"公开说明","desktop_access":"RCI 专属联系 · rci@tum.de","aliases":["协调员","选课咨询","学分认定","rci@tum.de","RCI 联系人"]},
     {"id":"R035","label":"TUM IT 支持","hint":"账号 · Wi-Fi · VPN · 邮箱","group":"support","icon":"help","access":"公开说明","aliases":["登录","网络","软件","IT"]},
     {"id":"R043","label":"软件许可与下载","hint":"TUM 软件目录 · 激活说明","group":"support","icon":"grid","access":"TUM 登录 · 按产品确认","aliases":["软件","许可","安装","下载","Software","license","BayernCollab"]},
     {"id":"R140","label":"英语写作辅导预约","hint":"免费咨询 · 论文与求职文本","group":"support","icon":"book","access":"TUM 学生 · 需验证邮箱","aliases":["英语写作","英文论文","English Writing Center","EWC","writing","简历","求职信"]},
@@ -47,6 +47,7 @@
     {"id":"R144","label":"备考与学习方法","hint":"ProLehre · 工作坊与自学课程","group":"support","icon":"book","access":"查看当期课程与报名方式","aliases":["备考","学习方法","学习技巧","时间管理","ProLehre","Study Skills","工作坊"]}
   ],
   "sources": [
+    {"id":"rci-advising","title":"RCI 专业咨询联系人与 Informatics 总页职责范围","url":"https://www.cit.tum.de/en/cit/studies/degree-programs/master-robotics-cognition-intelligence/#c2289","checked_on":"2026-10-15","status":"checked","scope":"AI 辅助核对 RCI 专业页 Kontakt 区域及 c2289 锚点，确认专业咨询先发送至 rci@tum.de、紧急情况联系 Dr. Alexander Lenz。另对照 https://www.cit.tum.de/en/cit/studies/students/advising/informatics/ 的 Program independent Responsibilities 明确排除 Master RCI，RCI 联系人单列；这一排除不泛化到国际学生或无障碍等所有支持服务。保留总页作为多专业咨询总览。未发送邮件、预约咨询或提交个人资料，未核验个人学分认定结果。","human_review":"pending"},
     {"id":"tum-statutes-entry","title":"TUM 法规数据库公开入口","url":"https://www.tum.de/en/studies/during-your-studies/organizing-your-studies/statutes-regulations","checked_on":"2026-10-13","status":"checked","scope":"AI 辅助确认旧入口 GET 返回 404，通过官方导航或官方搜索定位现行公开页面，并核对页面标题、用途和 HTTP 200。仅修复入口路径；未逐条复核录取、材料、法规或个人适用规则，未登录学校系统。","human_review":"pending"},
     {"id":"tum-master-application-entry","title":"TUM 硕士申请步骤公开入口","url":"https://www.tum.de/en/studies/application/master/application-master","checked_on":"2026-10-13","status":"checked","scope":"AI 辅助确认旧入口 GET 返回 404，通过官方导航或官方搜索定位现行公开页面，并核对页面标题、用途和 HTTP 200。仅修复入口路径；未逐条复核录取、材料、法规或个人适用规则，未登录学校系统。","human_review":"pending"},
     {"id":"tum-documents-entry","title":"TUM 申请材料术语表公开入口","url":"https://www.tum.de/en/studies/application/application-info-portal/glossary-of-documents","checked_on":"2026-10-13","status":"checked","scope":"AI 辅助确认旧入口 GET 返回 404，通过官方导航或官方搜索定位现行公开页面，并核对页面标题、用途和 HTTP 200。仅修复入口路径；未逐条复核录取、材料、法规或个人适用规则，未登录学校系统。","human_review":"pending"},
