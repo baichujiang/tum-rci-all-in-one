@@ -2,6 +2,7 @@
 """Read-only anonymous HTTP checks against this project's public production domain.
 No auth headers, cookies, bypass links or personal data are used.
 These checks do not execute browser JavaScript or replace a student usability test.
+Build the local release first so production can be checked against its metadata.
 """
 import json
 import pathlib
@@ -11,6 +12,8 @@ import urllib.request
 from datetime import datetime, timezone
 
 ORIGIN = "https://tum-rci-all-in-one.vercel.app"
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+EXPECTED_BUILD = json.loads((ROOT / "dist/build-info.json").read_text(encoding="utf-8"))
 RESULTS = []
 
 class SameOrigin(urllib.request.HTTPRedirectHandler):
@@ -67,9 +70,10 @@ for route, marker in [
 
 def index_check():
     data = json.loads(get("/assets/search-index.json"))
-    assert len(data["docs"]) == 248
+    assert len(data["docs"]) == EXPECTED_BUILD["searchRecords"], "Search records differ from the local release"
+    assert sum(d.get("kind") == "course" for d in data["docs"]) == EXPECTED_BUILD["courses"], "Course records differ from the local release"
     assert any(d.get("code") == "IN2067" for d in data["docs"])
-check("anonymous search data: 248 records", index_check)
+check(f"anonymous search data: {EXPECTED_BUILD['searchRecords']} records", index_check)
 
 def bookmarks_check():
     body = get("/")
@@ -86,8 +90,8 @@ def build_check():
     info = json.loads(get("/build-info.json"))
     index = json.loads(get("/assets/search-index.json"))
     assert info["version"] == index["version"], "Build and search data versions differ"
-    assert info["pages"] == 78
-    assert info["searchRecords"] == 248
+    for key in ("version", "pages", "courses", "resources", "uniqueResources", "topics", "guides", "searchRecords", "base"):
+        assert info[key] == EXPECTED_BUILD[key], f"Production {key} differs from the local release"
     assert info["origin"] == ORIGIN, "Production origin not reflected in build"
 check("production build and canonical origin", build_check)
 check("anonymous sitemap", lambda: contains("/sitemap.xml", ORIGIN + "/guides/matching/"))
