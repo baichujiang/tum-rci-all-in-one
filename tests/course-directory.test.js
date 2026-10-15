@@ -26,6 +26,12 @@ async function harness(search=''){
 (async()=>{
  await test('Local search accepts spaced codes, Chinese aliases and all cross-category memberships',()=>{
   assert.equal(D.filter(data,empty(),{...defaults,query:'IN 2060'})[0].code,'IN2060');
+  for(const c of courses){
+   const spaced=c.module_code.replace(/^(\D+)(\d)/,'$1 $2');
+   assert.equal(D.filter(data,empty(),{...defaults,query:spaced})[0]?.code,c.module_code,spaced);
+  }
+  assert.equal(D.filter(data,empty(),{...defaults,query:'SZ 1102 intercultural'})[0]?.code,'SZ1102');
+  assert.equal(D.filter(data,empty(),{...defaults,query:'SZ 1102 火锅xyz'}).length,0);
   assert(D.filter(data,empty(),{...defaults,query:'机器学习'}).some(c=>c.code==='IN2064'));
   for(const group of ['G','I'])assert(D.filter(data,empty(),{...defaults,group}).some(c=>c.code==='IN2060'));
   const winter=D.filter(data,empty(),{...defaults,term:'WiSe',language:'EN'});assert(winter.length);assert(winter.every(c=>c.term.includes('WiSe')&&c.language.split('/').includes('EN')));

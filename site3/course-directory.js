@@ -11,7 +11,9 @@ function category(group=''){return 'GHI'.includes(group)&&group.length===1||grou
 function filter(data,plan,state){
  const selected=new Map(plan.items.map(x=>[x.code,x]));
  const docs=data.courses.map(c=>{const v=view(c,selected.get(c.module_code),data.names);return {...v,id:v.code,kind:'course',summary:v.chinese,body:v.body+' '+v.groups.map(k=>C.courseGroups[k]).join(' '),tasks:['study']};});
- return S.search(docs,state.query,data.synonyms||[]).filter(d=>(!state.group||(state.group==='core'?d.groups.some(k=>'ABCDE'.includes(k)):state.group==='professional'?d.groups.some(k=>'GHI'.includes(k)):d.groups.includes(state.group)))&&(!state.term||d.term.includes(state.term))&&(!state.language||String(d.language).split('/').includes(state.language))&&(!state.selection||(state.selection==='selected'?selected.has(d.code):!selected.has(d.code))));
+ const codes=new Set(docs.map(d=>S.normalize(d.code))),compact=S.normalize(state.query);
+ const query=codes.has(compact)?compact:String(state.query||'').normalize('NFKC').replace(/\b([a-z]+)\s+(\d+)\b/gi,(text,prefix,digits)=>codes.has((prefix+digits).toLowerCase())?prefix+digits:text);
+ return S.search(docs,query,data.synonyms||[]).filter(d=>(!state.group||(state.group==='core'?d.groups.some(k=>'ABCDE'.includes(k)):state.group==='professional'?d.groups.some(k=>'GHI'.includes(k)):d.groups.includes(state.group)))&&(!state.term||d.term.includes(state.term))&&(!state.language||String(d.language).split('/').includes(state.language))&&(!state.selection||(state.selection==='selected'?selected.has(d.code):!selected.has(d.code))));
 }
 function button(course,item,semester){
  const unknown=!Number.isFinite(Number(course.ects))||Number(course.ects)<=0;
@@ -30,7 +32,10 @@ const api={view,category,filter,button,card};if(node){module.exports=api;return;
 const U=root.RCIUI,box=document.getElementById('course-directory');if(!box)return;
 const $=selector=>box.querySelector(selector),params=new URLSearchParams(location.search),target=$('#course-target-semester'),query=$('#page-search'),group=$('#group-filter'),term=$('#term-filter'),language=$('#directory-language'),selection=$('#directory-selection'),results=$('#results'),count=$('#result-count'),undo=$('#directory-undo');
 let db,plan,semester=null,limit=24,renderId=0,debounce=null,lastChange=null,focusAfter=null,message='';
-const pending=new Set();
+const pending=new Set(),desktopMedia=root.matchMedia?.('(min-width: 961px)');
+function updateDesktopLabels(){if(desktopMedia)for(const option of term.querySelectorAll('[data-desktop-label]')){option.dataset.originalLabel??=option.textContent;option.textContent=desktopMedia.matches?option.dataset.desktopLabel:option.dataset.originalLabel;}}
+updateDesktopLabels();
+desktopMedia?.addEventListener('change',()=>{updateDesktopLabels();render();});
 query.value=(params.get('q')||'').slice(0,160);group.value=params.get('group')||'';term.value=params.get('term')||'';language.value=params.get('language')||'';selection.value=params.get('selection')||'';
 if(params.has('semester')){const n=Number(params.get('semester'));semester=Number.isInteger(n)&&n>=0&&n<=12?n:0;}
 function state(){return {query:query.value,group:group.value,term:term.value,language:language.value,selection:selection.value};}
@@ -39,7 +44,7 @@ function notice(text,change){message=text;if(change!==undefined)lastChange=chang
 function render(){
  if(!db||!plan)return;
  const chosen=new Map(plan.items.map(x=>[x.code,x])),list=filter(db,plan,state());
- count.textContent=`${query.value.trim()?'“'+query.value.trim()+'” · ':''}${list.length} 门课程`;
+ count.textContent=`${query.value.trim()?'“'+query.value.trim()+'” · ':''}${list.length} 门课程${desktopMedia?.matches&&list.length>limit?' · 已显示 '+limit+' 门':''}`;
  results.innerHTML=list.length?list.slice(0,limit).map(c=>card(c,chosen.get(c.code),semester,{base:U.base,busy:pending.has(c.code)})).join(''):'<div class="catalog-empty"><h2>没有找到对应课程</h2><p>试试课程代码，或清除筛选。</p><button type="button" class="button secondary" data-directory-reset>清除搜索与筛选</button></div>';
  $('#more-results').hidden=list.length<=limit;
  $('[data-directory-clear-query]').hidden=!query.value;
