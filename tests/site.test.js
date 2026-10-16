@@ -34,7 +34,7 @@ test('merged resource entries retain their original descriptions and task catego
 test('task filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{task:'life'}).every(d=>d.tasks.includes('life'))));
 test('kind filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{kind:'course'}).every(d=>d.kind==='course')));
 const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(path.join(p,x.name)):[path.join(p,x.name)]),html=walk(dist).filter(p=>p.endsWith('.html'));
-test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,638);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
+test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,639);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
 test('every page can resolve historical favorite IDs before loading search data',()=>{
  for(const p of html){const match=fs.readFileSync(p,'utf8').match(/<meta name="rci-favorite-groups" content="([^"]+)">/);assert(match,p);
   const groups=JSON.parse(match[1].replace(/&quot;/g,'"'));
@@ -126,10 +126,18 @@ test('study journey separates personal planning from school registration',()=>{c
 test('Feedback is reachable beside the directory and from every page footer',()=>{
  const home=fs.readFileSync(path.join(dist,'index.html'),'utf8');assert(home.includes('缺少入口？'));
  for(const p of html)assert(fs.readFileSync(p,'utf8').includes('快速反馈'),p);
- const feedback=fs.readFileSync(path.join(dist,'feedback/index.html'),'utf8');assert(feedback.includes('需要 GitHub 账号'));assert(feedback.includes('内容会公开'));assert(feedback.includes('id="feedback-message"'));
- const F=require('../site3/feedback');const d=F.draft('missing','增加测试平台 https://example.org/?x=1&y=2','/planner/');const u=new URL(d.url);
- assert.equal(u.origin,'https://github.com');assert.equal(u.pathname,'/baichujiang/tum-rci-all-in-one/issues/new');assert(u.searchParams.get('body').includes('x=1&y=2'));assert(u.searchParams.get('body').endsWith('/planner/'));
+ const feedback=fs.readFileSync(path.join(dist,'feedback/index.html'),'utf8');assert(feedback.includes('无需登录'));assert(feedback.includes('仅供维护者查看'));assert(feedback.includes('id="feedback-message"'));assert(feedback.includes('id="feedback-submit" class="button" type="submit"'));assert(feedback.includes('action="'+JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8')).base+'/api/feedback"'));assert(!feedback.includes('issues/new'));
+ const F=require('../site3/feedback');const d=F.draft('missing','增加测试平台 https://example.org/?x=1&y=2','/planner/');
+ assert.equal(d.type,'missing');assert(d.body.includes('x=1&y=2'));assert(d.body.endsWith('/planner/'));assert(!d.url);
  assert(F.draft('feature','test','/search/?private=secret').body.endsWith('/'));assert(!F.draft('feature','test','/search/?private=secret').body.includes('secret'));
+});
+test('Feedback admin publishes an empty protected shell outside search and sitemap',()=>{
+ const admin=fs.readFileSync(path.join(dist,'admin/feedback/index.html'),'utf8');
+ assert(admin.includes('id="admin-login"'));assert(admin.includes('id="admin-inbox"'));assert(admin.includes('id="admin-feedback-list"'));assert(admin.includes('type="password"'));assert(admin.includes('noindex'));
+ assert(admin.includes('assets/feedback-admin.js'));assert(!admin.includes('FEEDBACK_ADMIN_PASSWORD_HASH'));assert(!admin.includes('FEEDBACK_ADMIN_SESSION_SECRET'));
+ assert(!index.docs.some(doc=>doc.url.startsWith('/admin/')));
+ const sitemap=path.join(dist,'sitemap.xml');if(fs.existsSync(sitemap))assert(!fs.readFileSync(sitemap,'utf8').includes('/admin/'));
+ const view=fs.readFileSync(path.join(root,'site3/feedback-admin.js'),'utf8');assert(!view.includes('.innerHTML'));assert(!view.includes('localStorage'));
 });
 test('Homepage search retains every original resource name behind its shorter card label',()=>{
  const nav=JSON.parse(fs.readFileSync(path.join(root,'content/navigation.json'),'utf8')),C=require('../assets/core'),resources=C.csv(fs.readFileSync(path.join(root,'data/resources.csv'),'utf8')),home=fs.readFileSync(path.join(dist,'index.html'),'utf8');

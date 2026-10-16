@@ -1,0 +1,16 @@
+.admin-heading{max-width:920px;margin:0 auto 24px}.admin-heading .lead{font-size:15px}
+.admin-login{max-width:440px;margin:36px auto}.admin-login h2{font-size:22px}.admin-login p{font-size:13px;color:var(--muted)}
+#admin-login-form{display:flex;flex-direction:column;gap:12px}#admin-login-form label{font-size:13px;font-weight:600}#admin-password{width:100%}
+#admin-inbox,.admin-status{max-width:920px;margin-left:auto;margin-right:auto}
+.admin-toolbar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px}.admin-toolbar>label,.admin-card-actions label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+.admin-toolbar select{min-width:160px}.admin-tools{display:flex;align-items:center;gap:12px}.admin-tools .button{min-height:40px;font-size:13px}
+.admin-feedback-list{display:grid;gap:16px}.admin-feedback-card{background:white;border:1px solid var(--line);border-radius:12px;padding:24px;min-width:0}
+.admin-card-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px}.admin-type{font-size:13px;font-weight:600;color:var(--muted)}
+.admin-state{font-size:12px;border-radius:20px;padding:4px 12px;background:#fff1d7;color:#835816}.admin-state[data-state="progress"]{background:#e6f1fc;color:#00599f}.admin-state[data-state="resolved"]{background:#e8f4eb;color:#2e6c3c}
+.admin-feedback-message{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.8;margin:0 0 18px}
+.admin-feedback-meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:var(--muted)}.admin-feedback-meta .text-link{font-size:12px}
+.admin-card-actions{display:flex;align-items:flex-end;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}.admin-card-actions select{min-width:140px;font-size:13px}.admin-card-actions .button{font-size:13px}
+.admin-updated{margin:8px 0 0}.admin-empty{padding:36px 24px;background:white;border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted);font-size:14px}
+.admin-status{font-size:13px;margin-top:20px;color:var(--green)}.admin-status[data-state="error"]{color:#a3312d}.admin-status:empty{display:none}
+#admin-more{margin-top:20px}.admin-time-note{margin-top:20px}#admin-inbox button:disabled,#admin-login button:disabled{opacity:.55;cursor:default}
+@media(max-width:600px){.admin-heading h1{font-size:28px}.admin-heading .lead{font-size:13px}.admin-login{margin:24px auto}.admin-toolbar{gap:10px}.admin-tools{gap:4px}.admin-toolbar select{min-width:125px;font-size:13px}.admin-feedback-card{padding:18px}.admin-feedback-message{font-size:14px}.admin-card-actions{gap:10px}.admin-card-actions select{min-width:130px}.admin-card-actions .button{padding-left:12px;padding-right:12px}}

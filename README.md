@@ -28,7 +28,7 @@
 
 个人计划和收藏自动保存在当前浏览器，无需登录。首页收藏区与「我的计划」中的「备份与迁移」可导出包含课程、学期安排、批次、补修设置和收藏的 JSON 文件，换设备后导入即可继续。导入先显示预览，默认合并并保留当前课程的安排与状态，也可选择替换。每次导入前保留一份本地恢复备份，最近 3 次记录可预览恢复。旧版计划文件仍可使用，不改变当前收藏；电脑端旧计划中缺少学期安排的未修课程放入第1学期，已修历史学期保留。
 
-网站区旁的「缺少入口？」、桌面页头和全站页脚可进入快速反馈。先选择缺少入口、功能建议或使用问题，再填写简短描述；反馈预填到 GitHub Issues，由学生确认提交，需要 GitHub 账号。
+网站区旁的「缺少入口？」、桌面页头和全站页脚可进入快速反馈。先选择缺少入口、功能建议或使用问题，再填写简短描述；反馈直接提交到本站私有收件箱，无需账号，仅供维护者查看。保存成功后显示回执；失败时保留文字，可安全重试。只提交描述、类型和相关页面路径，不附带个人计划、收藏、搜索词或分享片段。
 
 已有申请、科研、生活等资料保留在次级页面与更多资料中。后续按实际需求逐步完善。
 
@@ -45,6 +45,7 @@
 ## 维护与构建
 
 ```sh
+npm ci
 node tests/core.test.js
 node tests/local-lock.test.js
 node tests/interactions.test.js
@@ -56,6 +57,7 @@ node tests/course-directory.test.js
 node tests/routes.test.js
 node tests/portals.test.js
 node tests/checklist.test.js
+node tests/feedback.test.js
 node tests/build.test.js
 node scripts/build_site.js
 node tests/site.test.js
@@ -64,7 +66,7 @@ python3 tests/links.test.py
 python3 -m http.server 8000 --directory dist
 ```
 
-打开 `http://localhost:8000`。构建不需要第三方依赖，发布目录是 `dist`。正式网站由 Vercel 从本仓库 main 构建发布。GitHub 用于维护；学生使用固定网站入口。
+打开 `http://localhost:8000`。静态正文构建不需要第三方依赖；反馈接收端使用 `@vercel/blob`，首次运行完整发布检查前执行 `npm ci`。发布目录是 `dist`，`api/feedback.js` 由 Vercel 单独部署为函数。正式网站由 Vercel 从本仓库 main 构建发布。GitHub 用于维护；学生使用固定网站入口。
 
 完整发布检查可运行 `node scripts/verify_site.js`，它依次执行上述 Node 回归、静态构建和站点检查。Vercel 使用同一脚本，构建命令保持在平台的 256 字符限制内。
 
@@ -146,3 +148,29 @@ J至少6ECTS，整体没有统一6ECTS最高值；语言课合计最多6ECTS。R
 来源和逐门原因见[本轮J核对记录](docs/maintenance/2026-10-15-j-catalog.md)、`data/official-interdisciplinary-memberships.json`、`data/interdisciplinary-verification.json`、`data/j-rules.json`。`data/interdisciplinary-review-decisions.json`把45门可推荐决定绑定到已复核完整手册SHA256，来源变化不会自动继承旧批准。独立人工审核仍待完成。
 
 复查工具：`scripts/audit_course_handbooks.py --manifest <含modules数组的官方清单> --full --output <仓库外证据目录>`。在重新审查公开政策和候选后，`scripts/build_interdisciplinary_catalog.py`可用`--catalog`、`--handbooks`、`--policies`和`--decisions`重建J数据；不匹配的手册哈希不能开启自动推荐。测试为`node tests/interdisciplinary.test.js`，已纳入完整发布流水线。
+
+
+### 站内反馈接收与本地验证
+
+完整预览先执行 `npm ci`、`node scripts/build_site.js`，再运行 `npm run dev`，打开终端显示的 `http://127.0.0.1:8001`。原 Python 静态服务器仍可预览正文，但不能接收反馈，提交失败时页面会保留文字。
+
+反馈接收使用 Frankfurt 的 Vercel 私有 Blob store。为 Preview / Development 和 Production 分别连接私有存储，设置服务端 `FEEDBACK_RATE_LIMIT_SECRET`，再重新部署；不要把生产存储凭据分享给预览环境。可使用自动注入的 Blob OIDC 凭据或 `BLOB_READ_WRITE_TOKEN`，凭据仅在服务端使用。`vercel env pull .env.local --yes` 供本地预览使用，`.env.local` 不进入 Git 或发布文件。未配置接收端时明确返回失败，不会显示已收到。
+
+维护者在 Vercel 项目的 Storage 中打开对应私有 store，查看 `feedback/` 下的 JSON，按 `createdAt` 处理；不会自动创建公开 Issue 或发送邮件。`feedback-rate/` 仅含加密摘要构成的短时限流键及清理时间，不保存原始 IP；同一网络每 10 秒可提交一条。维护时可删除超过 24 小时的限流标记。反馈使用随机回执与正文摘要防止网络重试重复保存。反馈与处理状态均只允许管理员接口读取。
+
+发布检查含 `node tests/feedback.test.js`：验证私有写入、回执、重试去重、输入和来源校验、限流以及失败保留文字。测试使用内存模拟；实际接收需另在非生产存储验证。
+
+
+### 管理员反馈收件箱
+
+访问 `/admin/feedback/`，或从反馈页下方点「管理员登录」。仅有一个管理员密码，不开放注册。登录后查看反馈原文、类型、来源页面和时间；可筛选「待处理／处理中／已处理」，逐条保存状态并退出登录。较多反馈分页加载，状态筛选同样支持继续加载更早记录。
+
+首次本地配置运行 `node scripts/setup_feedback_admin.js`，脚本生成强随机密码，将登录信息放在仅当前 Mac 账户可读取的 `.vercel/feedback-admin-login.txt`，将密码的 scrypt 摘要和独立会话密钥加入 `.env.local`。明文密码不进入 Git、静态构建或 Vercel 环境变量。启动本地预览前需重启 `npm run dev`。
+
+脚本同时生成 `.vercel/feedback-admin-env-0.json` 和 `feedback-admin-env-1.json` 两份私有请求体，用 Vercel 环境变量 API 逐份同步到已核对的本项目 Development / Preview，成功后删除临时请求体。Production 使用独立密码、会话密钥和私有 store。部署需同时配置 `FEEDBACK_ADMIN_PASSWORD_HASH`、`FEEDBACK_ADMIN_SESSION_SECRET`、`FEEDBACK_RATE_LIMIT_SECRET` 及 Blob 凭据；不要将这些值放入客户端。
+
+生产首次配置使用 `node scripts/setup_feedback_admin.js --production`，不会更改本地／预览密码或 `.env.local`。正式登录信息单独保存在 `.vercel/feedback-admin-production-login.txt`，三个私有请求体只以 Secret 类型同步到 Production，同步后删除请求体。生产重置需明确运行 `--production --reset`，同步并重新部署后旧生产会话失效。
+
+忘记管理员密码时可在本机明确执行 `node scripts/setup_feedback_admin.js --reset`，同步新的环境配置并重新部署。更换密码摘要后旧会话失效。登录保持最多 8 小时，使用 HttpOnly / SameSite=Strict Cookie；线上 Cookie 使用 Secure 与 __Host 前缀。会话保存在私有存储，退出会撤销当前会话。登录限流每个网络每 15 分钟最多 5 次，不记录原始 IP。敏感接口设置 no-store，每次读取或修改均重新验证会话；修改还需要同源和 CSRF 校验。
+
+处理状态单独保存在 `feedback-status/`，不改写用户反馈原文。保存采用 ETag 条件写入，另一页面已修改时返回冲突并要求刷新，不静默覆盖。管理员界面把反馈当纯文本显示；反馈、会话与凭据都不会写进静态 HTML、搜索索引或个人计划备份。

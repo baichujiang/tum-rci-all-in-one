@@ -1,0 +1,12 @@
+{
+  "name": "tum-rci-all-in-one",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/verify_site.js",
+    "dev": "node --env-file-if-exists=.env.local scripts/serve_site.js"
+  },
+  "dependencies": {
+    "@vercel/blob": "2.8.2",
+    "iron-session": "9.0.1"
+  }
+}

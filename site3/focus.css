@@ -338,6 +338,9 @@ button,a,input,select,summary{-webkit-tap-highlight-color:transparent}
 .feedback-actions .button{font-size:12px}
 #feedback-status{font-size:12px;color:var(--green);margin:14px 0 0}
 #feedback-status:empty{display:none}
+#feedback-status[data-state="error"]{color:#a3312d}
+.feedback-honeypot{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+.feedback-actions .button:disabled{opacity:.65;cursor:default}
 .feedback-followup{margin-top:16px}
 .course-semester-context{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;border:1px solid #d2dfcb;background:#eef4e9;padding:16px 20px;border-radius:12px;margin:0 0 20px}
 .course-semester-context label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#67815b}

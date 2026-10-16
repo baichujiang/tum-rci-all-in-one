@@ -6,6 +6,8 @@
 
 正常生产域名应无需登录。Preview 域名可能有部署保护，不能把临时绕过保护链接当作群公告中的公开网址。发布后检查首页、课程与指南深链接、资源文件、错误页面状态及匿名访问。
 
+反馈接收端为 `api/feedback.js`，由 Vercel 单独部署；安装阶段执行 `npm ci --omit=dev`。发布前为 Production 连接独立的 Frankfurt 私有 Blob store，设置服务端 `FEEDBACK_RATE_LIMIT_SECRET`。Preview / Development 使用另一个私有 store，避免预览访问生产反馈。先在非生产环境核对实际提交回执、私有存储写入及匿名读取返回 403；生产烟测只读检查接口，不自动写入测试反馈。未配置接收端时返回 503 并保留原文。管理员页面为 `/admin/feedback/`，另需配置 `FEEDBACK_ADMIN_PASSWORD_HASH` 与 `FEEDBACK_ADMIN_SESSION_SECRET`；公开访客访问收件箱 API 应返回 401，登录后才可查看及修改状态。发布前验证实际登录、改状态、刷新保留及退出后原会话被拒绝。
+
 `SITE_URL` 可设置为已确认的正式源站，例如 `https://实际域名`（无结尾斜杠）。未设置时使用 Vercel 提供的 `VERCEL_PROJECT_PRODUCTION_URL`。只有确认源站时才生成 canonical 与 sitemap，不能猜测域名。未知源站的本地构建不生成 sitemap。
 
 ## 本地
