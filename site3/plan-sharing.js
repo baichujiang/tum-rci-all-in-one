@@ -1,20 +1,13 @@
 /* Compressed share links and printable plans. All transformation happens locally. */
 (async function(){
 'use strict';
-const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,e=C.esc,box=document.getElementById('plan-exports');if(!box)return;
+const U=window.RCIUI,C=window.RCI,X=window.RCIExports,box=document.getElementById('plan-exports');if(!box)return;
 let db;try{db=await U.data();}catch(_){return;}
-box.innerHTML='<div class="plan-export-actions"><button class="plan-tool-row" type="button" data-plan-xlsx><span><b>导出 Excel</b><small>课程、学分和学期安排</small></span><span aria-hidden="true">↓</span></button><button class="plan-tool-row" type="button" data-plan-print><span><b>打印／保存 PDF</b><small>生成可打印的完整计划</small></span><span aria-hidden="true">↓</span></button><button class="plan-tool-row" type="button" data-plan-link><span><b>生成分享链接</b><small>分享当前计划，不包含收藏</small></span><span aria-hidden="true">↗</span></button></div><div id="plan-share-output" hidden><label>分享链接（含课程、已修和选课偏好）<textarea readonly rows="3" aria-label="个人计划分享链接"></textarea></label><p class="meta">任何得到链接的人都可读取其中的计划。链接内容在浏览器解码，不上传到本站服务器；收藏不会包含在链接中。</p></div>';
-const getName=(code,p)=>p.items.find(x=>x.code===code&&x.custom)?.name||db.courses.find(c=>c.module_code===code)?.module_name_legal_2025||p.items.find(x=>x.code===code)?.name||code;
-function sheets(p){
- const rows=[['模块代码','原文名称','中文参考名','ECTS','计入领域','状态','学期','固定学期']];
- for(const x of p.items){const c=x.custom?null:db.courses.find(c=>c.module_code===x.code);rows.push([x.code,getName(x.code,p),x.custom?'':db.names[x.code]||'',Number(c?.ects??x.ects),x.group||c?.section_2025[0],x.status==='passed'?'已修通过':'未来计划',x.status==='passed'?'已修':x.semester?T.term(p,x.semester).label:'待分配',x.locked?'是':'否']);}
- const settings=[['设置','值'],['入学批次',p.cohort],['控制理论补修',p.conditional?'是':'否'],['想选',p.preferences.desired.join(', ')],['排除',p.preferences.excluded.join(', ')],['语言',p.preferences.languages.join('/')],['全局学分',`${p.workload.minECTS}–${p.workload.maxECTS}`],['全局考核',`${p.workload.minExams}–${p.workload.maxExams}`],['规则','2024 FPSO + 2025-02-11 修订；模拟结果不等于学校认可'],['数据核验','专业选修2026-10-14；规则2026-10-13；实际开课和个人认定以TUMonline为准']];
- return [{name:'毕业计划',rows},{name:'规划条件',rows:settings}];
-}
+box.innerHTML='<div class="plan-export-actions"><button class="plan-tool-row" type="button" data-plan-xlsx><span><b>导出 Excel</b><small>课程与学分合计按学期分段展示</small></span><span aria-hidden="true">↓</span></button><button class="plan-tool-row" type="button" data-plan-print><span><b>打印／保存 PDF</b><small>横向学期看板，含每学期学分与状态</small></span><span aria-hidden="true">↓</span></button><button class="plan-tool-row" type="button" data-plan-link><span><b>生成分享链接</b><small>分享当前计划，不包含收藏</small></span><span aria-hidden="true">↗</span></button></div><div id="plan-share-output" hidden><label>分享链接（含课程、已修和选课偏好）<textarea readonly rows="3" aria-label="个人计划分享链接"></textarea></label><p class="meta">任何得到链接的人都可读取其中的计划。链接内容在浏览器解码，不上传到本站服务器；收藏不会包含在链接中。</p></div>';
 box.addEventListener('click',async event=>{const b=event.target.closest('button');if(!b)return;try{
  const p=await U.plan();
- if(b.hasAttribute('data-plan-xlsx'))window.RCIExports.download(window.RCIExports.xlsx(sheets(p)),'rci-study-plan.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
- if(b.hasAttribute('data-plan-print')){const print=document.getElementById('printable-plan');print.innerHTML=`<h1>TUM RCI · 我的毕业计划</h1><p>${e(p.cohort)} · ${new Date().toLocaleDateString('zh-CN')} · 已修 ${C.calculate(p,db.courses,true).allocated}，规划 ${C.calculate(p,db.courses).allocated} / 120 ECTS</p>${sheets(p).map(s=>`<h2>${s.name}</h2><table><thead><tr>${s.rows[0].map(x=>`<th>${e(x)}</th>`).join('')}</tr></thead><tbody>${s.rows.slice(1).map(r=>`<tr>${r.map(x=>`<td>${e(x)}</td>`).join('')}</tr>`).join('')}</tbody></table>`).join('')}<p>独立学生项目，规则、名额、时间与学分认定请核对学校记录。</p>`;window.print();}
+ if(b.hasAttribute('data-plan-xlsx'))X.download(X.xlsx(X.planSheets(X.planView(p,db))),'rci-study-plan.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+ if(b.hasAttribute('data-plan-print')){document.getElementById('printable-plan').innerHTML=X.printPlan(X.planView(p,db));window.print();}
  if(b.hasAttribute('data-plan-link')){
   if(typeof CompressionStream==='undefined')throw new Error('浏览器不支持压缩分享，请使用完整 JSON 备份迁移。');
   const bytes=new Uint8Array(await new Response(new Blob([JSON.stringify({...p,timetable:{events:[],replaced:[]}})]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());

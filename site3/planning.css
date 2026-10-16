@@ -258,5 +258,50 @@
  .planner-page .semester-tools .board-navigation{margin:0;flex-shrink:0}
  .planner-page .semester-tools .board-navigation button{min-width:38px;min-height:42px}
 }
-@media print{body>header,body>footer,.mobile-bottom-nav,.skip,#toast,dialog,#main>*{display:none!important}dialog::backdrop{display:none!important}#main{width:100%;max-width:none;padding:0}#main>#printable-plan{display:block!important}#printable-plan[hidden]{display:block!important}#printable-plan table{width:100%;border-collapse:collapse;font-size:9px;word-break:break-word}#printable-plan th,#printable-plan td{border:1px solid #aaa;padding:5px;text-align:left}#printable-plan tr{break-inside:avoid}#printable-plan thead{display:table-header-group}#printable-plan h1{font-size:22px}#printable-plan h2{font-size:16px;break-after:avoid}#printable-plan p{font-size:10px}@page{size:A4 landscape;margin:12mm}}
+@media print{
+ body>header,body>footer,.mobile-bottom-nav,.skip,#toast,dialog,#main>*{display:none!important}
+ dialog::backdrop{display:none!important}
+ html,body{background:#fff!important;color:#20352f}
+ #main{width:100%;max-width:none;padding:0;min-height:0}
+ #main>#printable-plan,#printable-plan[hidden]{display:block!important}
+ #printable-plan{font-size:10pt;line-height:1.45;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ #printable-plan h1{font-size:20pt;letter-spacing:0;margin:0 0 1mm}
+ #printable-plan h2{font-size:12pt;margin:0 0 2mm;break-after:avoid}
+ #printable-plan p{font-size:9pt;margin:0 0 3mm}
+ #printable-plan .print-plan-heading{display:grid;grid-template-columns:1fr auto;column-gap:6mm;border-bottom:2px solid #0065bd;padding-bottom:3mm;margin-bottom:3mm}
+ #printable-plan .print-plan-heading h1{grid-column:1;font-size:18pt}
+ #printable-plan .print-plan-heading>p{grid-column:1;font-size:8pt;margin:0}
+ #printable-plan .print-summary{grid-column:2;grid-row:1/3;align-self:center;font-size:10pt;font-weight:600;color:#0065bd}
+ #printable-plan .print-board-note{color:#5c6b64;font-size:7.5pt;margin-bottom:3mm}
+ #printable-plan table{width:100%;border-collapse:collapse;font-size:9pt;table-layout:fixed;overflow-wrap:anywhere}
+ #printable-plan th,#printable-plan td{min-width:0;border:1px solid #d0dbdf;padding:2mm;text-align:left;vertical-align:top}
+ #printable-plan tr{break-inside:avoid}
+ #printable-plan thead{display:table-header-group}
+ #printable-plan .print-semester-board{border-collapse:separate;border-spacing:3mm 0;margin:0 -3mm;width:calc(100% + 6mm)}
+ #printable-plan .print-semester-board th{border-top:3px solid #0065bd;background:#edf5fb;padding:2mm}
+ #printable-plan .print-semester-board th.winter{background:#f7f2e7;border-top-color:#9c7d36}
+ #printable-plan .print-semester-board th>*{display:block}
+ #printable-plan .print-term-title{font-size:11pt;margin-bottom:.5mm}
+ #printable-plan .print-term-label{font-size:8pt;font-weight:400;color:#5c6b64;margin-bottom:1.5mm}
+ #printable-plan .print-semester-board th strong{font-size:10pt}
+ #printable-plan .print-semester-board th small{font-size:7pt;margin-top:1mm}
+ #printable-plan .print-semester-board td{padding:1.2mm 0;border:0}
+ #printable-plan .print-course{border:1px solid #d0dbdf;border-left:3px solid #0065bd;border-radius:2mm;padding:2mm;break-inside:avoid;background:#f4f8fc}
+ #printable-plan .print-course.is-passed{background:#edf6f0;border-left-color:#357460}
+ #printable-plan .print-course-title{font-size:9pt;font-weight:650;line-height:1.2}
+ #printable-plan .print-course-translation{font-size:7pt;color:#5c6b64;margin-top:.5mm}
+ #printable-plan .print-course-code{font-size:7pt;color:#5c6b64;margin-top:1.2mm}
+ #printable-plan .print-course-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1mm 3mm;font-size:7pt;margin-top:1.2mm}
+ #printable-plan .print-course-bottom b{font-size:9pt}
+ #printable-plan .print-empty{border:1px dashed #d0dbdf;padding:5mm;color:#5c6b64}
+ #printable-plan .print-new-page{break-before:page}
+ #printable-plan .print-other{margin-bottom:7mm}
+ #printable-plan .print-history th{background:#edf5fb}
+ #printable-plan .print-history th:first-child{width:55%}
+ #printable-plan .print-history th:nth-child(2){width:12%}
+ #printable-plan .print-settings th{width:20%;background:#f4f8fc}
+ #printable-plan .print-settings td{white-space:pre-wrap}
+ #printable-plan .print-footnote{font-size:8pt;color:#5c6b64;margin-top:5mm}
+ @page{size:A4 landscape;margin:10mm}
+}
 .picker-course-restriction{margin:6px 0 0;font-size:11px;color:#91602c}.picker-course-restriction summary{cursor:pointer;min-height:28px;line-height:1.7;padding:4px 0}.picker-course-restriction p{font-size:12px;line-height:1.7;color:var(--muted);margin:5px 0}.picker-show-more{display:block;margin:16px auto;font-size:13px}
