@@ -52,15 +52,60 @@
  .plan-progress .summary-progress{display:block}
  .planner-page .board-headers{top:calc(var(--planner-header-height,65px) + var(--plan-progress-height,84px))}
  .planner-page .semester-board .semester-card,.planner-page .course-card{scroll-margin-top:calc(var(--planner-header-height,65px) + var(--plan-progress-height,84px) + 118px)}
- .planner-page #summary-gaps{border:0;padding:0 2px;margin:0 0 20px}
- .planner-page #summary-gaps>summary{display:list-item;width:fit-content;padding:5px 0;min-height:30px}
- .planner-page #summary-gaps[open]{padding:0 18px 16px;background:var(--white);border:1px solid var(--line);border-radius:10px}
- .planner-page #summary-gaps[open]>summary{padding:9px 0}
- #planner .credit-category-core{--credit-color:#0065bd;--credit-soft:#dcebf9}
- #planner .credit-category-professional{--credit-color:#168487;--credit-soft:#dceff0}
- #planner .credit-category-interdisciplinary{--credit-color:#b88724;--credit-soft:#f5ecd5}
- #planner .credit-category-thesis{--credit-color:#8063a9;--credit-soft:#eae3f4}
- #planner .credit-category-remediation{--credit-color:#be6554;--credit-soft:#f7e3de}
+ .plan-progress .summary-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+ .summary-heading #plan-open-credit-check{display:inline-flex;align-items:center;gap:3px;border:0;background:transparent;padding:0;min-height:18px;line-height:18px;font-size:12px;font-weight:600;color:var(--brand);white-space:nowrap}
+ #plan-open-credit-check:hover{text-decoration:underline;text-underline-offset:3px}
+ #plan-open-credit-check>span{font-size:16px;line-height:1}
+ .plan-dialog.credit-check-dialog{width:min(760px,calc(100vw - 64px))}
+ .credit-check-dialog>.plan-dialog-heading{position:sticky;top:0;z-index:2;align-items:center;padding:14px 24px 12px}
+ #credit-check-content{padding:16px 24px}
+ .credit-check-total{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:10px 18px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+ .credit-check-total>div{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}
+ .credit-check-total>div+div{border-left:1px solid var(--line);padding-left:20px}
+ .credit-check-total b{font-size:25px;line-height:1.4;font-weight:650;font-variant-numeric:tabular-nums}
+ .credit-check-total small{font-size:12px;color:var(--muted);font-weight:400}
+ .credit-check-section{margin-top:16px}
+ .credit-check-section h3,.credit-check-notice h3{font-size:15px;margin:0 0 6px}
+ .credit-check-section h3 small{font-size:11px;font-weight:400;color:var(--muted);margin-left:6px}
+ .credit-check-section>p{font-size:12px;color:var(--muted);margin:0 0 8px;line-height:1.7}
+ .credit-check-table{font-size:13px;table-layout:fixed;font-variant-numeric:tabular-nums}
+ .credit-check-table th,.credit-check-table td{min-width:0;border:0;border-bottom:1px solid var(--line);padding:9px 10px;text-align:right;vertical-align:middle}
+ .credit-check-table th:first-child{width:38%;text-align:left}
+ .credit-check-table th:last-child{width:30%}
+ .credit-check-table thead th{background:var(--paper);color:var(--muted);font-size:11px;font-weight:500}
+ .credit-check-table tbody th{font-weight:500}
+ .credit-check-table tbody th small{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+ .credit-check-table td a{display:inline-flex;align-items:baseline;justify-content:flex-end;gap:12px;color:var(--brand)}
+ .credit-check-table td a b{font-weight:600}.credit-check-table td a span{font-size:12px}
+ .credit-check-category{display:inline-flex;align-items:center;gap:8px}
+ .credit-check-category:before{content:'';width:7px;height:7px;border-radius:2px;background:var(--credit-color);flex-shrink:0}
+ .credit-check-met{color:var(--success);font-size:12px;font-weight:550}
+ .credit-check-pending{color:#94601b;font-size:12px}
+ .credit-check-domains{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+ .credit-check-domain{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--paper)}
+ .credit-check-domain.is-met{border-color:#cde2d4;background:var(--success-soft)}
+ .credit-check-domain h4{font-size:13px;font-weight:600;margin:0 0 6px}
+ .credit-check-domain p{font-size:12px;margin:0 0 5px}
+ .credit-check-domain p b{font-size:17px;font-weight:650;font-variant-numeric:tabular-nums}
+ .credit-check-domain p span{color:var(--muted);font-size:11px}
+ .credit-check-domain a{font-size:12px;color:var(--brand);font-weight:550}
+ .credit-check-milestones{border-top:1px solid var(--line)}
+ .credit-check-milestones>summary{font-size:14px;font-weight:600;min-height:40px;padding:9px 0}
+ .credit-check-milestones .credit-check-table th:first-child{width:24%}
+ .credit-check-milestones .credit-check-table th:nth-child(2){width:30%;text-align:left}
+ .credit-check-milestones .credit-check-table td:nth-child(2){text-align:left}
+ .credit-check-milestones .credit-check-table th:last-child{width:28%}
+ .credit-check-milestones[open]>p{margin:6px 0 12px}
+ .credit-check-notice{background:#fff8e8;border:1px solid #ead8ac;border-radius:8px;padding:12px 14px;margin-bottom:18px;font-size:12px;line-height:1.7;color:#79571c}
+ .credit-check-notice p{margin:0 0 5px}
+ .credit-check-notice .text-link{border:0;background:transparent;padding:0;min-height:30px;font-size:12px;color:var(--brand)}
+ .credit-check-notice ul{margin:0;padding-left:18px}.credit-check-notice li+li{margin-top:5px}
+ .credit-check-footnote{font-size:11px;color:var(--muted);margin:12px 0 0;line-height:1.7}
+ #planner .credit-category-core,.credit-check-dialog .credit-category-core{--credit-color:#0065bd;--credit-soft:#dcebf9}
+ #planner .credit-category-professional,.credit-check-dialog .credit-category-professional{--credit-color:#168487;--credit-soft:#dceff0}
+ #planner .credit-category-interdisciplinary,.credit-check-dialog .credit-category-interdisciplinary{--credit-color:#b88724;--credit-soft:#f5ecd5}
+ #planner .credit-category-thesis,.credit-check-dialog .credit-category-thesis{--credit-color:#8063a9;--credit-soft:#eae3f4}
+ #planner .credit-category-remediation,.credit-check-dialog .credit-category-remediation{--credit-color:#be6554;--credit-soft:#f7e3de}
  .credit-distribution{display:flex;gap:3px;border-radius:8px;overflow:hidden}
  .credit-segment{position:relative;flex-basis:0;flex-shrink:1;min-width:0;height:58px;overflow:hidden;background:var(--credit-soft);outline-offset:-3px;--credit-fill:color-mix(in srgb,var(--credit-color) 82%,#000)}
  .plan-progress .credit-distribution-progress{position:absolute;inset:0;width:100%;height:100%;border-radius:0;background:var(--credit-soft);outline:2px solid var(--credit-active-color,transparent);outline-offset:-2px;filter:var(--credit-active-filter,none)}

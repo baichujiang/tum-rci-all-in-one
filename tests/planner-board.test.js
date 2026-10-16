@@ -8,12 +8,13 @@ const copy=x=>JSON.parse(JSON.stringify(x)),tick=()=>new Promise(resolve=>setImm
 const draft=items=>C.validatePlan({version:2,cohort:'2026/27冬季',conditional:false,timeline:{count:4,start:'winter'},items},courses);
 function element(){return {innerHTML:'',open:false,handlers:{},style:{setProperty(){}},scrollLeft:0,scrollWidth:600,clientWidth:600,elements:{namedItem(){}},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];},focus(){},toggleAttribute(){}};}
 async function harness(initial,desktop=true){
- let plan=copy(initial),writes=0;const events={},nodes={},toasts=[],moves=[],box=element();
+ let plan=copy(initial),writes=0;const events={},nodes={},toasts=[],moves=[],box=element(),creditDialog=element(),creditContent=element();
+ creditDialog.showModal=()=>{creditDialog.open=true;};creditDialog.close=()=>{creditDialog.open=false;};creditContent.querySelector=()=>null;
  for(const key of ['.semester-board','.board-head-scroll','.board-courses-scroll','[data-board-step="-1"]','[data-board-step="1"]','#summary-gaps','#custom-plan'])nodes[key]=element();
  box.querySelector=key=>nodes[key];
  const U={base:'',persisted:true,data:async()=>({courses,names}),plan:async()=>copy(plan),updatePlan:async fn=>{const next=await fn(copy(plan));if(next){plan=C.validatePlan(next,courses);writes++;events['rci:planchange']?.();}return copy(plan);},toast:(message,action)=>toasts.push({message,action})};
  U.moveCourse=async(code,semester,options)=>{moves.push(copy({code,semester,options}));return {kind:'unchanged',code,semester};};
- vm.runInNewContext(source,{window:{matchMedia:()=>({matches:desktop,addEventListener(){}}),RCIUI:U,RCI:C,RCICourseContext:T,RCIPlanning:E,addEventListener:(key,fn)=>events[key]=fn},document:{activeElement:null,getElementById:id=>id==='planner'?box:null},cancelAnimationFrame(){},requestAnimationFrame(){}});
+ vm.runInNewContext(source,{window:{matchMedia:()=>({matches:desktop,addEventListener(){}}),RCIUI:U,RCI:C,RCICourseContext:T,RCIPlanning:E,addEventListener:(key,fn)=>events[key]=fn},document:{activeElement:null,getElementById:id=>({'planner':box,'credit-check-dialog':creditDialog,'credit-check-content':creditContent}[id])},cancelAnimationFrame(){},requestAnimationFrame(){}});
  await tick();
  const click=async(key,code)=>{const name=key.replace(/^data-/,'').replace(/-([a-z])/g,(_,c)=>c.toUpperCase());await box.handlers.click({target:{closest:()=>({dataset:{[name]:code},hasAttribute:k=>k===key})}});await tick();};
  const changeSemester=async(code,semester)=>{await box.handlers.change({target:{value:String(semester),dataset:{semester:code},hasAttribute:key=>key==='data-semester'}});await tick();};
@@ -22,7 +23,7 @@ async function harness(initial,desktop=true){
   box.handlers.dragstart({target:{closest:selector=>selector==='[data-plan-course]'?item:null},clientX:0,dataTransfer:{setData(){}}});
   await box.handlers.drop({target:{closest:()=>({dataset:{dropSemester:String(semester)}})},preventDefault(){}});await tick();
  };
- return {html:()=>box.innerHTML,plan:()=>copy(plan),writes:()=>writes,toasts,moves,click,changeSemester,drag,external:async value=>{plan=C.validatePlan(value,courses);await events['rci:planchange']();await tick();}};
+ return {html:()=>box.innerHTML,creditHTML:()=>creditContent.innerHTML,creditDialog,plan:()=>copy(plan),writes:()=>writes,toasts,moves,click,changeSemester,drag,external:async value=>{plan=C.validatePlan(value,courses);await events['rci:planchange']();await tick();}};
 }
 const card=(html,code)=>html.match(new RegExp('<details[^>]*id="plan-course-'+code+'"[\\s\\S]*?</details>'))?.[0];
 let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS',name);}
@@ -39,6 +40,24 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   await h.external({...initial,items:initial.items.map(x=>({...x,status:'passed'}))});assert.deepEqual(counts(h.html()),{pending:0,passed:14});
   await h.external({...initial,items:[]});assert.deepEqual(counts(h.html()),{pending:0,passed:0});
   const narrow=await harness(initial,false);assert(!narrow.html().includes('plan-course-status'));
+ });
+ await test('Desktop credit check opens without changing a plan, shows category and domain gaps, and refreshes while open',async()=>{
+  const initial=draft([{code:'IN2064',status:'passed',semester:1},{code:'OWNG',name:'已认可计算选修',ects:8.5,group:'G',custom:true,status:'planned',semester:2},{code:'OWNJ',name:'已认可跨学科',ects:7.5,group:'J',custom:true,status:'planned',semester:2}]),h=await harness(initial);
+  assert(h.html().includes('data-open-credit-check'));assert(!h.html().includes('id="summary-gaps"'));
+  assert(h.creditHTML().includes('22.5<small> / 120 ECTS'));assert(h.creditHTML().includes('97.5<small> ECTS'));assert(h.creditHTML().includes('超出 1.5 ECTS 未计入总进度'));
+  for(const group of ['core','professional','F','H','I'])assert(h.creditHTML().includes('/courses/?group='+group));
+  assert(!h.creditHTML().includes('href="/courses/?group=G"'));assert(!h.creditHTML().includes('href="/courses/?group=J"'));
+  assert(h.creditHTML().includes('已包含在上方专业选修总额中'));assert(h.creditHTML().includes('计划可覆盖'));assert(h.creditHTML().includes('计划还差 7.5 ECTS'));
+  await h.click('data-open-credit-check','');assert(h.creditDialog.open);assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
+  await h.external({...initial,items:[]});assert(h.creditDialog.open);assert(h.creditHTML().includes('120<small> ECTS'));assert(h.creditHTML().includes('/courses/?group=J'));assert.equal(h.writes(),0);
+  const narrow=await harness(initial,false);assert(narrow.html().includes('id="summary-gaps"'));assert(!narrow.html().includes('data-open-credit-check'));assert.equal(narrow.creditHTML(),'');
+ });
+ await test('Credit check separates historical records from future estimates and explains unconfirmed remediation',async()=>{
+  const initial=C.validatePlan({...draft([{code:'IN2064',status:'passed',semester:0},{code:'ED140014',status:'planned',semester:4}]),cohort:'unknown',conditionalConfirmed:false,preferences:{startSemester:4}},courses),h=await harness(initial);
+  assert(h.creditHTML().includes('尚未选择入学批次'));assert(h.creditHTML().includes('录取补修要求尚未确认'));assert(h.creditHTML().includes('ED140014'));assert(h.creditHTML().includes('data-open-settings'));
+  const historical=h.creditHTML().match(/<tr><th scope="row">第 2 学期末[\s\S]*?<\/tr>/)[0];assert(historical.includes('历史记录'));assert(historical.includes('通过学期待核对'));assert(!historical.includes('计划可覆盖'));
+  const confirmed=await harness(C.validatePlan({...initial,cohort:'2026/27冬季',conditional:true,conditionalConfirmed:true},courses));
+  assert(confirmed.creditHTML().includes('补修 K'));assert(confirmed.creditHTML().includes('credit-category-remediation'));assert(!confirmed.creditHTML().includes('data-open-settings'));assert.deepEqual(confirmed.plan().items,initial.items);assert.equal(confirmed.writes(),0);
  });
  await test('Desktop hover categories follow the credit overview while preserving passed and custom recognition records',async()=>{
   const expected={IN2067:'core',IN2064:'core',IN2228:'core',IN2107:'core',IN2106:'core',IN2346:'professional',MW0085:'professional',MW1808:'professional',CIT433050:'professional',WI001056_1:'interdisciplinary',IN2320:'thesis',ED140014:'remediation',IN2060:'interdisciplinary'};
