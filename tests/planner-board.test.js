@@ -27,11 +27,13 @@ async function harness(initial,desktop=true){
 const card=(html,code)=>html.match(new RegExp('<details[^>]*id="plan-course-'+code+'"[\\s\\S]*?</details>'))?.[0];
 let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS',name);}
 (async()=>{
- await test('Persistent course counts include passed history and update after status changes and undo',async()=>{
+ await test('Semester overview counts include passed history and update after status changes and undo',async()=>{
   const codes=['IN2067','IN2064','IN2406','ED150039','IN2346','IN2106','MW0085','MW1808','IN2107','MW1420','CIT433037','IN2357','WI001056_1','IN2320'];
   const initial=draft(codes.map(code=>({code,status:code==='IN2064'?'passed':'planned',semester:code==='IN2064'?6:2}))),h=await harness(initial);
   const counts=html=>Object.fromEntries([...html.matchAll(/class="plan-course-status-(pending|passed)">[^<]+<b>(\d+)<\/b>/g)].map(m=>[m[1],Number(m[2])]));
   assert.deepEqual(counts(h.html()),{pending:13,passed:1});assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
+  const progress=h.html().match(/<section class="plan-progress"[\s\S]*?<\/section>/)[0];
+  assert(!progress.includes('plan-course-status'));assert.match(h.html(),/<h2 id="semester-board-title">学期安排<\/h2><div class="plan-course-status"/);
   await h.click('data-passed','IN2346');assert.deepEqual(counts(h.html()),{pending:12,passed:2});
   await h.toasts.at(-1).action.run();await tick();assert.deepEqual(counts(h.html()),{pending:13,passed:1});assert.deepEqual(h.plan(),initial);
   await h.external({...initial,items:initial.items.map(x=>({...x,status:'passed'}))});assert.deepEqual(counts(h.html()),{pending:0,passed:14});

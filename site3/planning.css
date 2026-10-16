@@ -50,8 +50,8 @@
  .plan-progress .summary-total{gap:5px;font-variant-numeric:tabular-nums}
  .plan-progress .summary-total b{font-size:28px;letter-spacing:-.7px}
  .plan-progress .summary-progress{display:block}
- .planner-page .board-headers{top:calc(var(--planner-header-height,65px) + var(--plan-progress-height,116px))}
- .planner-page .semester-board .semester-card,.planner-page .course-card{scroll-margin-top:calc(var(--planner-header-height,65px) + var(--plan-progress-height,116px) + 118px)}
+ .planner-page .board-headers{top:calc(var(--planner-header-height,65px) + var(--plan-progress-height,84px))}
+ .planner-page .semester-board .semester-card,.planner-page .course-card{scroll-margin-top:calc(var(--planner-header-height,65px) + var(--plan-progress-height,84px) + 118px)}
  .planner-page #summary-gaps{border:0;padding:0 2px;margin:0 0 20px}
  .planner-page #summary-gaps>summary{display:list-item;width:fit-content;padding:5px 0;min-height:30px}
  .planner-page #summary-gaps[open]{padding:0 18px 16px;background:var(--white);border:1px solid var(--line);border-radius:10px}
@@ -74,7 +74,9 @@
  .credit-segment-filled{color:#fff;clip-path:inset(0 calc(100% - var(--credit-filled,0%)) 0 0)}
  .credit-segment-compact .credit-segment-name{font-size:11px}
  .credit-segment-compact .credit-segment-copy>b,.credit-segment-compact .credit-segment-copy>b>small{font-size:11px}
- .plan-course-status{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:8px;font-size:13px;font-weight:600;line-height:22px}
+ .semester-board-overview{display:flex;align-items:center;flex-wrap:wrap;gap:12px;min-width:0;margin-right:auto}
+ .semester-board-overview h2{margin:0}
+ .plan-course-status{display:flex;align-items:center;flex-wrap:wrap;gap:10px;font-size:13px;font-weight:600;line-height:22px}
  .plan-course-status>span{display:inline-flex;align-items:baseline;gap:5px;padding:1px 8px;border-radius:5px;background:var(--brand-soft);color:var(--brand)}
  .plan-course-status>.plan-course-status-passed{background:var(--success-soft);color:var(--success)}
  .plan-course-status b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
