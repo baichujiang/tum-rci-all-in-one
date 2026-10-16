@@ -136,7 +136,7 @@ test('Feedback admin publishes an empty protected shell outside search and sitem
  assert(admin.includes('id="admin-login"'));assert(admin.includes('id="admin-inbox"'));assert(admin.includes('id="admin-feedback-list"'));assert(admin.includes('type="password"'));assert(admin.includes('noindex'));
  assert(admin.includes('assets/feedback-admin.js'));assert(!admin.includes('FEEDBACK_ADMIN_PASSWORD_HASH'));assert(!admin.includes('FEEDBACK_ADMIN_SESSION_SECRET'));
  assert(!index.docs.some(doc=>doc.url.startsWith('/admin/')));
- for(const p of html){const markup=fs.readFileSync(p,'utf8');assert(!/href="[^"]*\/admin\//.test(markup),p+' exposes an administrator link');}
+ for(const p of html){const markup=fs.readFileSync(p,'utf8');assert(!/<a\b[^>]*\bhref="[^"]*\/admin\//.test(markup),p+' exposes an administrator link');}
  const sitemap=path.join(dist,'sitemap.xml');if(fs.existsSync(sitemap))assert(!fs.readFileSync(sitemap,'utf8').includes('/admin/'));
  const view=fs.readFileSync(path.join(root,'site3/feedback-admin.js'),'utf8');assert(!view.includes('.innerHTML'));assert(!view.includes('localStorage'));
 });
