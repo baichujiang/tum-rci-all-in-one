@@ -183,3 +183,9 @@ Vercel 项目已启用 Web Analytics，页面按 Other 指引使用 `@vercel/ana
 只统计公开页面浏览，不发送个人计划、收藏或反馈正文，也不记录按钮等自定义事件。`beforeSend` 会移除页面 URL 的全部查询参数和片段，并拒绝管理员、API 与外站 URL。Referrer-Policy 使用 strict-origin，来源只保留域名。当前项目在 Vercel Analytics 中查看访客、浏览量和热门页面；统计从接入后开始，事件费用按团队套餐计费。
 
 `node tests/analytics.test.js` 验证数据过滤与环境隔离，已纳入发布检查。上线后访问公开页面，检查官方脚本和采集请求，再在 Analytics 页面确认收到数据。
+
+管理员登录后，同一管理页显示近 7 天／30 天的访客数、浏览量、每日趋势与热门页面。数据由 `/api/admin-analytics` 从官方 Web Analytics API 读取，沿用反馈管理的服务端会话验证，不另行采集访问。仅查询固定的本项目 Production 数据，日期按 UTC 划分并包含当天；总访客数使用整个期间的去重结果，不能相加每日访客数或各页面访客数。每个范围在函数实例内最多缓存一分钟；接口与页面数据不进入公开缓存。
+
+Production 需额外配置服务端 Secret `ANALYTICS_VERCEL_TOKEN`，使用范围仅限本项目的独立 Vercel Access Token。不要复用个人全账号 Token、放入静态资源或把生产凭证同步到 Preview / Development。Token 到期或撤销后需替换 Secret 并重新部署。未配置、权限不足或上游失败时显示明确错误，保留上次成功显示的数据；退出、会话过期与离开页面时清空统计展示。公开页面继续不展示管理入口。
+
+`node tests/admin-analytics.test.js` 验证匿名与伪造会话被拒绝、固定查询范围、当天数据边界、服务端缓存与失败关闭，已纳入完整发布检查。

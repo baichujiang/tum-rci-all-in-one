@@ -2,7 +2,7 @@
 'use strict';
 const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
 const feedback=require('../api/feedback');
-const handlers={'/api/feedback':feedback,'/api/admin-session':require('../api/admin-session'),'/api/admin-feedback':require('../api/admin-feedback')};
+const handlers={'/api/feedback':feedback,'/api/admin-session':require('../api/admin-session'),'/api/admin-feedback':require('../api/admin-feedback'),'/api/admin-analytics':require('../api/admin-analytics')};
 const root=path.resolve(__dirname,'../dist'),port=Number(process.env.PORT||8001);
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};
 http.createServer(async(req,res)=>{
