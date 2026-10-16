@@ -183,10 +183,26 @@
 .plan-dialog-heading>.quiet{min-height:40px;flex-shrink:0;font-size:13px;padding:6px 9px}
 .plan-dialog-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;bottom:0;background:var(--white);padding:16px 24px;border-top:1px solid var(--line);z-index:2}
 .plan-dialog-footer .meta{margin:0;font-size:12px}
+#plan-settings-dialog{display:flex;flex-direction:column;overflow:hidden}
+#plan-settings-dialog:not([open]){display:none}
+#plan-settings-dialog>.plan-dialog-heading,#plan-settings-dialog>.plan-dialog-footer{flex-shrink:0}
+#plan-settings-dialog>.plan-dialog-footer{position:static;justify-content:flex-end}
+#plan-settings-dialog [data-finish-settings]{flex-shrink:0}
+#plan-settings-content{overflow-y:auto;min-height:0;overscroll-behavior:contain;scroll-padding:16px}
 #plan-settings-notice{margin:18px 24px 0;font-size:13px}
 .planning-workflow{padding:20px 24px}
 .planning-workflow h3{font-size:15px;margin:0 0 14px}
 .plan-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.plan-load-settings{border-top:1px solid var(--line);margin-top:22px;padding-top:20px}
+.plan-language-settings{align-items:end}
+.planning-workflow .plan-language-settings fieldset{margin:0;min-width:0;padding:2px 12px 4px}
+.planning-workflow .plan-language-settings .check{margin:5px 12px 5px 0}
+.planning-workflow .plan-rules-link{display:flex;align-items:center;justify-content:space-between;width:100%;border-top:1px solid var(--line);border-radius:0;margin-top:18px;padding:14px 0 0;font-size:12px;font-weight:400;color:var(--muted)}
+.plan-rules-intro{font-size:14px;line-height:1.8}
+.plan-rules-highlights{padding-left:20px;font-size:13px;line-height:1.8;margin-bottom:20px}
+.plan-rules-highlights li+li{margin-top:6px}
+.plan-rules-list{padding-left:20px;font-size:13px;line-height:1.8;margin:0 0 14px}
+.plan-rules-list li+li{margin-top:6px}
 .planning-workflow label{font-size:13px;font-weight:500;display:grid;gap:7px}
 .planning-workflow select,.planning-workflow input:not([type=checkbox]){padding:10px 12px;width:100%;background:var(--white);border:1px solid var(--line);border-radius:8px;color:var(--ink);min-height:44px;font-size:14px;font-family:inherit}
 .planning-workflow .meta{font-size:12px;line-height:1.7;color:var(--muted)}
@@ -197,6 +213,10 @@
 .planning-workflow fieldset{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .planning-workflow legend{font-size:13px;font-weight:500}
 .planning-workflow .check{display:inline-flex;align-items:center;gap:8px;font-weight:400;margin:6px 14px 6px 0;line-height:1.6}
+.planning-toggle-options{display:grid;gap:18px;margin-top:20px}
+.planning-workflow .planning-toggle-option .check{display:flex;align-items:flex-start;margin:0;font-weight:500}
+.planning-toggle-option input[type=checkbox]{margin-top:2px}
+.planning-workflow .planning-toggle-option .meta{margin:5px 0 0 26px;font-size:12px;line-height:1.7}
 .planning-workflow input[type=checkbox]{width:18px;height:18px;flex-shrink:0}
 .planning-workflow form>.meta{margin:0}
 .load-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
@@ -242,6 +262,7 @@
  .planner-page .semester-tools h2{font-size:17px}.planner-page .semester-tools h2 span{font-size:11px}.planner-page .board-hint{font-size:11px;line-height:1.7}.unassigned-heading>small{font-size:11px}.unassigned-heading>span{font-size:11px}
  .plan-dialog-heading{padding:18px 18px 16px}.plan-dialog-heading h2{font-size:19px}.plan-dialog-heading p{font-size:12px}.plan-dialog-heading>.quiet{font-size:12px}.planning-workflow{padding:18px}.plan-dialog-footer{padding:14px 18px}.plan-dialog-footer .meta{font-size:11px}#plan-settings-notice{margin:16px 18px 0}
  .plan-settings-grid{gap:14px}.planning-workflow select,.planning-workflow input:not([type=checkbox]){font-size:16px;padding:9px 10px}.planning-workflow label{font-size:12px}.planning-workflow details>summary{font-size:13px}
+ #plan-settings-dialog .plan-dialog-footer{flex-wrap:wrap;gap:10px}#plan-settings-dialog .plan-dialog-footer .meta{max-width:none}#plan-settings-dialog [data-finish-settings]{width:100%}.plan-language-settings{grid-template-columns:1fr}.planning-workflow .plan-language-settings fieldset{padding:6px 12px}
  .preference-modes button{font-size:13px;padding:8px 5px}.preference-modes button span{font-size:10px;margin-left:4px}.preference-result{padding:12px 10px;gap:10px}.preference-result b{font-size:13px}.preference-result small{font-size:11px}.preference-result button{font-size:12px}.preference-results{max-height:35vh}
  .plan-tool-row{padding:14px 18px}.plan-storage-note{margin:16px 18px}.plan-tools-footer{padding:14px 18px;padding-bottom:max(14px,env(safe-area-inset-bottom))}.plan-clear-button{width:100%}#plan-share-output{padding:16px 18px}
  .auto-preview-semesters{grid-template-columns:1fr}.auto-plan-dialog{padding:18px}.auto-plan-dialog .dialog-actions{bottom:-18px}.auto-plan-dialog .dialog-actions .button{font-size:12px;padding:10px 12px}.auto-plan-dialog [data-edit-auto-settings]{font-size:12px}

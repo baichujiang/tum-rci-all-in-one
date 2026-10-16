@@ -164,26 +164,28 @@ function generate(raw,courses,offerings={},options={}){
    if(exhausted)break;
   }
  }
- if(!best)return {ok:false,reasons:[exhausted?'搜索已达到计算上限，尚未找到方案；这不证明数学上无解。可放宽条件、减少固定课程或增加规划学期。':'没有找到满足全部设置的方案。试着增加规划学期、提高单学期上限或放宽时间条件。',...attempts].slice(0,8),warnings,nodes,exhausted};
+ if(!best)return {ok:false,reasons:[exhausted?'还没算出方案，不代表一定排不出来。可以多安排几个学期，或减少固定学期的课程后再试。':'没有找到符合所有要求的方案。试试多安排几个学期，或放宽每学期的学分和考试数量要求。',...attempts].slice(0,8),warnings,nodes,exhausted};
  best=C.validatePlan(best,courses);
  const unconfirmed=[];
  for(const x of best.items.filter(x=>x.status==='planned')){
   const c=known.get(x.code)||x,offer=T.offering(best,c,x.semester,offerings);
   if(!offer.dated&&offer.state!=='flexible')unconfirmed.push(x.code);
  }
- if(unconfirmed.length)warnings.push(`${unconfirmed.length} 门按目录季节推算，未来开课、名额与主题未确认。`);
- if(best.items.some(x=>x.custom))warnings.push('包含自行录入课程，学分归类与认定需要学校确认。');
+ if(unconfirmed.length)warnings.push(`${unconfirmed.length} 门课先按通常的开课学期安排，之后还要确认是否开课、有无名额和课题。`);
+ if(best.items.some(x=>x.custom))warnings.push('手动添加的课，学分和分类需要学校认可。');
  const uncertain=best.items.filter(x=>x.status==='planned'&&known.get(x.code)?.current_catalog_status==='needs_review');
- if(uncertain.length)warnings.push('已选模块的当期目录状态待复核：'+uncertain.map(x=>x.code).join('、')+'；未据此确认可报名或可计入。');
+ if(uncertain.length)warnings.push('这些课的最新资料还没确认：'+uncertain.map(x=>x.code).join('、')+'。请先确认能否报名和计入学分。');
+ let needsPrerequisiteCheck=false;
  for(const x of best.items.filter(x=>x.status==='planned')){
   const c=known.get(x.code),prerequisites=c?.prerequisites;
-  if(prerequisites&&prerequisites.kind!=='none')warnings.push(`${x.code}：${prerequisites.summary_cn} 方案未判断你的知识准备或个人报名资格，请采用前核对手册。`);
+  if(prerequisites&&prerequisites.kind!=='none'){warnings.push(`${x.code}：${prerequisites.summary_cn}`);needsPrerequisiteCheck=true;}
  }
- if(best.items.some(x=>x.status==='planned'&&['IN2106','IN2107','IN2257'].includes(x.code)))warnings.push('研讨／实践模块这里只分配学分，尚未选定具体课题或获得名额；不同实践模块不能复用同一实际课题。');
+ if(needsPrerequisiteCheck)warnings.push('上面列出的知识基础和报名要求，请在采用前自行确认。');
+ if(best.items.some(x=>x.status==='planned'&&['IN2106','IN2107','IN2257'].includes(x.code)))warnings.push('研讨课、实验课还需要自己选课题和申请名额。同一个实验课题不能重复算作不同实验课的学分。');
  const thesisItem=best.items.find(x=>x.status==='planned'&&x.code==='IN2320');
- if(thesisItem&&best.items.some(x=>x.status==='planned'&&x.code!=='IN2320'&&x.semester===thesisItem.semester))warnings.push('论文与其他课程在同一学期：须保证论文通常作为最后一项考核；提前开题需申请批准，请核对个人时间安排。');
- if(p.preferences.deadlineException)warnings.push('已选择只提示标准进度期限；方案可能超出标准期限，本工具未判断补考、最终不通过或个人期限例外，请按学校记录核对。');
- if(C.progression(best,courses).some(x=>x.historical&&!x.met))warnings.push('历史期限可能不满足或通过学期不完整，请按已修记录与学校批准情况核对。');
+ if(thesisItem&&best.items.some(x=>x.status==='planned'&&x.code!=='IN2320'&&x.semester===thesisItem.semester))warnings.push('论文和其他课排在同一学期。论文通常应最后完成；若要提前开题，需要学校批准。');
+ if(p.preferences.deadlineException)warnings.push('这个方案可能没达到学校的进度要求。能否延期、补考或继续修读，以学校记录为准。');
+ if(C.progression(best,courses).some(x=>x.historical&&!x.met))warnings.push('以前的学业进度可能没达标，或缺少通过学期记录。请对照成绩和学校批准情况确认。');
  const finish=Math.max(start,...best.items.filter(x=>x.status==='planned').map(x=>x.semester));
  return {ok:true,plan:best,finish,nodes,warnings,removed:excludedSelected.map(x=>x.code),added:best.items.filter(x=>!p.items.some(y=>y.code===x.code)).map(x=>x.code),moved:best.items.filter(x=>x.status==='planned'&&p.items.some(y=>y.code===x.code&&y.semester!==x.semester)).map(x=>x.code),calculation:C.calculate(best,courses),passed:C.calculate(best,courses,true)};
 }

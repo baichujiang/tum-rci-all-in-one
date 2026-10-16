@@ -20,10 +20,14 @@ module.exports=function plannerView(studyHelp=''){return `
   <div id="credit-check-content"></div>
  </dialog>
  <dialog id="plan-settings-dialog" class="plan-dialog" aria-labelledby="plan-settings-title">
-  <header class="plan-dialog-heading"><div><h2 id="plan-settings-title">计划设置</h2><p>基本信息只需确认一次，之后随时可改。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭计划设置">关闭</button></header>
+  <header class="plan-dialog-heading"><h2 id="plan-settings-title">计划设置</h2><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭计划设置">关闭</button></header>
   <p id="plan-settings-notice" class="notice" role="status" hidden></p>
   <div id="plan-settings-content" class="planning-workflow"></div>
-  <footer class="plan-dialog-footer"><span class="meta">基本设置更改后自动保存</span><button type="button" class="button" data-finish-settings>完成</button></footer>
+  <footer class="plan-dialog-footer"><button type="button" class="button" data-finish-settings>保存设置</button></footer>
+ </dialog>
+ <dialog id="planning-rules-dialog" class="plan-dialog" aria-labelledby="planning-rules-title">
+  <header class="plan-dialog-heading"><h2 id="planning-rules-title">规划说明</h2><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭规划说明">返回设置</button></header>
+  <div id="planning-rules-content" class="planning-workflow"></div>
  </dialog>
  <dialog id="course-preferences-dialog" class="plan-dialog" aria-labelledby="course-preferences-title">
   <header class="plan-dialog-heading"><div><h2 id="course-preferences-title">已修与选课偏好</h2><p class="desktop-legacy">已修计入进度，想选与排除用于自动规划。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭已修与选课偏好">完成</button></header>
