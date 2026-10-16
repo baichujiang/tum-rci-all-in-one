@@ -15,6 +15,7 @@ try{
  assert(releaseScript&&fs.existsSync(path.join(root,releaseScript[1])),'The release command must reference an existing local verification script');
  console.log('PASS Release build command fits the platform schema and resolves its local script');
  for(const folder of ['scripts','assets','site3','content','data','guides'])fs.cpSync(path.join(root,folder),path.join(fixture,folder),{recursive:true});
+ fs.symlinkSync(path.join(root,'node_modules'),path.join(fixture,'node_modules'),'dir');
  const first=build();assert.equal(first.status,0,first.stderr);const original=manifest(path.join(fixture,'dist'));
  const navFile=path.join(fixture,'content/navigation.json'),nav=JSON.parse(fs.readFileSync(navFile,'utf8'));
  fs.writeFileSync(navFile,JSON.stringify({...nav,resource_display_ids:['MISSING-RESOURCE']}));

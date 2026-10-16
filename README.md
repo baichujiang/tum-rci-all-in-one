@@ -66,7 +66,7 @@ python3 tests/links.test.py
 python3 -m http.server 8000 --directory dist
 ```
 
-打开 `http://localhost:8000`。静态正文构建不需要第三方依赖；反馈接收端使用 `@vercel/blob`，首次运行完整发布检查前执行 `npm ci`。发布目录是 `dist`，`api/feedback.js` 由 Vercel 单独部署为函数。正式网站由 Vercel 从本仓库 main 构建发布。GitHub 用于维护；学生使用固定网站入口。
+打开 `http://localhost:8000`。构建前执行 `npm ci`：静态资源会包含已安装的官方 `@vercel/analytics` 浏览器 SDK，反馈接收端使用 `@vercel/blob`。发布目录是 `dist`，`api/feedback.js` 由 Vercel 单独部署为函数。正式网站由 Vercel 从本仓库 main 构建发布。GitHub 用于维护；学生使用固定网站入口。
 
 完整发布检查可运行 `node scripts/verify_site.js`，它依次执行上述 Node 回归、静态构建和站点检查。Vercel 使用同一脚本，构建命令保持在平台的 256 字符限制内。
 
@@ -174,3 +174,12 @@ J至少6ECTS，整体没有统一6ECTS最高值；语言课合计最多6ECTS。R
 忘记管理员密码时可在本机明确执行 `node scripts/setup_feedback_admin.js --reset`，同步新的环境配置并重新部署。更换密码摘要后旧会话失效。登录保持最多 8 小时，使用 HttpOnly / SameSite=Strict Cookie；线上 Cookie 使用 Secure 与 __Host 前缀。会话保存在私有存储，退出会撤销当前会话。登录限流每个网络每 15 分钟最多 5 次，不记录原始 IP。敏感接口设置 no-store，每次读取或修改均重新验证会话；修改还需要同源和 CSRF 校验。
 
 处理状态单独保存在 `feedback-status/`，不改写用户反馈原文。保存采用 ETag 条件写入，另一页面已修改时返回冲突并要求刷新，不静默覆盖。管理员界面把反馈当纯文本显示；反馈、会话与凭据都不会写进静态 HTML、搜索索引或个人计划备份。
+
+
+### 网站访问统计
+
+Vercel 项目已启用 Web Analytics，页面按 Other 指引使用 `@vercel/analytics` 的 `inject()`。构建时将锁定版本的官方浏览器模块及 MIT 许可一起发布为同源静态资源，不需要 React 或额外打包器。只有 `VERCEL_ENV=production` 且当前源站匹配正式域名时才启动；本地、Preview 与管理员页面不采集。
+
+只统计公开页面浏览，不发送个人计划、收藏或反馈正文，也不记录按钮等自定义事件。`beforeSend` 会移除页面 URL 的全部查询参数和片段，并拒绝管理员、API 与外站 URL。Referrer-Policy 使用 strict-origin，来源只保留域名。当前项目在 Vercel Analytics 中查看访客、浏览量和热门页面；统计从接入后开始，事件费用按团队套餐计费。
+
+`node tests/analytics.test.js` 验证数据过滤与环境隔离，已纳入发布检查。上线后访问公开页面，检查官方脚本和采集请求，再在 Analytics 页面确认收到数据。

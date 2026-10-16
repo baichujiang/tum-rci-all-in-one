@@ -6,6 +6,7 @@
     "dev": "node --env-file-if-exists=.env.local scripts/serve_site.js"
   },
   "dependencies": {
+    "@vercel/analytics": "2.0.1",
     "@vercel/blob": "2.8.2",
     "iron-session": "9.0.1"
   }

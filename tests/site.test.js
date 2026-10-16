@@ -42,7 +42,7 @@ test('every page can resolve historical favorite IDs before loading search data'
  }
 });
 test('all local assets and links resolve',()=>{const build=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));for(const p of html){const txt=fs.readFileSync(p,'utf8');for(const m of txt.matchAll(/(?:href|src)="([^"]+)"/g)){if(!m[1].startsWith('/'))continue;let u=decodeURIComponent(m[1].split(/[?#]/)[0]);if(build.base){assert(u.startsWith(build.base+'/'));u=u.slice(build.base.length);}let target=path.join(dist,u);if(u.endsWith('/'))target=path.join(target,'index.html');assert(fs.existsSync(target),p+' -> '+u);}}});
-test('no raw API credentials, CDN scripts or analytics in emitted markup',()=>{for(const p of html){const txt=fs.readFileSync(p,'utf8');assert(!/src="https?:|ghp_[A-Za-z0-9]+|sk_live_|googletagmanager/.test(txt),p);}});
+test('no raw API credentials, external script URLs or Google trackers in emitted markup',()=>{for(const p of html){const txt=fs.readFileSync(p,'utf8');assert(!/src="https?:|ghp_[A-Za-z0-9]+|sk_live_|googletagmanager/.test(txt),p);}});
 test('Local backup UI is reachable from favorites and planner, with its dependencies loaded in order',()=>{
  for(const p of html){
   const s=fs.readFileSync(p,'utf8');assert.equal((s.match(/id="backup-dialog"/g)||[]).length,1,p);
@@ -135,6 +135,7 @@ test('Feedback admin publishes an empty protected shell outside search and sitem
  const admin=fs.readFileSync(path.join(dist,'admin/feedback/index.html'),'utf8');
  assert(admin.includes('id="admin-login"'));assert(admin.includes('id="admin-inbox"'));assert(admin.includes('id="admin-feedback-list"'));assert(admin.includes('type="password"'));assert(admin.includes('noindex'));
  assert(admin.includes('assets/feedback-admin.js'));assert(!admin.includes('FEEDBACK_ADMIN_PASSWORD_HASH'));assert(!admin.includes('FEEDBACK_ADMIN_SESSION_SECRET'));
+ assert(!admin.includes('assets/analytics.js'));
  assert(!index.docs.some(doc=>doc.url.startsWith('/admin/')));
  for(const p of html){const markup=fs.readFileSync(p,'utf8');assert(!/<a\b[^>]*\bhref="[^"]*\/admin\//.test(markup),p+' exposes an administrator link');}
  const sitemap=path.join(dist,'sitemap.xml');if(fs.existsSync(sitemap))assert(!fs.readFileSync(sitemap,'utf8').includes('/admin/'));
