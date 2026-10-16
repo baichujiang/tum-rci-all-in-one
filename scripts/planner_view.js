@@ -5,9 +5,9 @@ module.exports=function plannerView(studyHelp=''){return `
  <header class="plan-page-heading">
   <div><h1>我的计划</h1><p>选好课程，按学期安排。</p></div>
   <div class="plan-primary-actions">
-   <button id="plan-add-course" type="button" class="button" data-pick-semester="1" aria-haspopup="dialog">＋ 添加课程</button>
-   <button type="button" class="button secondary" data-generate>自动规划</button>
-   <button type="button" class="quiet plan-more-button" data-open-tools aria-haspopup="dialog">更多 <span aria-hidden="true">···</span></button>
+   <button id="plan-add-course" type="button" class="button plan-action-button plan-add-button" data-pick-semester="1" aria-haspopup="dialog" aria-controls="course-picker"><svg class="plan-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg><span>添加课程</span></button>
+   <button type="button" class="button secondary plan-action-button plan-auto-button" data-generate aria-haspopup="dialog" aria-controls="auto-plan-dialog"><svg class="plan-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/><path d="M14 7h3a3 3 0 0 1 3 3v1M10 17H7a3 3 0 0 1-3-3v-1"/></svg><span>自动规划</span></button>
+   <button type="button" class="button secondary plan-action-button plan-more-button" data-open-tools aria-haspopup="dialog" aria-controls="plan-tools-dialog"><svg class="plan-action-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg><span>更多</span></button>
   </div>
  </header>
  <div id="plan-context" class="plan-context"><p class="loading-state">正在读取计划…</p></div>

@@ -2,10 +2,14 @@
 .plan-page-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0 0 12px}
 .plan-page-heading h1{font-size:32px;letter-spacing:-1px;line-height:1.25;margin:0 0 8px}
 .plan-page-heading p{font-size:14px;color:var(--muted);margin:0}
-.plan-primary-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.plan-primary-actions .button,.plan-more-button{min-height:44px;font-size:14px;white-space:nowrap}
-.plan-more-button{display:inline-flex;align-items:center;gap:8px;padding:10px 12px}
-.plan-more-button span{font-size:20px;line-height:1}
+.plan-primary-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.plan-primary-actions .plan-action-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;line-height:20px;white-space:nowrap;transition:background-color .15s,border-color .15s,color .15s}
+.plan-action-icon{display:block;width:18px;height:18px;flex:none}
+.plan-primary-actions .plan-auto-button{background:var(--brand-soft,#edf4ef);border-color:var(--line);color:var(--brand,var(--green))}
+.plan-primary-actions .plan-auto-button:hover{background:var(--white);border-color:var(--brand,var(--green))}
+.plan-primary-actions .plan-more-button{padding:10px 12px;background:var(--white);border-color:var(--line);color:var(--muted)}
+.plan-primary-actions .plan-more-button:hover{background:var(--paper);border-color:var(--muted);color:var(--ink)}
+.plan-primary-actions .plan-action-button:focus-visible{outline:2px solid var(--brand,var(--green));outline-offset:3px}
 .plan-context{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-bottom:22px;min-height:36px}
 .plan-context-button{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;padding:8px 0;min-height:36px;cursor:pointer}
 .plan-context-button:hover{color:var(--brand,var(--green));text-decoration:underline}
@@ -231,7 +235,7 @@
 .auto-preview-semesters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.auto-preview-semesters section{border:1px solid var(--line);border-radius:10px;padding:14px}.auto-preview-semesters h3{font-size:14px;margin:0}.auto-preview-semesters ul{padding-left:20px;font-size:13px}.auto-preview-semesters li{margin:8px 0}.auto-preview-semesters small{display:block;color:var(--muted)}.auto-result-total{font-size:18px}#printable-plan{display:none}
 @media(max-width:700px){
  .plan-page-heading{align-items:flex-start;flex-direction:column;gap:18px;margin-bottom:10px}.plan-page-heading h1{font-size:28px}.plan-page-heading p{font-size:13px}
- .plan-primary-actions{width:100%;gap:8px}.plan-primary-actions .button{flex:1;justify-content:center;font-size:14px;padding:10px 12px}.plan-more-button{font-size:13px;padding:8px 5px}.plan-more-button span{display:none}
+ .plan-primary-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;width:100%;gap:8px}.plan-primary-actions .plan-action-button{gap:6px;padding:10px;font-size:13px}.plan-action-icon{width:16px;height:16px}.plan-primary-actions .plan-more-button{padding:10px}
  .plan-context{gap:0 14px;margin-bottom:16px}.plan-context-button{font-size:12px;min-height:38px}.plan-save-state{width:100%;margin:0;font-size:11px}.context-divider{display:none}
  .plan-progress{padding:14px 16px 0;margin-bottom:18px}.plan-progress-main{grid-template-columns:1fr;gap:14px;padding-bottom:12px}.plan-progress .summary-overview{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.plan-progress .summary-overview h2{font-size:12px}.plan-progress .summary-total{margin:0}.plan-progress .summary-total b{font-size:26px}.plan-progress .summary-caption{margin-left:auto;font-size:11px}
  .plan-progress .summary-progress{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px}.plan-progress .progress-row>div{font-size:11px;gap:4px;margin-bottom:5px}.plan-progress .progress-row b{font-size:11px}#summary-gaps>summary{font-size:11px;min-height:34px}#summary-gaps .domain-minimums{grid-template-columns:1fr;gap:6px}#summary-gaps .domain-minimums>span{display:flex;justify-content:space-between}#summary-gaps .gaps{grid-template-columns:1fr}
