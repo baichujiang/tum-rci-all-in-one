@@ -60,7 +60,7 @@ async function render(){
  document.getElementById('plan-add-course').dataset.pickSemester=String(desktopPlanning?.matches?1:p.preferences.startSemester);
  document.getElementById('plan-settings-content').innerHTML=settingsHTML();
  document.getElementById('course-preferences-content').innerHTML=preferencesHTML();
- box.querySelector('[data-clear]').hidden=!p.items.length;
+ box.querySelector('[data-clear-area]').hidden=!p.items.length;
  for(const [key,isOpen] of detailState){const el=document.getElementById(key);if(el)el.open=isOpen;}
  for(const [formId,values] of drafts){const form=document.getElementById(formId);if(!form)continue;for(const saved of values){const el=[...form.elements].find(x=>x.name===saved.name&&(saved.type!=='checkbox'||x.value===saved.value));if(!el)continue;if(saved.type==='checkbox')el.checked=saved.checked;else if(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===saved.value))el.value=saved.value;}}
  search();

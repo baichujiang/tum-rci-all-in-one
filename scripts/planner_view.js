@@ -31,12 +31,17 @@ module.exports=function plannerView(studyHelp=''){return `
  </dialog>
  <dialog id="plan-tools-dialog" class="plan-dialog plan-tools-dialog" aria-labelledby="plan-tools-title">
   <header class="plan-dialog-heading"><div><h2 id="plan-tools-title">更多操作</h2><p>导出、迁移或继续完善你的计划。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭更多操作">关闭</button></header>
+  <div class="plan-tools-content">
   <button type="button" class="plan-tool-row" data-backup-open><span><b>备份与恢复</b><small>保存完整记录，或迁移到另一台设备</small></span><span aria-hidden="true">→</span></button>
   <section id="plan-exports" aria-label="导出与分享"></section>
   <button type="button" class="plan-tool-row" data-open-custom><span><b>添加目录外课程</b><small>自行录入已获学校认可的选修</small></span><span aria-hidden="true">→</span></button>
   <a class="plan-tool-row" href="https://campus.tum.de/" target="_blank" rel="noopener noreferrer"><span><b>在 TUMonline 查看课表</b><small>登录后打开 Terminkalender，查看实际日期与分组</small></span><span aria-hidden="true">↗</span></a>
   <p class="meta plan-storage-note">计划和收藏保存在当前浏览器。换设备或清理浏览器前，请先导出备份。</p>
-  <button type="button" class="quiet plan-clear-button" data-clear>清空计划…</button>
+  </div>
+  <footer class="plan-tools-footer" data-clear-area>
+   <button type="button" class="plan-clear-button" data-clear aria-describedby="plan-clear-description">清空计划…</button>
+   <p id="plan-clear-description">包括已修记录和计划设置，清空前会再次确认。</p>
+  </footer>
  </dialog>
 </div>
 <div id="planner"><p class="loading-state">正在读取你的课程…</p></div>

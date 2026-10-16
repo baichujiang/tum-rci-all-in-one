@@ -212,9 +212,17 @@
 .preference-chip{display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px;padding:3px 5px 3px 10px;margin:4px 6px 4px 0;background:var(--paper);border:1px solid var(--line);border-radius:8px;font-size:12px;overflow-wrap:anywhere}
 .preference-chip small{color:var(--muted)}.preference-chip button{min-width:36px;min-height:36px;padding:4px}
 .plan-tools-dialog{width:min(520px,calc(100vw - 32px))}
+.plan-tools-dialog[open]{display:flex;flex-direction:column;overflow:hidden}
+.plan-tools-dialog>.plan-dialog-heading{flex-shrink:0}
+.plan-tools-content{min-height:0;overflow:auto;overscroll-behavior:contain}
+.plan-tools-footer{flex-shrink:0;padding:16px 24px;border-top:1px solid var(--line);background:var(--white)}
+.plan-tools-footer p{margin:8px 0 0;font-size:12px;line-height:1.6;color:var(--muted)}
+.plan-clear-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border:1px solid #e9b8b0;border-radius:9px;background:#fff0ed;color:#923b31;font-family:inherit;font-size:14px;font-weight:600;line-height:1.4;cursor:pointer}
+.plan-clear-button:hover{background:#ffe3de;border-color:#d79c92}
+.plan-clear-button:focus-visible{outline:2px solid #923b31;outline-offset:3px}
 .plan-tool-row{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;padding:16px 24px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:var(--white);color:var(--ink);text-align:left;font:inherit;cursor:pointer;min-height:68px;text-decoration:none}
 .plan-tool-row:hover{background:var(--paper);text-decoration:none}.plan-tool-row b{display:block;font-size:14px;font-weight:600}.plan-tool-row small{display:block;font-size:12px;line-height:1.6;color:var(--muted);margin-top:3px}.plan-tool-row>span:last-child{color:var(--muted)}
-#plan-exports{padding:0;margin:0}.plan-storage-note{margin:18px 24px 8px;font-size:12px;line-height:1.7}.plan-clear-button{margin:0 14px 12px;color:#a34c41;min-height:40px;font-size:12px}
+#plan-exports{padding:0;margin:0}.plan-storage-note{margin:18px 24px;font-size:12px;line-height:1.7}
 #plan-share-output{padding:18px 24px;border-bottom:1px solid var(--line);font-size:13px}#plan-share-output textarea{display:block;width:100%;margin:8px 0;word-break:break-all;font-size:12px;padding:12px;border:1px solid var(--line);border-radius:8px}#plan-share-output .meta{font-size:12px}
 .auto-plan-dialog{width:min(860px,calc(100vw - 32px));max-height:90vh;max-height:90dvh;overflow:auto;border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--white);color:var(--ink);box-shadow:0 24px 90px #122a3a33}
 .auto-plan-dialog .plan-dialog-heading{padding:0 0 16px;margin-bottom:18px}
@@ -231,7 +239,7 @@
  .plan-dialog-heading{padding:18px 18px 16px}.plan-dialog-heading h2{font-size:19px}.plan-dialog-heading p{font-size:12px}.plan-dialog-heading>.quiet{font-size:12px}.planning-workflow{padding:18px}.plan-dialog-footer{padding:14px 18px}.plan-dialog-footer .meta{font-size:11px}#plan-settings-notice{margin:16px 18px 0}
  .plan-settings-grid{gap:14px}.planning-workflow select,.planning-workflow input:not([type=checkbox]){font-size:16px;padding:9px 10px}.planning-workflow label{font-size:12px}.planning-workflow details>summary{font-size:13px}
  .preference-modes button{font-size:13px;padding:8px 5px}.preference-modes button span{font-size:10px;margin-left:4px}.preference-result{padding:12px 10px;gap:10px}.preference-result b{font-size:13px}.preference-result small{font-size:11px}.preference-result button{font-size:12px}.preference-results{max-height:35vh}
- .plan-tool-row{padding:14px 18px}.plan-storage-note{margin:16px 18px 8px}.plan-clear-button{margin-left:8px}#plan-share-output{padding:16px 18px}
+ .plan-tool-row{padding:14px 18px}.plan-storage-note{margin:16px 18px}.plan-tools-footer{padding:14px 18px;padding-bottom:max(14px,env(safe-area-inset-bottom))}.plan-clear-button{width:100%}#plan-share-output{padding:16px 18px}
  .auto-preview-semesters{grid-template-columns:1fr}.auto-plan-dialog{padding:18px}.auto-plan-dialog .dialog-actions{bottom:-18px}.auto-plan-dialog .dialog-actions .button{font-size:12px;padding:10px 12px}.auto-plan-dialog [data-edit-auto-settings]{font-size:12px}
 }
 @media(max-width:380px){.plan-settings-grid{grid-template-columns:1fr}.plan-progress .summary-caption{width:100%;margin:0}.unassigned-heading>small{display:none}.plan-dialog-footer{align-items:flex-start}.plan-dialog-footer .meta{max-width:130px}}
