@@ -3,7 +3,8 @@
   "framework": null,
   "buildCommand": "node scripts/verify_site.js",
   "outputDirectory": "dist",
-  "installCommand": "echo No third-party dependencies",
+  "installCommand": "npm ci --omit=dev",
+  "functions": {"api/feedback.js": {"maxDuration": 15, "regions": ["fra1"]}, "api/admin-*.js": {"maxDuration": 30, "regions": ["fra1"]}},
   "trailingSlash": true,
   "headers": [{"source":"/(.*)","headers":[{"key":"X-Content-Type-Options","value":"nosniff"},{"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"},{"key":"X-Frame-Options","value":"DENY"}]}]
 }
