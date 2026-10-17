@@ -3,32 +3,22 @@
 'use strict';
 const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,e=C.esc,box=document.getElementById('planner');if(!box)return;
 let db,known,renderId=0,draggedCode=null,dragFrame=0,dragX=0,boardScrollOwner=null;
-const domainNames=C.courseGroups,desktopPlanning=window.matchMedia?.('(min-width: 961px)');
+const desktopPlanning=window.matchMedia?.('(min-width: 961px)');
 const creditDialog=document.getElementById('credit-check-dialog'),creditContent=document.getElementById('credit-check-content');
 creditDialog?.addEventListener('click',event=>{
  if(event.target.closest('[data-open-settings]'))creditDialog.close();
  if(event.target===creditDialog){const r=creditDialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)creditDialog.close();}
 });
 try{db=await U.data();known=new Map(db.courses.map(c=>[c.module_code,c]));await render();}catch(err){box.innerHTML='<div class="empty"><h2>暂时无法读取计划</h2><p>'+e(err.message)+'。已有记录没有覆盖，请先备份再重试。</p><button class="button" type="button" data-backup-open>备份与恢复</button> <a class="button secondary" href="'+U.base+'/courses/">先浏览课程</a></div>';return;}
-function progress(calc){
- if(!desktopPlanning?.matches)return calc.buckets.map(([name,value,target],i)=>`<div class="progress-row"><div><span>${e(name)}<small class="original-label">${e(C.creditOriginalNames[i])}</small></span><b>${Math.min(value,target)} / ${target}</b></div><progress max="${target}" value="${Math.min(value,target)}" aria-label="${e(name)} ${e(C.creditOriginalNames[i])} ${Math.min(value,target)} / ${target} ECTS"></progress></div>`).join('');
+function checkpoints(p){return C.progression(p,db.courses).filter(x=>x.semester<=p.timeline.count);}
+function creditMetrics(calc){
  const categories=[['core','必修'],['professional','专业选修'],['interdisciplinary','跨学科'],['thesis','论文'],['remediation','补修']];
- const bars=calc.buckets.map(([name,value,target],i)=>{
-  const [category,label]=categories[i],current=Math.min(value,target),compact=target<=6,copy=`<span class="credit-segment-name">${label}</span><b>${current}<small>${compact?'/':' / '}${target}</small></b>`;
-  return `<div class="credit-segment credit-category-${category}${compact?' credit-segment-compact':''}" data-credit-category="${category}" tabindex="0" role="group" aria-label="${e(name)}" title="${e(name)} · ${e(C.creditOriginalNames[i])}"><progress class="credit-distribution-progress credit-category-${category}" data-credit-category="${category}" data-credit-share="${target}" max="${target}" value="${current}" aria-label="${e(name)} ${e(C.creditOriginalNames[i])} ${current} / ${target} ECTS"></progress><span class="credit-segment-copy" aria-hidden="true">${copy}</span><span class="credit-segment-copy credit-segment-filled" aria-hidden="true">${copy}</span></div>`;
- }).join('');
- return `<div class="credit-distribution" role="group" aria-label="学分分布与规划进度">${bars}</div>`;
+ return `<dl class="credit-metrics">${calc.buckets.map(([name,value,target],i)=>{
+  const [category,label]=categories[i],current=Math.min(value,target);
+  return `<div class="credit-metric credit-category-${category}"${desktopPlanning?.matches?` data-credit-category="${category}" tabindex="0"`:''} title="${e(name)} · ${e(C.creditOriginalNames[i])}"><dt>${label}</dt><dd><b>${current}</b><span> / ${target}</span></dd></div>`;
+ }).join('')}</dl>`;
 }
-function gaps(calc,p){
- if(!p.items.length&&!desktopPlanning?.matches)return '<p>加入课程后，查看各类别还需要多少学分。</p>';
- const keys=['core','professional','J','F','K'];
- let links=(!p.conditionalConfirmed?'<p>个人补修条件未确认，暂不判断规则达成。</p>':'')+(p.conditional&&!C.amended(p.cohort)?'<p>此批次的入学附加考试需单独核对，不能套用 K 学分减免。</p>':'')+calc.buckets.map(([label,value,target],i)=>value<target?`<a class="gap-link" href="${U.base}/courses/?group=${keys[i]}"><span>${e(label)}还差 <b>${target-value}</b> ECTS</span><span aria-hidden="true">→</span></a>`:'').join('');
- for(const k of ['G','H','I'])if(calc.totals[k]<5)links+=`<a class="gap-link" href="${U.base}/courses/?group=${k}"><span>${domainNames[k]}领域还差 <b>${5-calc.totals[k]}</b> ECTS</span><span aria-hidden="true">→</span></a>`;
- if(!p.conditional&&calc.totals.K>0)links+='<p>控制理论未计入，请核对补修设置。</p>';
- return links||'<p>规划已覆盖本模型的学分要求。课程认定请在学校系统核对。</p>';
-}
-function renderCreditCheck(calc,p){
- if(!desktopPlanning?.matches){if(creditDialog?.open)creditDialog.close();return;}
+function renderCreditCheck(calc,p,checkpoints){
  if(!creditContent)return;
  const categories=[['core','必修 A–E','core'],['professional','专业选修 G/H/I','professional'],['interdisciplinary','跨学科 J','J'],['thesis','论文 F','F'],['remediation','补修 K','K']];
  const remaining=120-calc.allocated,notices=[];
@@ -44,12 +34,12 @@ function renderCreditCheck(calc,p){
   const value=calc.totals[group],gap=Math.max(0,5-value);
   return `<article class="credit-check-domain${gap?'':' is-met'}"><h4>${group} · ${label}</h4><p>已规划 <b>${value}</b> <span>/ 最低 5 ECTS</span></p>${gap?`<a href="${U.base}/courses/?group=${group}">还差 ${gap} ECTS · 选课 →</a>`:'<span class="credit-check-met">已覆盖</span>'}</article>`;
  }).join('');
- const milestones=C.progression(p,db.courses).map(x=>{
-  const status=x.unknown?'通过学期待核对':x.historical?(x.met?'已通过记录覆盖':'已通过记录未覆盖'):(x.met?'计划可覆盖':x.semester===2?'尚未安排 A/B/C 课程':`计划还差 ${x.required-x.value} ECTS`);
-  return `<tr><th scope="row">第 ${x.semester} 学期末<small>${x.historical?'历史记录':'计划预估'}</small></th><td>${x.semester===2?'A/B/C 至少通过 1 门':`累计 ${x.required} ECTS`}</td><td>${x.value} ${x.semester===2?'门':'ECTS'}</td><td><span class="${x.met&&!x.unknown?'credit-check-met':'credit-check-pending'}">${status}</span></td></tr>`;
+ const milestones=checkpoints.map(x=>{
+  const status=x.unknown?'通过学期待核对':x.historical?(x.met?'已通过记录覆盖':x.semester===2?'基础必修记录待核对':`记录还差 ${x.required-x.value} ECTS，待核对`):(x.met?'计划可覆盖':x.semester===2?'尚未安排 A/B/C 课程':`计划还差 ${x.required-x.value} ECTS`);
+  return `<tr data-check-semester="${x.semester}"><th scope="row">第 ${x.semester} 学期末<small>${x.historical?'历史记录':'计划预估'}</small></th><td>${x.semester===2?'A/B/C 至少通过 1 门':`累计 ${x.required} ECTS`}</td><td>${x.value} ${x.semester===2?'门':'ECTS'}</td><td><span class="${x.met&&!x.unknown?'credit-check-met':'credit-check-pending'}">${status}</span></td></tr>`;
  }).join('');
  const scrollTop=creditDialog.scrollTop,progressOpen=creditContent.querySelector('#credit-check-milestones')?.open;
- creditContent.innerHTML=`${notices.length?`<div class="credit-check-notice">${notices.map(text=>`<p>${e(text)}</p>`).join('')}<button type="button" class="text-link" data-open-settings>核对计划设置 →</button></div>`:''}<div class="credit-check-total"><div><span>已规划</span><b>${calc.allocated}<small> / 120 ECTS</small></b></div><div><span>还需规划</span><b>${remaining}<small> ECTS</small></b></div></div><section class="credit-check-section" aria-labelledby="credit-check-categories-title"><h3 id="credit-check-categories-title">各类学分 <small>ECTS</small></h3><table class="credit-check-table"><thead><tr><th scope="col">类别</th><th scope="col">已规划</th><th scope="col">目标</th><th scope="col">缺口</th></tr></thead><tbody>${categoryRows}</tbody></table></section><section class="credit-check-section" aria-labelledby="credit-check-domains-title"><h3 id="credit-check-domains-title">专业选修的领域要求</h3><p>G、H、I 各至少 5 ECTS，已包含在上方专业选修总额中。</p><div class="credit-check-domains">${domains}</div></section>${calc.countingIssues.length?`<section class="credit-check-notice" aria-labelledby="credit-check-recognition-title"><h3 id="credit-check-recognition-title">计入学分需核对</h3><ul>${calc.countingIssues.map(text=>`<li>${e(text)}</li>`).join('')}</ul></section>`:''}<details id="credit-check-milestones" class="credit-check-section credit-check-milestones"${progressOpen?' open':''}><summary>学期进度预估</summary><p>第 ${p.preferences.startSemester} 学期起按计划预测；之前的学期只看已通过记录。</p><table class="credit-check-table"><thead><tr><th scope="col">检查点</th><th scope="col">最低要求</th><th scope="col">记录／预估</th><th scope="col">结果</th></tr></thead><tbody>${milestones}</tbody></table><button type="button" class="text-link study-progress-link" data-open-study data-study-section="deadlines" aria-haspopup="dialog" aria-controls="plan-study-dialog">查看进度规则 →</button>${p.preferences.deadlineException?'<p>当前自动规划设置允许超出标准进度期限。</p>':''}</details><p class="credit-check-footnote">按所选批次的 FPSO 模拟，实际学分与期限以个人 TUMonline 记录为准。${calc.custom?'自录课程的认定需学校确认。':''}</p>`;
+ creditContent.innerHTML=`${notices.length?`<div class="credit-check-notice">${notices.map(text=>`<p>${e(text)}</p>`).join('')}<button type="button" class="text-link" data-open-settings>核对计划设置 →</button></div>`:''}<div class="credit-check-total"><div><span>已规划</span><b>${calc.allocated}<small> / 120 ECTS</small></b></div><div><span>还需规划</span><b>${remaining}<small> ECTS</small></b></div></div><section class="credit-check-section" aria-labelledby="credit-check-categories-title"><h3 id="credit-check-categories-title">各类学分 <small>ECTS</small></h3><table class="credit-check-table"><thead><tr><th scope="col">类别</th><th scope="col">已规划</th><th scope="col">目标</th><th scope="col">缺口</th></tr></thead><tbody>${categoryRows}</tbody></table></section><section class="credit-check-section" aria-labelledby="credit-check-domains-title"><h3 id="credit-check-domains-title">专业选修的领域要求</h3><p>G、H、I 各至少 5 ECTS，已包含在上方专业选修总额中。</p><div class="credit-check-domains">${domains}</div></section>${calc.countingIssues.length?`<section class="credit-check-notice" aria-labelledby="credit-check-recognition-title"><h3 id="credit-check-recognition-title">计入学分需核对</h3><ul>${calc.countingIssues.map(text=>`<li>${e(text)}</li>`).join('')}</ul></section>`:''}<details id="credit-check-milestones" class="credit-check-section credit-check-milestones"${progressOpen?' open':''}><summary>学期进度预估</summary><p>第 ${p.preferences.startSemester} 学期起按计划预测；之前的学期只看已通过记录。通过学期未记录时，需补全历史信息再核对。排入计划不代表已通过；超额选修不替代缺失必修。</p>${milestones?'':'<p>当前规划范围内还没有学期检查点。</p>'}<table class="credit-check-table"><thead><tr><th scope="col">检查点</th><th scope="col">最低要求</th><th scope="col">记录／预估</th><th scope="col">结果</th></tr></thead><tbody>${milestones}</tbody></table><button type="button" class="text-link study-progress-link" data-open-study data-study-section="deadlines" aria-haspopup="dialog" aria-controls="plan-study-dialog">查看进度规则 →</button>${p.preferences.deadlineException?'<p>当前自动规划设置允许超出标准进度期限。</p>':''}</details><p class="credit-check-footnote">按所选批次的 FPSO 模拟，实际学分与期限以个人 TUMonline 记录为准。${calc.custom?'自录课程的认定需学校确认。':''}</p>`;
  creditDialog.scrollTop=scrollTop;
 }
 function semesterOptions(p,selected,course){
@@ -76,33 +66,20 @@ function row(x,p){
  const season=x.semester?C.semesterSeason(p.timeline,x.semester):null,offer=T?T.offering(p,c,x.semester,db.offerings||{}):C.offering(c,season),conflict=!!season&&offer.state==='conflict';
  return `<details class="plan-row scheduled-row course-card${conflict?' has-conflict':''}${categoryClass}"${categoryAttribute} id="plan-course-${e(x.code)}" data-plan-course="${e(x.code)}" draggable="true"><summary class="course-card-summary" id="plan-course-toggle-${e(x.code)}" aria-label="${e(title)}，${e(credits)} ECTS，调整学期${conflict?'，目录季节不符':''}"><span class="course-drag" aria-hidden="true">⠿</span><span class="course-card-title">${e(title)}</span><span class="course-card-credits">${e(credits)} <small>ECTS</small></span>${conflict?'<span class="course-card-alert">冬夏季节需核对</span>':''}</summary><div class="course-card-actions">${translation?`<p class="course-card-translation">${e(translation)}</p>`:''}<p class="course-card-meta">${e(x.code)} · ${e(offer.label)}${x.custom?' · 认定待确认':''}${c?`<a class="text-link" href="${U.base}/courses/${e(x.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(title)} 课程详情（新标签页）">课程详情 ↗</a>`:''}</p><div class="row-controls">${c?.allowed_groups?.length>1?`<label>计入领域<select data-allocation="${e(x.code)}">${c.allowed_groups.map(k=>`<option value="${k}" ${(x.group||c.section_2025[0])===k?'selected':''}>${e(C.courseGroups[k])}</option>`).join('')}</select></label>`:''}<label><span>${x.semester?'移动到':'安排到'}</span><select data-semester="${e(x.code)}" aria-label="${e(title)} 安排学期">${semesterOptions(p,x.semester,c)}</select></label></div>${conflict?`<p class="season-warning">目录仅${e(offer.label)}开课，与当前${season==='winter'?'冬季':'夏季'}安排不符。请核对实际开课。</p>`:offer.state==='unknown'?'<p class="season-unknown">开课季节需另行确认。</p>':''}<label class="check"><input type="checkbox" data-lock="${e(x.code)}" ${x.locked?'checked':''} ${!x.semester?'disabled':''}>自动规划时固定此学期</label><button class="quiet" type="button" data-passed="${e(x.code)}">记为已修通过</button><button class="quiet remove-course" data-remove="${e(x.code)}" aria-label="移除 ${e(title)}">从计划移除</button></div></details>`;
 }
-function semesterHeading(semester,p){
+function semesterHeading(semester,p,checkpoints){
+ const checkpoint=checkpoints.find(x=>x.semester===semester.number&&!x.met);
+ const hint=checkpoint?(checkpoint.unknown?'通过学期待核对':checkpoint.semester===2?(checkpoint.historical?'基础必修通过记录待核对':'需安排至少 1 门 A/B/C 必修'):`${checkpoint.historical?'已记录':'累计'} ${checkpoint.value} / ${checkpoint.required} ECTS · ${checkpoint.historical?'待核对':'还差'} ${checkpoint.required-checkpoint.value}`):'';
  const limits=window.RCIPlanning.bounds(p,semester.number),over=semester.credits>limits.maxECTS||semester.items.length>limits.maxExams;
  const items=semester.visibleItems||semester.items,passedCredits=semester.passedCredits||0;
- return `<div class="semester-heading ${semester.season}${over?' over-workload':''}" data-drop-semester="${semester.number}"><div><span class="season-tag">${semester.season==='winter'?'冬季':'夏季'}</span><h3 id="semester-title-${semester.number}">第 ${semester.number} 学期</h3></div><div class="semester-total"><b>${semester.credits+passedCredits}</b><span>ECTS · ${items.length} 门</span>${items.length>semester.items.length?`<small class="semester-status-totals">已通过 ${passedCredits} · 待修 ${semester.credits} ECTS</small>`:''}<small class="workload-hint">${desktopPlanning?.matches?'待修上限':'上限'} ${limits.maxECTS} ECTS / ${limits.maxExams} 项考核${over?' · 已超出':''}</small></div></div>`;
+ return `<div class="semester-heading ${semester.season}${over?' over-workload':''}" data-drop-semester="${semester.number}"><div><span class="season-tag">${semester.season==='winter'?'冬季':'夏季'}</span><h3 id="semester-title-${semester.number}">第 ${semester.number} 学期</h3></div><div class="semester-total"><b>${semester.credits+passedCredits}</b><span>ECTS · ${items.length} 门</span>${items.length>semester.items.length?`<small class="semester-status-totals">已通过 ${passedCredits} · 待修 ${semester.credits} ECTS</small>`:''}<small class="workload-hint">${desktopPlanning?.matches?'待修上限':'上限'} ${limits.maxECTS} ECTS / ${limits.maxExams} 项考核${over?' · 已超出':''}</small></div>${hint?`<button type="button" class="semester-progress-hint" data-open-progress-check data-progress-semester="${semester.number}" aria-label="第 ${semester.number} 学期末：${hint}，查看进度详情" aria-haspopup="dialog" aria-controls="credit-check-dialog"><span aria-hidden="true">!</span>${hint}<span aria-hidden="true">›</span></button>`:''}</div>`;
 }
 function semesterCard(semester,p){
  const conflictCount=semester.conflicts.length,items=semester.visibleItems||semester.items;
  return `<section class="semester-card ${semester.season}" id="semester-${semester.number}" data-drop-semester="${semester.number}" aria-labelledby="semester-title-${semester.number}">${conflictCount?`<p class="semester-alert">${conflictCount} 门课程的目录季节与安排不符</p>`:''}<div class="semester-courses">${items.length?items.map(x=>row(x,p)).join(''):'<p class="semester-placeholder">还没有安排课程</p>'}</div><button type="button" class="semester-add text-link" data-pick-semester="${semester.number}" aria-haspopup="dialog" aria-label="为第 ${semester.number} 学期添加课程">＋ 添加课程</button></section>`;
 }
-function summary(calc,p){
- const passed=C.calculate(p,db.courses,true).allocated;
- const heading=desktopPlanning?.matches?'<div class="summary-heading"><h2 id="plan-summary-title">规划学分</h2><button id="plan-open-credit-check" type="button" data-open-credit-check aria-haspopup="dialog" aria-controls="credit-check-dialog">查看缺口 <span aria-hidden="true">›</span></button></div>':'<h2 id="plan-summary-title">规划学分</h2>';
- const details=desktopPlanning?.matches?'':`<details id="summary-gaps" class="summary-gaps"><summary>查看学分缺口与进度</summary><div class="domain-minimums">${['G','H','I'].map(k=>`<span class="${calc.totals[k]>=5?'met':''}">${domainNames[k]}<b>${calc.totals[k]} / 最低 5</b></span>`).join('')}</div><div class="gaps">${gaps(calc,p)}</div><div class="progression-status"><p>按本模型的分类上限预测学期末学分；超额选修不替代缺失必修。实际进度与期限以个人TUMonline学分账户为准。</p>${C.progression(p,db.courses).map(x=>`<span class="${x.met?'met':''}">第 ${x.semester} 学期：${x.semester===2?'A/B/C 至少一门':x.value+' / '+x.required+' ECTS'}${x.unknown?' · 历史时间待核对':x.met?' ✓':x.historical?' · 请核对历史记录':' · 尚未覆盖'}</span>`).join('')}<button type="button" class="text-link study-progress-link" data-open-study data-study-section="deadlines" aria-haspopup="dialog" aria-controls="plan-study-dialog">查看进度规则 →</button></div><p class="summary-note">${calc.supported?'按所选批次的2024 FPSO／2025修订模拟，不等于学校认定。':p.cohort==='older'?'其他入学批次未包含在当前模型中，请核对学校原文。':'先在计划设置中确认入学批次，再核对结构是否适用。'}${calc.custom?' 含自行录入选修，实际认定待确认。':''}</p></details>`;
- return `<section class="plan-progress" aria-labelledby="plan-summary-title"><div class="plan-progress-main"><div class="summary-overview">${heading}<div class="summary-total"><b>${calc.allocated}</b><small>/ 120 ECTS</small></div><p class="summary-caption">已修 ${passed} ECTS</p></div><div class="summary-progress">${progress(calc)}</div></div>${details}</section>`;
-}
-function progressionAlerts(calc,p){
- const missing=C.progression(p,db.courses).filter(x=>x.semester<=p.timeline.count&&!x.met);
- if(!missing.length)return '';
- const rows=missing.map(x=>{
-  let message;
-  if(x.unknown)message=`要求${x.semester===2?'通过至少 1 门 A/B/C 基础必修模块':`累计通过至少 ${x.required} ECTS`}；部分已修课程的通过学期待补充，暂无法确认当时进度。`;
-  else if(x.semester===2)message=x.historical?'尚未记录在此期限前通过的 A/B/C 基础必修模块，请核对历史成绩（至少通过 1 门）。':'尚未在此期限前安排 A/B/C 基础必修模块（至少通过 1 门）。';
-  else message=x.historical?`已记录通过 ${x.value} / 至少 ${x.required} ECTS，尚缺 ${x.required-x.value} ECTS 的记录，请核对历史成绩。`:`累计已规划 ${x.value} / 至少 ${x.required} ECTS，还差 ${x.required-x.value} ECTS。`;
-  return `<li data-progress-semester="${x.semester}"><b>第 ${x.semester} 学期末</b><span>${message}</span></li>`;
- }).join('');
- const scope=!calc.supported?'入学批次尚未确认或不在当前模型内，以下按 2024 起批次提供参考。':!p.conditionalConfirmed?'补修要求尚未确认，学分预估还需按录取通知核对。':'';
- return `<section class="plan-progress-alerts" aria-labelledby="plan-progress-alerts-title"><div class="progress-alert-heading"><h2 id="plan-progress-alerts-title">学期进度提醒</h2><button type="button" class="text-link study-progress-link" data-open-study data-study-section="deadlines" aria-haspopup="dialog" aria-controls="plan-study-dialog">查看进度规则 →</button></div><ul>${rows}</ul><p>${scope}按当前安排预估累计进度，排入计划不代表已通过；实际期限以学校记录为准。</p></section>`;
+function summary(calc,p,checkpoints){
+ const passed=C.calculate(p,db.courses,true).allocated,missing=checkpoints.filter(x=>!x.met);
+ return `<section class="plan-progress" aria-labelledby="plan-summary-title"><div class="summary-heading"><h2 id="plan-summary-title">学分概览</h2><button id="plan-open-credit-check" type="button" data-open-credit-check aria-haspopup="dialog" aria-controls="credit-check-dialog">查看学分详情 <span aria-hidden="true">›</span></button></div><div class="plan-progress-main"><div class="summary-overview"><div class="summary-total"><b>${calc.allocated}</b><small>/ 120 ECTS</small></div><p class="summary-caption">已通过 ${passed} · 还需规划 ${120-calc.allocated}</p></div>${creditMetrics(calc)}</div>${missing.length?`<button type="button" class="summary-progress-check" data-open-progress-check aria-haspopup="dialog" aria-controls="credit-check-dialog"><span class="progress-check-dot" aria-hidden="true"></span><b>${missing.length} 项学期进度待完善</b><span>查看差额 <span aria-hidden="true">›</span></span></button>`:`<p class="summary-progress-clear">${checkpoints.length?'✓ 当前规划范围内的学期进度已覆盖':'学期检查点将随规划范围显示'}</p>`}</section>`;
 }
 function syncBoard(source){
  const progress=box.querySelector('.plan-progress'),header=document.querySelector?.('.header');
@@ -167,11 +144,10 @@ async function render(){
  const focusKey=active?.id?{id:active.id}:active?.dataset.semester?{semester:active.dataset.semester}:active?.closest('#custom-plan')&&active.name?{customField:active.name,start:active.selectionStart,end:active.selectionEnd}:null;
  const customDraft=[...box.querySelectorAll('#custom-plan [name]')].map(el=>[el.name,el.value]);
  const openDetails=[...box.querySelectorAll('details[open]')].map(el=>el.id);
- const summaryOpen=box.querySelector('#summary-gaps')?.open;
  const boardLeft=box.querySelector('.board-courses-scroll')?.scrollLeft||0;
  let p=await U.plan();if(id!==renderId)return;
  if(desktopPlanning?.matches&&p.items.some(x=>x.status==='planned'&&x.semester===0)){await U.assignUnscheduled();if(id!==renderId)return;p=await U.plan();if(id!==renderId)return;}
- const calc=C.calculate(p,db.courses),schedule=C.schedule(p,db.courses);
+ const calc=C.calculate(p,db.courses),schedule=C.schedule(p,db.courses),milestones=checkpoints(p);
  const future=p.items.filter(x=>x.status==='planned'),assigned=future.length-schedule.unassigned.items.length;
  const passed=p.items.filter(x=>x.status==='passed');
  const semesters=desktopPlanning?.matches?schedule.semesters.map(n=>({...n,visibleItems:p.items.filter(x=>x.semester===n.number),passedCredits:passed.filter(x=>x.semester===n.number).reduce((sum,x)=>sum+Number(x.custom?x.ects:known.get(x.code)?.ects),0)})):schedule.semesters;
@@ -179,11 +155,9 @@ async function render(){
  const otherPassed=desktopPlanning?.matches?passed.filter(x=>!x.semester||x.semester>p.timeline.count):[];
  const history=otherPassed.length?`<section class="passed-history" aria-labelledby="passed-history-title"><h3 id="passed-history-title">其他已通过课程</h3><p class="meta">通过学期未记录，或在当前 ${p.timeline.count} 个学期之外。</p><div class="passed-history-grid">${otherPassed.map(x=>row(x,p)).join('')}</div></section>`:'';
  const unassigned=schedule.unassigned.items.length?`<details class="unassigned-courses" id="unassigned" data-drop-semester="0" aria-labelledby="unassigned-title"><summary class="unassigned-heading" id="unassigned-title">待分配 <span>${schedule.unassigned.items.length} 门 · ${schedule.unassigned.credits} ECTS</span><small>展开安排</small></summary><div class="unassigned-grid">${schedule.unassigned.items.map(x=>row(x,p)).join('')}</div></details>`:'';
- box.innerHTML=`${summary(calc,p)}${progressionAlerts(calc,p)}<div class="planner-main"><div class="plan-tools semester-tools">${boardTitle}<div class="board-navigation" aria-label="查看其他学期"><button class="quiet" data-board-step="-1" aria-label="向左查看学期" aria-controls="semester-board-courses">←</button><button class="quiet" data-board-step="1" aria-label="向右查看学期" aria-controls="semester-board-courses">→</button></div></div>${unassigned}${desktopPlanning?.matches?'':`<p class="board-hint"><span class="board-drag-hint">${!p.items.length?'点「添加课程」开始，或试试自动规划。':'拖动课程，或点课程调整学期。'}</span><span class="board-swipe-hint">左右滑动查看其他学期。</span></p>`}<div class="semester-board"><div class="board-headers"><div class="board-head-scroll"><div class="semester-head-track">${semesters.map(n=>semesterHeading(n,p)).join('')}</div></div></div><div class="board-courses-scroll" id="semester-board-courses" tabindex="0" role="region" aria-labelledby="semester-board-title"><div class="semester-grid">${semesters.map(semester=>semesterCard(semester,p)).join('')}</div></div></div>${history}<details id="custom-options" class="supplement"><summary>课程不在目录里？添加自己的选修</summary><p>仅支持 G/H/I/J 选修，归类与学分由你填写，认定需要学校确认。</p><form id="custom-plan" class="custom-form"><label>模块代码<input name="code" maxlength="60" required></label><label>课程名称<input name="name" maxlength="160" required></label><label>ECTS<input name="ects" type="number" min="0.5" max="30" step="0.5" required></label><label>所属领域<select name="group">${['G','H','I','J'].map(k=>`<option value="${k}">${e(C.courseGroups[k])}</option>`).join('')}</select></label><button class="button" type="submit">加入计划</button></form></details></div>`;
- for(const bar of box.querySelectorAll('[data-credit-share]')){bar.parentElement.style.flexGrow=bar.dataset.creditShare;bar.parentElement.style.setProperty('--credit-filled',100*bar.value/bar.max+'%');}
+ box.innerHTML=`${summary(calc,p,milestones)}<div class="planner-main"><div class="plan-tools semester-tools">${boardTitle}<div class="board-navigation" aria-label="查看其他学期"><button class="quiet" data-board-step="-1" aria-label="向左查看学期" aria-controls="semester-board-courses">←</button><button class="quiet" data-board-step="1" aria-label="向右查看学期" aria-controls="semester-board-courses">→</button></div></div>${unassigned}${desktopPlanning?.matches?'':`<p class="board-hint"><span class="board-drag-hint">${!p.items.length?'点「添加课程」开始，或试试自动规划。':'拖动课程，或点课程调整学期。'}</span><span class="board-swipe-hint">左右滑动查看其他学期。</span></p>`}<div class="semester-board"><div class="board-headers"><div class="board-head-scroll"><div class="semester-head-track">${semesters.map(n=>semesterHeading(n,p,milestones)).join('')}</div></div></div><div class="board-courses-scroll" id="semester-board-courses" tabindex="0" role="region" aria-labelledby="semester-board-title"><div class="semester-grid">${semesters.map(semester=>semesterCard(semester,p)).join('')}</div></div></div>${history}<details id="custom-options" class="supplement"><summary>课程不在目录里？添加自己的选修</summary><p>仅支持 G/H/I/J 选修，归类与学分由你填写，认定需要学校确认。</p><form id="custom-plan" class="custom-form"><label>模块代码<input name="code" maxlength="60" required></label><label>课程名称<input name="name" maxlength="160" required></label><label>ECTS<input name="ects" type="number" min="0.5" max="30" step="0.5" required></label><label>所属领域<select name="group">${['G','H','I','J'].map(k=>`<option value="${k}">${e(C.courseGroups[k])}</option>`).join('')}</select></label><button class="button" type="submit">加入计划</button></form></details></div>`;
  box.querySelector('.semester-board').style.setProperty('--semester-count',String(p.timeline.count));
- const legacyGaps=box.querySelector('#summary-gaps');if(legacyGaps)legacyGaps.open=summaryOpen??false;
- renderCreditCheck(calc,p);
+ renderCreditCheck(calc,p,milestones);
  const scrollers=[box.querySelector('.board-head-scroll'),box.querySelector('.board-courses-scroll')];
  boardScrollOwner=scrollers[1];
  for(const scroller of scrollers){
@@ -238,7 +212,17 @@ box.addEventListener('change',async ev=>{
 box.addEventListener('click',async ev=>{
  const b=ev.target.closest('button');if(!b)return;
  try{
-  if(b.hasAttribute('data-open-credit-check')&&desktopPlanning?.matches&&!creditDialog.open)creditDialog.showModal();
+  if(b.hasAttribute('data-open-credit-check')){if(!creditDialog.open)creditDialog.showModal();creditDialog.scrollTop=0;}
+  if(b.hasAttribute('data-open-progress-check')){
+   const section=creditContent.querySelector('#credit-check-milestones');
+   if(section)section.open=true;
+   if(!creditDialog.open)creditDialog.showModal();
+   const target=b.dataset.progressSemester?creditContent.querySelector(`[data-check-semester="${b.dataset.progressSemester}"]`):section;
+   if(target){
+    const heading=creditDialog.querySelector('.plan-dialog-heading');
+    creditDialog.scrollTop+=target.getBoundingClientRect().top-creditDialog.getBoundingClientRect().top-(heading?.getBoundingClientRect().height||0)-12;
+   }
+  }
   if(b.hasAttribute('data-board-step')){
    const scroller=box.querySelector('.board-courses-scroll'),column=box.querySelector('.semester-heading');
    boardScrollOwner=scroller;
