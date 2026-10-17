@@ -112,7 +112,7 @@ async function refresh(){
  if(semester===null)semester=desktopMedia?.matches?1:plan.preferences.startSemester;
  if(desktopMedia?.matches&&semester===0)semester=1;
  if(semester>plan.timeline.count){semester=desktopMedia?.matches?1:0;notice(desktopMedia?.matches?'原目标学期已移除，已切换到第 1 学期。':'原目标学期已移除，已切换为待分配。',null);}
- target.innerHTML=Array.from({length:plan.timeline.count},(_,i)=>`<option value="${i+1}">${e(C.semesterLabel(plan.timeline,i+1))}</option>`).join('')+(desktopMedia?.matches?'':'<option value="0">先选课，稍后分配</option>');target.value=String(semester);target.disabled=false;
+ target.innerHTML=Array.from({length:plan.timeline.count},(_,i)=>`<option value="${i+1}">${e(C.planSemesterLabel(plan,i+1))}</option>`).join('')+(desktopMedia?.matches?'':'<option value="0">先选课，稍后分配</option>');target.value=String(semester);target.disabled=false;
  const items=plan.items.filter(x=>x.status!=='passed'&&x.semester===semester),ects=items.reduce((n,item)=>n+Number(item.custom?item.ects:db.courses.find(c=>c.module_code===item.code)?.ects||0),0);
  $('#directory-target-credits').textContent=semester?`${ects} ECTS`:'待分配';
  render();

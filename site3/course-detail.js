@@ -40,7 +40,7 @@ async function refresh(){
   course=data.courses.find(c=>c.module_code===code);if(!course)throw Error('没有找到课程数据，请刷新后重试。');plan=next;
   if(semester===undefined){const raw=params.get('semester'),n=raw===null?NaN:Number(raw);semester=Number.isInteger(n)&&n>=0&&n<=plan.timeline.count?n:(current()?.semester||0);}
   if(semester>plan.timeline.count||media?.matches&&semester===0)semester=media?.matches?1:0;
-  target.innerHTML=(media?.matches?'':'<option value="0">先选课，稍后分配</option>')+Array.from({length:plan.timeline.count},(_,i)=>`<option value="${i+1}">${C.esc(C.semesterLabel(plan.timeline,i+1))}</option>`).join('');target.value=String(semester);
+  target.innerHTML=(media?.matches?'':'<option value="0">先选课，稍后分配</option>')+Array.from({length:plan.timeline.count},(_,i)=>`<option value="${i+1}">${C.esc(C.planSemesterLabel(plan,i+1))}</option>`).join('');target.value=String(semester);
   ready=true;render();
  }catch(err){if(token!==revision)return;ready=false;target.disabled=true;button.disabled=true;status.textContent='无法读取已有计划。请到“我的计划”检查或备份后重试。';}
 }

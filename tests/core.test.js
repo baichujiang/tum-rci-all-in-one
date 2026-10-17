@@ -37,7 +37,7 @@ test('Old v2 plans keep courses, passed states and custom credits as unassigned'
 });
 test('Four and five semesters alternate winter/summer from the chosen start',()=>{
  for(const start of ['winter','summer'])for(const count of [4,5]){
-  const p={...draft(),timeline:{count,start}},s=C.schedule(p,courses);
+  const p={...draft(),cohort:start==='summer'?'2026夏季':'2026/27冬季',timeline:{count,start}},s=C.schedule(p,courses);
   assert.equal(s.semesters.length,count);assert.equal(s.semesters[0].season,start);
   assert.notEqual(s.semesters[1].season,start);assert.equal(s.semesters[4]?.season,count===5?start:undefined);
  }
@@ -61,5 +61,19 @@ test('Winter-only courses conflict in summer; both seasons and thesis remain val
 test('Invalid timeline or semester imports fail without coercing assignments',()=>{
  for(const timeline of [null,{count:0,start:'winter'},{count:13,start:'winter'},{count:4.5,start:'winter'},{count:4,start:'spring'}])assert.throws(()=>C.validatePlan({...draft(),timeline},courses));
  for(const semester of [-1,5,1.5,'1',null])assert.throws(()=>C.validatePlan({...draft(),items:[{code:'IN2067',status:'planned',semester}]},courses));
+});
+test('Semester display order persists independently of records, credits and deadlines',()=>{
+ const p=C.validatePlan({...draft(),items:[{code:'IN2064',status:'planned',semester:1},{code:'IN2228',status:'passed',semester:1},{code:'IN2406',status:'planned',semester:1},{code:'IN2320',status:'planned',semester:4}]},courses);
+ const sorted=C.validatePlan(C.reorderSemester(p,1,['IN2406','IN2228','IN2064']),courses);
+ assert.deepEqual(sorted.items,p.items);assert.deepEqual(C.calculate(sorted,courses),C.calculate(p,courses));assert.deepEqual(C.progression(sorted,courses),C.progression(p,courses));
+ assert.deepEqual(C.semesterItems(sorted,1,true).map(x=>x.code),['IN2406','IN2228','IN2064']);assert.deepEqual(C.schedule(sorted,courses).semesters[0].items.map(x=>x.code),['IN2406','IN2064']);
+ assert.deepEqual(C.validatePlan(JSON.parse(JSON.stringify(sorted)),courses),sorted);
+ const partial=C.reorderSemester(p,1,['IN2406','IN2064']);assert.deepEqual(partial.courseOrder[1],['IN2406','IN2228','IN2064']);
+});
+test('Display order cleans removed and relocated references while preserving new courses',()=>{
+ const p=C.validatePlan({...draft(),items:[{code:'IN2064',status:'planned',semester:2},{code:'IN2228',status:'planned',semester:1},{code:'IN2406',status:'planned',semester:1}],courseOrder:{1:['IN2064','REMOVED','IN2228'],2:['IN2064']}},courses);
+ assert.deepEqual(p.courseOrder,{1:['IN2228'],2:['IN2064']});assert.deepEqual(C.semesterItems(p,1).map(x=>x.code),['IN2228','IN2406']);
+ for(const courseOrder of [null,[],{13:[]},{1:null},{1:['<script>']},{1:['IN2064','IN2064']}])assert.throws(()=>C.validatePlan({...p,courseOrder},courses),/顺序/);
+ assert.throws(()=>C.reorderSemester(p,1,['IN2064']),/变化/);
 });
 console.log(`${tests} tests passed`);

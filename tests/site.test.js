@@ -152,7 +152,7 @@ test('Course directory can target a semester while static links remain available
  const s=fs.readFileSync(path.join(dist,'courses/index.html'),'utf8');assert(s.includes('id="course-target-semester"'));assert(s.includes('先选课，稍后分配'));assert(s.includes('TUMonline'));
 });
 const Picker=require('../site3/course-picker'),Core=require('../assets/core'),pickerData=JSON.parse(fs.readFileSync(path.join(dist,'assets/planner-data.json'),'utf8'));
-const pickerPlan={version:2,cohort:'unknown',conditional:false,timeline:{count:4,start:'winter'},items:[]};
+const pickerPlan={version:2,cohort:'2026/27冬季',conditional:false,timeline:{count:4,start:'winter'},items:[]};
 test('Planner embeds a continuous course picker with explicit close and undo',()=>{
  const s=fs.readFileSync(path.join(dist,'planner/index.html'),'utf8');assert(s.includes('id="course-picker"'));assert(s.includes('aria-labelledby="picker-title"'));assert(s.includes('id="picker-query"'));assert(s.includes('id="picker-undo"'));assert(s.includes('assets/course-picker.js'));assert(!fs.readFileSync(path.join(dist,'courses/index.html'),'utf8').includes('id="course-picker"'));
 });

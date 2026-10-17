@@ -3,6 +3,7 @@
 'use strict';
 const C=typeof module==='object'&&module.exports?require('./core'):root.RCI;
 function term(plan,semester){
+ if(!C.hasAcademicTerm(plan))return {season:null,year:null,key:'',label:C.planSemesterLabel(plan,semester)};
  const match=plan.cohort.match(/^\d{4}/),base=match?Number(match[0]):null;
  const season=C.semesterSeason(plan.timeline,semester);
  const year=base===null?null:base+Math.floor((semester-1+(plan.timeline.start==='winter'?1:0))/2);

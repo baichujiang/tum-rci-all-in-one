@@ -75,8 +75,41 @@ function updatePlan(change){
  });
  planQueue=task;return task;
 }
+let academicTermPrompt=null;
+async function ensureAcademicTerm(){
+ const before=await plan();if(C.hasAcademicTerm(before))return true;
+ if(!academicTermPrompt)academicTermPrompt=askAcademicTerm(before).finally(()=>{academicTermPrompt=null;});
+ return academicTermPrompt;
+}
+function askAcademicTerm(before){
+ return new Promise((resolve,reject)=>{
+  const dialog=document.createElement('dialog');dialog.className='plan-dialog academic-term-dialog';dialog.setAttribute('aria-labelledby','academic-term-title');
+  dialog.innerHTML=`<header class="plan-dialog-heading"><div><h2 id="academic-term-title">先确认入学时间</h2><p>用于确定第一学期的冬／夏季，并筛选对应开课课程。只需确认一次。</p></div><button type="button" class="quiet" data-term-cancel aria-label="取消确认入学时间">关闭</button></header><form id="academic-term-form"><div class="planning-workflow"><label for="academic-term-cohort">入学时间<select id="academic-term-cohort" name="cohort" required><option value="">请选择入学时间</option>${C.cohorts.map(cohort=>`<option value="${esc(cohort)}" ${before.cohort===cohort?'selected':''}>${esc(cohort)}</option>`).join('')}</select></label><p id="academic-term-preview" class="meta" aria-live="polite">选择后可预览前两个学期的冬／夏季。</p><p id="academic-term-error" class="notice" role="alert" hidden></p></div><footer class="plan-dialog-footer"><button type="button" class="button secondary" data-term-cancel>取消</button><button type="submit" class="button" id="academic-term-save">确认并继续</button></footer></form>`;
+  const form=dialog.querySelector('form'),input=dialog.querySelector('#academic-term-cohort'),error=dialog.querySelector('#academic-term-error'),save=dialog.querySelector('#academic-term-save');
+  const baseline=JSON.stringify([before.cohort,before.timeline.start]);let saving=false,saved=false;
+  input.addEventListener('change',()=>{error.hidden=true;dialog.querySelector('#academic-term-preview').textContent=input.value?`第 1 学期：${input.value.endsWith('夏季')?'夏季；第 2 学期：冬季':'冬季；第 2 学期：夏季'}`:'请选择入学时间。';});
+  for(const button of dialog.querySelectorAll('[data-term-cancel]'))button.addEventListener('click',()=>{if(!saving)dialog.close();});
+  dialog.addEventListener('cancel',event=>{if(saving)event.preventDefault();});
+  dialog.addEventListener('close',()=>{dialog.remove();resolve(saved);},{once:true});
+  form.addEventListener('submit',async event=>{
+   event.preventDefault();if(saving)return;
+   const cohort=input.value;if(!C.cohorts.includes(cohort)){error.textContent='请选择入学时间。';error.hidden=false;input.focus();return;}
+   saving=true;input.disabled=true;save.disabled=true;save.textContent='正在保存…';error.hidden=true;
+   try{
+    await updatePlan(latest=>{
+     if(JSON.stringify([latest.cohort,latest.timeline.start])!==baseline)throw new Error('入学信息已在其他页面修改，请关闭后重新操作。');
+     return {...latest,cohort,timeline:{...latest.timeline,start:cohort.endsWith('夏季')?'summer':'winter'}};
+    });
+    saved=true;dialog.close();
+   }catch(err){error.textContent=err.message+'。现有课程保留，可重试。';error.hidden=false;}
+   finally{saving=false;input.disabled=false;save.disabled=false;save.textContent='确认并继续';}
+  });
+  try{document.body.append(dialog);dialog.showModal();input.focus();}catch(error){dialog.remove();reject(error);}
+ });
+}
 async function addCourse(code,semester=0,{moveExisting=false}={}){
  code=String(code).trim().toUpperCase();if(desktopPlanning?.matches&&semester===0)semester=1;let result={kind:'cancelled'};
+ if(!await ensureAcademicTerm())return result;
  await updatePlan(async p=>{
   const d=await data(),course=d.courses.find(c=>c.module_code===code);
   if(!course)throw new Error('没有找到这门课程，请刷新目录重试。');
@@ -87,13 +120,15 @@ async function addCourse(code,semester=0,{moveExisting=false}={}){
   const replaced=p.items.find(x=>x.code===other);
   if(replaced?.status==='passed')throw new Error(`已修 ${other} 与这门课二选一，不能替换已修成绩。若记录有误，请先在已修列表取消该记录。`);
   const target=semester||(!previous&&replaced?.semester)||0;
+  if(target&&!C.hasAcademicTerm(p))throw new Error('入学时间刚刚有变化，请先重新确认后再安排课程。');
   if(target&&!previous?.custom){
    const offer=window.RCICourseContext?window.RCICourseContext.offering(p,course,target,d.offerings||{}):C.offering(course,C.semesterSeason(p.timeline,target));
-   if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,target)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
+   if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.planSemesterLabel(p,target)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
   }
   if(replaced&&!await confirmAction('这两门课是二选一',`计划已有 ${d.names[other]||other}（${other}）。改选 ${d.names[code]||code} 后，会移除原课程，学分不会重复计入。`,'改选这门课'))return null;
   const applied=previous?{...previous,semester:target}:{code,status:'planned',semester:target};
-  result={kind:previous?'moved':replaced?'replaced':'added',code,semester:target,previous:previous||null,replaced:replaced||null,applied};
+  const source=(previous||replaced)?.semester;
+  result={kind:previous?'moved':replaced?'replaced':'added',code,semester:target,previous:previous||null,replaced:replaced||null,applied,previousOrder:p.courseOrder?.[source]?C.semesterItems(p,source,true).map(x=>x.code):undefined};
   return {...p,items:[...p.items.filter(x=>x.code!==code&&x.code!==other),applied]};
  });
  return result;
@@ -106,11 +141,22 @@ async function undoCourse(change){
   const items=p.items.filter(x=>x.code!==change.code);
   if(change.previous)items.push(fit(change.previous));
   if(change.replaced)items.push(fit(change.replaced));
-  return {...p,items};
+  const next={...p,items},restored=change.previous?fit(change.previous):change.replaced?fit(change.replaced):null;
+  if(restored&&change.previousOrder){
+   const order=C.semesterItems(next,restored.semester,true).map(x=>x.code).filter(code=>code!==restored.code),old=change.previousOrder.indexOf(restored.code);
+   const anchor=change.previousOrder.slice(old+1).find(code=>order.includes(code));
+   const previous=[...change.previousOrder.slice(0,old)].reverse().find(code=>order.includes(code));
+   const index=anchor?order.indexOf(anchor):previous?order.indexOf(previous)+1:order.length;
+   order.splice(index,0,restored.code);return C.reorderSemester(next,restored.semester,order);
+  }
+  return next;
  });
 }
 async function moveCourse(code,semester,{editPassedSemester=false}={}){
- code=String(code).trim().toUpperCase();let result={kind:'cancelled'};
+ code=String(code).trim().toUpperCase();
+ const prior=(await plan()).items.find(x=>x.code===code);
+ if(prior?.status==='planned'&&(semester>0||desktopPlanning?.matches)&&!await ensureAcademicTerm())return {kind:'cancelled'};
+ let result={kind:'cancelled'};
  await updatePlan(async p=>{
   const previous=p.items.find(x=>x.code===code);
   if(!previous)throw new Error('这门课已不在计划中，请重新选择。');
@@ -119,20 +165,52 @@ async function moveCourse(code,semester,{editPassedSemester=false}={}){
   if(editPassedSemester&&!editingPassed)throw new Error('课程状态已更新，请重新选择通过学期。');
   const target=desktopPlanning?.matches&&!editingPassed&&semester===0?1:semester;
   if(!Number.isInteger(target)||target<0||target>(editingPassed?12:p.timeline.count))throw new Error('目标学期已调整，请重新选择。');
+  if(target&&!editingPassed&&!C.hasAcademicTerm(p))throw new Error('入学时间刚刚有变化，请先重新确认后再安排课程。');
   if(previous.semester===target){result={kind:'unchanged',code,semester:target};return null;}
   const d=await data(),course=d.courses.find(c=>c.module_code===code);
   if(!editingPassed&&target&&course&&!previous.custom){
    const offer=window.RCICourseContext?window.RCICourseContext.offering(p,course,target,d.offerings||{}):C.offering(course,C.semesterSeason(p.timeline,target));
-   if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.semesterLabel(p.timeline,target)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
+   if(offer.state==='conflict'&&!await confirmAction('目录季节与安排不符',`这门课在目录中仅${offer.label}开课，你正在安排到${C.planSemesterLabel(p,target)}。若已确认实际开课有变化，可以继续安排。`,'仍安排到这个学期'))return null;
   }
   const applied={...previous,semester:target};
-  result={kind:'moved',code,semester:target,previous,applied,replaced:null};
-  return {...p,items:p.items.map(x=>x.code===code?applied:x)};
+  result={kind:'moved',code,semester:target,previous,applied,replaced:null,previousOrder:p.courseOrder?.[previous.semester]?C.semesterItems(p,previous.semester,true).map(x=>x.code):undefined};
+  const next={...p,items:p.items.map(x=>x.code===code?applied:x)};
+  const order=C.semesterItems(next,target,true).map(x=>x.code);
+  return order.at(-1)===code?next:C.reorderSemester(next,target,[...order.filter(value=>value!==code),code]);
  });
  return result;
 }
+async function reorderCourse(code,semester,{relativeTo=null,placement='before'}={}){
+ code=String(code).trim().toUpperCase();let result={kind:'unchanged'};
+ await updatePlan(p=>{
+  const includePassed=!!desktopPlanning?.matches,item=p.items.find(x=>x.code===code);
+  if(!item||item.semester!==semester||!Number.isInteger(semester)||semester<1||semester>p.timeline.count)throw new Error('课程安排已变化，请重新调整顺序。');
+  const before=C.semesterItems(p,semester,includePassed).map(x=>x.code);
+  if(!before.includes(code))throw new Error('这门课不在当前学期的看板中。');
+  const after=before.filter(value=>value!==code);let target;
+  if(relativeTo===null)target=after.length;
+  else{
+   if(relativeTo===code)return null;
+   target=after.indexOf(relativeTo);
+   if(target<0||!['before','after'].includes(placement))throw new Error('目标课程已变化，请重新调整顺序。');
+   if(placement==='after')target++;
+  }
+  after.splice(target,0,code);
+  if(after.every((value,i)=>value===before[i]))return null;
+  result={kind:'reordered',code,semester,includePassed,before,after};
+  return C.reorderSemester(p,semester,after);
+ });
+ return result;
+}
+function undoCourseOrder(change){
+ return updatePlan(p=>{
+  const current=C.semesterItems(p,change.semester,change.includePassed).map(x=>x.code);
+  if(JSON.stringify(current)!==JSON.stringify(change.after))throw new Error('这个学期已有后续调整，请重新拖动课程调整顺序。');
+  return C.reorderSemester(p,change.semester,change.before);
+ });
+}
 function assignUnscheduled(){
- return updatePlan(p=>p.items.some(x=>x.status==='planned'&&x.semester===0)?{...p,items:p.items.map(x=>x.status==='planned'&&x.semester===0?{...x,semester:1}:x)}:null);
+ return updatePlan(p=>C.hasAcademicTerm(p)&&p.items.some(x=>x.status==='planned'&&x.semester===0)?{...p,items:p.items.map(x=>x.status==='planned'&&x.semester===0?{...x,semester:1}:x)}:null);
 }
 const savePlan=p=>updatePlan(()=>p);
 async function clearPlan(){
@@ -151,7 +229,7 @@ function confirmAction(title,description,confirmLabel){
  dialog.returnValue='cancel';dialog.showModal();
  return new Promise(resolve=>dialog.addEventListener('close',()=>resolve(dialog.returnValue==='confirm'),{once:true}));
 }
-window.RCIUI={toast,read,store,data,plan,savePlan,clearPlan,updatePlan,empty,base,confirmAction,addCourse,moveCourse,undoCourse,assignUnscheduled,get persisted(){return planPersisted;}};
+window.RCIUI={toast,read,store,data,plan,savePlan,clearPlan,updatePlan,empty,base,confirmAction,ensureAcademicTerm,addCourse,moveCourse,undoCourse,reorderCourse,undoCourseOrder,assignUnscheduled,get persisted(){return planPersisted;}};
 
 const savedRaw=read('rci:v2:saves',[]);
 let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);
@@ -232,7 +310,7 @@ async function syncPlanWidgets(){
   if(selectedSemester>p.timeline.count||desktopPlanning?.matches&&selectedSemester===0)selectedSemester=desktopPlanning?.matches?1:0;
   const target=$('#course-target-semester');
   if(target&&!target.hasAttribute('data-directory-target')){
-   target.innerHTML=(desktopPlanning?.matches?'':'<option value="0">先选课，稍后分配</option>')+Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}">${C.semesterLabel(p.timeline,i+1)}</option>`).join('');target.value=selectedSemester;
+   target.innerHTML=(desktopPlanning?.matches?'':'<option value="0">先选课，稍后分配</option>')+Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}">${C.planSemesterLabel(p,i+1)}</option>`).join('');target.value=selectedSemester;
    $('#course-semester-context').hidden=false;
   }
   document.querySelectorAll('[data-plan-count]').forEach(el=>{el.textContent=p.items.length;el.hidden=el.classList.contains('plan-badge')&&!p.items.length;});

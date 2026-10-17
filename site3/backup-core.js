@@ -34,7 +34,7 @@ function prepare(current,incoming,mode,courses){
  else{
   const p=current.plan,sameSeason=p.timeline.start===other.timeline.start;
   const count=sameSeason?Math.max(p.timeline.count,other.timeline.count):p.timeline.count;
-  const items=[...p.items],used=new Set(items.map(x=>x.code));let moved=0,kept=0;
+  const items=[...p.items],currentCodes=new Set(items.map(x=>x.code)),used=new Set(currentCodes);let moved=0,kept=0;
   for(const item of other.items){
    if(used.has(item.code)){kept++;continue;}
    const opposite=item.code==='IN2067'?'ED160028':item.code==='ED160028'?'IN2067':null;
@@ -45,6 +45,11 @@ function prepare(current,incoming,mode,courses){
   if(kept)notes.push(`${kept} 门重复课程保留当前设备的安排与状态。`);
   if(moved)notes.push(`起始冬夏季节不同，${moved} 门新增课程放入待分配。`);
   plan={...p,timeline:{...p.timeline,count},items};
+  if(sameSeason)for(const semester of Object.keys(other.courseOrder||{})){
+   const existing=C.semesterItems(p,Number(semester),true).map(x=>x.code);
+   const added=C.semesterItems(other,Number(semester),true).filter(x=>!currentCodes.has(x.code)&&items.some(item=>item.code===x.code&&item.semester===x.semester)).map(x=>x.code);
+   if(added.length)plan=C.reorderSemester(plan,Number(semester),[...existing,...added]);
+  }
   notes.push('想选／排除、语言、负担、固定学期及兼容记录保留当前设备设置；替换模式会采用备份的全部设置。');
  }
  const result=state({plan,favorites:saves===null?current.favorites:mode==='merge'?[...new Set([...current.favorites,...saves])]:saves},courses);

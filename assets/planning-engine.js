@@ -42,7 +42,7 @@ function subsets(pool,max,keep=12){
   }sums=next;
  }return [...sums].flatMap(([n,sets])=>sets.map(items=>({credits:n/2,items})));
 }
-function completeSelections(p,courses,base,offerings){
+function completeSelections(p,courses,base,offerings,allocations={}){
  const known=new Map(courses.map(c=>[code(c),c]));
  // A passed or explicitly allocated module keeps its category. An unallocated
  // future module can use any verified category, while still earning credit once.
@@ -52,14 +52,14 @@ function completeSelections(p,courses,base,offerings){
   if(item.status==='passed'||item.group!==undefined||!allowed||allowed.length<2)continue;
   variants=variants.flatMap(items=>allowed.map(k=>items.map(x=>x.code===item.code?{...x,group:k}:x))).slice(0,64);
  }
- return selectionShapes(variants.flatMap(items=>completeAllocation(p,courses,items,offerings)),known);
+ return selectionShapes(variants.flatMap(items=>completeAllocation(p,courses,items,offerings,allocations)),known);
 }
-function completeAllocation(p,courses,base,offerings){
+function completeAllocation(p,courses,base,offerings,allocations){
  const known=new Map(courses.map(c=>[code(c),c]));
  const selected=new Set(base.map(x=>x.code)),calc=C.calculate({...p,items:base},courses),target=p.conditional?36:41;
  const baseFamilies=new Set(base.filter(x=>!x.custom).map(x=>known.get(x.code)?.j_constraints?.recognition_family).filter(Boolean)),passedCodes=new Set(base.filter(x=>x.status==='passed').map(x=>x.code));
  const pool=courses.filter(c=>!selected.has(code(c))&&!p.preferences.excluded.includes(code(c))&&recommendationEligible(c)&&(!c.j_constraints?.recognition_family||!baseFamilies.has(c.j_constraints.recognition_family))&&!(c.j_constraints?.incompatible_with||[]).some(x=>passedCodes.has(x))&&'GHIJ'.includes(group(c))&&Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,c,offerings,n)&&T.offering(p,c,n,offerings).state!=='conflict'))
-  .flatMap(c=>(c.allowed_groups||[group(c)]).map(k=>({...c,allocation_group:k})));
+  .flatMap(c=>(c.allowed_groups||[group(c)]).filter(k=>!allocations[code(c)]||allocations[code(c)]===k).map(k=>({...c,allocation_group:k})));
  const choices={};
  for(const k of ['G','H','I','J'])choices[k]=subsets(pool.filter(c=>group(c)===k),Math.max(k==='J'?6:target,0)+10).filter(x=>x.credits+calc.totals[k]>=(k==='J'?6:5));
  if(calc.totals.J>=6)choices.J=[{credits:0,items:[]}];
@@ -81,7 +81,7 @@ function completeAllocation(p,courses,base,offerings){
  for(const pro of professionals.slice(0,100))for(const j of diverse(choices.J,12,x=>shape(x.items)))combos.push({extra:pro.credits+j.credits,items:[...base,...pro.items,...j.items].map(x=>x.module_code?{code:code(x),status:'planned',semester:0,locked:false,...(x.allowed_groups?.length>1?{group:x.allocation_group}:{})}:x)});
  return selectionShapes(combos,known);
 }
-function generate(raw,courses,offerings={},options={}){
+function generateRequired(raw,courses,offerings={},options={}){
  const p=C.validatePlan(raw,courses),known=new Map(courses.map(c=>[code(c),c])),reasons=[],warnings=[];
  const fail=message=>({ok:false,reasons:[message,...reasons],warnings,nodes:0});
  if(!C.cohorts.includes(p.cohort))return fail('先确认适用的入学批次，再自动规划。其他批次仍可使用手动看板。');
@@ -97,7 +97,7 @@ function generate(raw,courses,offerings={},options={}){
  const selected=p.items.filter(x=>x.status==='planned');
  const excludedSelected=selected.filter(x=>p.preferences.excluded.includes(x.code));
  const fixedExcluded=excludedSelected.filter(x=>x.locked||x.custom||'ABCDEF'.includes(group(known.get(x.code)||x))||p.conditional&&x.code==='ED140014');
- if(fixedExcluded.length)return fail(`固定／必修／自定义课程与排除偏好冲突：${fixedExcluded.map(x=>x.code).join('、')}。请先核对并解除固定或取消排除；自定义课可先手动移除。`);
+ if(fixedExcluded.length)return fail(`固定／必修／自定义课程与排除偏好冲突：${fixedExcluded.map(x=>displayCourse(known.get(x.code)||x)).join('；')}。请先核对并解除固定或取消排除；自定义课可先手动移除。`);
  let base=p.items.filter(x=>x.status==='passed'||!p.preferences.excluded.includes(x.code)),used=new Set(base.map(x=>x.code));
  const add=c=>{if(!used.has(c)){base.push({code:c,status:'planned',semester:0,locked:false});used.add(c);}};
  for(const c of p.preferences.desired)add(c);
@@ -106,24 +106,24 @@ function generate(raw,courses,offerings={},options={}){
  if(!robotics)return fail('Robotics / Roboterdynamik 二选一均被排除或授课语言不满足偏好。');
  const required=[robotics,'IN2228','IN2406','IN2064','IN2107','IN2106','IN2320',...(p.conditional?['ED140014']:[])];
  const blocked=required.filter(c=>p.preferences.excluded.includes(c)&&!passed.some(x=>x.code===c));
- if(blocked.length)return fail(`必修课程不能排除：${blocked.join('、')}。请调整偏好。`);
+ if(blocked.length)return fail(`必修课程不能排除：${blocked.map(c=>displayCourse(known.get(c))).join('；')}。请调整偏好。`);
  for(const c of required)add(c);
  const unresolved=base.filter(x=>x.status==='planned'&&known.has(x.code)&&!recommendationEligible(known.get(x.code)));
- if(unresolved.length)return fail(`这些已选／想选课程暂不能自动安排：${unresolved.map(x=>x.code+'（'+(known.get(x.code).recommendation_note||'资料或个人条件待核实')+'）').join('、')} 已有手动记录保留。请先取消想选并从未来方案移出；确认资料、开课或个人准备后可继续使用手动看板。`);
+ if(unresolved.length)return fail(`这些已选／想选课程暂不能自动安排：${unresolved.map(x=>displayCourse(known.get(x.code))+'：'+(known.get(x.code).recommendation_note||'资料或个人条件待核实')).join('；')} 已有手动记录保留。请先取消想选并从未来方案移出；确认资料、开课或个人准备后可继续使用手动看板。`);
  const countingConflicts=C.calculate({...p,items:base},courses).countingIssues;
  if(countingConflicts.length)return fail(countingConflicts.join(' '));
  if(!p.conditional&&used.has('ED140014'))return {...fail('计划含控制补修课程，但补修设置未开启。请按个人录取条件核对。'),issue:'remediation-conflict'};
  const noLanguage=base.filter(x=>x.status!=='passed'&&!Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,known.get(x.code)||x,offerings,n)));
- if(noLanguage.length)return fail(`这些已选／必修课程不符合授课语言：${noLanguage.map(x=>x.code).join('、')}。双语模块表示目录语言，具体班次仍须核对。`);
- const choices=completeSelections(p,courses,base,offerings);
- if(!choices.length)return fail('当前目录在排除与语言条件下无法补齐 G/H/I 各 5 ECTS、专业选修总额或 J 的 6 ECTS。请放宽偏好，或录入已获学校认可的选修。');
+ if(noLanguage.length)return fail(`这些已选／必修课程不符合授课语言：${noLanguage.map(x=>displayCourse(known.get(x.code)||x)).join('；')}。双语模块表示目录语言，具体班次仍须核对。`);
+ const conflict=planningConflict(p,courses,base,offerings);if(conflict)return fail(conflict);
+ const choices=completeSelections(p,courses,base,offerings,options.allocations);
+ if(!choices.length)return fail('在当前排除、授课语言和课程资格条件下，可自动安排的课程不足以补齐学分：'+C.calculate({...p,items:base},courses).gaps.join('；')+'。请调整排除／语言条件，或录入已获学校认可的选修。');
  const start=p.preferences.startSemester,limit=options.nodeLimit??350000;let nodes=0,exhausted=false,best=null;
- const attempts=new Set();
  for(let finish=start;finish<=p.timeline.count&&!best&&!exhausted;finish++){
   for(const selection of choices){
    const future=selection.items.filter(x=>x.status==='planned'),thesis=future.find(x=>x.code==='IN2320'),last=finish;
-   if(thesis&&(bounds(p,last).maxECTS<30||bounds(p,last).maxExams<1)){attempts.add('论文需要同一学期容纳 30 ECTS 和 1 项考核，可用单学期覆盖设置。');continue;}
-   if(future.some(x=>x.locked&&(!x.semester||x.semester<start||x.semester>finish))){attempts.add('固定课程必须在开始规划学期至结束学期之间，且不能待分配。');continue;}
+   if(thesis&&(bounds(p,last).maxECTS<30||bounds(p,last).maxExams<1)){continue;}
+   if(future.some(x=>x.locked&&(!x.semester||x.semester<start||x.semester>finish))){continue;}
    if(thesis?.locked&&thesis.semester!==last)continue;
    const bins=Array.from({length:finish+1},()=>({credits:0,exams:0,codes:[]}));
    const descriptors=future.map(item=>{
@@ -137,7 +137,7 @@ function generate(raw,courses,offerings={},options={}){
     }return {item,c,credits:credits(c),numbers};
    }).sort((a,b)=>a.numbers.length-b.numbers.length||Number(b.item.locked)-Number(a.item.locked)||b.credits-a.credits||a.item.code.localeCompare(b.item.code));
    const unavailable=descriptors.filter(d=>!d.numbers.length);
-   if(unavailable.length){attempts.add(`可用学期／开课条件不满足：${unavailable.map(d=>d.item.code).join('、')}。`);continue;}
+   if(unavailable.length)continue;
    const assignments=new Map();
    function search(index){
     if(++nodes>limit){exhausted=true;return false;}
@@ -164,7 +164,7 @@ function generate(raw,courses,offerings={},options={}){
    if(exhausted)break;
   }
  }
- if(!best)return {ok:false,reasons:[exhausted?'还没算出方案，不代表一定排不出来。可以多安排几个学期，或减少固定学期的课程后再试。':'没有找到符合所有要求的方案。试试多安排几个学期，或放宽每学期的学分和考试数量要求。',...attempts].slice(0,8),warnings,nodes,exhausted};
+ if(!best)return {ok:false,reasons:[exhausted?'搜索已达到本次计算上限，不代表一定排不出来。可减少固定学期的课程或增加规划学期后重试。':`在第 ${start} 至第 ${p.timeline.count} 学期内，未找到同时满足各类学分、开课季节、每学期负担和学期进度要求的安排。请核对单学期限制或增加规划学期；当前课程记录没有修改。`],warnings,nodes,exhausted};
  best=C.validatePlan(best,courses);
  const unconfirmed=[];
  for(const x of best.items.filter(x=>x.status==='planned')){
@@ -188,6 +188,92 @@ function generate(raw,courses,offerings={},options={}){
  if(C.progression(best,courses).some(x=>x.historical&&!x.met))warnings.push('以前的学业进度可能没达标，或缺少通过学期记录。请对照成绩和学校批准情况确认。');
  const finish=Math.max(start,...best.items.filter(x=>x.status==='planned').map(x=>x.semester));
  return {ok:true,plan:best,finish,nodes,warnings,removed:excludedSelected.map(x=>x.code),added:best.items.filter(x=>!p.items.some(y=>y.code===x.code)).map(x=>x.code),moved:best.items.filter(x=>x.status==='planned'&&p.items.some(y=>y.code===x.code&&y.semester!==x.semester)).map(x=>x.code),calculation:C.calculate(best,courses),passed:C.calculate(best,courses,true)};
+}
+function displayCourse(c){return `${C.courseName(c)||c.name||code(c)}（${code(c)}，${credits(c)} ECTS）`;}
+function availableSemesters(p,c,item,offerings){
+ const all=Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester);
+ return all.filter(n=>(!item.locked||item.semester===n)&&T.offering(p,c,n,offerings).state!=='conflict'&&languageOK(p,c,offerings,n)&&(p.preferences.allowUnconfirmed||T.offering(p,c,n,offerings).dated||T.offering(p,c,n,offerings).state==='flexible')&&credits(c)<=bounds(p,n).maxECTS&&bounds(p,n).maxExams>=1);
+}
+function unavailableReason(p,c,item,offerings){
+ const label=displayCourse(c),start=p.preferences.startSemester,end=p.timeline.count;
+ if(item.locked&&(!item.semester||item.semester<start||item.semester>end))return `${label}固定在${item.semester?`第 ${item.semester} 学期`:'待分配'}，超出第 ${start} 至第 ${end} 学期的规划范围。请调整开始规划学期或解除固定。`;
+ const scope=item.locked?[item.semester]:Array.from({length:end-start+1},(_,i)=>i+start);
+ if(scope.every(n=>T.offering(p,c,n,offerings).state==='conflict'))return `${label}${item.locked?`固定在第 ${item.semester} 学期，但与目录开课季节不符`:`在第 ${start} 至第 ${end} 学期没有符合目录开课季节的学期`}。请调整学期范围${item.locked?'或解除固定':''}；目录季节为${C.offering(c,'winter').label}。`;
+ if(scope.every(n=>!languageOK(p,c,offerings,n)))return `${label}的授课语言不符合当前语言选择。请核对英语／德语条件。`;
+ if(!p.preferences.allowUnconfirmed&&scope.every(n=>!T.offering(p,c,n,offerings).dated&&T.offering(p,c,n,offerings).state!=='flexible'))return `${label}在当前规划范围内尚无已确认的具体学期开课记录。可允许按通常开课季节提前安排，或等待开课信息确认。`;
+ const max=Math.max(...scope.map(n=>bounds(p,n).maxECTS));
+ if(max<credits(c))return `${label}需要同一学期容纳 ${credits(c)} ECTS，当前${item.locked?`第 ${item.semester} 学期`:'可用学期'}最多允许 ${max} ECTS。请提高该学期学分上限。`;
+ if(scope.every(n=>bounds(p,n).maxExams<1))return `${label}需要至少 1 次考核容量，当前可用学期的考试数上限均为 0。`;
+ return `${label}的开课季节、授课语言与单学期负担限制没有交集。请核对这些条件${item.locked?'或解除固定学期':''}。`;
+}
+function planningConflict(p,courses,base,offerings){
+ const known=new Map(courses.map(c=>[code(c),c])),future=base.filter(x=>x.status==='planned');
+ const semesters=Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester);
+ for(const item of future){const c=known.get(item.code)||item;if(!availableSemesters(p,c,item,offerings).length)return unavailableReason(p,c,item,offerings);}
+ for(const n of semesters){
+  const fixed=future.filter(x=>x.locked&&x.semester===n),sum=fixed.reduce((v,x)=>v+credits(known.get(x.code)||x),0),cap=bounds(p,n);
+  if(sum>cap.maxECTS||fixed.length>cap.maxExams)return `第 ${n} 学期的固定课程合计 ${sum} ECTS、${fixed.length} 次考核，超过该学期 ${cap.maxECTS} ECTS／${cap.maxExams} 次的上限：${fixed.map(x=>displayCourse(known.get(x.code)||x)).join('；')}。请调整固定安排或提高该学期上限。`;
+ }
+ const required=future.reduce((v,x)=>v+credits(known.get(x.code)||x),0),capacity=semesters.reduce((v,n)=>v+bounds(p,n).maxECTS,0),exams=semesters.reduce((v,n)=>v+bounds(p,n).maxExams,0);
+ const domains=future.map(item=>({item,c:known.get(item.code)||item,numbers:availableSemesters(p,known.get(item.code)||item,item,offerings)}));
+ for(const mask of new Set(domains.map(d=>d.numbers.reduce((bits,n)=>bits|(1<<n),0)))){
+  const slots=semesters.filter(n=>mask&(1<<n)),restricted=domains.filter(d=>d.numbers.every(n=>mask&(1<<n))),demand=restricted.reduce((sum,d)=>sum+credits(d.c),0),capacity=slots.reduce((sum,n)=>sum+bounds(p,n).maxECTS,0),examCapacity=slots.reduce((sum,n)=>sum+bounds(p,n).maxExams,0);
+  if(slots.length===semesters.length)continue;
+  if(demand>capacity||restricted.length>examCapacity)return `受开课季节或固定安排限制，${restricted.map(d=>displayCourse(d.c)).join('；')}只能使用第 ${slots.join('、')} 学期，合计 ${demand} ECTS／${restricted.length} 次考核，超过这些学期 ${capacity} ECTS／${examCapacity} 次的容量。请调整固定安排、单学期上限或学期范围。`;
+ }
+ if(required>capacity)return `本次必须保留的课程合计 ${required} ECTS，超过第 ${p.preferences.startSemester} 至第 ${p.timeline.count} 学期最多 ${capacity} ECTS 的容量，至少相差 ${required-capacity} ECTS。请增加学期或调整固定安排／学分上限。`;
+ if(future.length>exams)return `本次必须安排 ${future.length} 门课程（按 ${future.length} 次考核估算），当前规划范围最多允许 ${exams} 次考核。请增加学期或提高考试数上限。`;
+ const passed=C.calculate({...p,items:base.filter(x=>x.status==='passed')},courses,true).allocated,remaining=Math.max(0,120-passed);
+ if(remaining>capacity)return `距离毕业学分目标还需至少 ${remaining} ECTS，第 ${p.preferences.startSemester} 至第 ${p.timeline.count} 学期的容量合计只有 ${capacity} ECTS，至少相差 ${remaining-capacity} ECTS。请增加学期或提高学分上限。`;
+ return '';
+}
+// Bounded combinations, starting with the fewest changes. Always include the
+// fully flexible case so a large existing board cannot crowd out all replacements.
+function removalSets(list,limit){
+ const result=[[]];
+ function choose(start,size,pick){if(result.length>=limit)return;if(!size){result.push([...pick]);return;}for(let i=start;i<=list.length-size&&result.length<limit;i++){pick.push(list[i]);choose(i+1,size-1,pick);pick.pop();}}
+ for(let size=1;size<list.length&&result.length<limit;size++)choose(0,size,[]);
+ if(list.length)result.push([...list]);return result;
+}
+function generate(raw,courses,offerings={},options={}){
+ const p=C.validatePlan(raw,courses),known=new Map(courses.map(c=>[code(c),c]));
+ const elective=x=>!x.custom&&'GHIJ'.includes(group(known.get(x.code)||x));
+ const replaceable=p.items.filter(x=>x.status==='planned'&&!x.locked&&elective(x)&&!p.preferences.excluded.includes(x.code)).sort((a,b)=>credits(known.get(b.code))-credits(known.get(a.code))).map(x=>x.code);
+ const flexibleWanted=p.preferences.desired.filter(c=>!p.items.some(x=>x.code===c&&(x.status==='passed'||x.locked||x.custom))&&known.has(c)&&'GHIJ'.includes(group(known.get(c)))).reverse();
+ const allocations=Object.fromEntries(p.items.filter(x=>x.group!==undefined).map(x=>[x.code,x.group]));
+ const retainedSets=removalSets(replaceable,32),wantedSets=removalSets(flexibleWanted,32),limit=options.nodeLimit??350000,deadline=Date.now()+(options.timeLimitMs??18000);
+ const seen=new Set();
+ let nodes=0,attempts=0,budgetHit=false;
+ for(const omittedWanted of wantedSets){
+  const wanted=p.preferences.desired.filter(c=>!omittedWanted.includes(c));
+  for(const removed of retainedSets){
+   if(attempts>=160||nodes>=limit||Date.now()>deadline){budgetHit=true;break;}
+   // A wanted existing elective must remain present in this attempt.
+   const items=p.items.filter(x=>!removed.includes(x.code)||wanted.includes(x.code));
+   const key=items.map(x=>x.code).join(',')+'|'+wanted.join(',');if(seen.has(key))continue;seen.add(key);attempts++;
+   const input={...p,items,preferences:{...p.preferences,desired:wanted}};
+   const r=generateRequired(input,courses,offerings,{...options,allocations,nodeLimit:Math.min(60000,limit-nodes)});nodes+=r.nodes||0;
+   if(r.issue==='remediation-conflict')return {...r,nodes};
+   if(!r.ok){if(r.exhausted)budgetHit=true;continue;}
+   const plan=C.validatePlan({...r.plan,preferences:p.preferences,...(p.courseOrder?{courseOrder:p.courseOrder}:{})},courses),included=new Set(plan.items.map(x=>x.code));
+   const omitted=p.preferences.desired.filter(c=>!included.has(c)).map(c=>{
+    const course=known.get(c)||p.items.find(x=>x.code===c),item={code:c,semester:0,locked:false};
+    let reason=!recommendationEligible(course)?'资料或个人资格条件尚未核实，暂不自动推荐。'+(course.recommendation_note||''):!availableSemesters(p,course,item,offerings).length?unavailableReason(p,course,item,offerings):'在保留已修、固定课程并满足学分、开课和负担要求的前提下，本次未找到能同时纳入该课的方案。可增加学期或调整负担后再试。';
+    if(reason.startsWith(displayCourse(course)))reason=reason.slice(displayCourse(course).length);
+    return {code:c,name:C.courseName(course),reason};
+   });
+   const removedItems=p.items.filter(x=>x.status==='planned'&&!included.has(x.code));
+   return {...r,plan,nodes,removed:removedItems.map(x=>x.code),replaced:removedItems.filter(x=>!p.preferences.excluded.includes(x.code)).map(x=>x.code),desired:{included:p.preferences.desired.filter(c=>included.has(c)),omitted},warnings:[...r.warnings,...(budgetHit?['本次搜索达到部分计算上限，已给出找到的可行方案；想选课程的覆盖可能仍可改善。']:[])],added:plan.items.filter(x=>!p.items.some(y=>y.code===x.code)).map(x=>x.code),moved:plan.items.filter(x=>x.status==='planned'&&p.items.some(y=>y.code===x.code&&y.semester!==x.semester)).map(x=>x.code),calculation:C.calculate(plan,courses),passed:C.calculate(plan,courses,true)};
+  }
+  if(attempts>=160||nodes>=limit||Date.now()>deadline)break;
+ }
+ // Diagnose the most flexible case, rather than leaking failures from early,
+ // shorter candidate schedules. This can only cite constraints still in force.
+ const essential=p.items.filter(x=>x.status==='passed'||x.locked||x.custom||!elective(x));
+ const relaxed={...p,items:essential,preferences:{...p.preferences,desired:p.preferences.desired.filter(c=>!flexibleWanted.includes(c))}};
+ const diagnostic=generateRequired(relaxed,courses,offerings,{...options,allocations,nodeLimit:Math.max(1,Math.min(20000,limit-nodes))});
+ if(diagnostic.ok||budgetHit||diagnostic.exhausted)return {ok:false,reasons:['搜索已达到本次计算上限，不代表一定排不出来。已修和固定课程保持不变；可增加规划学期、减少固定安排，或稍后重试。'],warnings:[],nodes,exhausted:true};
+ return {...diagnostic,nodes,exhausted:false};
 }
 const api={generate,bounds,languageOK,recommendationEligible};if(node)module.exports=api;else root.RCIPlanning=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

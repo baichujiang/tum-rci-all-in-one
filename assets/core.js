@@ -69,6 +69,16 @@
       return {code, name:x.name.trim(), group:x.group, ects:x.ects, custom:true, status:x.status, semester, ...extra};
     });
     if (used.has('IN2067') && used.has('ED160028')) throw new Error('Robotics 与 Roboterdynamik 是二选一，请先移除另一门');
+    const courseOrder={},itemSemesters=new Map(items.map(x=>[x.code,x.semester]));
+    if(raw.courseOrder!==undefined){
+      if(!raw.courseOrder||typeof raw.courseOrder!=='object'||Array.isArray(raw.courseOrder))throw new Error('课程显示顺序无效');
+      for(const [semester,list] of Object.entries(raw.courseOrder)){
+        if(!/^(?:[0-9]|1[0-2])$/.test(semester)||!Array.isArray(list)||list.length>250||list.some(code=>typeof code!=='string'||!/^[A-Z0-9][A-Z0-9._-]{0,59}$/.test(code)))throw new Error('课程显示顺序无效');
+        if(new Set(list).size!==list.length)throw new Error('课程显示顺序中有重复模块');
+        const current=list.filter(code=>itemSemesters.get(code)===Number(semester));
+        if(current.length)courseOrder[semester]=current;
+      }
+    }
     const preferences = raw.preferences ?? {};
     if (!preferences || typeof preferences !== 'object' || Array.isArray(preferences)) throw new Error('选课偏好无效');
     const codes = key => {
@@ -125,7 +135,7 @@
       if(!value||!known.has(value.code)||!Number.isInteger(value.semester)||value.semester<1||value.semester>12)throw new Error('旧版时间替代记录无效');
       return {code:value.code,semester:value.semester};
     });
-    return {version:5, cohort:raw.cohort, conditional:raw.conditional, conditionalConfirmed,timeline:{count:timeline.count, start:timeline.start}, items,
+    return {version:5, cohort:raw.cohort, conditional:raw.conditional, conditionalConfirmed,timeline:{count:timeline.count, start:timeline.start}, items,...(Object.keys(courseOrder).length?{courseOrder}:{}),
       preferences:{desired,excluded,languages:[...new Set(languages)],...flags,startSemester},workload,timetable:{events:normalizedEvents,replaced:normalizedReplaced}};
   }
   function semesterSeason(timeline, number) {
@@ -134,20 +144,40 @@
   function semesterLabel(timeline, number) {
     return `第 ${number} 学期 · ${semesterSeason(timeline, number) === 'winter' ? '冬季' : '夏季'}`;
   }
+  function hasAcademicTerm(plan) {
+    if (!plan.cohort || plan.cohort === 'unknown') return false;
+    const season = plan.cohort.endsWith('夏季') ? 'summer' : plan.cohort.endsWith('冬季') ? 'winter' : null;
+    return !season || plan.timeline.start === season;
+  }
+  function planSemesterLabel(plan, number) {
+    return hasAcademicTerm(plan) ? semesterLabel(plan.timeline, number) : `第 ${number} 学期 · 季节待确认`;
+  }
   function offering(course, season) {
     const term = course?.current_term || course?.term_legal_annex;
     if (term === '自主安排') return {state:'flexible', label:'自主安排'};
     if (!['WiSe','SoSe','WiSe/SoSe'].includes(term)) return {state:'unknown', label:term || '季节待确认'};
     const seasons = term.split('/');
     const label = term.replace('WiSe', '冬季').replace('SoSe', '夏季');
+    if (!['winter', 'summer'].includes(season)) return {state:'unknown', label};
     return {state:seasons.includes(season === 'winter' ? 'WiSe' : 'SoSe') ? 'compatible' : 'conflict', label};
+  }
+  function semesterItems(plan,number,includePassed=false){
+    const rank=new Map((plan.courseOrder?.[number]||[]).map((code,i)=>[code,i]));
+    return plan.items.filter(x=>x.semester===number&&(includePassed||x.status!=='passed')).map((item,index)=>({item,index})).sort((a,b)=>(rank.get(a.item.code)??Infinity)-(rank.get(b.item.code)??Infinity)||a.index-b.index).map(x=>x.item);
+  }
+  function reorderSemester(plan,number,codes){
+    const current=semesterItems(plan,number,true).map(x=>x.code),chosen=new Set(codes);
+    if(!Number.isInteger(number)||number<0||number>12||chosen.size!==codes.length||codes.some(code=>!current.includes(code)))throw new Error('课程安排已变化，请重新调整顺序。');
+    let index=0;
+    const order=current.map(code=>chosen.has(code)?codes[index++]:code);
+    return {...plan,courseOrder:{...plan.courseOrder,[number]:order}};
   }
   function schedule(plan, courses) {
     plan = validatePlan(plan, courses);
     const known = new Map(courses.map(c => [c.module_code, c]));
     const bucket = (number) => {
-      const season = number ? semesterSeason(plan.timeline, number) : null;
-      const items = plan.items.filter(x => x.status !== 'passed' && x.semester === number);
+      const season = number && hasAcademicTerm(plan) ? semesterSeason(plan.timeline, number) : null;
+      const items = semesterItems(plan,number);
       const credits = items.reduce((n, x) => n + Number(x.custom?x.ects:known.get(x.code)?.ects ?? x.ects), 0);
       return {number, season, items, credits, conflicts:season ? items.filter(x => offering(x.custom?null:known.get(x.code), season).state === 'conflict').map(x => x.code) : []};
     };
@@ -256,7 +286,7 @@
       return {...row,value,historical,unknown,met:value>=row.required,exception:plan.preferences.deadlineException};
     });
   }
-  const api = {csv, esc, courseName, safeURL, validatePlan, calculate, progression, amended, semesterSeason, semesterLabel, offering, schedule, markdown, cohorts, courseGroups, creditOriginalNames};
+  const api = {csv, esc, courseName, safeURL, validatePlan, calculate, progression, amended, semesterSeason, semesterLabel, hasAcademicTerm, planSemesterLabel, offering, semesterItems, reorderSemester, schedule, markdown, cohorts, courseGroups, creditOriginalNames};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.RCI = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

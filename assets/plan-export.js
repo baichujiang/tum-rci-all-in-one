@@ -58,17 +58,18 @@ function planView(p,db,date=new Date().toLocaleDateString('zh-CN')){
  const known=new Map(db.courses.map(c=>[c.module_code,c]));
  const items=p.items.map(x=>{
   const c=x.custom?null:known.get(x.code),group=x.group||c?.section_2025[0]||'';
-  return {...x,name:x.custom?x.name:C.courseName(c)||x.name||x.code,translation:x.custom?'':db.names?.[x.code]||'',ects:Number(c?.ects??x.ects),group,statusLabel:x.status==='passed'?'已通过':'待修',termLabel:x.semester?`第 ${x.semester} 学期 · ${T.term(p,x.semester).label}`:x.status==='passed'?'通过学期未记录':'待分配'};
+  return {...x,name:x.custom?x.name:C.courseName(c)||x.name||x.code,translation:x.custom?'':db.names?.[x.code]||'',ects:Number(c?.ects??x.ects),group,statusLabel:x.status==='passed'?'已通过':'待修',termLabel:x.semester?(C.hasAcademicTerm(p)?`第 ${x.semester} 学期 · ${T.term(p,x.semester).label}`:C.planSemesterLabel(p,x.semester)):x.status==='passed'?'通过学期未记录':'待分配'};
  });
  const sum=rows=>rows.reduce((n,x)=>n+x.ects,0);
  const summarize=rows=>({items:rows,credits:sum(rows),passedCredits:sum(rows.filter(x=>x.status==='passed')),plannedCredits:sum(rows.filter(x=>x.status!=='passed'))});
- const semesters=Array.from({length:p.timeline.count},(_,i)=>({number:i+1,title:`第 ${i+1} 学期`,label:T.term(p,i+1).label,season:C.semesterSeason(p.timeline,i+1),...summarize(items.filter(x=>x.semester===i+1))}));
+ const byCode=new Map(items.map(x=>[x.code,x]));
+ const semesters=Array.from({length:p.timeline.count},(_,i)=>({number:i+1,title:`第 ${i+1} 学期`,label:T.term(p,i+1).label,season:T.term(p,i+1).season,...summarize(C.semesterItems(p,i+1,true).map(x=>byCode.get(x.code)))}));
  const other=[];
  for(const [title,label,rows] of [
   ['待分配课程','尚未安排学期',items.filter(x=>x.status!=='passed'&&!x.semester)],
   ['其他已通过课程','通过学期未记录或在规划范围外',items.filter(x=>x.status==='passed'&&(!x.semester||x.semester>p.timeline.count))]
  ])if(rows.length)other.push({title,label,...summarize(rows)});
- const settings=[['设置','值'],['入学批次',p.cohort],['学期规划',`${p.timeline.count} 个学期，${p.timeline.start==='winter'?'冬季':'夏季'}开始`],['开始规划',`第 ${p.preferences.startSemester} 学期`],['控制理论补修',p.conditionalConfirmed?(p.conditional?'需要':'不需要'):'尚未确认'],['想选',p.preferences.desired.join(', ')],['排除',p.preferences.excluded.join(', ')],['语言',p.preferences.languages.join('/')],['全局学分',`${p.workload.minECTS}–${p.workload.maxECTS} ECTS / 学期`],['全局考核',`${p.workload.minExams}–${p.workload.maxExams} 项 / 学期（估算）`],...Object.entries(p.workload.semesters).map(([n,limits])=>{const b={...p.workload,...limits};return [`第 ${n} 学期负担`,`${b.minECTS}–${b.maxECTS} ECTS；${b.minExams}–${b.maxExams} 项考核（估算）`];}),['标准进度期限',p.preferences.deadlineException?'仅提示，允许方案超出':'按标准进度规划'],['规则','2024 FPSO + 2025-02-11 修订；模拟结果不等于学校认可'],['数据核验','专业选修2026-10-14；规则2026-10-13；实际开课和个人认定以TUMonline为准']];
+ const settings=[['设置','值'],['入学批次',p.cohort],['学期规划',`${p.timeline.count} 个学期，${C.hasAcademicTerm(p)?(p.timeline.start==='winter'?'冬季':'夏季')+'开始':'起始季节待确认'}`],['开始规划',`第 ${p.preferences.startSemester} 学期`],['控制理论补修',p.conditionalConfirmed?(p.conditional?'需要':'不需要'):'尚未确认'],['想选',p.preferences.desired.join(', ')],['排除',p.preferences.excluded.join(', ')],['语言',p.preferences.languages.join('/')],['全局学分',`${p.workload.minECTS}–${p.workload.maxECTS} ECTS / 学期`],['全局考核',`${p.workload.minExams}–${p.workload.maxExams} 项 / 学期（估算）`],...Object.entries(p.workload.semesters).map(([n,limits])=>{const b={...p.workload,...limits};return [`第 ${n} 学期负担`,`${b.minECTS}–${b.maxECTS} ECTS；${b.minExams}–${b.maxExams} 项考核（估算）`];}),['标准进度期限',p.preferences.deadlineException?'仅提示，允许方案超出':'按标准进度规划'],['规则','2024 FPSO + 2025-02-11 修订；模拟结果不等于学校认可'],['数据核验','专业选修2026-10-14；规则2026-10-13；实际开课和个人认定以TUMonline为准']];
  return {cohort:p.cohort,date,items,semesters,other,settings,allocated:C.calculate(p,db.courses).allocated,passed:C.calculate(p,db.courses,true).allocated};
 }
 const boardNote='学期总额为课程学分之和；毕业进度按类别上限计入。已通过课程保留原学期。';

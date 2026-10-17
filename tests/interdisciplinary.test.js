@@ -20,13 +20,19 @@ test('J eligibility approvals bind to current full-handbook hashes and fail clos
  }
  assert(!E.recommendationEligible({module_code:'LEGACYJ',section_2025:'J Support Electives',ects:'6'}));
 });
-test('All 384 unsafe J modules are blocked as desired courses even with dated teaching or overwritten flags',()=>{
+test('All 384 unsafe J modules stay out of generated plans and explain omitted preferences even with dated teaching or overwritten flags',()=>{
  const disabled=source.modules.map(m=>known.get(m.module_code)).filter(c=>!c.automatic_recommendation_eligible);assert.equal(disabled.length,384);
+ const feasible=E.generate(draft(),courses,offerings);assert(feasible.ok,JSON.stringify(feasible.reasons));
+ // Keep a complete feasible catalog so each case isolates eligibility rather than repeating catalog-wide search.
+ const feasibleCourses=courses.filter(c=>feasible.plan.items.some(x=>x.code===c.module_code));
  for(const c of disabled){const p=draft();p.preferences.desired=[c.module_code];const before=JSON.stringify(p),v=c.verification;
   assert(!E.recommendationEligible({...c,automatic_recommendation_eligible:true,verification:{...v,automatic_recommendation_eligible:true,fields:Object.fromEntries(Object.keys(v.fields).map(k=>[k,'verified']))}}),c.module_code);
-  const r=E.generate(p,courses,{...offerings,[c.module_code]:{offerings:{'2026-winter':{available:true,language:'EN'}}}});assert(!r.ok,c.module_code);assert(r.reasons.some(s=>s.includes(c.module_code)),c.module_code);assert.equal(JSON.stringify(p),before);
+  const r=E.generate(p,[...feasibleCourses,c],{...offerings,[c.module_code]:{offerings:{'2026-winter':{available:true,language:'EN'}}}});assert(r.ok,JSON.stringify(r.reasons));assert(!r.plan.items.some(x=>x.code===c.module_code),c.module_code);assert(r.desired.omitted.some(x=>x.code===c.module_code&&x.reason.includes('暂不自动推荐')),c.module_code);assert.equal(JSON.stringify(p),before);
  }
- for(const code of ['MGT000159','SOT46401','SZ0471','SZ0361','SOT10082']){const p=draft();p.items=[{code,status:'planned',semester:1}];assert(!E.generate(p,courses,offerings).ok,code);}
+ for(const code of ['MGT000159','SOT46401','SZ0471','SZ0361','SOT10082']){
+  const p=draft();p.items=[{code,status:'planned',semester:1}];const r=E.generate(p,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));assert(!r.plan.items.some(x=>x.code===code),code);assert(r.removed.includes(code),code);
+  p.items[0].locked=true;const pinned=E.generate(p,courses,offerings);assert(!pinned.ok,code);assert(pinned.reasons.some(reason=>reason.includes(code)),code);
+ }
 });
 test('Language learning is separate from teaching language and personal eligibility is never inferred',()=>{
  const language=source.modules.map(m=>known.get(m.module_code)).filter(c=>c.j_constraints.is_language_course);assert.equal(language.length,156);assert(language.every(c=>!E.recommendationEligible(c)));
@@ -52,7 +58,7 @@ test('A previous variant cannot be used to fill the remaining J gap with the sam
  const p=draft();p.items=[{code:'SOT86060',status:'passed',semester:0}];
  const narrow=courses.map(c=>c.section_2025[0]==='J'&&c.module_code!=='SOT86061'?{...c,automatic_recommendation_eligible:false}:c);
  assert(!E.generate(p,narrow,offerings).ok);
- const both=draft();both.preferences.desired=['SOT86060','SOT86061'];const r=E.generate(both,courses,offerings);assert(!r.ok);assert(r.reasons.some(s=>s.includes('重叠')||s.includes('只能计入一次')));
+ const both=draft();both.preferences.desired=['SOT86060','SOT86061'];const r=E.generate(both,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));assert.equal(r.plan.items.filter(x=>both.preferences.desired.includes(x.code)).length,1);assert.equal(r.desired.omitted.length,1);assert(r.desired.omitted[0].reason);
 });
 test('Explicit previous-pass exclusions preserve chronology and never erase historical records',()=>{
  const p=draft(),previous={code:'MGT001407',name:'已认可记录',ects:3,group:'J',custom:true,status:'passed',semester:1};p.items=[previous,{code:'MGT001445',status:'planned',semester:2}];assert(C.calculate(p,courses).countingIssues.some(s=>s.includes('MGT001407')));
@@ -61,9 +67,9 @@ test('Explicit previous-pass exclusions preserve chronology and never erase hist
 });
 test('Recognized passed J records and legacy custom collisions survive planning and backup',()=>{
  const p=draft();p.items=[{code:'MGT000159',status:'passed',semester:0},{code:'CLA31307',name:'已获认可的自录课程',ects:3,group:'J',custom:true,status:'passed',semester:0}];const normalized=C.validatePlan(p,courses),saved=B.parse(JSON.stringify(B.create({plan:normalized,favorites:[]},courses)),courses);assert.deepEqual(saved.plan.items,normalized.items);const r=E.generate(normalized,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));for(const x of normalized.items)assert.deepEqual(r.plan.items.find(y=>y.code===x.code),x);
- const unknown=draft();unknown.preferences.desired=['CLA31307'];assert(!E.generate(unknown,courses,offerings).ok);unknown.items=[{code:'CLA31307',status:'planned',semester:1}];assert.throws(()=>C.validatePlan(unknown,courses),/学分尚未核实/);
+ const unknown=draft();unknown.preferences.desired=['CLA31307'];const skipped=E.generate(unknown,courses,offerings);assert(skipped.ok,JSON.stringify(skipped.reasons));assert(!skipped.plan.items.some(x=>x.code==='CLA31307'));assert(skipped.desired.omitted.some(x=>x.code==='CLA31307'&&x.reason.includes('暂不自动推荐')));unknown.items=[{code:'CLA31307',status:'planned',semester:1}];assert.throws(()=>C.validatePlan(unknown,courses),/学分尚未核实/);
 });
 test('Exclusion preferences can cover the expanded catalogue and preserve the complete backup',()=>{
- const p=draft();p.preferences.excluded=source.modules.map(m=>m.module_code);const normalized=C.validatePlan(p,courses);assert.equal(normalized.preferences.excluded.length,429);const r=E.generate(normalized,courses,offerings);assert(!r.ok);assert(r.reasons.some(s=>s.includes('J 的 6 ECTS')));assert.deepEqual(B.parse(JSON.stringify(B.create({plan:normalized,favorites:[]},courses)),courses).plan.preferences.excluded,normalized.preferences.excluded);
+ const p=draft();p.preferences.excluded=source.modules.map(m=>m.module_code);const normalized=C.validatePlan(p,courses);assert.equal(normalized.preferences.excluded.length,429);const r=E.generate(normalized,courses,offerings);assert(!r.ok);assert(r.reasons.some(s=>s.includes('跨学科 J还差 6 ECTS')));assert.deepEqual(B.parse(JSON.stringify(B.create({plan:normalized,favorites:[]},courses)),courses).plan.preferences.excluded,normalized.preferences.excluded);
 });
 console.log(count+' interdisciplinary safety checks passed');

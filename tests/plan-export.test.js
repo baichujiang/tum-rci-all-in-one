@@ -79,5 +79,14 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   await click('data-plan-print');assert.equal(prints,1);assert(printable.innerHTML.includes('print-semester-board'));assert(printable.innerHTML.includes('Machine Learning'));
   p=draft([{code:'IN2228',status:'planned',semester:2}]);await click('data-plan-xlsx');assert.equal(downloads.length,1);const text=new TextDecoder().decode(downloads[0][0]);assert(text.includes('Computer Vision II'));assert(!text.includes('Machine Learning'));assert.equal(downloads[0][1],'rci-study-plan.xlsx');
  });
+ await test('Excel and PDF course groups follow the same saved order as the board',()=>{
+  const p=draft(['IN2064','IN2228','IN2406'].map(code=>({code,status:code==='IN2228'?'passed':'planned',semester:1}))),sorted=C.reorderSemester(p,1,['IN2406','IN2228','IN2064']),view=X.planView(sorted,db),sheet=X.planSheets(view)[0];
+  assert.deepEqual(view.semesters[0].items.map(x=>x.code),['IN2406','IN2228','IN2064']);assert.deepEqual(readingCourses(sheet).map(row=>row[1]),['IN2406','IN2228','IN2064']);assert.equal(view.allocated,X.planView(p,db).allocated);
+ });
+ await test('Exports leave unconfirmed entry seasons neutral instead of exporting default winter as fact',()=>{
+  const p={...draft([{code:'IN2228',status:'planned',semester:1}]),cohort:'unknown'},view=X.planView(p,db);
+  assert(view.semesters.every(x=>x.season===null&&x.label.includes('待确认')));assert.equal(view.items[0].termLabel,'第 1 学期 · 季节待确认');
+  assert.match(view.settings.find(x=>x[0]==='学期规划')[1],/待确认/);assert(!X.printPlan(view).includes('冬季开始'));
+ });
  console.log(`${checks} plan export checks passed`);
 })().catch(error=>{console.error(error);process.exitCode=1;});

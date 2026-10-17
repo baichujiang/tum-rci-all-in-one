@@ -16,14 +16,23 @@ let count=0;
 async function test(name,fn){await fn();count++;console.log('PASS',name);}
 const appSource=fs.readFileSync(path.join(__dirname,'../site3/app.js'),'utf8').split('// A small website directory')[0]+'})();';
 function application(mem,locks,manualConfirmation=false,noLock=false,lockOverride=null){
- const events=[],toast={replaceChildren(){},append(){},contains(){return false;}};
+ const prompts=[],events=[],toast={replaceChildren(){},append(){},contains(){return false;}};
  const dialog=manualConfirmation?{open:false,showModal(){this.open=true;},addEventListener(type,fn){this.onClose=fn;},answer(value){this.returnValue=value;this.open=false;this.onClose();}}:null;
  const dialogText={};
+ function createElement(tag){
+  const node={handlers:{},addEventListener(type,fn){this.handlers[type]=fn;},setAttribute(){},focus(){}};if(tag!=='dialog')return node;
+  const fields=Object.fromEntries(['form','#academic-term-cohort','#academic-term-error','#academic-term-save','#academic-term-preview'].map(key=>[key,createElement('input')]));
+  node.querySelector=key=>fields[key];node.querySelectorAll=()=>[];node.remove=()=>{};
+  node.showModal=()=>{node.open=true;prompts.push(node);};node.close=()=>{node.open=false;node.handlers.close();};
+  node.submit=async cohort=>{fields['#academic-term-cohort'].value=cohort;fields['#academic-term-cohort'].handlers.change();await fields.form.handlers.submit({preventDefault(){}});};
+  return node;
+ }
+
  const window={RCILocalLock:lockOverride|| (noLock?{create:()=>require('../site3/local-lock').create()}:require('../site3/local-lock')),RCI:C,RCIBackup:B,confirm(){return true;},addEventListener(){},dispatchEvent(e){events.push(e.type);}};
  const context={window,URLSearchParams,location:{search:''},navigator:{locks:locks||{request:(_name,work)=>work()}},
-  document:{querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;if(s==='#action-dialog')return dialog;if(dialog&&['#dialog-title','#dialog-description','#dialog-confirm'].includes(s))return dialogText[s]||={};return null;},querySelectorAll(){return [];},createElement(){return {addEventListener(){}};}},
+  document:{body:{append(){}},querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;if(s==='#action-dialog')return dialog;if(dialog&&['#dialog-title','#dialog-description','#dialog-confirm'].includes(s))return dialogText[s]||={};return null;},querySelectorAll(){return [];},createElement},
   localStorage:mem.storage,fetch:async url=>{assert.equal(url,'/assets/planner-data.json');return {ok:true,json:async()=>({courses,names:{}})};},Event:function(type){this.type=type;},setTimeout(){return 0;},clearTimeout(){}};
- vm.runInNewContext(appSource,context,{filename:'site3/app.js'});return {U:window.RCIUI,events,dialog};
+ vm.runInNewContext(appSource,context,{filename:'site3/app.js'});return {U:window.RCIUI,events,dialog,nextPrompt:async()=>{for(let i=0;i<8&&!prompts.at(-1)?.open;i++)await new Promise(resolve=>setImmediate(resolve));assert(prompts.at(-1)?.open,'Expected entry-term prompt');return prompts.at(-1);}};
 }
 (async()=>{
  await test('A lost storage lock cannot later publish temporary records over another page',async()=>{
@@ -55,7 +64,7 @@ function application(mem,locks,manualConfirmation=false,noLock=false,lockOverrid
  await test('Blocked storage still allows a session-only plan and an exportable in-memory backup',async()=>{
   const mem=memory(initial()),original=mem.values.get(B.keys.plan),get=mem.storage.getItem,set=mem.storage.setItem;
   mem.storage.getItem=()=>{throw Error('Storage access blocked');};mem.storage.setItem=()=>{throw Error('Storage access blocked');};
-  const h=application(mem);await h.U.addCourse('IN2320',4);
+  const h=application(mem),addition=h.U.addCourse('IN2320',4),prompt=await h.nextPrompt();await prompt.submit('2026/27冬季');await addition;
   assert.equal(h.U.persisted,false);assert.equal(h.U.backupPersisted,false);assert.equal((await h.U.plan()).items[0].code,'IN2320');
   assert.equal((await h.U.backupSnapshot()).data.plan.items[0].code,'IN2320');assert.equal(mem.values.get(B.keys.plan),original);
   mem.storage.getItem=get;mem.storage.setItem=set;await h.U.addCourse('IN2107',1);
@@ -193,6 +202,12 @@ function application(mem,locks,manualConfirmation=false,noLock=false,lockOverrid
   const mem=memory(initial()),first=application(mem,locks),second=application(mem,locks),snapshot=await first.U.backupSnapshot();
   await second.U.plan();await first.U.importBackup({plan:{...draft(),items:[...draft().items,{code:'IN2320',status:'planned',semester:4}]},favorites:['R140']},'replace',snapshot);
   await second.U.updatePlan(p=>({...p,conditional:!p.conditional}));assert.equal(JSON.parse(mem.storage.getItem(B.keys.plan)).items.length,2);assert.equal(JSON.parse(mem.storage.getItem(B.keys.favorites))[0],'R140');
+ });
+ await test('Backup replacement keeps display order and merging appends imported courses in their saved order',()=>{
+  const here={...draft(),items:['IN2064','IN2107'].map(code=>({code,status:'planned',semester:1})),courseOrder:{1:['IN2107','IN2064']}},incoming={...draft(),items:['IN2064','IN2228','IN2406'].map(code=>({code,status:'planned',semester:1})),courseOrder:{1:['IN2406','IN2064','IN2228']}};
+  const parsed=B.parse(JSON.stringify(B.create({plan:incoming,favorites:[]},courses)),courses),replaced=B.prepare({plan:here,favorites:[]},parsed,'replace',courses),merged=B.prepare({plan:here,favorites:[]},parsed,'merge',courses);
+  assert.deepEqual(replaced.plan.courseOrder,incoming.courseOrder);assert.deepEqual(C.semesterItems(merged.plan,1,true).map(x=>x.code),['IN2107','IN2064','IN2406','IN2228']);
+  assert.deepEqual(merged.plan.items.map(x=>x.code),['IN2064','IN2107','IN2228','IN2406']);
  });
  console.log(count+' backup checks passed');
 })().catch(error=>{console.error(error);process.exitCode=1;});

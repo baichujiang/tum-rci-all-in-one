@@ -46,14 +46,16 @@ test('Bilingual handbook corrections preserve evidence, warning text and the unr
  for(const code of p.preferences.desired){assert(r.plan.items.some(x=>x.code===code));assert(r.warnings.some(x=>x.startsWith(code+'：')),code);}
  for(const code of ['ED160053','EI70140','MW0538']){
   const requested=draft();requested.preferences.desired=[code];const result=E.generate(requested,courses,offerings);
-  assert(!result.ok,code);assert(result.reasons.some(x=>x.includes(code)),code);
+  assert(result.ok,JSON.stringify(result.reasons));assert(!result.plan.items.some(x=>x.code===code),code);assert(result.desired.omitted.some(x=>x.code===code&&x.reason.includes('暂不自动推荐')),code);
  }
 });
-test('Desired and manually selected unsafe future modules cannot bypass the same gate, even with dated teaching',()=>{
- for(const code of ['IN2002','IN2123','IN2076','IN2169','CIT4230002'])for(const mode of ['desired','selected']){
-  const p=draft();if(mode==='desired')p.preferences.desired=[code];else p.items=[{code,status:'planned',semester:1,locked:false}];
+test('Unsafe preferences and replaceable selections stay out of generated plans; pinned records still block, even with dated teaching',()=>{
+ for(const code of ['IN2002','IN2123','IN2076','IN2169','CIT4230002'])for(const mode of ['desired','selected','pinned']){
+  const p=draft();if(mode==='desired')p.preferences.desired=[code];else p.items=[{code,status:'planned',semester:1,locked:mode==='pinned'}];
   const before=JSON.stringify(p),r=E.generate(p,courses,{...offerings,[code]:{offerings:{'2026-winter':{available:true,language:'EN'}}}});
-  assert(!r.ok,code+' '+mode);assert(r.reasons.some(x=>x.includes(code)));assert.equal(JSON.stringify(p),before);
+  if(mode==='pinned'){assert(!r.ok,code);assert(r.reasons.some(x=>x.includes(code)),code);}
+  else{assert(r.ok,JSON.stringify(r.reasons));assert(!r.plan.items.some(x=>x.code===code),code);assert(mode==='desired'?r.desired.omitted.some(x=>x.code===code&&x.reason.includes('暂不自动推荐')):r.removed.includes(code),code);}
+  assert.equal(JSON.stringify(p),before);
  }
 });
 test('All remaining pending modules have specific evidence and stay blocked in every future-input path',()=>{
@@ -62,10 +64,12 @@ test('All remaining pending modules have specific evidence and stay blocked in e
   const c=map.get(code),r=c.verification.follow_up_review;assert.equal(r.outcome,'unresolved',code);assert(r.summary_cn.length>30,code);assert(r.unresolved_fields.length,code);assert(r.sources.every(s=>C.safeURL(s.url)),code);
   const unsafe={...c,automatic_recommendation_eligible:true,verification:{...c.verification,automatic_recommendation_eligible:true,fields:Object.fromEntries(Object.keys(c.verification.fields).map(k=>[k,'verified']))}};
   assert.equal(E.recommendationEligible(unsafe),false,code+' unresolved evidence cannot be overwritten by flags');
-  for(const mode of ['desired','selected']){
-   const p=draft();if(mode==='desired')p.preferences.desired=[code];else p.items=[{code,status:'planned',semester:1,locked:false}];const before=JSON.stringify(p);
+  for(const mode of ['desired','selected','pinned']){
+   const p=draft();if(mode==='desired')p.preferences.desired=[code];else p.items=[{code,status:'planned',semester:1,locked:mode==='pinned'}];const before=JSON.stringify(p);
    const result=E.generate(p,courses,{...offerings,[code]:{offerings:{'2026-winter':{available:true,language:'EN'}}}});
-   assert(!result.ok,code+' '+mode);assert(result.reasons.some(x=>x.includes(code)));assert.equal(JSON.stringify(p),before);
+   if(mode==='pinned'){assert(!result.ok,code);assert(result.reasons.some(x=>x.includes(code)),code);}
+   else{assert(result.ok,JSON.stringify(result.reasons));assert(!result.plan.items.some(x=>x.code===code),code);assert(mode==='desired'?result.desired.omitted.some(x=>x.code===code&&x.reason.includes('暂不自动推荐')):result.removed.includes(code),code);}
+   assert.equal(JSON.stringify(p),before);
   }
  }
  const p=draft();p.items=follow.unresolved_codes.map(code=>({code,status:'passed',semester:0}));const r=E.generate(p,courses,offerings);assert(r.ok,JSON.stringify(r.reasons));
