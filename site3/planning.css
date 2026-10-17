@@ -347,10 +347,10 @@ details[open]>summary>.settings-disclosure-arrow{transform:rotate(180deg)}
 .auto-plan-dialog{width:min(920px,calc(100vw - 48px));max-height:calc(100dvh - 48px);overflow:hidden;border:1px solid var(--line);border-radius:16px;padding:0;background:var(--white);color:var(--ink);box-shadow:0 24px 90px #122a3a33}
 .auto-plan-dialog[open]{display:flex;flex-direction:column}
 .auto-plan-dialog>.plan-dialog-heading{flex-shrink:0}
+.auto-plan-dialog>.plan-dialog-heading>.auto-preview-close{display:inline-flex;align-items:center;justify-content:center;flex:none;min-width:44px;min-height:44px;padding:0;font-size:26px;line-height:1;color:var(--muted)}
 #auto-plan-result{min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-padding:16px;padding:16px;display:grid;grid-auto-rows:max-content;align-content:start;gap:16px;background:var(--paper)}
-.auto-plan-dialog .dialog-actions{position:static;flex-shrink:0;padding:16px 24px;margin:0;border-top:1px solid var(--line);display:flex;gap:16px;align-items:center;justify-content:space-between;background:var(--white)}
-.auto-plan-dialog [data-edit-auto-settings]{min-height:44px;font-size:14px;padding:10px 12px}
-.auto-preview-primary-actions{display:flex;align-items:center;gap:10px}
+.auto-plan-dialog .dialog-actions{position:static;flex-shrink:0;padding:16px 24px;margin:0;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;justify-content:flex-end;background:var(--white)}
+.auto-plan-dialog [data-apply-auto]{min-width:132px}
 .auto-plan-dialog .dialog-actions .button{min-height:44px;padding:10px 18px;font-size:14px}
 .auto-preview-overview,.auto-preview-semester,.auto-preview-state{min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--white)}
 .auto-preview-overview{padding:18px 20px}
@@ -436,11 +436,9 @@ details[open]>summary>.settings-disclosure-arrow{transform:rotate(180deg)}
  .plan-tool-row{padding:14px 18px}.plan-storage-note{margin:16px 18px}.plan-tools-footer{padding:14px 18px;padding-bottom:max(14px,env(safe-area-inset-bottom))}.plan-clear-button{width:100%}#plan-share-output{padding:16px 18px}
  .auto-plan-dialog>.plan-dialog-heading{padding:16px 18px 14px}
  #auto-plan-result{padding:14px;gap:14px}
- .auto-plan-dialog .dialog-actions{flex-wrap:wrap;padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));gap:8px}
- .auto-plan-dialog [data-edit-auto-settings]{width:100%;padding:6px 10px;min-height:38px;font-size:13px}
- .auto-preview-primary-actions{width:100%;gap:10px}
- .auto-preview-primary-actions .button{flex:1;justify-content:center}
- .auto-plan-dialog .dialog-actions .button{font-size:14px;padding:10px 12px}
+ .auto-plan-dialog .dialog-actions{flex-wrap:nowrap;padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));gap:10px}
+ .auto-plan-dialog .dialog-actions .button{flex:1;min-width:0;justify-content:center;font-size:14px;padding:10px 12px}
+ .auto-plan-dialog .dialog-actions [data-apply-auto]{flex:1.15}
  .auto-preview-overview{padding:16px}
  .auto-preview-overview .settings-section-heading h3,.auto-preview-section-heading h3{font-size:15px}
  .auto-preview-section-heading{gap:8px;margin-left:2px;margin-right:2px}

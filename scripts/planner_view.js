@@ -52,7 +52,7 @@ module.exports=function plannerView(studyHelp=''){return `
 <div id="planner"><p class="loading-state">正在读取你的课程…</p></div>
 <section id="printable-plan" hidden></section>
 <dialog id="auto-plan-dialog" class="auto-plan-dialog" aria-labelledby="auto-plan-title" aria-describedby="auto-plan-description">
- <header class="plan-dialog-heading"><div><h2 id="auto-plan-title">自动方案预览</h2><p id="auto-plan-description">先查看安排，采用后才会更新计划。</p></div></header>
+ <header class="plan-dialog-heading"><div><h2 id="auto-plan-title">自动方案预览</h2><p id="auto-plan-description">先查看安排，采用后才会更新计划。</p></div><button type="button" class="quiet auto-preview-close" data-cancel-auto aria-label="关闭方案预览" title="关闭方案预览"><span aria-hidden="true">×</span></button></header>
  <div id="auto-plan-result" aria-live="polite"></div>
- <footer class="dialog-actions"><button type="button" class="quiet" data-edit-auto-settings>调整条件</button><div class="auto-preview-primary-actions"><button type="button" class="button secondary" data-cancel-auto>返回计划</button><button type="button" class="button" data-apply-auto hidden>采用这个方案</button></div></footer>
+ <footer class="dialog-actions"><button type="button" class="button secondary" data-edit-auto-settings>返回调整条件</button><button type="button" class="button" data-apply-auto hidden>采用方案</button></footer>
 </dialog>`;};
