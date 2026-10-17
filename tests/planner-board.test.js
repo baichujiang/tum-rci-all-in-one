@@ -6,10 +6,10 @@ const courses=require('../scripts/load-courses')(),names=require('../content/edi
 const source=fs.readFileSync(require.resolve('../site3/planner'),'utf8');
 const copy=x=>JSON.parse(JSON.stringify(x)),tick=()=>new Promise(resolve=>setImmediate(resolve));
 const draft=items=>C.validatePlan({version:2,cohort:'2026/27冬季',conditional:false,timeline:{count:4,start:'winter'},items},courses);
-function element(){return {innerHTML:'',open:false,handlers:{},style:{setProperty(){}},scrollLeft:0,scrollWidth:600,clientWidth:600,elements:{namedItem(){}},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];},focus(){},toggleAttribute(){}};}
+function element(){return {innerHTML:'',open:false,handlers:{},style:{setProperty(){}},scrollLeft:0,scrollTop:0,getBoundingClientRect(){return {top:0,height:0};},scrollWidth:600,clientWidth:600,elements:{namedItem(){}},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];},focus(){},toggleAttribute(){}};}
 async function harness(initial,desktop=true){
  let plan=copy(initial),writes=0;const events={},nodes={},toasts=[],moves=[],box=element(),creditDialog=element(),creditContent=element();
- creditDialog.showModal=()=>{creditDialog.open=true;};creditDialog.close=()=>{creditDialog.open=false;};creditContent.querySelector=()=>null;
+ creditDialog.showModal=()=>{creditDialog.open=true;};creditDialog.close=()=>{creditDialog.open=false;};const milestones=element();milestones.getBoundingClientRect=()=>({top:300});creditDialog.querySelector=()=>null;milestones.scrollIntoView=()=>assert.fail('Opening details must not scroll the underlying page');creditContent.querySelector=key=>key==='#credit-check-milestones'?milestones:null;
  for(const key of ['.semester-board','.board-head-scroll','.board-courses-scroll','[data-board-step="-1"]','[data-board-step="1"]','#summary-gaps','#custom-plan'])nodes[key]=element();
  box.querySelector=key=>nodes[key];
  const U={base:'',persisted:true,data:async()=>({courses,names}),plan:async()=>copy(plan),updatePlan:async fn=>{const next=await fn(copy(plan));if(next){plan=C.validatePlan(next,courses);writes++;events['rci:planchange']?.();}return copy(plan);},toast:(message,action)=>toasts.push({message,action})};
@@ -23,45 +23,47 @@ async function harness(initial,desktop=true){
   box.handlers.dragstart({target:{closest:selector=>selector==='[data-plan-course]'?item:null},clientX:0,dataTransfer:{setData(){}}});
   await box.handlers.drop({target:{closest:()=>({dataset:{dropSemester:String(semester)}})},preventDefault(){}});await tick();
  };
- return {html:()=>box.innerHTML,creditHTML:()=>creditContent.innerHTML,creditDialog,plan:()=>copy(plan),writes:()=>writes,toasts,moves,click,changeSemester,drag,external:async value=>{plan=C.validatePlan(value,courses);await events['rci:planchange']();await tick();}};
+ return {html:()=>box.innerHTML,creditHTML:()=>creditContent.innerHTML,creditDialog,milestones,plan:()=>copy(plan),writes:()=>writes,toasts,moves,click,changeSemester,drag,external:async value=>{plan=C.validatePlan(value,courses);await events['rci:planchange']();await tick();}};
 }
 const card=(html,code)=>html.match(new RegExp('<details[^>]*id="plan-course-'+code+'"[\\s\\S]*?</details>'))?.[0];
 let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS',name);}
 (async()=>{
- await test('Visible semester reminders show a cumulative third-semester shortfall on both screen sizes and clear at exactly 30 ECTS',async()=>{
+ await test('Both layouts show the third-semester cumulative shortfall at the semester, clearing at exactly 30 ECTS without saving',async()=>{
   const initial=C.validatePlan({...draft([{code:'IN2064',status:'planned',semester:1},{code:'OWNG',name:'自录专业选修',custom:true,group:'G',ects:21.5,status:'planned',semester:3}]),timeline:{count:3,start:'winter'}},courses);
   for(const desktop of [true,false]){
-   const h=await harness(initial,desktop),alert=h.html().match(/<section class="plan-progress-alerts"[\s\S]*?<\/section>/)[0];
-   assert(alert.includes('第 3 学期末'));assert(alert.includes('累计已规划 29.5 / 至少 30 ECTS，还差 0.5 ECTS'));
-   assert(!alert.includes('data-progress-semester="2"'));assert(!alert.includes('data-progress-semester="4"'));assert(!alert.includes('<details'));
-   assert(h.html().indexOf(alert)<h.html().indexOf('id="semester-board-title"'));assert(alert.includes('data-study-section="deadlines"'));
+   const h=await harness(initial,desktop);
+   assert(h.html().includes('累计 29.5 / 30 ECTS · 还差 0.5'));assert(h.html().includes('1 项学期进度待完善'));
+   assert(h.html().includes('data-progress-semester="3"'));assert(!h.html().includes('data-progress-semester="2"'));assert(!h.html().includes('data-progress-semester="4"'));
+   assert(!h.html().includes('<progress'));assert(!h.html().includes('plan-progress-alerts'));
+   await h.click('data-open-progress-check','');assert(h.creditDialog.open);assert(h.milestones.open);assert(h.creditDialog.scrollTop>0);
+   assert(h.creditHTML().includes('计划还差 0.5 ECTS'));assert(h.creditHTML().includes('data-study-section="deadlines"'));
    const fixed=copy(initial);fixed.items[1].ects=22;await h.external(fixed);
-   assert(!h.html().includes('class="plan-progress-alerts"'));assert.equal(h.writes(),0);assert.deepEqual(h.plan(),fixed);
+   assert(!h.html().includes('data-progress-semester='));assert(h.html().includes('当前规划范围内的学期进度已覆盖'));assert.equal(h.writes(),0);assert.deepEqual(h.plan(),fixed);
   }
  });
- await test('Visible reminders include the second-semester foundation deadline and never count later courses toward an earlier checkpoint',async()=>{
+ await test('Semester hints include the foundation deadline and never count later courses toward an earlier checkpoint',async()=>{
   const initial=draft([{code:'IN2064',status:'planned',semester:4},{code:'OWNG',name:'之后的选修',custom:true,group:'G',ects:30,status:'planned',semester:4}]);initial.preferences.deadlineException=true;
   assert(C.calculate(initial,courses).allocated>30);
-  const h=await harness(initial),alert=h.html().match(/<section class="plan-progress-alerts"[\s\S]*?<\/section>/)[0];
-  assert(alert.includes('data-progress-semester="2"'));assert(alert.includes('A/B/C 基础必修模块（至少通过 1 门）'));
-  assert(alert.includes('第 3 学期末'));assert(alert.includes('累计已规划 0 / 至少 30 ECTS，还差 30 ECTS'));
-  assert(!alert.includes('data-progress-semester="5"'));assert.equal(h.writes(),0);assert(h.plan().preferences.deadlineException);
+  const h=await harness(initial);
+  assert(h.html().includes('data-progress-semester="2"'));assert(h.html().includes('需安排至少 1 门 A/B/C 必修'));
+  assert(h.html().includes('data-progress-semester="3"'));assert(h.html().includes('累计 0 / 30 ECTS · 还差 30'));
+  assert(!h.html().includes('data-progress-semester="5"'));assert.equal(h.writes(),0);assert(h.plan().preferences.deadlineException);
   const empty=C.validatePlan({...draft([]),timeline:{count:3,start:'winter'}},courses),narrow=await harness(empty,false);
-  assert(narrow.html().includes('累计已规划 0 / 至少 30 ECTS，还差 30 ECTS'));
+  assert(narrow.html().includes('2 项学期进度待完善'));assert(narrow.html().includes('累计 0 / 30 ECTS · 还差 30'));
  });
- await test('Historical reminders request missing passed-semester records instead of declaring a definite credit shortfall',async()=>{
+ await test('Missing passed-semester records request verification instead of declaring a definite shortfall',async()=>{
   const initial=C.validatePlan({...draft([{code:'IN2064',status:'passed',semester:0},{code:'OWNG',name:'已修认定',custom:true,group:'G',ects:22,status:'passed',semester:2}]),preferences:{startSemester:4}},courses),h=await harness(initial);
-  const third=h.html().match(/<li data-progress-semester="3">[\s\S]*?<\/li>/)[0];
-  assert(third.includes('累计通过至少 30 ECTS'));assert(third.includes('通过学期待补充'));assert(!third.includes('还差'));assert.equal(h.writes(),0);
+  const third=h.html().match(/<button[^>]*data-progress-semester="3"[^>]*>[\s\S]*?<\/button>/)[0];
+  assert(third.includes('通过学期待核对'));assert(!third.includes('还差'));assert.equal(h.writes(),0);
   const recorded=copy(initial);recorded.items[0].semester=1;await h.external(recorded);
   assert(!h.html().includes('data-progress-semester="2"'));assert(!h.html().includes('data-progress-semester="3"'));
  });
- await test('Reminders cover each checkpoint in the selected planning horizon and qualify unconfirmed rules',async()=>{
+ await test('Checkpoints follow the planning horizon and unconfirmed rules remain qualified in the details',async()=>{
   const initial=C.validatePlan({...draft([]),cohort:'unknown',conditionalConfirmed:false,timeline:{count:6,start:'winter'}},courses),h=await harness(initial);
-  const alert=h.html().match(/<section class="plan-progress-alerts"[\s\S]*?<\/section>/)[0];
-  for(const [semester,required] of [[3,30],[4,60],[5,90],[6,120]])assert(alert.includes(`累计已规划 0 / 至少 ${required} ECTS，还差 ${required} ECTS`),semester);
-  assert(alert.includes('入学批次尚未确认或不在当前模型内'));assert.equal(h.writes(),0);
-  const short=await harness(C.validatePlan({...draft([]),timeline:{count:1,start:'winter'}},courses));assert(!short.html().includes('class="plan-progress-alerts"'));
+  assert(h.html().includes('5 项学期进度待完善'));
+  for(const [semester,required] of [[3,30],[4,60],[5,90],[6,120]])assert(h.html().includes(`累计 0 / ${required} ECTS · 还差 ${required}`),semester);
+  assert(h.creditHTML().includes('尚未选择入学批次'));assert(h.creditHTML().includes('录取补修要求尚未确认'));assert.equal(h.writes(),0);
+  const short=await harness(C.validatePlan({...draft([]),timeline:{count:1,start:'winter'}},courses));assert(!short.html().includes('data-open-progress-check'));assert(!short.creditHTML().includes('data-check-semester='));
  });
  await test('Semester overview counts include passed history and update after status changes and undo',async()=>{
   const codes=['IN2067','IN2064','IN2406','ED150039','IN2346','IN2106','MW0085','MW1808','IN2107','MW1420','CIT433037','IN2357','WI001056_1','IN2320'];
@@ -76,21 +78,21 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   await h.external({...initial,items:[]});assert.deepEqual(counts(h.html()),{pending:0,passed:0});
   const narrow=await harness(initial,false);assert(!narrow.html().includes('plan-course-status'));
  });
- await test('Desktop credit check opens without changing a plan, shows category and domain gaps, and refreshes while open',async()=>{
+ await test('Credit check opens without changing a plan, shows category and domain gaps, and refreshes while open',async()=>{
   const initial=draft([{code:'IN2064',status:'passed',semester:1},{code:'OWNG',name:'已认可计算选修',ects:8.5,group:'G',custom:true,status:'planned',semester:2},{code:'OWNJ',name:'已认可跨学科',ects:7.5,group:'J',custom:true,status:'planned',semester:2}]),h=await harness(initial);
   assert(h.html().includes('data-open-credit-check'));assert(!h.html().includes('id="summary-gaps"'));
   assert(h.creditHTML().includes('22.5<small> / 120 ECTS'));assert(h.creditHTML().includes('97.5<small> ECTS'));assert(h.creditHTML().includes('超出 1.5 ECTS 未计入总进度'));
   for(const group of ['core','professional','F','H','I'])assert(h.creditHTML().includes('/courses/?group='+group));
   assert(!h.creditHTML().includes('href="/courses/?group=G"'));assert(!h.creditHTML().includes('href="/courses/?group=J"'));
   assert(h.creditHTML().includes('data-study-section="deadlines"'));assert(h.creditHTML().includes('已包含在上方专业选修总额中'));assert(h.creditHTML().includes('计划可覆盖'));assert(h.creditHTML().includes('计划还差 7.5 ECTS'));
-  await h.click('data-open-credit-check','');assert(h.creditDialog.open);assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
+  h.creditDialog.scrollTop=300;await h.click('data-open-credit-check','');assert(h.creditDialog.open);assert.equal(h.creditDialog.scrollTop,0);assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
   await h.external({...initial,items:[]});assert(h.creditDialog.open);assert(h.creditHTML().includes('120<small> ECTS'));assert(h.creditHTML().includes('/courses/?group=J'));assert.equal(h.writes(),0);
-  const narrow=await harness(initial,false);assert(narrow.html().includes('id="summary-gaps"'));assert(narrow.html().includes('data-study-section="deadlines"'));assert(!narrow.html().includes('data-open-credit-check'));assert.equal(narrow.creditHTML(),'');
+  const narrow=await harness(initial,false);assert(!narrow.html().includes('id="summary-gaps"'));assert(narrow.html().includes('data-open-credit-check'));assert(narrow.creditHTML().includes('data-study-section="deadlines"'));await narrow.click('data-open-credit-check','');assert(narrow.creditDialog.open);assert.equal(narrow.writes(),0);assert.deepEqual(narrow.plan(),initial);
  });
  await test('Credit check separates historical records from future estimates and explains unconfirmed remediation',async()=>{
   const initial=C.validatePlan({...draft([{code:'IN2064',status:'passed',semester:0},{code:'ED140014',status:'planned',semester:4}]),cohort:'unknown',conditionalConfirmed:false,preferences:{startSemester:4}},courses),h=await harness(initial);
   assert(h.creditHTML().includes('尚未选择入学批次'));assert(h.creditHTML().includes('录取补修要求尚未确认'));assert(h.creditHTML().includes('ED140014'));assert(h.creditHTML().includes('data-open-settings'));
-  const historical=h.creditHTML().match(/<tr><th scope="row">第 2 学期末[\s\S]*?<\/tr>/)[0];assert(historical.includes('历史记录'));assert(historical.includes('通过学期待核对'));assert(!historical.includes('计划可覆盖'));
+  const historical=h.creditHTML().match(/<tr data-check-semester="2"><th scope="row">第 2 学期末[\s\S]*?<\/tr>/)[0];assert(historical.includes('历史记录'));assert(historical.includes('通过学期待核对'));assert(!historical.includes('计划可覆盖'));
   const confirmed=await harness(C.validatePlan({...initial,cohort:'2026/27冬季',conditional:true,conditionalConfirmed:true},courses));
   assert(confirmed.creditHTML().includes('补修 K'));assert(confirmed.creditHTML().includes('credit-category-remediation'));assert(!confirmed.creditHTML().includes('data-open-settings'));assert.deepEqual(confirmed.plan().items,initial.items);assert.equal(confirmed.writes(),0);
  });
@@ -103,24 +105,24 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   assert(card(h.html(),'IN2064').includes('✓ 已通过'));assert(card(h.html(),'IN2060').includes('原有跨学科认定'));assert.deepEqual(h.plan(),initial);assert.equal(h.writes(),0);
   const narrow=await harness(initial,false);assert(!narrow.html().includes('data-credit-category='));assert.equal(narrow.writes(),0);
  });
- await test('Desktop credit segments use target weights and preserve fractional planned and passed credits',async()=>{
-  const initial=draft([{code:'IN2064',status:'passed',semester:1},{code:'OWN1',name:'示例认定',ects:7.5,group:'G',custom:true,status:'planned',semester:2}]),h=await harness(initial);
-  const segments=[...h.html().matchAll(/data-credit-share="([\d.]+)" max="([\d.]+)" value="([\d.]+)"/g)].map(m=>m.slice(1).map(Number));
-  assert.deepEqual(segments,[[43,43,8],[41,41,7.5],[6,6,0],[30,30,0]]);
-  assert.deepEqual([...h.html().matchAll(/<progress[^>]*data-credit-category="([^"]+)"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
-  assert.deepEqual([...h.html().matchAll(/class="credit-segment[^>]*data-credit-category="([^"]+)" tabindex="0"/g)].map(m=>m[1]),['core','professional','interdisciplinary','thesis']);
-  assert.equal(segments.reduce((n,x)=>n+x[0],0),120);assert(h.html().includes('credit-category-thesis'));
-  assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
+ await test('Numeric credit overview preserves fractional credits and counts passed credits once on both layouts',async()=>{
+  const initial=draft([{code:'IN2064',status:'passed',semester:1},{code:'OWN1',name:'示例认定',ects:7.5,group:'G',custom:true,status:'planned',semester:2}]);
+  for(const desktop of [true,false]){
+   const h=await harness(initial,desktop),html=h.html();
+   for(const [label,value,target] of [['必修',8,43],['专业选修',7.5,41],['跨学科',0,6],['论文',0,30]])assert(html.includes(`<dt>${label}</dt><dd><b>${value}</b><span> / ${target}</span></dd>`));
+   assert(html.includes('已通过 8 · 还需规划 104.5'));assert(html.includes('<b>15.5</b><small>/ 120 ECTS'));
+   assert(!html.includes('<progress'));assert(!html.includes('credit-distribution'));assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
+  }
  });
- await test('Credit distribution follows the active remediation rule and caps overfilled category progress',async()=>{
-  const initial=C.validatePlan({...draft([]),conditional:true,conditionalConfirmed:true,items:[{code:'OWN1',name:'原有认定',ects:30,group:'G',custom:true,status:'passed',semester:1},{code:'OWN2',name:'另一项认定',ects:30,group:'H',custom:true,status:'planned',semester:2}]},courses),h=await harness(initial);
-  const segments=[...h.html().matchAll(/data-credit-share="([\d.]+)" max="([\d.]+)" value="([\d.]+)"/g)].map(m=>m.slice(1).map(Number));
-  assert.deepEqual(segments,[[43,43,0],[36,36,36],[6,6,0],[30,30,0],[5,5,0]]);assert.equal(segments.reduce((n,x)=>n+x[0],0),120);
-  assert.equal([...h.html().matchAll(/data-credit-category="remediation"/g)].length,2);
-  assert(h.html().includes('credit-category-remediation'));assert.deepEqual(h.plan(),initial);assert.equal(h.writes(),0);
+ await test('Numeric categories follow the remediation rule and cap overfilled credits without changing records',async()=>{
+  const initial=C.validatePlan({...draft([]),conditional:true,conditionalConfirmed:true,items:[{code:'OWN1',name:'原有认定',ects:30,group:'G',custom:true,status:'passed',semester:1},{code:'OWN2',name:'另一项认定',ects:30,group:'H',custom:true,status:'planned',semester:2}]},courses);
+  for(const desktop of [true,false]){
+   const h=await harness(initial,desktop);
+   assert(h.html().includes('<dt>专业选修</dt><dd><b>36</b><span> / 36</span>'));assert(h.html().includes('<dt>补修</dt><dd><b>0</b><span> / 5</span>'));
+   assert(h.creditHTML().includes('超出 24 ECTS 未计入总进度'));assert.deepEqual(h.plan(),initial);assert.equal(h.writes(),0);
+  }
   const legacy=await harness(C.validatePlan({...initial,cohort:'2024夏季'},courses));
-  assert(legacy.html().includes('data-credit-share="41"'));assert(!legacy.html().includes('credit-category-remediation'));
-  const narrow=await harness(initial,false);assert(!narrow.html().includes('credit-distribution'));assert(narrow.html().includes('class="progress-row"'));
+  assert(legacy.html().includes('<dt>专业选修</dt><dd><b>41</b><span> / 41</span>'));assert(!legacy.html().includes('credit-category-remediation'));
  });
  await test('Marking passed keeps the course in the same semester and counts its credit once, excluding future workload',async()=>{
   const initial=draft([{code:'IN2064',status:'planned',semester:1,locked:true},{code:'IN2228',status:'planned',semester:1}]),h=await harness(initial),total=C.calculate(initial,courses).allocated;
