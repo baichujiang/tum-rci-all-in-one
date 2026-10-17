@@ -10,6 +10,19 @@ function assessmentMarkup(text){
  const parts=String(text).match(/[^；。]+[；。]?/g)||[];
  return text.length>50&&parts.length>1?`<ul class="course-assessment-list">${parts.map(part=>`<li>${e(part)}</li>`).join('')}</ul>`:e(text);
 }
+function listMarkup(items,cls='course-topic-list'){
+ return `<ul class="${cls}">${items.map(item=>`<li>${e(item)}</li>`).join('')}</ul>`;
+}
+function learningRows(summary,missing){
+ const assessment=(summary.assessment_cn||'').match(/[^；。]+[；。]?/g)||[];
+ const tasks=(summary.assignments_cn||[]).filter(item=>!assessment.some(part=>part.trim()===item.trim())),combined=tasks.join('');
+ const teaching=summary.teaching_cn;
+ return [
+  teaching&&!combined.includes(teaching)?`<div><dt>怎么上课</dt><dd>${e(teaching)}</dd></div>`:'',
+  tasks.length?`<div class="course-activities"><dt>课堂练习、作业与项目</dt><dd>${listMarkup(tasks,'course-activity-list')}</dd></div>`:'',
+  `<div class="course-assessment"><dt>怎么考</dt><dd>${summary.assessment_cn?assessmentMarkup(summary.assessment_cn):e(missing('assessment'))}</dd></div>`
+ ].join('');
+}
 function points(c){
  const v=c.verification,items=[];
  if(v?.current_academic_year_selection_verified===false)items.push('目前只能找到旧版课程说明，最新的开课季节、授课语言和先修要求还需确认。');
@@ -53,44 +66,56 @@ module.exports=function courseDetailView({course:c,translation='',summary,catalo
  const pending=unknown||c.current_catalog_status==='needs_review'||v?.eligibility?.requires_confirmation||v?.follow_up_review?.outcome==='unresolved';
  const alternatives=relatedCourses(c,catalog);
  const workload=summary?.workload_hours;
+ const weeklyHours=Number.isFinite(workload?.total)&&workload.total>0&&summary.workload_status!=='conflict'&&!groups.includes('F')?Math.round(workload.total/15*10)/10:null;
  const missing=key=>summary?.field_status?.[key]==='unclear'?'手册还没写清，请向教学团队确认。':summary?.source_type==='module_handbook'?'手册未注明。':'暂未找到可靠说明。';
  const breakdown=workload?['contact','self_study'].filter(k=>Number.isFinite(workload[k])).map(k=>(k==='contact'?'上课':'自学')+' '+workload[k]+' 小时').join(' · '):'';
  const workloadText=summary?.workload_status==='conflict'?'手册里的总时长和分项对不上，需向教学团队确认。':workload?`${Number.isFinite(workload.total)?`整个学期约 ${e(workload.total)} 小时`:''}${breakdown?`<span class="course-workload-breakdown">${e(breakdown)}</span>`:''}`:e(missing('workload'));
  const learningKnown=summary?.teaching_cn||summary?.assessment_cn;
- const courseRows=learningKnown?`<div><dt>怎么上课</dt><dd>${e(summary.teaching_cn||missing('teaching'))}</dd></div><div class="course-assessment"><dt>怎么考</dt><dd>${assessmentMarkup(summary.assessment_cn||missing('assessment'))}</dd></div>`:'';
+ const courseRows=learningKnown?learningRows(summary,missing):'';
+ const overview=summary?.overview_cn||'',firstClause=overview.split(/[，；。]/)[0];
+ const intro=firstClause.length>=10&&firstClause.length<overview.length-8?firstClause+'。':'';
  const period=summary?.source_period?.replace(/^(\d{4})([WS])$/,(_s,year,season)=>year+'年'+(season==='W'?'冬季':'夏季'));
  const caption=summary?.source_type==='official_regulation'?'上课和考试信息来自法规附件，当前安排需向教学团队确认。':'实际教学和考试安排以当期课程页为准。';
  const autoNote=c.automatic_recommendation_eligible===false&&!unknown?'自动规划暂不选择这门课；确认选课要求后，可以手动加入。':'';
- const conditionBody=[prep?`<p class="course-preparation">${e(prep)}</p>`:'',notices.length?`<ul class="course-condition-list">${notices.map(s=>`<li>${e(s)}</li>`).join('')}</ul>`:''].join('');
+ const conditionBody=[prep?`<p class="course-preparation">${e(prep)}</p>`:'',notices.length?`<div class="course-selection-notes"><h3>选课前确认</h3><ul class="course-condition-list">${notices.map(s=>`<li>${e(s)}</li>`).join('')}</ul></div>`:''].join('');
  const sourceLinks=[c.offering_url&&c.offering_url!==official?link(c.offering_url,'本学期开课'):'',link(official,book?'官方课程介绍':'查看官方依据')].filter(Boolean).join('');
- const requirements=conditionBody?`<section class="course-detail-section course-requirements" id="course-requirements"><h2>选课要求</h2>${conditionBody}${['IN2106','IN2107'].includes(code)?`<p>${internal('/guides/matching/','如何申请课题和名额 →','text-link')}</p>`:''}</section>`:'';
+ const requirements=conditionBody?`<section class="course-detail-section course-detail-panel course-requirements" id="course-requirements"><h2>选课要求</h2>${conditionBody}${['IN2106','IN2107'].includes(code)?`<p>${internal('/guides/matching/','如何申请课题和名额 →','text-link')}</p>`:''}</section>`:'';
  const counting=c.j_constraints?`<details class="course-counting"><summary>这门课的学分怎么算</summary><ul><li>计入 J 类，至少修满 6 ECTS；多修的 J 类学分不能抵 G、H、I 类。</li><li>每门课只计一次。本科已经计入学位的限选或选修课，不能再计入硕士。</li>${c.j_constraints.is_language_course?'<li>语言课合计最多计入 6 ECTS。同一种语言 A1 至 B2 的重叠级别不能重复计入；C1 及以上的同级课程还需区分内容。</li>':''}</ul>${internal(relatedURL,'查看完整学分要求 →','text-link')}</details>`:'';
- return `<article class="course-detail" id="course-detail" data-course-code="${e(code)}">
- <div class="course-detail-back">${internal('/courses/','<span aria-hidden="true">←</span> 返回课程列表','text-link').replace('<a ', '<a data-detail-back ')}<button type="button" class="quiet course-share" data-share>复制链接</button></div>
- <div class="course-detail-layout">
- <header class="course-detail-heading"><div class="course-detail-tags"><span class="course-detail-code">${e(code)}</span>${groups.map(g=>`<span>${e(g+' · '+labels[g])}</span>`).join('')}${pending?(conditionBody?'<a class="course-detail-review" href="#course-requirements">选课条件需确认 ↓</a>':'<span class="course-detail-review">本学期要求待确认</span>'):''}</div><h1>${e(title)}</h1>${translation?`<p class="course-detail-translation">${e(translation)}</p>`:''}
- ${historical?`<p class="course-detail-history">以下按${e(period)}的${summary.source_type==='module_handbook'?'旧版手册':'官方课程页'}整理，本学期安排需确认。</p>`:''}
- ${summary?`<div class="course-detail-overview"><h2 class="sr-only">这门课学什么</h2><p${!summary.overview_cn?' class="course-content-missing"':''}>${e(summary.overview_cn||(summary.source_type==='module_handbook'?'官方手册暂未提供内容介绍。':'暂未找到官方课程内容介绍。'))}</p></div>`:''}
- <dl class="course-detail-facts"><div><dt>学分</dt><dd>${e(c.ects)}${unknown?'':' <small>ECTS</small>'}</dd></div><div><dt>通常开课</dt><dd>${e(termLabel(c.current_term||c.term_legal_annex))}${v?.fields?.term==='pending'||v?.current_academic_year_selection_verified===false?'<small class="course-fact-pending">待确认</small>':''}</dd></div><div><dt>授课语言</dt><dd>${e(languageLabel(c.current_language||c.language_legal_annex))}${v?.fields?.language==='pending'||v?.current_academic_year_selection_verified===false?'<small class="course-fact-pending">待确认</small>':''}</dd></div></dl>
- </header>
- <aside class="course-detail-side" aria-label="安排课程与官方入口">
+ const hasWorkload=workload||summary?.workload_status==='conflict';
+ const term=termLabel(c.current_term||c.term_legal_annex),language=languageLabel(c.current_language||c.language_legal_annex);
+ const termPending=term!=='待确认'&&(v?.fields?.term==='pending'||v?.current_academic_year_selection_verified===false);
+ const languagePending=language!=='待确认'&&(v?.fields?.language==='pending'||v?.current_academic_year_selection_verified===false);
+ const detailNav=[[summary&&'course-syllabus','课程内容'],[summary&&'course-learning','上课考核'],[conditionBody&&'course-requirements','选课要求'],[hasWorkload&&'course-workload','学习投入']].filter(([id])=>id);
+ const planning=`<aside class="course-detail-side" aria-label="安排课程与官方入口">
  <section class="course-detail-plan" aria-labelledby="course-plan-title"><h2 id="course-plan-title">加入我的计划</h2>
  <div class="course-detail-actions"><label class="course-detail-target" for="detail-semester">安排到<select id="detail-semester" data-detail-semester disabled><option value="0">先选课，稍后分配</option></select></label><button type="button" class="button" data-course-detail-add disabled>${unknown?'学分待核实':'加入计划'}</button></div>
  <p class="course-detail-status" id="course-detail-status" role="status" aria-live="polite">${unknown?'学分确认前，暂不能加入计划。':'加入计划只做学期安排，不会向学校报名。'}</p><button type="button" class="quiet course-detail-undo" data-detail-undo hidden>撤销这次调整</button>${autoNote?`<p class="course-auto-note">${e(autoNote)} <a href="${conditionBody?'#course-requirements':'#course-official-links'}" class="text-link">${conditionBody?'查看要求':'查看官方介绍'} ↓</a></p>`:''}<noscript><p>加入计划需要启用JavaScript；课程内容和官方链接仍可查看。</p></noscript>
  </section>
  <nav class="course-official-links" id="course-official-links" aria-label="官方课程入口">${sourceLinks}</nav>
  ${internal('/planner/','查看我的计划 →','text-link course-plan-link')}
- </aside>
+ </aside>`;
+ return `<article class="course-detail" id="course-detail" data-course-code="${e(code)}">
+ <div class="course-detail-back">${internal('/courses/','<span aria-hidden="true">←</span> 返回课程列表','text-link').replace('<a ', '<a data-detail-back ')}<button type="button" class="quiet course-share" data-share>复制链接</button></div>
+ <div class="course-detail-layout">
+ <header class="course-detail-heading"><div class="course-detail-tags"><span class="course-detail-code">${e(code)}</span>${groups.map(g=>`<span>${e(g+' · '+labels[g])}</span>`).join('')}${pending?(conditionBody?'<a class="course-detail-review" href="#course-requirements">选课条件需确认 ↓</a>':'<span class="course-detail-review">本学期要求待确认</span>'):''}</div><h1>${e(title)}</h1>${translation?`<p class="course-detail-translation">${e(translation)}</p>`:''}
+ ${historical?`<p class="course-detail-history">以下按${e(period)}的${summary.source_type==='module_handbook'?'旧版手册':'官方课程页'}整理，本学期安排需确认。</p>`:''}
+ ${intro?`<div class="course-detail-overview"><p>${e(intro)}</p></div>`:''}
+ <dl class="course-detail-facts"><div><dt>学分</dt><dd>${e(c.ects)}${unknown?'':' <small>ECTS</small>'}</dd></div><div><dt>通常开课</dt><dd>${e(term)}${termPending?'<small class="course-fact-pending">待确认</small>':''}</dd></div><div><dt>授课语言</dt><dd>${e(language)}${languagePending?'<small class="course-fact-pending">待确认</small>':''}</dd></div>${Number.isFinite(workload?.total)?`<div><dt>预计投入</dt><dd>${e(workload.total)} <small>小时 / 学期</small>${weeklyHours!==null?`<small class="course-fact-weekly">每周约 ${e(weeklyHours)} 小时（按15周）</small>`:''}</dd></div>`:''}</dl>
+ <div class="course-detail-quick-links">${link(official,book?'官方课程介绍':'查看官方依据')}<a class="text-link" href="#course-plan-title">安排课程 <span aria-hidden="true">↓</span></a></div>
+ </header>
  <div class="course-detail-content">
-
- ${summary?.topics_cn?.length?`<section class="course-detail-section"><h2>主要内容</h2><ul class="course-topic-list">${summary.topics_cn.map(topic=>`<li>${e(topic)}</li>`).join('')}</ul></section>`:''}
- ${summary?`<section class="course-detail-section course-learning"><h2>上课与考核</h2>${learningKnown?`<dl class="course-study-details">${courseRows}</dl>`:`<p class="course-content-missing">${summary.field_status?.assessment==='unclear'?'上课方式和考试安排还需确认。':summary.source_type==='module_handbook'?'手册未提供上课方式和考试说明。':'暂未找到上课方式和考试说明。'}</p>`}<p class="course-detail-caption">${e(caption)}</p></section>`:''}
+ ${detailNav.length?`<nav class="course-detail-nav" aria-label="课程详情目录">${detailNav.map(([id,label])=>`<a href="#${id}">${label}<span aria-hidden="true">↓</span></a>`).join('')}</nav>`:''}
+ ${summary?'<div class="course-reading-card">':''}
+ ${summary?`<section class="course-detail-section course-syllabus" id="course-syllabus"><h2>课程大纲</h2>${summary.topics_cn?.length?listMarkup(summary.topics_cn):`<p class="course-content-missing">${e(summary.source_type==='module_handbook'?'官方手册暂未提供内容介绍。':'暂未找到官方课程内容介绍。')}</p>`}</section>`:''}
+ ${summary?.outcomes_cn?.length?`<section class="course-detail-section course-outcomes" id="course-outcomes"><h2>学完能做什么</h2>${listMarkup(summary.outcomes_cn)}</section>`:summary?`<p class="course-detail-missing">${summary.source_type==='module_handbook'?'学习目标：手册未单独说明。':'暂未找到可靠的学习目标说明。'}</p>`:''}
+ ${summary?'</div>':''}
+ ${summary?`<section class="course-detail-section course-detail-panel course-learning" id="course-learning"><h2>上课与考核</h2>${learningKnown?`<dl class="course-study-details">${courseRows}</dl>`:`<p class="course-content-missing">${summary.field_status?.assessment==='unclear'?'上课方式和考试安排还需确认。':summary.source_type==='module_handbook'?'手册未提供上课方式和考试说明。':'暂未找到上课方式和考试说明。'}</p>`}<p class="course-detail-caption">${e(caption)}</p></section>`:''}
  ${requirements}
- ${workload||summary?.workload_status==='conflict'?`<section class="course-detail-section course-workload"><h2>预计投入</h2><p>${workloadText}</p>${workload?'<p class="course-detail-caption">这是整个学期的预计学习时间，包含上课和课外学习。</p>':''}</section>`:''}
- ${alternatives.length?`<section class="course-detail-section course-alternatives"><h2>选课时一起比较</h2><p class="course-detail-caption">这些课程和本课有选课或计分限制，具体要求见上方。</p><ul>${alternatives.map(other=>`<li><a data-detail-related href="${e(base+'/courses/'+other.module_code+'/')}"><span><span class="course-related-code">${e(other.module_code)}</span><strong>${e(C.courseName(other))}</strong></span><span class="course-related-credits">${e(other.ects)}${Number.isFinite(Number(other.ects))?' ECTS':''} <span aria-hidden="true">→</span></span></a></li>`).join('')}</ul></section>`:''}
+ ${hasWorkload?`<section class="course-detail-section course-detail-panel course-workload" id="course-workload"><h2>预计投入</h2><div class="course-workload-estimates"><p class="course-workload-total">${workloadText}</p>${weeklyHours!==null?`<div class="course-weekly-reference"><span>平均每周约</span><p><strong>${e(weeklyHours)}</strong> 小时</p></div>`:''}</div>${workload?`<p class="course-detail-caption">${weeklyHours!==null?'每周参考按15周均摊，包含上课和课外学习；实际投入可能集中在项目或考试前。':groups.includes('F')?'这是论文的预计总投入，包含课外学习；每周投入取决于实际写作周期。':'这是整个学期的预计学习时间，包含上课和课外学习。'}</p>`:''}</section>`:''}
+ ${alternatives.length?`<section class="course-detail-section course-detail-panel course-alternatives"><h2>选课时一起比较</h2><p class="course-detail-caption">这些课程和本课有选课或计分限制，具体要求见上方。</p><ul>${alternatives.map(other=>`<li><a data-detail-related href="${e(base+'/courses/'+other.module_code+'/')}"><span><span class="course-related-code">${e(other.module_code)}</span><strong>${e(C.courseName(other))}</strong></span><span class="course-related-credits">${e(other.ects)}${Number.isFinite(Number(other.ects))?' ECTS':''} <span aria-hidden="true">→</span></span></a></li>`).join('')}</ul></section>`:''}
  ${counting}
  <div class="course-detail-footer">${!counting?internal(relatedURL,'查看选课与学分说明 →','text-link'):''}</div>
- </div></div></article>`;
+ </div>${planning}</div></article>`;
 };
 module.exports.points=points;
 module.exports.termLabel=termLabel;
