@@ -14,18 +14,17 @@ function fields(value,prefix,keys=['minECTS','maxECTS','minExams','maxExams'],fo
 function semesterLabel(number){const term=T.term(p,number);return term.year===null?term.label:`第 ${number} 学期 · ${term.label}`;}
 function requiredSettings(plan){return !C.cohorts.includes(plan.cohort)?'先选择入学时间，并确认录取通知里的补修要求。':!plan.conditionalConfirmed?'先确认录取通知里的补修要求。':(plan.cohort.endsWith('夏季')?'summer':'winter')!==plan.timeline.start?'第一学期与入学时间不一致，请调整。':'';}
 function defaultConditions(plan){return C.validatePlan({...plan,workload:undefined,preferences:{...plan.preferences,languages:undefined,startSemester:Math.min(plan.timeline.count,Math.max(1,...plan.items.filter(x=>x.status==='passed').map(x=>x.semester))),allowUnconfirmed:undefined,deadlineException:undefined}},db.courses);}
-async function generateDefaults(){
+async function applyDefaultConditions(){
  if(worker||preparing)return;
  preparing=true;
  try{
   await U.updatePlan(defaultConditions);
   dirtyForms.delete('planning-preferences');dirtyForms.delete('semester-workload');
-  await render();settings.close();
+  await render();U.toast('已恢复默认规划条件，可继续调整。');
  }finally{preparing=false;}
- await generate();
 }
 function settingsHTML(){workloadSemester=Math.min(workloadSemester,p.timeline.count);const defaults=defaultConditions(p);return `
- <section class="settings-default-shortcut" aria-labelledby="settings-default-title"><div><h3 id="settings-default-title">先看看默认推荐</h3><p>每学期最多 ${defaults.workload.maxECTS} ECTS · ${defaults.workload.maxExams} 次考试（估算）· 英语 / 德语</p><small>从第 ${defaults.preferences.startSemester} 学期开始，恢复默认高级要求并清除单学期限制；保留学业信息、课程与想选／排除记录。</small></div><button type="button" class="button secondary" data-generate-defaults aria-haspopup="dialog" aria-controls="auto-plan-dialog">使用默认规划条件推荐 <span aria-hidden="true">→</span></button></section>
+ <section class="settings-default-shortcut" aria-labelledby="settings-default-title"><div><h3 id="settings-default-title">恢复默认规划条件</h3><p>每学期最多 ${defaults.workload.maxECTS} ECTS · ${defaults.workload.maxExams} 次考试（估算）· 英语 / 德语</p><small>从第 ${defaults.preferences.startSemester} 学期开始，清除单学期限制；保留学业信息、课程与想选／排除记录。应用后可在本页继续调整。</small></div><button id="plan-use-default-conditions" type="button" class="button secondary" data-use-default-conditions>使用默认规划条件</button></section>
  <section id="plan-options" class="plan-basic-settings plan-settings-card" aria-labelledby="plan-basics-title">
   <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">01</span><div><h3 id="plan-basics-title">学业信息</h3></div><span class="settings-save-badge">修改后自动保存</span></div>
   <div class="plan-settings-grid">
@@ -160,7 +159,7 @@ box.addEventListener('click',async event=>{
   }
   if(b.hasAttribute('data-forget'))await U.updatePlan(p=>b.dataset.kind==='passed'?{...p,items:p.items.map(x=>x.code===b.dataset.forget?{...x,status:'planned',locked:false,semester:desktopPlanning?.matches&&x.semester>0&&x.semester<=p.timeline.count?x.semester:desktopPlanning?.matches?1:0}:x)}:{...p,preferences:{...p.preferences,[b.dataset.kind]:p.preferences[b.dataset.kind].filter(c=>c!==b.dataset.forget)}});
   if(b.hasAttribute('data-reset-workload')){const n=box.querySelector('#semester-workload [name="semester"]').value;dirtyForms.delete('semester-workload');await U.updatePlan(p=>{const semesters={...p.workload.semesters};delete semesters[n];return {...p,workload:{...p.workload,semesters}};});}
-  if(b.hasAttribute('data-generate-defaults'))await generateDefaults();
+  if(b.hasAttribute('data-use-default-conditions'))await applyDefaultConditions();
   if(b.hasAttribute('data-generate'))await generate();
  }catch(error){U.toast(error.message);}
 });
