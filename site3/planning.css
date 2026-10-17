@@ -34,10 +34,10 @@
 .summary-total small{font-size:12px;color:var(--muted)}
 .summary-caption{font-size:11px;color:var(--muted);margin:4px 0 0}
 .credit-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin:0}
-.credit-metric{min-width:0;padding:4px 12px;border-left:1px solid var(--line);border-radius:3px}
-.credit-metric dt{font-size:12px;color:var(--muted);margin:0 0 4px}
+.credit-metric{--credit-ink:color-mix(in srgb,var(--credit-color) 78%,#172635);min-width:0;padding:6px 12px;border:1px solid var(--credit-soft);border-left:3px solid var(--credit-color);border-radius:6px;background:color-mix(in srgb,var(--credit-soft) 55%,var(--white))}
+.credit-metric dt{font-size:12px;font-weight:500;color:var(--credit-ink);margin:0 0 4px}
 .credit-metric dd{margin:0;font-size:14px;line-height:1.4;white-space:nowrap;font-variant-numeric:tabular-nums}
-.credit-metric dd b{font-size:20px;font-weight:600;color:var(--ink)}
+.credit-metric dd b{font-size:20px;font-weight:600;color:var(--credit-ink)}
 .credit-metric dd span{font-size:12px;color:var(--muted)}
 .summary-progress-check,.summary-progress-clear{width:100%;display:flex;align-items:center;gap:8px;border:0;border-top:1px solid var(--line);background:transparent;border-radius:0;margin:0;min-height:38px;padding:8px 0;font-size:12px;line-height:1.5;text-align:left}
 .summary-progress-check{color:#8b5d1d;cursor:pointer}
@@ -126,7 +126,7 @@
  .summary-overview{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
  .summary-total b{font-size:28px}.summary-caption{margin:0}
  .credit-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
- .credit-metric{display:flex;align-items:baseline;justify-content:space-between;gap:8px;border:0;padding:0}
+ .credit-metric{display:flex;align-items:baseline;justify-content:space-between;gap:6px;padding:6px 8px}
  .credit-metric dt{margin:0}.credit-metric dd b{font-size:16px}
  .plan-dialog.credit-check-dialog{width:calc(100vw - 24px);max-height:calc(100dvh - 32px)}
  .credit-check-dialog>.plan-dialog-heading{padding:14px 16px 12px}
