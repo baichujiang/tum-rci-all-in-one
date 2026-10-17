@@ -29,7 +29,18 @@ async function harness({code='IN2346',items=[],query='?semester=1',desktop=true}
   assert.equal(Object.values(summaries).filter(s=>s.source_type==='module_handbook').length,593);
   assert.equal(Object.values(summaries).filter(s=>s.overview_cn).length,549);
   for(const code of ['MA8113','IN3150','SOT56601','SOT82136'])assert(!summaries[code]);
-  for(const c of courses){const s=summaries[c.module_code],html=view({course:c,summary:s,catalog:courses}),text=html.replace(/<[^>]+>/g,'');assert(html.includes('这门课学什么'),c.module_code);assert(html.includes('上课与考核'),c.module_code);for(const key of ['teaching_cn','assessment_cn'])if(s[key])assert(text.includes(C.esc(s[key])),c.module_code+': '+key);if(s.workload_hours)assert(html.includes('预计投入'));assert(!/\bundefined\b|>null</.test(html),c.module_code);}
+  for(const c of courses){const s=summaries[c.module_code],html=view({course:c,summary:s,catalog:courses}),text=html.replace(/<[^>]+>/g,'');assert(html.includes('课程大纲'),c.module_code);assert(html.includes('上课与考核'),c.module_code);for(const key of ['teaching_cn','assessment_cn'])if(s[key])for(const clause of s[key].match(/[^；。]+[；。]?/g)||[])assert(text.includes(C.esc(clause)),c.module_code+': '+key);if(s.workload_hours)assert(html.includes('预计投入'));assert(!/\bundefined\b|>null</.test(html),c.module_code);}
+ });
+ await test('Every course has independently supported syllabus, outcomes and activity decisions, including electives and languages',()=>{
+  const counts={syllabus:0,outcomes:0,assignments:0};
+  for(const c of courses){const s=summaries[c.module_code],html=view({course:c,summary:s});for(const [key,property] of [['syllabus','topics_cn'],['outcomes','outcomes_cn'],['assignments','assignments_cn']]){assert(s.field_status[key],c.module_code+': '+key);if(s[property]){counts[key]++;for(const item of s[property])assert(html.includes(C.esc(item)),c.module_code+': '+property);}}}
+  assert.deepEqual(counts,{syllabus:549,outcomes:547,assignments:522});
+  for(const code of ['CIT433039','CLA30811','SOT86061','SZ07052'])assert(summaries[code].outcomes_cn?.length,code);
+  assert(summaries.SZ07052.outcomes_cn.join('').includes('20个'));assert(summaries.IN2392.assignments_cn.join('').includes('后两个月'));
+  assert(!summaries.SZ1235.outcomes_cn);assert(!summaries.IN9003.outcomes_cn);assert(!summaries.IN2404.outcomes_cn);
+  const robot=view({course:known.get('EI7210'),summary:summaries.EI7210});assert(robot.includes('30%'));assert(robot.includes('70%'));assert(robot.includes('15分钟'));
+  const optional=view({course:known.get('IN2346'),summary:summaries.IN2346});assert(optional.includes('自愿实践作业'));assert(!optional.includes('必须完成所有作业'));
+  const html=view({course:known.get('IN2392'),summary:summaries.IN2392});assert.equal((html.match(/90分钟笔试/g)||[]).length,1);
  });
  await test('Missing content does not hide known teaching and assessment, or create a guessed description',()=>{
   const fallback=view({course:known.get('IN9003'),summary:summaries.IN9003});
@@ -39,7 +50,7 @@ async function harness({code='IN2346',items=[],query='?semester=1',desktop=true}
  });
  await test('Historical handbook and course-page content is labelled before the description',()=>{
   for(const [code,period] of [['IN2123','2014年夏季'],['MW2352','2025年夏季'],['WI000159','2024年夏季'],['IN2404','2023年冬季']]){
-   const s=summaries[code],html=view({course:known.get(code),summary:s});assert.equal(s.source_current_year,false);assert(html.includes(period),code);assert(html.indexOf(period)<html.indexOf(s.overview_cn),code);assert(html.includes('本学期安排需确认'));
+   const s=summaries[code],html=view({course:known.get(code),summary:s});assert.equal(s.source_current_year,false);assert(html.includes(period),code);assert(html.indexOf(period)<html.indexOf('id="course-syllabus"'),code);assert(html.includes('本学期安排需确认'));
   }
  });
  await test('Partial workload stays partial, and contradictory source totals are not presented as valid estimates',()=>{
@@ -69,6 +80,13 @@ async function harness({code='IN2346',items=[],query='?semester=1',desktop=true}
   check(s=>s.IN2320.workload_hours.contact=0);
   check(s=>s.ED150018.workload_hours={total:90,contact:30,self_study:60});
   check((s,r)=>{s.IN2123.source_current_year=r.courses.IN2123.source_current_year=true;});
+  check(s=>s.SZ1235.outcomes_cn=['根据名称编写的学习目标']);
+  check(s=>{s.IN2392.field_status.outcomes='not_provided';delete s.IN2392.outcomes_cn;});
+  check((s,r)=>{s.SZ1235.field_status.assignments='available';s.SZ1235.assignments_cn=['编造项目'];r.courses.SZ1235.fields.assignments.status='present';});
+  check(s=>delete s.IN2392.field_status.assignments);
+  check((s,r)=>r.courses.IN2392.fields.outcomes.sha256='invalid');
+  check((s,r)=>r.courses.IN2392.fields.assignments.sources[0].sha256='0'.repeat(64));
+  check((s,r)=>r.courses.IN2392.fields.syllabus.sha256='0'.repeat(64));
  });
  await test('Student notices preserve eligibility requirements without repeating maintenance conclusions',()=>{
   const language=view({course:known.get('SZ1408'),summary:summaries.SZ1408});assert(language.includes('非母语要求'));assert(language.includes('学分认可'));assert(language.includes('最多计入6 ECTS'));assert(!language.includes('具体未来班次'));

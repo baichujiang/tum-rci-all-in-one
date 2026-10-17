@@ -31,6 +31,20 @@ module.exports=function validateCourseContent(summaries,evidence,courses,invento
    }else if(value!==undefined||(status==='unclear')!==(f.status==='present'))fail('Missing or unclear evidence must not produce a summary: '+key);
   }
   for(const key of ['topics_cn','selection_notes_cn'])if(s[key]&&(!Array.isArray(s[key])||!s[key].length||s[key].some(v=>typeof v!=='string'||!v.trim())))fail('Invalid '+key);
+  for(const [key,property] of [['syllabus','topics_cn'],['outcomes','outcomes_cn'],['assignments','assignments_cn']]){
+   const status=s.field_status?.[key],value=s[property],f=r.fields[key];
+   if(!['available','not_provided','unclear','pending'].includes(status)||!f)fail('Missing expanded field decision: '+key);
+   if(status==='available'){
+    if(!Array.isArray(value)||!value.length||value.some(v=>typeof v!=='string'||!v.trim()||v.startsWith('@'))||f.status!=='present')fail('Expanded content has no supporting field: '+key);
+   }else if(value!==undefined||key!=='assignments'&&(status==='unclear')!==(f.status==='present'))fail('Missing expanded evidence must not produce content: '+key);
+   if(key==='syllabus'&&JSON.stringify(f)!==JSON.stringify(r.fields.overview))fail('Syllabus must use the official content field');
+   if(key==='outcomes'&&s.source_type==='module_handbook'&&!hash(f.sha256))fail('Missing learning outcome field hash');
+   if(key==='assignments'){
+    if(!Array.isArray(f.sources)||!f.sources.length)fail('Missing activity sources');
+    if(status==='available'&&!f.sources.some(source=>source.status==='present'))fail('Activity has no available teaching or assessment source');
+    for(const source of f.sources){const original=r.fields[source.field];if(!['teaching','assessment'].includes(source.field)||!original||Object.keys(original).some(k=>source[k]!==original[k]))fail('Activity source does not match teaching or assessment evidence');}
+   }
+  }
   const values=r.workload_values,keys=Object.keys(values);
   if(keys.some(k=>!hourKeys.includes(k)||!Number.isFinite(values[k])||values[k]<0)||values.total===0)fail('Invalid source hours');
   const conflict=keys.length===3&&Math.abs(values.total-values.contact-values.self_study)>.01;
