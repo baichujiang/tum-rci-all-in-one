@@ -158,9 +158,22 @@ box.addEventListener('keydown',async event=>{
 });
 for(const panel of [settings,preferences,tools])panel.addEventListener('click',event=>{if(event.target!==panel)return;const r=panel.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)panel.close();});
 function autoHeading(title,description){
- if(!desktopPlanning?.matches)return;
  document.getElementById('auto-plan-title').textContent=title;
  document.getElementById('auto-plan-description').textContent=description;
+}
+function previewState(heading,content,loading=false){return `<section class="auto-preview-state${loading?' is-loading':''}"${loading?' role="status"':''}>${loading?'<span class="auto-preview-spinner" aria-hidden="true"></span>':''}<h3>${e(heading)}</h3>${content}</section>`;}
+function previewHTML(r){
+ const known=new Map(db.courses.map(c=>[c.module_code,c])),credits=x=>Number(x.custom?x.ects:known.get(x.code)?.ects??x.ects),schedule=C.schedule(r.plan,db.courses);
+ const future=r.plan.items.filter(x=>x.status==='planned'),removed=r.removed||[];
+ return `<section class="auto-preview-overview" aria-labelledby="auto-overview-title">
+  <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">01</span><div><h3 id="auto-overview-title">方案概览</h3></div><span class="auto-preview-draft">待采用</span></div>
+  <div class="auto-preview-metrics"><div><span>规划学分</span><strong>${r.calculation.allocated}<small> / 120 ECTS</small></strong><p>已修 ${r.passed.allocated} ECTS · 待修 ${future.reduce((sum,x)=>sum+credits(x),0)} ECTS</p></div><div><span>预计完成</span><strong>第 ${r.finish} 学期</strong><p>${e(T.term(r.plan,r.finish).label)}</p></div><div><span>课程变动</span><strong>新增 ${r.added.length} 门</strong><p class="auto-preview-change-counts"><span>调整学期 ${r.moved.length} 门</span><span>移除 ${removed.length} 门</span></p></div></div>
+  ${removed.length?`<p class="auto-preview-removals">移除已排除的选修：${removed.map(title).map(e).join('、')}。</p>`:''}
+ </section>
+ <section class="auto-preview-arrangement" aria-labelledby="auto-arrangement-title"><div class="auto-preview-section-heading"><span class="settings-section-number" aria-hidden="true">02</span><h3 id="auto-arrangement-title">学期安排</h3><span>仅展示待修课程</span></div>
+ <div class="auto-preview-semesters">${schedule.semesters.filter(n=>n.number<=r.finish).map(n=>`<section class="auto-preview-semester" aria-labelledby="auto-semester-${n.number}"><header><div><h4 id="auto-semester-${n.number}">第 ${n.number} 学期</h4><p>${e(T.term(r.plan,n.number).label)}</p></div><span class="auto-semester-credits">${n.credits} <small>ECTS</small></span></header><p class="auto-semester-load">${n.items.length} 门课程 · 估算 ${n.items.length} 次考试</p><ul>${n.items.map(x=>`<li><div class="auto-preview-course"><b>${e(x.custom?x.name:title(x.code))}</b><div><span class="auto-course-code">${e(x.code)}</span>${x.group?`<span>计入 ${e(x.group)}</span>`:''}${r.added.includes(x.code)?'<span class="auto-course-change">新增</span>':r.moved.includes(x.code)?'<span class="auto-course-change">调整学期</span>':''}${x.locked?'<span class="auto-course-locked">固定学期</span>':''}</div></div><span class="auto-course-credits">${credits(x)} <small>ECTS</small></span></li>`).join('')||'<li class="auto-preview-empty">本学期没有待修课程</li>'}</ul></section>`).join('')}</div></section>
+ ${r.warnings.length?`<details class="auto-preview-warnings" open><summary><span><b>采用前请确认</b><small>课程要求、开课与报名事项</small></span><span class="auto-warning-count">${r.warnings.length} 条提示 <span class="settings-disclosure-arrow" aria-hidden="true">⌄</span></span></summary><ul>${r.warnings.map(x=>`<li>${e(x)}</li>`).join('')}</ul></details>`:''}
+ <div class="auto-preview-footnote"><p>实际开课、名额、课表和考试报名，请到 TUMonline 确认。每门课按 1 次考试估算，论文和研讨课也计入。</p><p>会尽量早点排完，但不保证是最快的方案。采用后可立即撤销。</p></div>`;
 }
 function remediationConflict(snapshot){
  const item=snapshot.items.find(x=>x.code==='ED140014'),desired=snapshot.preferences.desired.includes('ED140014');
@@ -182,7 +195,7 @@ result.addEventListener('click',async event=>{
  }catch(error){U.toast(error.message);}
 });
 dialog.querySelector('[data-edit-auto-settings]').addEventListener('click',()=>{
- const conflict=desktopPlanning?.matches&&preview?.issue==='remediation-conflict';
+ const conflict=preview?.issue==='remediation-conflict';
  dialog.close();openSettings(true,conflict?'请按录取通知确认补修要求。只有要求修读 ED140014 时，才选“需要”。':'',!!conflict);
  if(conflict)document.getElementById('controls-conditional-status').focus();
 });
@@ -196,25 +209,24 @@ async function generate(){
  original=snapshot;expected=JSON.stringify(original);preview=null;
  autoHeading('自动方案预览','先查看安排，采用后才会更新计划。');
  dialog.querySelector('[data-edit-auto-settings]').textContent='调整条件';
- result.innerHTML='<p role="status">正在检查课程和学分，安排各学期…</p>';dialog.querySelector('[data-apply-auto]').hidden=true;dialog.showModal();
- if(typeof Worker==='undefined'){result.innerHTML='<p>这个浏览器暂时用不了自动规划。请换一个较新的浏览器，或继续手动排课。</p>';return;}
+ result.innerHTML=previewState('正在检查课程和学分','<p>正在安排各学期，请稍候。原计划尚未改动。</p>',true);dialog.querySelector('[data-apply-auto]').hidden=true;dialog.showModal();result.scrollTop=0;
+ if(typeof Worker==='undefined'){result.innerHTML=previewState('这个浏览器暂时用不了自动规划','<p>请换一个较新的浏览器，或继续手动排课。原计划没有改动。</p>');return;}
  const activeWorker=new Worker(U.base+'/assets/planning-worker.js');worker=activeWorker;
  const finish=()=>{if(run!==generation)return false;clearTimeout(searchTimer);searchTimer=null;activeWorker.terminate();worker=null;return true;};
- searchTimer=setTimeout(()=>{if(!finish())return;result.innerHTML='<p>这次没能算出方案，原计划没有改动。可以多安排几个学期，或减少固定学期的课程后再试。</p>';},25000);
- activeWorker.onerror=()=>{if(!finish())return;result.innerHTML='<p>暂时生成不了方案，请刷新后再试。原计划没有改动。</p>';};
+ searchTimer=setTimeout(()=>{if(!finish())return;result.innerHTML=previewState('这次没能算出方案','<p>原计划没有改动。可以多安排几个学期，或减少固定学期的课程后再试。</p>');},25000);
+ activeWorker.onerror=()=>{if(!finish())return;result.innerHTML=previewState('暂时生成不了方案','<p>请刷新后再试。原计划没有改动。</p>');};
  activeWorker.onmessage=event=>{if(!finish())return;const r=event.data;preview=r;
   if(!r.ok){
-   if(desktopPlanning?.matches&&r.issue==='remediation-conflict'){
+   if(r.issue==='remediation-conflict'){
     autoHeading('先核对补修要求','现有计划没有修改。');
-    result.innerHTML=remediationConflict(original);dialog.querySelector('[data-edit-auto-settings]').textContent='核对补修设置';
+    result.innerHTML=`<section class="auto-preview-state auto-preview-conflict">${remediationConflict(original)}</section>`;dialog.querySelector('[data-edit-auto-settings]').textContent='核对补修设置';
    }else{
     autoHeading('还没找到合适的方案','原计划没有改动。');
-    result.innerHTML=`${desktopPlanning?.matches?'':'<h3>还没找到合适的方案</h3>'}<ul>${r.reasons.map(x=>`<li>${e(x)}</li>`).join('')}</ul>`;
+    result.innerHTML=previewState('可以试着调整规划条件',`<ul>${r.reasons.map(x=>`<li>${e(x)}</li>`).join('')}</ul>`);
    }
    return;
   }
-  const s=C.schedule(r.plan,db.courses);
-  result.innerHTML=`<p class="auto-result-total"><b>${r.calculation.allocated} / 120 ECTS</b> · 已修 ${r.passed.allocated} · 待修 ${r.plan.items.filter(x=>x.status==='planned').reduce((sum,x)=>sum+Number(x.custom?x.ects:db.courses.find(c=>c.module_code===x.code)?.ects??x.ects),0)} ECTS</p><p>预计第 ${r.finish} 学期完成。新增 ${r.added.length} 门课${r.moved.length?'，调整 '+r.moved.length+' 门课的学期':''}${r.removed?.length?'，移除 '+r.removed.length+' 门已排除的选修课':''}。${r.removed?.length?' 移除：'+r.removed.map(title).map(e).join('、')+'。':''}</p><div class="auto-preview-semesters">${s.semesters.filter(x=>x.number<=r.finish).map(n=>`<section><h3>${e(T.term(r.plan,n.number).label)} · ${n.credits} ECTS · ${n.items.length} 次考试（估算）</h3><ul>${n.items.map(x=>`<li>${e(title(x.code))} <small>${e(x.code)}${x.group?' · 计入 '+e(x.group):''}${x.locked?' · 固定':''}</small></li>`).join('')}</ul></section>`).join('')}</div>${r.warnings.length?`<div class="notice"><h3>用这个方案前，请先确认</h3><ul>${r.warnings.map(x=>`<li>${e(x)}</li>`).join('')}</ul></div>`:''}<p class="meta">实际开课、名额、课表和考试报名，请到 TUMonline 确认。</p><p class="meta">会尽量早点排完，但不保证是最快的方案。采用后可立即撤销。</p>`;
+  result.innerHTML=previewHTML(r);result.scrollTop=0;
   dialog.querySelector('[data-apply-auto]').hidden=false;
  };
  activeWorker.postMessage({plan:original,courses:db.courses,offerings:db.offerings||{}});
