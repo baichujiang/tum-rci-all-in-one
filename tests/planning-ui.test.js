@@ -12,11 +12,12 @@ async function harness(desktop=false){
  const settings=element(),preferences=element(),tools=element(),finishSettings=element(),notice=element(),clear=element(),defaultButton=element(),defaultStatus=element();
  dialog.querySelector=selector=>({'[data-apply-auto]':apply,'[data-cancel-auto]':cancel,'[data-edit-auto-settings]':edit}[selector]);
  settings.querySelector=()=>finishSettings;box.querySelector=()=>clear;
- for(const panel of [dialog,settings,preferences,tools]){panel.showModal=()=>{panel.open=true;};panel.close=()=>{panel.open=false;panel.handlers.close?.();};}
+ for(const panel of [dialog,settings,preferences,tools]){panel.showModal=()=>{panel.open=true;};panel.close=()=>{panel.closeCount=(panel.closeCount||0)+1;panel.open=false;panel.handlers.close?.();};}
  class Worker{constructor(){this.terminated=false;workers.push(this);}postMessage(input){this.input=copy(input);}terminate(){this.terminated=true;}}
  const U={base:'',persisted:true,data:async()=>({courses,names:{},synonyms:[]}),plan:async()=>{planReads++;if(planGate)await planGate;return copy(plan);},updatePlan:async fn=>{if(updateError)throw new Error(updateError);planWrites++;const next=await fn(copy(plan));if(next)plan=C.validatePlan(next,courses);return plan;},confirmAction:async()=>true,toast(){}};
  const nodes={'planning-controls':box,'auto-plan-dialog':dialog,'auto-plan-result':result,'preference-results':choices,'plan-settings-dialog':settings,'course-preferences-dialog':preferences,'plan-tools-dialog':tools,'plan-context':element(),'plan-add-course':{dataset:{}},'plan-settings-content':element(),'planning-rules-content':element(),'plan-settings-title':element(),'course-preferences-content':element(),'plan-settings-notice':notice,'plan-cohort':{focus(){}},'controls-conditional-status':{focus(){this.focused=true;}},'auto-plan-title':element(),'auto-plan-description':element(),'preference-search':{focus(){this.focused=true;}},'plan-start-term':{focus(){}}};
  nodes['plan-use-default-conditions']=defaultButton;nodes['plan-default-conditions-status']=defaultStatus;
+ for(const id of ['plan-cohort','controls-conditional-status','plan-start-term'])Object.assign(nodes[id],{focus(){this.focused=true;},scrollIntoView(){this.scrolled=true;}});
  vm.runInNewContext(source,{window:{matchMedia:()=>({matches:desktop}),RCIUI:U,RCI:C,RCIPlanning:E,RCICourseContext:T,RCISearch:S,addEventListener:(event,listener)=>listeners.set(event,listener)},document:{getElementById:id=>nodes[id]},Worker,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id)});
  await tick();
  const generate=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-generate'})}});
@@ -105,5 +106,15 @@ async function harness(desktop=false){
  console.log('PASS Successful defaults show accessible feedback inside settings, survive updates, restart once and expire without opening a preview');
  await feedback.defaults();await feedback.change('plan-semester-count','5');assert.equal(feedbackStatus.textContent,'');assert.equal(feedback.timers.size,0);await feedback.defaults();feedback.settings.close();assert.equal(feedbackStatus.textContent,'');assert(!feedbackButton.classList.contains('is-success'));assert.equal(feedback.timers.size,0);
  console.log('PASS Editing settings or closing the dialog clears default feedback and its timer');
- console.log('20 planning UI checks passed');
+ const required=await harness(),missingPlan=required.getPlan();missingPlan.cohort='unknown';missingPlan.conditionalConfirmed=false;required.setPlan(missingPlan);await required.generate();
+ const settingsHTML=()=>required.nodes['plan-settings-content'].innerHTML,invalid=id=>new RegExp(`<select id="${id}"[^>]*aria-invalid="true"`).test(settingsHTML());
+ assert(invalid('plan-cohort'));assert(invalid('controls-conditional-status'));assert(settingsHTML().includes('请选择入学时间。'));assert(settingsHTML().includes('请按录取通知选择是否需要补修。'));assert(required.nodes['plan-cohort'].focused);assert(required.nodes['plan-cohort'].scrolled);
+ await required.finish();assert(required.settings.open);assert.equal(required.settings.closeCount,undefined);assert.equal(required.workers.length,0);await required.defaults();assert(invalid('plan-cohort'));assert(invalid('controls-conditional-status'));
+ await required.change('plan-cohort','2026/27冬季');await required.refresh();assert(!invalid('plan-cohort'));assert(invalid('controls-conditional-status'));await required.finish();assert(required.nodes['controls-conditional-status'].focused);assert(required.nodes['controls-conditional-status'].scrolled);
+ await required.change('controls-conditional-status','no');await required.refresh();assert(!invalid('controls-conditional-status'));await required.finish();assert.equal(required.workers.length,1);assert(required.dialog.open);
+ console.log('PASS Missing required choices have field-specific accessible errors, survive default resets, focus the first missing field and clear individually when corrected');
+ const mismatch=await harness(),mismatched=mismatch.getPlan();mismatched.timeline.start='summer';mismatch.setPlan(mismatched);await mismatch.generate();assert(mismatch.nodes['plan-settings-content'].innerHTML.includes('id="plan-start-term" aria-invalid="true"'));assert(mismatch.nodes['plan-start-term'].focused);assert(mismatch.nodes['plan-start-term'].scrolled);await mismatch.finish();assert(mismatch.settings.open);assert.equal(mismatch.workers.length,0);
+ await mismatch.change('plan-start-term','winter');await mismatch.refresh();assert(mismatch.nodes['plan-settings-content'].innerHTML.includes('id="plan-start-term" aria-invalid="false"'));await mismatch.finish();assert.equal(mismatch.workers.length,1);
+ console.log('PASS A mismatched first semester is highlighted and blocks preview until corrected');
+ console.log('22 planning UI checks passed');
 })().catch(error=>{console.error(error);process.exitCode=1;});

@@ -13,6 +13,16 @@ function chips(codes,kind){return codes.length?codes.map(code=>`<span class="pre
 function fields(value,prefix,keys=['minECTS','maxECTS','minExams','maxExams'],form=''){return [['minECTS','学分下限','ECTS',120,.5],['maxECTS','学分上限','ECTS',120,.5],['minExams','考试数下限','次',50,1],['maxExams','考试数上限','次',50,1]].filter(([key])=>keys.includes(key)).map(([key,label,unit,max,step])=>`<label>${label}<span class="plan-number-control"><input name="${prefix+key}" ${form?`form="${form}"`:''} type="number" min="0" max="${max}" step="${step}" value="${value[key]}" aria-label="${label}（${unit}）" required><span aria-hidden="true">${unit}</span></span></label>`).join('');}
 function semesterLabel(number){const term=T.term(p,number);return term.year===null?term.label:`第 ${number} 学期 · ${term.label}`;}
 function requiredSettings(plan){return !C.cohorts.includes(plan.cohort)?'先选择入学时间，并确认录取通知里的补修要求。':!plan.conditionalConfirmed?'先确认录取通知里的补修要求。':(plan.cohort.endsWith('夏季')?'summer':'winter')!==plan.timeline.start?'第一学期与入学时间不一致，请调整。':'';}
+function requiredSettingErrors(plan){
+ const errors={};
+ if(plan.cohort==='unknown')errors['plan-cohort']='请选择入学时间。';
+ else if(!C.cohorts.includes(plan.cohort))errors['plan-cohort']='该入学时间暂不支持自动规划，可继续手动排课。';
+ if(!plan.conditionalConfirmed)errors['controls-conditional-status']='请按录取通知选择是否需要补修。';
+ if(C.cohorts.includes(plan.cohort)&&(plan.cohort.endsWith('夏季')?'summer':'winter')!==plan.timeline.start)errors['plan-start-term']='请与入学时间的冬／夏季保持一致。';
+ return errors;
+}
+function settingErrorHTML(id,errors){return `<small id="${id}-error" class="settings-field-error" ${errors[id]?'':'hidden'}>${e(errors[id]||'')}</small>`;}
+function settingErrorAttrs(id,errors){return `aria-invalid="${!!errors[id]}" aria-describedby="${id}-error${id==='controls-conditional-status'?' settings-remediation-help':''}"`;}
 function defaultConditions(plan){return C.validatePlan({...plan,workload:undefined,preferences:{...plan.preferences,languages:undefined,startSemester:Math.min(plan.timeline.count,Math.max(1,...plan.items.filter(x=>x.status==='passed').map(x=>x.semester))),allowUnconfirmed:undefined,deadlineException:undefined}},db.courses);}
 function updateDefaultFeedback(){
  const button=document.getElementById('plan-use-default-conditions'),status=document.getElementById('plan-default-conditions-status');
@@ -33,18 +43,17 @@ async function applyDefaultConditions(){
   await render();setDefaultFeedback(true);
  }finally{preparing=false;}
 }
-function settingsHTML(){workloadSemester=Math.min(workloadSemester,p.timeline.count);const defaults=defaultConditions(p);return `
+function settingsHTML(){workloadSemester=Math.min(workloadSemester,p.timeline.count);const defaults=defaultConditions(p),errors=requiredSettingErrors(p);return `
  <section class="settings-default-shortcut" aria-labelledby="settings-default-title"><div><h3 id="settings-default-title">恢复默认规划条件</h3><p>每学期最多 ${defaults.workload.maxECTS} ECTS · ${defaults.workload.maxExams} 次考试（估算）· 英语 / 德语</p><small>从第 ${defaults.preferences.startSemester} 学期开始，清除单学期限制；保留学业信息、课程与想选／排除记录。应用后可在本页继续调整。</small></div><button id="plan-use-default-conditions" type="button" class="button secondary" data-use-default-conditions>使用默认规划条件</button><span id="plan-default-conditions-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></section>
  <section id="plan-options" class="plan-basic-settings plan-settings-card" aria-labelledby="plan-basics-title">
   <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">01</span><div><h3 id="plan-basics-title">学业信息</h3></div><span class="settings-save-badge">修改后自动保存</span></div>
   <div class="plan-settings-grid">
-   <label>入学时间<select id="plan-cohort">${[['unknown','请选择'],...C.cohorts.map(v=>[v,v]),['older','其他时间']].map(([v,t])=>`<option value="${e(v)}" ${p.cohort===v?'selected':''}>${e(t)}</option>`).join('')}</select></label>
+   <label><span class="settings-field-label">入学时间 <small class="settings-required">必选</small></span><select id="plan-cohort" aria-required="true" ${settingErrorAttrs('plan-cohort',errors)}>${[['unknown','请选择'],...C.cohorts.map(v=>[v,v]),['older','其他时间']].map(([v,t])=>`<option value="${e(v)}" ${p.cohort===v?'selected':''}>${e(t)}</option>`).join('')}</select>${settingErrorHTML('plan-cohort',errors)}</label>
    <label>计划学期数<select id="plan-semester-count">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${p.timeline.count===i+1?'selected':''}>${i+1} 个学期</option>`).join('')}</select></label>
-   <label>第一学期<select id="plan-start-term"><option value="winter" ${p.timeline.start==='winter'?'selected':''}>冬季学期</option><option value="summer" ${p.timeline.start==='summer'?'selected':''}>夏季学期</option></select></label>
-   <label>录取通知的补修要求<select id="controls-conditional-status" aria-describedby="settings-remediation-help"><option value="unknown" ${!p.conditionalConfirmed?'selected':''}>还没确认</option><option value="no" ${p.conditionalConfirmed&&!p.conditional?'selected':''}>不需要</option><option value="yes" ${p.conditionalConfirmed&&p.conditional?'selected':''}>需要</option></select></label>
+   <label>第一学期<select id="plan-start-term" ${settingErrorAttrs('plan-start-term',errors)}><option value="winter" ${p.timeline.start==='winter'?'selected':''}>冬季学期</option><option value="summer" ${p.timeline.start==='summer'?'selected':''}>夏季学期</option></select>${settingErrorHTML('plan-start-term',errors)}</label>
+   <label><span class="settings-field-label">录取通知的补修要求 <small class="settings-required">必选</small></span><select id="controls-conditional-status" aria-required="true" ${settingErrorAttrs('controls-conditional-status',errors)}><option value="unknown" ${!p.conditionalConfirmed?'selected':''}>还没确认</option><option value="no" ${p.conditionalConfirmed&&!p.conditional?'selected':''}>不需要</option><option value="yes" ${p.conditionalConfirmed&&p.conditional?'selected':''}>需要</option></select>${settingErrorHTML('controls-conditional-status',errors)}</label>
   </div>
   <div class="settings-basics-foot"><p id="settings-remediation-help" class="meta settings-field-help">入学时间决定适用规则，补修要求请按录取通知填写。</p><p class="settings-pace">120 ECTS ÷ ${p.timeline.count} 学期 <span aria-hidden="true">≈</span> <strong>${Number((120/p.timeline.count).toFixed(1))} ECTS／学期</strong><span>仅作平均参考</span></p></div>
-  ${p.cohort==='older'?'<p class="meta">这个入学时间暂不支持自动规划，可以继续手动排课。</p>':''}
  </section>
  <section id="planning-preference-settings" class="plan-load-settings plan-settings-card" aria-labelledby="plan-load-title">
   <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">02</span><div><h3 id="plan-load-title">规划偏好</h3></div><span class="settings-save-badge is-draft">点击底部按钮保存</span></div>
@@ -114,7 +123,7 @@ function openSettings(forAuto=false,message='',fixedNotice=false){
  settings.querySelector('[data-finish-settings]').textContent=forAuto?'保存并预览':'保存设置';
  openPlanDialog(settings);
  document.getElementById('plan-settings-content').scrollTop=0;
- if(forAuto){const required=!C.cohorts.includes(p.cohort)?'plan-cohort':!p.conditionalConfirmed?'controls-conditional-status':'plan-start-term';document.getElementById(required).focus({preventScroll:true});}
+ if(forAuto){const required=Object.keys(requiredSettingErrors(p))[0];if(required){const field=document.getElementById(required);field.focus({preventScroll:true});field.scrollIntoView({block:'nearest'});}}
 }
 async function savePreferences(form){
  if(!form.reportValidity())return false;
@@ -155,6 +164,7 @@ box.addEventListener('click',async event=>{
   if(b.hasAttribute('data-open-planning-rules'))document.getElementById('planning-rules-dialog').showModal();
   if(b.hasAttribute('data-close-plan-dialog'))b.closest('dialog').close();
   if(b.hasAttribute('data-finish-settings')){
+   if(autoIntent){const missing=requiredSettings(await U.plan());if(missing){await render();openSettings(true,missing);return;}}
    for(const id of ['planning-preferences','semester-workload'])if(dirtyForms.has(id)&&!await savePreferences(document.getElementById(id)))return;
    const generateNext=autoIntent;settings.close();if(generateNext)await generate();
   }
@@ -230,7 +240,7 @@ async function generate(){
  const run=++generation;
  let snapshot;try{snapshot=await U.plan();}finally{preparing=false;}
  if(run!==generation)return;
- const missing=requiredSettings(snapshot);if(missing){openSettings(true,missing);return;}
+ const missing=requiredSettings(snapshot);if(missing){await render();openSettings(true,missing);return;}
  original=snapshot;expected=JSON.stringify(original);preview=null;
  autoHeading('自动方案预览','先查看安排，采用后才会更新计划。');
  dialog.querySelector('[data-edit-auto-settings]').textContent='调整条件';

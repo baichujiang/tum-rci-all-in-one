@@ -238,7 +238,13 @@
 #plan-settings-content .settings-section-heading h3{margin:0;font-size:16px;line-height:1.6}
 .settings-save-badge{flex:none;padding:3px 7px;border-radius:5px;background:#edf6ef;color:#457350;font-size:11px;line-height:1.6;white-space:nowrap}
 .settings-save-badge.is-draft{background:#f0f3f7;color:var(--muted)}
-#plan-settings-content .plan-settings-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+#plan-settings-content .plan-settings-grid{grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:14px}
+.settings-field-label{display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+.settings-required{font-size:10px;line-height:1.6;font-weight:500;color:#b42318}
+#plan-settings-content .settings-field-error{font-size:11px;line-height:1.6;color:#b42318;font-weight:400}
+#plan-settings-content .settings-field-error[hidden]{display:none}
+#plan-settings-content select[aria-invalid=true],#plan-settings-content input:user-invalid{border-color:#c7443e;background:#fff6f5}
+#plan-settings-content select[aria-invalid=true]:focus-visible,#plan-settings-content input:user-invalid:focus-visible{outline:2px solid #c7443e;outline-offset:2px}
 .settings-basics-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-top:12px}
 #plan-settings-content .settings-field-help{margin:0;font-size:12px}
 .settings-pace{margin:0;padding:6px 10px;background:var(--brand-soft,#f0f5f2);border-radius:6px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
