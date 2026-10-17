@@ -10,9 +10,9 @@ module.exports=function plannerView(studyHelp=''){return `
    <button type="button" class="button secondary plan-action-button plan-more-button" data-open-tools aria-haspopup="dialog" aria-controls="plan-tools-dialog"><svg class="plan-action-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg><span>更多</span></button>
   </div>
  </header>
- <div id="plan-context" class="plan-context"><p class="loading-state">正在读取计划…</p></div>
+ <div class="plan-context-row"><div id="plan-context" class="plan-context"><p class="loading-state">正在读取计划…</p></div><button type="button" class="plan-context-button plan-study-entry" data-open-study aria-haspopup="dialog" aria-controls="plan-study-dialog">学分与学业规则 <span aria-hidden="true">›</span></button></div>
  <dialog id="plan-study-dialog" class="plan-dialog plan-study-dialog" aria-labelledby="plan-study-title">
-  <header class="plan-dialog-heading"><h2 id="plan-study-title">选课与学分说明</h2><button type="button" class="quiet" data-close-study aria-label="关闭选课与学分说明">关闭</button></header>
+  <header class="plan-dialog-heading"><h2 id="plan-study-title">学分与学业规则</h2><button type="button" class="quiet" data-close-study aria-label="关闭学分与学业规则">关闭</button></header>
   ${studyHelp}
  </dialog>
  <dialog id="credit-check-dialog" class="plan-dialog credit-check-dialog" aria-labelledby="credit-check-title" aria-describedby="credit-check-description">
@@ -25,10 +25,6 @@ module.exports=function plannerView(studyHelp=''){return `
   <div id="plan-settings-error" class="notice settings-error" role="alert" hidden><p id="plan-settings-error-message"></p><button id="plan-settings-reload" type="button" class="quiet" data-reload-settings hidden>载入已保存设置</button></div>
   <div id="plan-settings-content" class="planning-workflow"></div>
   <footer class="plan-dialog-footer"><p id="plan-settings-save-state" class="meta settings-save-note" role="status">所有设置统一在点击保存后生效。</p><button type="button" class="button" data-finish-settings>保存设置</button></footer>
- </dialog>
- <dialog id="planning-rules-dialog" class="plan-dialog" aria-labelledby="planning-rules-title">
-  <header class="plan-dialog-heading"><h2 id="planning-rules-title">规划说明</h2><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭规划说明">返回设置</button></header>
-  <div id="planning-rules-content" class="planning-workflow"></div>
  </dialog>
  <dialog id="course-preferences-dialog" class="plan-dialog" aria-labelledby="course-preferences-title">
   <header class="plan-dialog-heading"><div><h2 id="course-preferences-title">已修与选课偏好</h2><p class="desktop-legacy">已修计入进度，想选与排除用于自动规划。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭已修与选课偏好">完成</button></header>

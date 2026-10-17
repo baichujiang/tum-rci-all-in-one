@@ -3,7 +3,6 @@
 'use strict';
 const C=typeof module==='object'&&module.exports?require('./core'):root.RCI;
 const T=typeof module==='object'&&module.exports?require('./course-context'):root.RCICourseContext;
-const groupLabel=group=>['G','H','I'].includes(group)?C.courseGroups[group]:group;
 const xml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c])).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'');
 const utf8=s=>new TextEncoder().encode(s);
 const concat=parts=>{const bytes=new Uint8Array(parts.reduce((n,x)=>n+x.length,0));let offset=0;for(const p of parts){bytes.set(p,offset);offset+=p.length;}return bytes;};
@@ -97,9 +96,9 @@ function planSheets(v){
    const translation=x.translation&&x.translation!==x.name?x.translation:'';
    const name=[x.name,translation].filter(Boolean).join('\n');
    const notes=[!g.number?x.termLabel:'',x.locked?'固定学期':'',x.custom?'自录课程，认定需核对':''].filter(Boolean).join('\n');
-   const values=[name,x.code,groupLabel(x.group),x.ects,x.statusLabel,notes];
+   const values=[name,x.code,x.group,x.ects,x.statusLabel,notes];
    const course={...cell(name,readingStyle[body+'Text']),runs:[{text:x.name,bold:true},...(translation?[{text:'\n'+translation,color:'5C6B64',size:9}]:[])]};
-   add([course,cell(x.code,readingStyle[body+'Meta']),cell(groupLabel(x.group),readingStyle[body+'Status']),cell(x.ects,readingStyle[body+'Number']),cell(x.statusLabel,readingStyle[body+(x.status==='passed'?'Passed':'Status')]),cell(notes,readingStyle[body+'Meta'])],rowHeight(values,widths,42));
+   add([course,cell(x.code,readingStyle[body+'Meta']),cell(x.group,readingStyle[body+'Status']),cell(x.ects,readingStyle[body+'Number']),cell(x.statusLabel,readingStyle[body+(x.status==='passed'?'Passed':'Status')]),cell(notes,readingStyle[body+'Meta'])],rowHeight(values,widths,42));
   }
   add([],8);
  });
@@ -110,7 +109,7 @@ function planSheets(v){
  groups.forEach((g,index)=>{
   const items=g.number?g.items:[...g.items].sort((a,b)=>(a.semester||Infinity)-(b.semester||Infinity));
   items.forEach((x,i)=>{
-   const values=[x.termLabel,x.code,x.name,x.translation,x.ects,groupLabel(x.group),x.statusLabel,x.locked?'是':'否',x.custom?'自录课程，认定需核对':''];
+   const values=[x.termLabel,x.code,x.name,x.translation,x.ects,x.group,x.statusLabel,x.locked?'是':'否',x.custom?'自录课程，认定需核对':''];
    detailRows.push(values.map(value=>cell(value,band(index,i===0)+(typeof value==='number'?1:0))));detailHeights.push(rowHeight(values,detailWidths));
   });
  });
@@ -120,14 +119,14 @@ function planSheets(v){
 }
 function printPlan(v){
  const e=C.esc;
- const card=x=>`<article class="print-course${x.status==='passed'?' is-passed':''}"><div class="print-course-title">${e(x.name)}</div>${x.translation?`<div class="print-course-translation">${e(x.translation)}</div>`:''}<div class="print-course-code">${e(x.code)} · ${e(groupLabel(x.group))}${x.custom?' · 自录认定':''}</div><div class="print-course-bottom"><b>${x.ects} ECTS</b><span>${x.statusLabel}${x.locked?' · 固定学期':''}</span></div></article>`;
+ const card=x=>`<article class="print-course${x.status==='passed'?' is-passed':''}"><div class="print-course-title">${e(x.name)}</div>${x.translation?`<div class="print-course-translation">${e(x.translation)}</div>`:''}<div class="print-course-code">${e(x.code)} · ${e(x.group)}${x.custom?' · 自录认定':''}</div><div class="print-course-bottom"><b>${x.ects} ECTS</b><span>${x.statusLabel}${x.locked?' · 固定学期':''}</span></div></article>`;
  // Balance groups (e.g. 5 semesters => 3 + 2) and repeat headings on overflow pages.
  const groupSize=Math.ceil(v.semesters.length/Math.ceil(v.semesters.length/4)),boards=[];
  for(let offset=0;offset<v.semesters.length;offset+=groupSize){
   const groups=v.semesters.slice(offset,offset+groupSize);
   boards.push(`<section class="print-board-section${offset?' print-new-page':''}"><h2>学期安排${v.semesters.length>groupSize?` · 第 ${groups[0].number}–${groups.at(-1).number} 学期`:''}</h2><table class="print-semester-board"><thead><tr>${groups.map(g=>`<th scope="col" class="${g.season}"><span class="print-term-title">${g.title}</span><span class="print-term-label">${e(g.label)}</span><strong>${g.credits} ECTS · ${g.items.length} 门</strong><small>已通过 ${g.passedCredits} · 待修 ${g.plannedCredits} ECTS</small></th>`).join('')}</tr></thead><tbody>${Array.from({length:Math.max(1,...groups.map(g=>g.items.length))},(_,i)=>`<tr>${groups.map(g=>`<td>${g.items[i]?card(g.items[i]):i===0?'<p class="print-empty">还没有安排课程</p>':''}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`);
  }
- const other=v.other.map(g=>`<section class="print-other"><h2>${g.title} <small>${g.credits} ECTS · ${g.items.length} 门</small></h2><p>${g.label}</p><table class="print-history"><thead><tr><th>课程</th><th>ECTS</th><th>状态与学期</th></tr></thead><tbody>${g.items.map(x=>`<tr><td><b>${e(x.name)}</b>${x.translation?`<br>${e(x.translation)}`:''}<br><small>${e(x.code)} · ${e(groupLabel(x.group))}${x.custom?' · 自录认定':''}</small></td><td>${x.ects}</td><td>${x.statusLabel}<br>${e(x.termLabel)}</td></tr>`).join('')}</tbody></table></section>`).join('');
+ const other=v.other.map(g=>`<section class="print-other"><h2>${g.title} <small>${g.credits} ECTS · ${g.items.length} 门</small></h2><p>${g.label}</p><table class="print-history"><thead><tr><th>课程</th><th>ECTS</th><th>状态与学期</th></tr></thead><tbody>${g.items.map(x=>`<tr><td><b>${e(x.name)}</b>${x.translation?`<br>${e(x.translation)}`:''}<br><small>${e(x.code)} · ${e(x.group)}${x.custom?' · 自录认定':''}</small></td><td>${x.ects}</td><td>${x.statusLabel}<br>${e(x.termLabel)}</td></tr>`).join('')}</tbody></table></section>`).join('');
  return `<header class="print-plan-heading"><h1>TUM RCI · 我的毕业计划</h1><p>${e(v.cohort)} · 导出日期 ${e(v.date)}</p><div class="print-summary">${summary(v)}</div></header><p class="print-board-note">${boardNote}</p>${boards.join('')}<div class="print-appendix print-new-page">${other}<section class="print-settings"><h2>规划条件</h2><table><tbody>${v.settings.slice(1).map(([k,value])=>`<tr><th scope="row">${e(k)}</th><td>${e(value)||'未设置'}</td></tr>`).join('')}</tbody></table></section><p class="print-footnote">独立学生项目，规则、名额、时间与学分认定请核对学校记录。</p></div>`;
 }
 function download(content,name,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}

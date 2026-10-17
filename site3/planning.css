@@ -11,6 +11,10 @@
 .plan-primary-actions .plan-more-button:hover{background:var(--paper);border-color:var(--muted);color:var(--ink)}
 .plan-primary-actions .plan-action-button:focus-visible{outline:2px solid var(--brand,var(--green));outline-offset:3px}
 .plan-context{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-bottom:22px;min-height:36px}
+.plan-context-row{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-bottom:22px;min-height:36px}
+.plan-context-row .plan-context{display:contents}
+.plan-context-row .plan-study-entry{color:var(--brand,var(--green));font-weight:600;white-space:nowrap}
+.plan-study-entry>span{margin-left:4px;font-size:12px}
 .plan-context-button{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;padding:8px 0;min-height:36px;cursor:pointer}
 .plan-context-button:hover{color:var(--brand,var(--green));text-decoration:underline}
 .context-edit{color:var(--brand,var(--green));margin-left:8px}
@@ -141,27 +145,25 @@
   .credit-segment-compact .credit-segment-name,.credit-segment-compact .credit-segment-copy>b,.credit-segment-compact .credit-segment-copy>b>small{font-size:10px}
  }
  .plan-dialog.plan-study-dialog{width:min(860px,calc(100vw - 64px))}
- .plan-study-dialog>.plan-dialog-heading{align-items:center}
- .plan-credit-help,.plan-study-sources,.plan-study-dialog>.selection-section{padding:0 24px 24px}
- .plan-study-dialog .plan-credit-help{padding-top:20px}
- .plan-credit-help h3,.plan-study-sources h3{font-size:16px;margin:0 0 8px}
- .plan-credit-explanations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px;margin:16px 0}
- .plan-credit-explanations dt{font-size:14px;font-weight:650}
- .plan-credit-explanations dd{margin:4px 0 0;font-size:13px;color:var(--muted);line-height:1.7}
- .plan-remediation-help{font-size:13px}
- .plan-remediation-help>summary{min-height:36px;padding:6px 0;cursor:pointer;color:var(--brand)}
- .plan-remediation-help p{margin:8px 0}
- .plan-study-dialog>.selection-section{margin:0}
- .plan-study-dialog .section-title{margin:0 0 12px}
- .plan-study-dialog .section-title h2{font-size:16px}
- .plan-study-dialog .selection-steps{gap:12px}
- .plan-study-dialog .selection-steps article{padding:14px;gap:10px}
- .plan-study-dialog .selection-steps h3{font-size:14px;margin:0 0 6px}
- .plan-study-dialog .selection-steps p{font-size:13px;margin-bottom:8px}
- .plan-study-dialog .selection-steps .text-link{font-size:13px}
- .plan-study-sources{border-top:1px solid var(--line);padding-top:20px}
+
 }
 .progression-status{display:grid;gap:5px;margin:12px 0}.progression-status p{margin:0 0 4px}.progression-status .met{color:#3b7751}
+.plan-progress-alerts{border:1px solid #e7d1a5;border-left:3px solid #bb822a;border-radius:10px;background:#fff9ed;color:#79571c;padding:10px 16px 12px;margin:0 0 18px}
+.progress-alert-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.progress-alert-heading h2{font-size:14px;margin:0;font-weight:650}
+.progress-alert-heading .study-progress-link{flex-shrink:0;min-height:32px;padding:5px 0;font-size:12px}
+.plan-progress-alerts ul{list-style:none;margin:4px 0 8px;padding:0;display:grid;gap:6px}
+.plan-progress-alerts li{display:flex;align-items:baseline;gap:12px;font-size:13px;line-height:1.7}
+.plan-progress-alerts li>b{flex-shrink:0;font-weight:600}
+.plan-progress-alerts>p{font-size:11px;line-height:1.7;margin:0;color:#886d42}
+@media(max-width:700px){
+ .plan-progress-alerts{padding:10px 12px 12px;margin-bottom:16px}
+ .progress-alert-heading{align-items:baseline;gap:8px}
+ .progress-alert-heading h2{font-size:13px}
+ .progress-alert-heading .study-progress-link{font-size:11px}
+ .plan-progress-alerts li{display:block;font-size:12px}
+ .plan-progress-alerts li>b{margin-right:8px}
+}
 .planner-page .semester-tools{margin:0 0 6px}
 .planner-page .semester-tools h2{font-size:18px;margin:0}
 .planner-page .semester-tools h2 span{font-size:12px;font-weight:400;color:var(--muted)}
@@ -183,6 +185,45 @@
 .plan-dialog-heading>.quiet{min-height:40px;flex-shrink:0;font-size:13px;padding:6px 9px}
 .plan-dialog-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;bottom:0;background:var(--white);padding:16px 24px;border-top:1px solid var(--line);z-index:2}
 .plan-dialog-footer .meta{margin:0;font-size:12px}
+#plan-study-dialog{display:flex;flex-direction:column;overflow:hidden;height:min(760px,88dvh)}
+#plan-study-dialog:not([open]){display:none}
+.plan-study-dialog>.plan-dialog-heading{flex-shrink:0;align-items:center}
+.study-help-content{display:flex;flex-direction:column;flex:1;min-height:0}
+.study-help-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;flex-shrink:0;padding:12px 24px;border-bottom:1px solid var(--line);background:var(--white)}
+.study-help-nav button{border:1px solid var(--line);background:var(--paper);border-radius:8px;color:var(--brand,var(--green));font:inherit;font-size:12px;min-height:40px;padding:8px;cursor:pointer}
+.study-help-nav button:hover{background:var(--brand-soft,#edf4ef)}
+.study-help-nav button[aria-selected=true]{background:var(--brand-soft,#edf4ef);border-color:var(--brand,var(--green));font-weight:650}
+.study-help-nav button:focus-visible,.plan-study-entry:focus-visible,.study-progress-link:focus-visible{outline:2px solid var(--brand,var(--green));outline-offset:3px}
+.study-rule-panels{overflow-y:auto;overscroll-behavior:contain;min-height:0;flex:1;padding:20px 24px 24px;scrollbar-gutter:stable}
+.study-rule-section{border:1px solid var(--line);border-radius:10px}
+.study-rule-section[hidden]{display:none}
+.study-rule-heading{margin:0;padding:13px 16px;font-size:14px;font-weight:650;color:var(--brand,var(--green))}
+.study-rule-body{padding:0 16px 16px;font-size:13px;line-height:1.8}
+.study-rule-body h3{font-size:14px;margin:12px 0 8px}
+.study-rule-body p{font-size:13px;margin:0 0 12px;line-height:1.8}
+.study-rule-body p:last-child{margin-bottom:0}
+.study-rule-body .meta{font-size:12px;color:var(--muted)}
+.study-rule-body>.selection-section{margin:0}
+.study-rule-body .section-title{margin:0 0 12px}
+.study-rule-body .section-title h2{font-size:15px}
+.study-rule-body .selection-steps{gap:12px}
+.study-rule-body .selection-steps article{padding:14px;gap:10px}
+.study-rule-body .selection-steps h3{font-size:14px;margin:0 0 6px}
+.study-rule-body .selection-steps .text-link{font-size:13px}
+.study-tool-help{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+.study-tool-help>summary{cursor:pointer;min-height:36px;padding:6px 0;font-weight:600}
+.study-source-links{display:grid;gap:12px;margin:16px 0}
+.study-source-links a{font-size:13px;line-height:1.7;overflow-wrap:anywhere}
+.study-progress-link{border:0;background:transparent;font:inherit;font-size:12px;min-height:36px;padding:8px 0;text-align:left;cursor:pointer}
+@media(max-width:700px){
+ .plan-context-row{gap:0 14px;margin-bottom:12px}
+ .study-rule-panels{padding:16px 18px 20px}
+ .study-help-nav{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px 18px}
+ .study-help-nav button{min-height:44px}
+ .study-rule-heading{font-size:13px;padding:12px}
+ .study-rule-body{padding:0 12px 14px}
+ .study-rule-body .selection-steps{grid-template-columns:1fr}
+}
 #plan-settings-dialog{display:flex;flex-direction:column;overflow:hidden;width:min(920px,calc(100vw - 48px));max-height:calc(100dvh - 48px)}
 #plan-settings-dialog:not([open]){display:none}
 #plan-settings-dialog>.plan-dialog-heading,#plan-settings-dialog>.plan-dialog-footer{flex-shrink:0}
@@ -197,10 +238,6 @@
 .plan-language-settings{align-items:end}
 .planning-workflow .plan-language-settings fieldset{margin:0;min-width:0;padding:2px 12px 4px}
 .planning-workflow .plan-language-settings .check{margin:5px 12px 5px 0}
-.planning-workflow .plan-rules-link{display:flex;align-items:center;justify-content:space-between;width:100%;border-top:1px solid var(--line);border-radius:0;margin-top:18px;padding:14px 0 0;font-size:12px;font-weight:400;color:var(--muted)}
-.plan-rules-intro{font-size:14px;line-height:1.8}
-.plan-rules-highlights{padding-left:20px;font-size:13px;line-height:1.8;margin-bottom:20px}
-.plan-rules-highlights li+li{margin-top:6px}
 .plan-rules-list{padding-left:20px;font-size:13px;line-height:1.8;margin:0 0 14px}
 .plan-rules-list li+li{margin-top:6px}
 .planning-workflow label{font-size:13px;font-weight:500;display:grid;gap:7px}
@@ -284,7 +321,6 @@ details[open]>summary>.settings-disclosure-arrow{transform:rotate(180deg)}
 #plan-settings-content .planning-toggle-option .meta{font-size:12px}
 .settings-override-count{display:inline-block;margin-left:8px;font-size:11px;font-weight:400;color:var(--brand,var(--green))}
 .workload-overrides p{padding:10px 12px;border-radius:8px;background:var(--brand-soft,#edf4ef);font-size:12px}
-#plan-settings-content .plan-rules-link{margin:0;padding:0 4px;border:0;min-height:32px;font-size:13px}
 #plan-settings-dialog .settings-save-note{font-size:12px;line-height:1.6;color:var(--muted)}
 #plan-settings-dialog .settings-error{flex-shrink:0;border-color:#e5b4ae;background:#fff6f5;color:#b42318}
 #plan-settings-dialog .settings-error p{margin:0}

@@ -116,7 +116,7 @@ function generate(raw,courses,offerings={},options={}){
  const noLanguage=base.filter(x=>x.status!=='passed'&&!Array.from({length:p.timeline.count-p.preferences.startSemester+1},(_,i)=>i+p.preferences.startSemester).some(n=>languageOK(p,known.get(x.code)||x,offerings,n)));
  if(noLanguage.length)return fail(`这些已选／必修课程不符合授课语言：${noLanguage.map(x=>x.code).join('、')}。双语模块表示目录语言，具体班次仍须核对。`);
  const choices=completeSelections(p,courses,base,offerings);
- if(!choices.length)return fail('按当前排除和语言条件，无法满足计算、机械、系统与控制各至少 5 ECTS、专业选修总额或跨学科至少 6 ECTS 的要求。请放宽偏好，或录入已获学校认可的选修。');
+ if(!choices.length)return fail('当前目录在排除与语言条件下无法补齐 G/H/I 各 5 ECTS、专业选修总额或 J 的 6 ECTS。请放宽偏好，或录入已获学校认可的选修。');
  const start=p.preferences.startSemester,limit=options.nodeLimit??350000;let nodes=0,exhausted=false,best=null;
  const attempts=new Set();
  for(let finish=start;finish<=p.timeline.count&&!best&&!exhausted;finish++){

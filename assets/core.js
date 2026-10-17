@@ -9,10 +9,11 @@
     A:'A · Robotics（机器人学，二选一）', B:'B · Cognition（认知）',
     C:'C · Intelligent Autonomous Systems（智能自主系统）',
     D:'D · Seminar（研讨课）', E:'E · Practical（实践课）', F:'F · Thesis（论文）',
-    G:'C · 计算', H:'M · 机械', I:'S · 系统与控制',
+    G:'G · Computation（计算）', H:'H · Mechanics（机械）',
+    I:'I · Systems and Control（系统与控制）',
     J:'J · Überfachliche Grundlagen（跨学科基础）', K:'K · Regelungstechnik（控制理论补修）'
   };
-  const creditOriginalNames = ['Pflichtbereich A–E', 'Fachliche Wahlmodule',
+  const creditOriginalNames = ['Pflichtbereich A–E', 'Fachliche Wahlmodule G/H/I',
     'Überfachliche Grundlagen J', "Master's Thesis F", 'Regelungstechnik K'];
   function csv(text) {
     const rows = []; let row = [], cell = '', quoted = false;
@@ -64,7 +65,7 @@
         if(groups?.length>1&&x.group!==undefined){if(!groups.includes(x.group))throw new Error('此模块不能计入所选领域');extra.group=x.group;}
         return {code, status:x.status, semester, ...extra};
       }
-      if (!x.custom || typeof x.name !== 'string' || !x.name.trim() || x.name.length > 160 || !['G', 'H', 'I', 'J'].includes(x.group) || typeof x.ects !== 'number' || !Number.isFinite(x.ects) || x.ects <= 0 || x.ects > 30 || !Number.isInteger(x.ects * 2)) throw new Error('请填写选修课名称，选择计算、机械、系统与控制或跨学科，并填写 0.5–30 ECTS（0.5 的倍数）');
+      if (!x.custom || typeof x.name !== 'string' || !x.name.trim() || x.name.length > 160 || !['G', 'H', 'I', 'J'].includes(x.group) || typeof x.ects !== 'number' || !Number.isFinite(x.ects) || x.ects <= 0 || x.ects > 30 || !Number.isInteger(x.ects * 2)) throw new Error('自定义选修须有名称、G/H/I/J 分类及 0.5–30 ECTS（0.5 的倍数）');
       return {code, name:x.name.trim(), group:x.group, ects:x.ects, custom:true, status:x.status, semester, ...extra};
     });
     if (used.has('IN2067') && used.has('ED160028')) throw new Error('Robotics 与 Roboterdynamik 是二选一，请先移除另一门');
@@ -196,14 +197,14 @@
     const target = plan.conditional && amended(plan.cohort) ? 36 : 41;
     const professional = totals.G + totals.H + totals.I;
     const buckets = [
-      ['必修（含二选一）', totals.core, 43], ['专业选修', professional, target],
+      ['必修（含二选一）', totals.core, 43], ['专业选修 G/H/I', professional, target],
       ['跨学科 J', totals.J, 6], ['硕士论文', totals.thesis, 30]
     ];
     if (plan.conditional && amended(plan.cohort)) buckets.push(['控制理论补修 K', totals.K, 5]);
     const allocated = buckets.reduce((n, [, value, required]) => n + Math.min(value, required), 0);
     const gaps = buckets.filter(([, value, required]) => value < required).map(([label, value, required]) => `${label}还差 ${required - value} ECTS`);
     gaps.push(...new Set(countingIssues));
-    for (const group of ['G', 'H', 'I']) if (totals[group] < 5) gaps.push(`${courseGroups[group]}领域至少 5 ECTS，还差 ${5 - totals[group]} ECTS`);
+    for (const group of ['G', 'H', 'I']) if (totals[group] < 5) gaps.push(`${group} 领域最低 5 ECTS，还差 ${5 - totals[group]}`);
     const supported = cohorts.includes(plan.cohort);
     if (!supported) gaps.unshift('未选择受支持的入学批次：不作规则达成判断');
     if(!plan.conditionalConfirmed)gaps.unshift('个人录取补修条件尚未确认：不作规则达成判断');
