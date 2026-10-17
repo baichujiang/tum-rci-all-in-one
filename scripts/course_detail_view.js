@@ -85,7 +85,6 @@ module.exports=function courseDetailView({course:c,translation='',summary,catalo
  const term=termLabel(c.current_term||c.term_legal_annex),language=languageLabel(c.current_language||c.language_legal_annex);
  const termPending=term!=='待确认'&&(v?.fields?.term==='pending'||v?.current_academic_year_selection_verified===false);
  const languagePending=language!=='待确认'&&(v?.fields?.language==='pending'||v?.current_academic_year_selection_verified===false);
- const detailNav=[[summary&&'course-syllabus','课程内容'],[summary&&'course-learning','上课考核'],[conditionBody&&'course-requirements','选课要求'],[hasWorkload&&'course-workload','学习投入']].filter(([id])=>id);
  const planning=`<aside class="course-detail-side" aria-label="安排课程与官方入口">
  <section class="course-detail-plan" aria-labelledby="course-plan-title"><h2 id="course-plan-title">加入我的计划</h2>
  <div class="course-detail-actions"><label class="course-detail-target" for="detail-semester">安排到<select id="detail-semester" data-detail-semester disabled><option value="0">先选课，稍后分配</option></select></label><button type="button" class="button" data-course-detail-add disabled>${unknown?'学分待核实':'加入计划'}</button></div>
@@ -103,7 +102,6 @@ module.exports=function courseDetailView({course:c,translation='',summary,catalo
  <div class="course-detail-quick-links">${link(official,book?'官方课程介绍':'查看官方依据')}<a class="text-link" href="#course-plan-title">安排课程 <span aria-hidden="true">↓</span></a></div>
  </header>
  <div class="course-detail-content">
- ${detailNav.length?`<nav class="course-detail-nav" aria-label="课程详情目录">${detailNav.map(([id,label])=>`<a href="#${id}">${label}<span aria-hidden="true">↓</span></a>`).join('')}</nav>`:''}
  ${summary?'<div class="course-reading-card">':''}
  ${summary?`<section class="course-detail-section course-syllabus" id="course-syllabus"><h2>课程大纲</h2>${summary.topics_cn?.length?listMarkup(summary.topics_cn):`<p class="course-content-missing">${e(summary.source_type==='module_handbook'?'官方手册暂未提供内容介绍。':'暂未找到官方课程内容介绍。')}</p>`}</section>`:''}
  ${summary?.outcomes_cn?.length?`<section class="course-detail-section course-outcomes" id="course-outcomes"><h2>学完能做什么</h2>${listMarkup(summary.outcomes_cn)}</section>`:summary?`<p class="course-detail-missing">${summary.source_type==='module_handbook'?'学习目标：手册未单独说明。':'暂未找到可靠的学习目标说明。'}</p>`:''}
