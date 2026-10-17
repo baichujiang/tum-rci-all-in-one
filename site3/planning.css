@@ -222,6 +222,13 @@
 .load-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .planning-workflow .button{justify-self:start;min-height:42px;font-size:13px}
 /* Common conditions come first; each optional group has its own disclosure. */
+.settings-default-shortcut{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 20px;border:1px solid var(--line);border-radius:12px;background:var(--brand-soft,#edf4ef)}
+.settings-default-shortcut>div{min-width:0}
+#plan-settings-content .settings-default-shortcut h3{margin:0 0 5px;font-size:15px;line-height:1.6}
+.settings-default-shortcut p{margin:0;font-size:12px;line-height:1.7}
+.settings-default-shortcut small{display:block;margin-top:4px;font-size:11px;line-height:1.7;color:var(--muted)}
+#plan-settings-content .settings-default-shortcut .button{display:inline-flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;min-height:44px;padding:10px 14px;font-size:13px;background:var(--white);border-color:var(--brand,var(--green));color:var(--brand,var(--green))}
+#plan-settings-content .settings-default-shortcut .button:hover{background:var(--brand-soft,#edf4ef)}
 #plan-settings-content .plan-settings-card{min-width:0;padding:18px 20px;background:var(--white);border:1px solid var(--line);border-radius:12px}
 #plan-settings-content .plan-load-settings{margin:0}
 .settings-section-heading{display:flex;align-items:center;gap:10px;margin-bottom:14px}
@@ -280,6 +287,8 @@ details[open]>summary>.settings-disclosure-arrow{transform:rotate(180deg)}
  .plan-common-fields>label:last-of-type,.plan-common-fields>fieldset{grid-column:1/-1}
  .settings-optional{grid-template-columns:1fr}
  .settings-language-choices>div{grid-template-columns:1fr 1fr}
+ .settings-default-shortcut{align-items:stretch;flex-direction:column;gap:12px;padding:16px}
+ #plan-settings-content .settings-default-shortcut .button{width:100%;font-size:14px}
 }
 @media(max-width:600px){
  #plan-settings-dialog>.plan-dialog-heading{padding:16px 18px 14px}
