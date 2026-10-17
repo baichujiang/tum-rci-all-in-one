@@ -17,7 +17,7 @@ test('Duplicate module codes rejected',()=>assert.throws(()=>C.validatePlan(add(
 test('Unknown cohort never reports completion',()=>assert.equal(C.calculate({...draft(),cohort:'unknown'},courses).supported,false));
 test('Future cohorts rejected',()=>assert.throws(()=>C.validatePlan({...draft(),cohort:'2030'},courses)));
 test('Conditional block shifts electives to 36',()=>{const x=C.calculate({...draft(),conditional:true},courses);assert.equal(x.buckets.find(x=>x[0].startsWith('专业'))[2],36);assert.equal(x.buckets.reduce((n,x)=>n+x[2],0),120);});
-test('Control remediation does not cover I minimum',()=>{const x=C.calculate({...add(draft(),'ED140014'),conditional:true},courses);assert.equal(x.totals.I,0);assert.equal(x.totals.K,5);assert(x.gaps.some(s=>s.startsWith('I ')));});
+test('Control remediation does not cover I minimum',()=>{const x=C.calculate({...add(draft(),'ED140014'),conditional:true},courses);assert.equal(x.totals.I,0);assert.equal(x.totals.K,5);assert(x.gaps.some(s=>s.startsWith('S · 系统与控制领域')));});
 test('Unneeded remediation not counted',()=>assert.equal(C.calculate(add(draft(),'ED140014'),courses).allocated,0));
 test('Planned and passed separated',()=>{const p=add(draft(),'IN2067');assert.equal(C.calculate(p,courses,true).allocated,0);p.items[0].status='passed';assert.equal(C.calculate(p,courses,true).allocated,6);});
 const custom = (code,group,ects) => ({code,name:code,group,ects,custom:true,status:'planned'});

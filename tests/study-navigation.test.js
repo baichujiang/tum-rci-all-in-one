@@ -36,6 +36,6 @@ test('Published desktop navigation has three destinations and retains one set of
  assert.equal((planner.match(/id="plan-study-dialog"/g)||[]).length,1);
  assert.equal((planner.match(/id="selection-title"/g)||[]).length,1);
  assert(!planner.includes('class="credit-visual"'));
- for(const required of ['G/H/I 各至少 5 ECTS','ED140014','https://matching-in.cit.tum.de/','https://campus.tum.de/','/guides/exams/','/guides/conditional-control/','assets/study-entry.js'])assert(planner.includes(required),required);
+ for(const required of ['计算、机械、系统与控制各至少 5 ECTS','ED140014','https://matching-in.cit.tum.de/','https://campus.tum.de/','/guides/exams/','/guides/conditional-control/','assets/study-entry.js'])assert(planner.includes(required),required);
 });
 console.log(count+' study navigation checks passed');

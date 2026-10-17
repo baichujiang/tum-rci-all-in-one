@@ -1,20 +1,23 @@
-/* Course facts, reading sections and planning have distinct visual roles. */
-.course-detail{max-width:1100px;margin:0 auto;color:var(--ink)}
-.course-detail-back{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;font-size:13px}
-.course-detail-back .text-link{font-size:13px}
-.course-share{font-size:12px;min-height:36px;padding:4px 10px}
-.course-detail-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;grid-template-areas:"heading heading" "content side";gap:26px 28px;align-items:start}
-.course-detail-heading{grid-area:heading;min-width:0;margin:0}
-.course-detail-tags{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:14px}
-.course-detail-code{font:600 12px ui-monospace,monospace;letter-spacing:.03em;border:1px solid var(--line);border-radius:5px;padding:3px 7px;background:var(--white);color:var(--green)}
-.course-detail-review{font-size:11px;color:#805b22;border-left:1px solid var(--line);padding-left:9px}
-.course-detail-heading h1{font-size:34px;line-height:1.3;letter-spacing:-.7px;margin:0;max-width:960px;overflow-wrap:anywhere}
-.course-detail-translation{font-size:16px;color:var(--muted);margin:9px 0 0}
+/* Three clear surfaces: course header, reading panel and planning panel. */
+.course-detail{--course-tint:color-mix(in srgb,var(--green) 5%,white);--course-shadow:0 4px 20px #20384f08;max-width:1120px;margin:0 auto;color:var(--ink)}
+.course-detail-topline{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:20px}
+.course-detail-back{flex:none;font-size:13px}
+.course-detail-back .text-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:9px 14px;border:1px solid var(--green);border-radius:8px;background:var(--course-tint);font-size:13px;font-weight:650;color:var(--green)}
+.course-detail-back .text-link>span{font-size:18px;font-weight:650;line-height:1}
+.course-detail-back .text-link:hover{background:var(--green);color:var(--white);text-decoration:none}
+.course-detail-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;grid-template-areas:"heading heading" "content side";gap:24px;align-items:start}
+.course-detail-heading{grid-area:heading;min-width:0;margin:0;padding:29px 32px 26px;background:var(--white);border:1px solid var(--line);border-top:4px solid var(--green);border-radius:14px;box-shadow:var(--course-shadow)}
+.course-detail-tags{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:0}
+.course-detail-tags>span{padding:4px 9px;border-radius:5px;background:var(--paper)}
+.course-detail-tags .course-detail-code{font:650 12px ui-monospace,monospace;letter-spacing:.03em;background:var(--course-tint);color:var(--green)}
+.course-detail-review{font-size:11px;color:#805b22;border:1px solid #e8d7af;background:var(--warn);border-radius:5px;padding:3px 8px}
+.course-detail-heading h1{font-size:32px;line-height:1.3;letter-spacing:-.7px;margin:0;max-width:960px;overflow-wrap:anywhere}
+.course-detail-translation{font-size:17px;color:var(--ink);margin:9px 0 0;font-weight:500}
 .course-detail-overview{margin-top:14px;max-width:840px}
 .course-detail-overview p{font-size:14px;line-height:1.85;margin:0;color:var(--muted)}
 .course-content-missing{color:var(--muted)}
 .course-detail-history{font-size:13px;line-height:1.75;color:#715329;border-left:3px solid var(--gold);padding-left:12px;margin:18px 0 0}
-.course-detail-facts{display:flex;gap:0;margin:24px 0 0;padding:19px 24px;border:1px solid var(--line);border-radius:11px;background:var(--white)}
+.course-detail-facts{display:flex;gap:0;margin:23px 0 0;padding:19px 22px;border:1px solid var(--line);border-radius:9px;background:var(--paper)}
 .course-detail-facts>div{flex:1;min-width:0;padding-right:16px}
 .course-detail-facts>div+div{padding-left:24px;border-left:1px solid var(--line)}
 .course-detail-facts>div:last-child{padding-right:0}
@@ -23,10 +26,11 @@
 .course-detail-facts small{font-size:12px;font-weight:500;color:var(--muted)}
 .course-detail-facts .course-fact-pending{display:block;font-size:11px;color:#805b22;margin-top:3px}
 .course-detail-facts .course-fact-weekly{display:block;font-size:11px;line-height:1.7;margin-top:4px}
+.course-weekly-basis{display:inline-block;white-space:nowrap}
 .course-detail-quick-links{display:none}
 .course-detail-plan h2{scroll-margin-top:0}
-.course-detail-side{grid-area:side;position:sticky;top:88px;min-width:0}
-.course-detail-plan{border:1px solid var(--line);background:var(--white);border-radius:12px;padding:22px 21px}
+.course-detail-side{grid-area:side;position:sticky;top:88px;min-width:0;background:var(--white);border:1px solid var(--line);border-radius:13px;box-shadow:var(--course-shadow);overflow:hidden}
+.course-detail-plan{padding:24px 22px;border-bottom:1px solid var(--line)}
 .course-detail-plan h2{font-size:17px;line-height:1.5;margin:0 0 19px;letter-spacing:0}
 .course-detail-actions{display:grid;gap:12px}
 .course-detail-target{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
@@ -36,39 +40,45 @@
 .course-detail-undo{min-height:32px;padding:3px 0;margin-top:6px;font-size:12px;text-decoration:underline}
 .course-auto-note{font-size:12px;line-height:1.75;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;margin:13px 0 0}
 .course-auto-note .text-link{font-size:12px;white-space:nowrap}
-.course-official-links{display:flex;flex-direction:column;gap:0;margin-top:16px;border:1px solid var(--line);border-radius:9px;background:var(--white)}
-.course-official-links a{font-size:13px;padding:12px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
-.course-official-links a+a{border-top:1px solid var(--line)}
-.course-plan-link{display:inline-block;font-size:12px;margin:15px 0 0 2px}
-.course-detail-content{grid-area:content;min-width:0}
-.course-detail-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:0 0 16px;padding:0 2px}
-.course-detail-nav a{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:7px 12px;border-radius:6px;font-size:13px;font-weight:550;color:var(--green)}
+.course-official-links{display:flex;flex-direction:column;gap:9px;margin:0;padding:18px 20px;background:var(--paper);border-bottom:1px solid var(--line)}
+.course-official-links a{font-size:13px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;border:1px solid var(--line);border-radius:7px;background:var(--white)}
+.course-official-links a:hover{border-color:var(--green);text-decoration:none}
+.course-detail-secondary-actions{display:flex;flex-direction:column;gap:2px;padding:9px 12px}
+.course-detail-secondary-actions .course-share,.course-detail-secondary-actions .course-plan-link{display:flex;align-items:center;justify-content:flex-start;gap:8px;min-height:40px;width:100%;font-size:12px;font-weight:500;margin:0;padding:9px 10px;border:0;border-radius:6px;background:transparent;color:var(--muted);text-align:left}
+.course-detail-secondary-actions .course-share:hover,.course-detail-secondary-actions .course-plan-link:hover{background:var(--course-tint);color:var(--green);text-decoration:none}
+.course-share svg{flex:none}
+.course-detail-content{grid-area:content;min-width:0;border:1px solid var(--line);border-radius:13px;background:var(--white);box-shadow:var(--course-shadow)}
+.course-detail-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0;padding:14px 20px;background:var(--paper);border-bottom:1px solid var(--line);border-radius:12px 12px 0 0}
+.course-detail-nav a{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:7px 10px;border:1px solid var(--line);background:var(--white);border-radius:7px;font-size:13px;font-weight:550;color:var(--green);white-space:nowrap}
 .course-detail-nav a span{font-size:11px;color:var(--muted)}
-.course-detail-nav a:hover{background:var(--white);color:var(--green);text-decoration:none}
+.course-detail-nav a:hover{background:var(--course-tint);border-color:var(--green);text-decoration:none}
 .course-detail-nav a:focus-visible{background:var(--white)}
 .course-detail-section{margin:0;scroll-margin-top:0}
-.course-detail-panel,.course-reading-card{padding:25px 28px;border:1px solid var(--line);border-radius:12px;background:var(--white);margin-bottom:20px}
-.course-detail-section h2{font-size:18px;line-height:1.5;letter-spacing:-.1px;margin:0 0 16px}
+.course-detail-panel,.course-reading-card{padding:28px;border:0;border-radius:0;margin:0}
+.course-detail-panel{border-top:1px solid var(--line)}
+.course-detail-section h2{display:flex;align-items:center;gap:10px;font-size:18px;line-height:1.5;letter-spacing:-.1px;margin:0 0 17px}
+.course-detail-section h2::before{content:"";display:block;flex:none;width:4px;height:18px;border-radius:3px;background:var(--green)}
 .course-detail-section p{font-size:14px;line-height:1.85;margin:0 0 10px}
 .course-topic-list{padding-left:19px;font-size:14px;line-height:1.9;margin:0}
 .course-topic-list li{padding:3px 0 3px 3px}
 .course-topic-list li+li{margin-top:3px}
 .course-topic-list li::marker{color:var(--green);font-size:11px}
-.course-outcomes{margin-top:23px;border-radius:8px;background:var(--paper);padding:18px 20px}
+.course-outcomes{margin-top:23px;border:1px solid var(--line);border-radius:9px;background:var(--course-tint);padding:18px 20px}
 .course-outcomes h2{font-size:15px;color:var(--green);margin-bottom:8px}
+.course-outcomes h2::before{display:none}
 .course-outcomes .course-topic-list{padding-left:17px}
 .course-detail-missing{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:15px;margin:19px 0 0}
 .course-syllabus p:last-child{margin-bottom:0}
 .course-activity-list{padding-left:18px;margin:0}
 .course-activity-list li+li{margin-top:7px}
 .course-study-details{margin:0}
-.course-study-details>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:18px;padding:18px 0}
+.course-study-details>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:18px;padding:20px 0}
 .course-study-details>div:first-child{padding-top:0}
 .course-study-details>div:last-child{padding-bottom:0}
 .course-study-details>div+div{border-top:1px solid var(--line)}
 .course-study-details dt{font-size:13px;font-weight:600;color:var(--muted);margin:0;line-height:1.85;text-wrap:balance}
 .course-study-details dd{font-size:14px;line-height:1.85;margin:0;overflow-wrap:anywhere}
-.course-study-details>div.course-assessment{background:var(--paper);border:0;border-radius:8px;padding:16px 18px;margin:18px -1px 0}
+.course-study-details>div.course-assessment{background:var(--course-tint);border:1px solid var(--line);border-radius:9px;padding:17px 18px;margin:18px 0 0}
 .course-study-details .course-assessment:first-child{margin-top:0}
 .course-study-details .course-assessment dt{color:var(--green)}
 .course-assessment-list{padding-left:18px;margin:0;line-height:1.85}
@@ -82,13 +92,13 @@
 .course-requirements>p:last-child:not(.course-preparation){margin:14px 0 0}
 .course-condition-list{padding-left:20px;margin:0;font-size:14px;line-height:1.85}
 .course-condition-list li{padding:3px 0 3px 2px}
-.course-workload-estimates{display:flex;align-items:center;justify-content:space-between;gap:24px}
-.course-workload-estimates .course-workload-total{font-size:20px;font-weight:600;margin:0}
+.course-workload-estimates{display:flex;align-items:stretch;gap:14px}
+.course-workload-estimates .course-workload-total{flex:1;display:flex;flex-direction:column;justify-content:center;padding:18px;font-size:18px;font-weight:600;margin:0;background:var(--paper);border:1px solid var(--line);border-radius:9px}
 .course-workload-breakdown{display:block;font-size:13px;font-weight:400;color:var(--muted);margin-top:5px}
-.course-weekly-reference{flex:none;border-left:1px solid var(--line);padding-left:24px;min-width:150px}
+.course-weekly-reference{flex:none;min-width:150px;border:1px solid var(--line);background:var(--course-tint);border-radius:9px;padding:16px 20px}
 .course-weekly-reference>span{font-size:12px;color:var(--muted)}
 .course-weekly-reference p{font-size:13px;margin:2px 0 0;color:var(--green)}
-.course-weekly-reference strong{font-size:24px;font-weight:650}
+.course-weekly-reference strong{font-size:28px;font-weight:650}
 .course-alternatives h2{margin-bottom:4px}
 .course-alternatives ul{list-style:none;padding:0;margin:13px 0 0;border:1px solid var(--line);border-radius:9px;background:var(--white);overflow:hidden}
 .course-alternatives li+li{border-top:1px solid var(--line)}
@@ -98,44 +108,45 @@
 .course-related-code{display:block;font:500 11px ui-monospace,monospace;color:var(--muted);margin-bottom:3px}
 .course-related-credits{font-size:12px;color:var(--muted);white-space:nowrap;flex:none}
 .course-related-credits>span{padding-left:9px;color:var(--green)}
-.course-counting{border-top:1px solid var(--line);padding:17px 0;font-size:13px}
+.course-counting{border-top:1px solid var(--line);padding:20px 28px;font-size:13px}
 .course-counting summary{font-size:13px;font-weight:500;min-height:30px;line-height:1.8;color:var(--muted)}
 .course-counting ul{font-size:13px;line-height:1.85;padding-left:20px;margin:10px 0 14px}
 .course-counting li{padding:3px 0}
 .course-counting .text-link{font-size:12px}
-.course-detail-footer{padding:2px 0 0}
+.course-detail-footer{padding:18px 28px;border-top:1px solid var(--line);background:var(--paper);border-radius:0 0 12px 12px}
 .course-detail-footer:empty{display:none}
 .course-detail-footer .text-link{font-size:12px}
-@media(min-width:961px) and (max-width:1100px){.course-detail-layout{grid-template-columns:minmax(0,1fr) 252px;column-gap:22px}.course-detail-plan{padding:19px 17px}.course-detail-panel,.course-reading-card{padding:23px}.course-study-details>div{grid-template-columns:95px minmax(0,1fr);gap:14px}}
+@media(min-width:961px) and (max-width:1100px){.course-detail-layout{grid-template-columns:minmax(0,1fr) 252px;column-gap:20px}.course-detail-plan{padding:22px 19px}.course-detail-panel,.course-reading-card{padding:23px}.course-study-details>div{grid-template-columns:95px minmax(0,1fr);gap:14px}.course-detail-nav{padding:12px;gap:6px}.course-detail-nav a{font-size:12px;padding:7px}}
 @media(max-width:960px){
  .course-detail{max-width:760px}
  .course-detail-layout{grid-template-columns:1fr;grid-template-areas:"heading" "content" "side";row-gap:20px}
- .course-detail-quick-links{display:flex;align-items:center;gap:23px;flex-wrap:wrap;margin-top:12px}
- .course-detail-quick-links a{display:inline-flex;align-items:center;gap:6px;min-height:40px;font-size:12px}
+ .course-detail-quick-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+ .course-detail-quick-links a{flex:1;display:inline-flex;justify-content:center;align-items:center;gap:6px;min-height:42px;padding:9px 12px;border:1px solid var(--line);border-radius:7px;font-size:12px;background:var(--white)}
+ .course-detail-quick-links a:last-child{background:var(--course-tint);border-color:var(--green)}
  .course-detail-side{position:static}
- .course-detail-plan{padding:17px 18px;border-radius:10px}
+ .course-detail-plan{padding:22px}
  .course-detail-plan h2{font-size:15px;margin-bottom:12px}
  .course-detail-actions{grid-template-columns:minmax(0,1fr) minmax(130px,.7fr);align-items:end;gap:12px}
  .course-detail-target select{font-size:16px}
  .course-detail-status{font-size:11px;margin-top:10px}
  .course-auto-note{font-size:11px;margin-top:10px;padding-top:10px}
- .course-official-links{flex-direction:row;background:transparent;border:0;margin-top:10px;gap:20px;flex-wrap:wrap}
- .course-official-links a{font-size:12px;padding:4px 0;min-height:36px;justify-content:flex-start;gap:6px}
- .course-official-links a+a{border:0}
- .course-plan-link{display:none}
- .course-detail-nav{margin-bottom:12px}
+ .course-official-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:16px 20px;gap:10px}
+ .course-official-links a{font-size:12px;padding:9px 10px;gap:6px}
+ .course-official-links a:only-child{grid-column:1/-1}
 }
 @media(max-width:600px){
- .course-detail-back{margin-bottom:19px}
- .course-detail-heading h1{font-size:27px;line-height:1.25;letter-spacing:-.45px}
- .course-detail-tags{font-size:11px;gap:7px;margin-bottom:12px}
+ .course-detail-topline{align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+ .course-detail-back .text-link{font-size:13px;padding:9px 12px}
+ .course-detail-heading{padding:20px 18px 18px;border-radius:11px}
+ .course-detail-heading h1{font-size:25px;line-height:1.3;letter-spacing:-.45px}
+ .course-detail-tags{font-size:11px;gap:6px;min-width:0}
  .course-detail-code{font-size:11px}
- .course-detail-review{font-size:10px}
- .course-detail-translation{font-size:14px;margin-top:8px}
+ .course-detail-review{font-size:10px;padding:3px 6px}
+ .course-detail-translation{font-size:15px;margin-top:8px}
  .course-detail-layout{row-gap:19px}
  .course-detail-overview{margin-top:13px}
  .course-detail-overview p{font-size:14px;line-height:1.8}
- .course-detail-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:19px;padding:0 16px;border-radius:9px}
+ .course-detail-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:18px;padding:0 13px;border-radius:8px}
  .course-detail-facts>div{padding:13px 10px 13px 0}
  .course-detail-facts>div+div{padding:13px 10px 13px 0;border-left:0}
  .course-detail-facts>div:nth-child(even){border-left:1px solid var(--line);padding-left:18px;padding-right:0}
@@ -144,12 +155,14 @@
  .course-detail-facts dt{font-size:11px}
  .course-detail-facts dd{font-size:16px}
  .course-detail-facts small{font-size:11px}
- .course-detail-plan{padding:15px}
+ .course-detail-plan{padding:20px 18px}
  .course-detail-actions{grid-template-columns:minmax(0,1fr) 123px;gap:9px}
  .course-detail-actions .button{font-size:13px;padding:8px;white-space:normal;line-height:1.4}
- .course-detail-panel,.course-reading-card{padding:20px 18px;border-radius:10px;margin-bottom:15px}
- .course-detail-nav{gap:3px;padding:0;justify-content:space-between}
- .course-detail-nav a{font-size:12px;min-height:40px;padding:6px 4px;gap:4px}
+ .course-detail-content,.course-detail-side{border-radius:11px}
+ .course-detail-panel,.course-reading-card{padding:22px 18px}
+ .course-detail-nav{display:flex;flex-wrap:nowrap;gap:6px;padding:10px;border-radius:10px 10px 0 0}
+ .course-detail-nav a{min-width:0;font-size:12px;min-height:40px;padding:7px 3px;gap:0}
+ .course-detail-nav a span{display:none}
  .course-detail-section h2{font-size:17px}
  .course-outcomes{padding:15px;margin-top:19px}
  .course-outcomes h2{font-size:14px;margin-bottom:7px}
@@ -157,14 +170,15 @@
  .course-study-details dt{font-size:12px}
  .course-study-details>div.course-assessment{padding:14px;margin-top:16px}
  .course-selection-notes{padding:12px;margin-top:15px}
- .course-workload-estimates{gap:16px;align-items:flex-start;flex-direction:column}
- .course-workload-estimates .course-workload-total{font-size:18px}
- .course-weekly-reference{border-left:0;border-top:1px solid var(--line);padding:13px 0 0;min-width:0;width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+ .course-workload-estimates{gap:12px;flex-direction:column}
+ .course-workload-estimates .course-workload-total{font-size:17px;padding:16px}
+ .course-weekly-reference{padding:13px 16px;min-width:0;width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
  .course-weekly-reference p{margin:0}
  .course-detail-section .course-detail-caption{font-size:11px}
  .course-alternatives li>a{gap:12px;padding:13px 14px}
  .course-related-credits{font-size:11px}
  .course-alternatives strong{font-size:13px}
+ .course-counting,.course-detail-footer{padding:18px}
 }
-@media(max-width:360px){.course-detail-actions{grid-template-columns:1fr}}
+@media(max-width:360px){.course-detail-actions{grid-template-columns:1fr}.course-detail-quick-links a{font-size:11px;padding:8px;gap:4px;white-space:nowrap}}
 @media print{.course-detail-back,.course-detail-side,.course-detail-nav{display:none}.course-detail-layout{display:block}.course-detail-heading h1{font-size:24px}.course-detail-content{margin-top:20px}.course-study-details,.course-detail-section{break-inside:avoid}.course-detail-facts{display:flex}.course-detail-panel,.course-reading-card{border:0;padding:15px 0}}
