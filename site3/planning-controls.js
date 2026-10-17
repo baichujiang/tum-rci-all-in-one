@@ -26,8 +26,8 @@ function settingErrorAttrs(id,errors){return `aria-invalid="${!!errors[id]}" ari
 function defaultConditions(plan){return C.validatePlan({...plan,workload:undefined,preferences:{...plan.preferences,languages:undefined,startSemester:Math.min(plan.timeline.count,Math.max(1,...plan.items.filter(x=>x.status==='passed').map(x=>x.semester))),allowUnconfirmed:undefined,deadlineException:undefined}},db.courses);}
 function updateDefaultFeedback(){
  const button=document.getElementById('plan-use-default-conditions'),status=document.getElementById('plan-default-conditions-status');
- if(button){button.classList.toggle('is-success',defaultsApplied);button.innerHTML=defaultsApplied?'<span aria-hidden="true">✓</span>已恢复默认条件':'使用默认规划条件';}
- if(status)status.textContent=defaultsApplied?'已恢复默认规划条件，可继续调整。':'';
+ if(button){button.classList.toggle('is-success',defaultsApplied);button.innerHTML=defaultsApplied?'<span aria-hidden="true">✓</span>已恢复默认偏好':'使用默认偏好';}
+ if(status)status.textContent=defaultsApplied?'已恢复默认偏好，可继续调整。':'';
 }
 function setDefaultFeedback(applied=false){
  clearTimeout(defaultsFeedbackTimer);defaultsFeedbackTimer=null;defaultsApplied=applied;updateDefaultFeedback();
@@ -44,7 +44,7 @@ async function applyDefaultConditions(){
  }finally{preparing=false;}
 }
 function settingsHTML(){workloadSemester=Math.min(workloadSemester,p.timeline.count);const defaults=defaultConditions(p),errors=requiredSettingErrors(p);return `
- <section class="settings-default-shortcut" aria-labelledby="settings-default-title"><div><h3 id="settings-default-title">恢复默认规划条件</h3><p>每学期最多 ${defaults.workload.maxECTS} ECTS · ${defaults.workload.maxExams} 次考试（估算）· 英语 / 德语</p><small>从第 ${defaults.preferences.startSemester} 学期开始，清除单学期限制；保留学业信息、课程与想选／排除记录。应用后可在本页继续调整。</small></div><button id="plan-use-default-conditions" type="button" class="button secondary" data-use-default-conditions>使用默认规划条件</button><span id="plan-default-conditions-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></section>
+ <section class="settings-default-shortcut" aria-labelledby="settings-default-title"><div><h3 id="settings-default-title">恢复默认偏好</h3><p>每学期最多 ${defaults.workload.maxECTS} ECTS · ${defaults.workload.maxExams} 次考试（估算）· 英语 / 德语</p><small>学业信息需自行确认；已填信息、课程与想选／排除记录保留。从第 ${defaults.preferences.startSemester} 学期开始，清除单学期限制，应用后可继续调整。</small></div><button id="plan-use-default-conditions" type="button" class="button secondary" data-use-default-conditions>使用默认偏好</button><span id="plan-default-conditions-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></section>
  <section id="plan-options" class="plan-basic-settings plan-settings-card" aria-labelledby="plan-basics-title">
   <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">01</span><div><h3 id="plan-basics-title">学业信息</h3></div><span class="settings-save-badge">修改后自动保存</span></div>
   <div class="plan-settings-grid">
