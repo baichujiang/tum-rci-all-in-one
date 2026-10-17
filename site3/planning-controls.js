@@ -46,7 +46,7 @@ async function applyDefaultConditions(){
 function settingsHTML(){workloadSemester=Math.min(workloadSemester,p.timeline.count);const defaults=defaultConditions(p),errors=requiredSettingErrors(p);return `
  <section class="settings-default-shortcut" aria-labelledby="settings-default-title"><div><h3 id="settings-default-title">恢复默认偏好</h3><p>每学期最多 ${defaults.workload.maxECTS} ECTS · ${defaults.workload.maxExams} 次考试（估算）· 英语 / 德语</p><small>学业信息需自行确认；已填信息、课程与想选／排除记录保留。从第 ${defaults.preferences.startSemester} 学期开始，清除单学期限制，应用后可继续调整。</small></div><button id="plan-use-default-conditions" type="button" class="button secondary" data-use-default-conditions>使用默认偏好</button><span id="plan-default-conditions-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></section>
  <section id="plan-options" class="plan-basic-settings plan-settings-card" aria-labelledby="plan-basics-title">
-  <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">01</span><div><h3 id="plan-basics-title">学业信息</h3></div><span class="settings-save-badge">修改后自动保存</span></div>
+  <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">01</span><div><h3 id="plan-basics-title">学业信息</h3></div><span class="settings-save-badge">学业信息自动保存</span></div>
   <div class="plan-settings-grid">
    <label><span class="settings-field-label">入学时间 <small class="settings-required">必选</small></span><select id="plan-cohort" aria-required="true" ${settingErrorAttrs('plan-cohort',errors)}>${[['unknown','请选择'],...C.cohorts.map(v=>[v,v]),['older','其他时间']].map(([v,t])=>`<option value="${e(v)}" ${p.cohort===v?'selected':''}>${e(t)}</option>`).join('')}</select>${settingErrorHTML('plan-cohort',errors)}</label>
    <label>计划学期数<select id="plan-semester-count">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${p.timeline.count===i+1?'selected':''}>${i+1} 个学期</option>`).join('')}</select></label>
@@ -120,7 +120,7 @@ function openSettings(forAuto=false,message='',fixedNotice=false){
  autoIntent=forAuto;fixedSettingsNotice=fixedNotice;
  const notice=document.getElementById('plan-settings-notice');notice.textContent=message;notice.hidden=!message;
  document.getElementById('plan-settings-title').textContent=forAuto?'调整规划条件':'计划设置';
- settings.querySelector('[data-finish-settings]').textContent=forAuto?'保存并预览':'保存设置';
+ settings.querySelector('[data-finish-settings]').textContent=forAuto?'保存偏好并预览':'保存规划偏好';
  openPlanDialog(settings);
  document.getElementById('plan-settings-content').scrollTop=0;
  if(forAuto){const required=Object.keys(requiredSettingErrors(p))[0];if(required){const field=document.getElementById(required);field.focus({preventScroll:true});field.scrollIntoView({block:'nearest'});}}

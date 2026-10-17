@@ -23,7 +23,7 @@ module.exports=function plannerView(studyHelp=''){return `
   <header class="plan-dialog-heading"><div><h2 id="plan-settings-title">计划设置</h2><p id="plan-settings-description">调整学期节奏和每学期负担。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭计划设置">关闭</button></header>
   <p id="plan-settings-notice" class="notice" role="status" hidden></p>
   <div id="plan-settings-content" class="planning-workflow"></div>
-  <footer class="plan-dialog-footer"><p class="meta settings-save-note">学业信息自动保存，规划偏好点击按钮保存。</p><button type="button" class="button" data-finish-settings>保存设置</button></footer>
+  <footer class="plan-dialog-footer"><p class="meta settings-save-note">学业信息会自动保存；规划偏好需点击下方按钮保存。</p><button type="button" class="button" data-finish-settings>保存规划偏好</button></footer>
  </dialog>
  <dialog id="planning-rules-dialog" class="plan-dialog" aria-labelledby="planning-rules-title">
   <header class="plan-dialog-heading"><h2 id="planning-rules-title">规划说明</h2><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭规划说明">返回设置</button></header>
