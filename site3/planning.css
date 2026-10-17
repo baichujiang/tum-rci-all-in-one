@@ -286,6 +286,9 @@ details[open]>summary>.settings-disclosure-arrow{transform:rotate(180deg)}
 .workload-overrides p{padding:10px 12px;border-radius:8px;background:var(--brand-soft,#edf4ef);font-size:12px}
 #plan-settings-content .plan-rules-link{margin:0;padding:0 4px;border:0;min-height:32px;font-size:13px}
 #plan-settings-dialog .settings-save-note{font-size:12px;line-height:1.6;color:var(--muted)}
+#plan-settings-dialog .settings-error{flex-shrink:0;border-color:#e5b4ae;background:#fff6f5;color:#b42318}
+#plan-settings-dialog .settings-error p{margin:0}
+#plan-settings-dialog .settings-error .quiet{margin-top:4px;color:inherit}
 #plan-settings-dialog [data-finish-settings]{min-height:44px;padding:10px 20px;font-size:14px}
 @media(max-width:800px){
  #plan-settings-dialog{width:min(600px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}

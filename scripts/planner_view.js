@@ -22,8 +22,9 @@ module.exports=function plannerView(studyHelp=''){return `
  <dialog id="plan-settings-dialog" class="plan-dialog" aria-labelledby="plan-settings-title" aria-describedby="plan-settings-description">
   <header class="plan-dialog-heading"><div><h2 id="plan-settings-title">计划设置</h2><p id="plan-settings-description">调整学期节奏和每学期负担。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭计划设置">关闭</button></header>
   <p id="plan-settings-notice" class="notice" role="status" hidden></p>
+  <div id="plan-settings-error" class="notice settings-error" role="alert" hidden><p id="plan-settings-error-message"></p><button id="plan-settings-reload" type="button" class="quiet" data-reload-settings hidden>载入已保存设置</button></div>
   <div id="plan-settings-content" class="planning-workflow"></div>
-  <footer class="plan-dialog-footer"><p class="meta settings-save-note">学业信息会自动保存；规划偏好需点击下方按钮保存。</p><button type="button" class="button" data-finish-settings>保存规划偏好</button></footer>
+  <footer class="plan-dialog-footer"><p id="plan-settings-save-state" class="meta settings-save-note" role="status">所有设置统一在点击保存后生效。</p><button type="button" class="button" data-finish-settings>保存设置</button></footer>
  </dialog>
  <dialog id="planning-rules-dialog" class="plan-dialog" aria-labelledby="planning-rules-title">
   <header class="plan-dialog-heading"><h2 id="planning-rules-title">规划说明</h2><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭规划说明">返回设置</button></header>
