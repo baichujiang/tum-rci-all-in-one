@@ -58,7 +58,7 @@ function planView(p,db,date=new Date().toLocaleDateString('zh-CN')){
  const known=new Map(db.courses.map(c=>[c.module_code,c]));
  const items=p.items.map(x=>{
   const c=x.custom?null:known.get(x.code),group=x.group||c?.section_2025[0]||'';
-  return {...x,name:x.custom?x.name:c?.module_name_legal_2025||x.name||x.code,translation:x.custom?'':db.names?.[x.code]||'',ects:Number(c?.ects??x.ects),group,statusLabel:x.status==='passed'?'已通过':'待修',termLabel:x.semester?`第 ${x.semester} 学期 · ${T.term(p,x.semester).label}`:x.status==='passed'?'通过学期未记录':'待分配'};
+  return {...x,name:x.custom?x.name:C.courseName(c)||x.name||x.code,translation:x.custom?'':db.names?.[x.code]||'',ects:Number(c?.ects??x.ects),group,statusLabel:x.status==='passed'?'已通过':'待修',termLabel:x.semester?`第 ${x.semester} 学期 · ${T.term(p,x.semester).label}`:x.status==='passed'?'通过学期未记录':'待分配'};
  });
  const sum=rows=>rows.reduce((n,x)=>n+x.ects,0);
  const summarize=rows=>({items:rows,credits:sum(rows),passedCredits:sum(rows.filter(x=>x.status==='passed')),plannedCredits:sum(rows.filter(x=>x.status!=='passed'))});

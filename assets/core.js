@@ -36,6 +36,7 @@
     });
   }
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const courseName = course => course?.module_name_current || course?.module_name_legal_2025 || '';
   function safeURL(url) {
     try { const u = new URL(String(url)); return ['https:', 'http:'].includes(u.protocol) && !u.username && !u.password ? u.href : ''; }
     catch (_) { return ''; }
@@ -255,7 +256,7 @@
       return {...row,value,historical,unknown,met:value>=row.required,exception:plan.preferences.deadlineException};
     });
   }
-  const api = {csv, esc, safeURL, validatePlan, calculate, progression, amended, semesterSeason, semesterLabel, offering, schedule, markdown, cohorts, courseGroups, creditOriginalNames};
+  const api = {csv, esc, courseName, safeURL, validatePlan, calculate, progression, amended, semesterSeason, semesterLabel, offering, schedule, markdown, cohorts, courseGroups, creditOriginalNames};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.RCI = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

@@ -56,7 +56,7 @@ test('Local backup UI is reachable from favorites and planner, with its dependen
  const planner=fs.readFileSync(path.join(dist,'planner/index.html'),'utf8');assert(planner.includes('id="plan-tools-dialog"'));assert(planner.includes('data-backup-open'));assert(!planner.includes('plan-import'));
 });
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
-test('course sources and status retained in static pages',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('2025'));assert(s.includes('历史整理'));assert(s.includes('campus.tum.de'));});
+test('static course pages keep official links and selection rules without maintenance logs',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('官方课程介绍'));assert(s.includes('campus.tum.de'));assert(s.includes('二选一'));assert(!s.includes('来源与核查记录'));assert(!s.includes('独立人工复核'));});
 test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,146);assert.equal(info.courses,595);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
 
 test('RCI advising and existing favorites open the program contact while the general overview remains secondary',()=>{
@@ -203,7 +203,7 @@ test('Current catalogue metadata supports winter Deep Learning and both IN2060 c
  assert(Picker.choices(pickerData,pickerPlan,1,{group:'I'}).some(x=>x.code==='IN2060'));assert(Picker.choices(pickerData,pickerPlan,1,{query:'IN2346'}).some(x=>x.code==='IN2346'));
  const p=Core.validatePlan({...pickerPlan,cohort:'2026/27冬季',items:[{code:'IN2060',status:'passed',semester:1,group:'I'}]},pickerData.courses);assert.equal(Core.calculate(p,pickerData.courses,true).totals.I,6);assert.equal(Core.calculate(p,pickerData.courses,true).totals.G,0);
  for(const code of ['MW2352','IN2404','WI000159','IN9003'])assert.equal(pickerData.courses.find(x=>x.module_code===code).automatic_recommendation_eligible,false);
- assert(!JSON.stringify(pickerData.offerings).includes('sessions'));assert(pickerData.catalogAudit.coverage.GHI.omitted_distinct_modules===0);
+ assert(!JSON.stringify(pickerData.offerings).includes('sessions'));assert.equal(pickerData.catalogAudit.coverage.GHI.omitted_distinct_modules,pickerData.catalogAudit.coverage.GHI.intentionally_unpublished_codes.length);for(const code of pickerData.catalogAudit.intentionally_unpublished_codes)assert(!pickerData.courses.some(c=>c.module_code===code));
 });
 
 test('Compiled catalogue plans satisfy verified numerical rules across original and amended cohorts',()=>{

@@ -11921,7 +11921,7 @@
       "selection_source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1051792/study-year/1623",
       "selection_sha256": "c3f4100627614344961cd438ab12f5d3eed84e3095f2a6d8522b2660a3c329c1",
       "curriculum_source_urls": [
-        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=12&pStpKnotenNr=#kn3886864"
+        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=13&pStpKnotenNr=#kn3886864"
       ],
       "current_academic_year_selection_verified": true,
       "selected_semester_id": "207",
@@ -12043,7 +12043,7 @@
       "selection_source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/1057258/study-year/1623",
       "selection_sha256": "3fc66e4a3e89acd3c297fd743e9084bbb37d024879261de7acbef18178a53836",
       "curriculum_source_urls": [
-        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=11&pStpKnotenNr=#kn3886508"
+        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=12&pStpKnotenNr=#kn3886508"
       ],
       "current_academic_year_selection_verified": true,
       "selected_semester_id": "207",
@@ -26233,7 +26233,7 @@
       "selection_source_api": "https://campus.tum.de/tumonline/ee/rest/slc.cm.reg/student/modules/detail/light/4108928/study-year/1623",
       "selection_sha256": "9c06494f1e15a822309b5be680bd51d4efc482b8a40dbfff645de2e5206f0479",
       "curriculum_source_urls": [
-        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=13&pStpKnotenNr=#kn4110496"
+        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=14&pStpKnotenNr=#kn4110496"
       ],
       "current_academic_year_selection_verified": true,
       "selected_semester_id": "207",

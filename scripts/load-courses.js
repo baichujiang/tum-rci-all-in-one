@@ -9,11 +9,11 @@ module.exports=function loadCourses(root=path.resolve(__dirname,'..')){
  const evidence=JSON.parse(read('data/course-verification.json'));
  const overrides=JSON.parse(read('data/course-overrides.json'));
  for(const row of current){
-  if(!row.module_detail_urls?.length||!row.module_detail_urls.every(C.safeURL)||!row.review_date||!['G','H','I','J'].includes(row.section?.[0]))throw Error('Current course evidence incomplete: '+row.module_code);
+  if(!row.module_detail_urls?.length||!row.module_detail_urls.every(C.safeURL)||!row.review_date||!['E','G','H','I','J'].includes(row.section?.[0]))throw Error('Current course evidence incomplete: '+row.module_code);
   const patch={current_term:row.term,current_language:row.language,offering_url:row.current_offering_urls?.[0],allowed_groups:row.accepted_sections.map(x=>x[0]),automatic_recommendation_eligible:row.automatic_recommendation_eligible===true,current_metadata_source:row.module_detail_urls[0]};
   const existing=courses.find(c=>c.module_code===row.module_code);
   if(existing){Object.assign(existing,patch);continue;}
-  courses.push({module_code:row.module_code,module_name_legal_2025:row.name,section_2025:row.section,ects:String(row.ects),term_legal_annex:row.term,language_legal_annex:row.language,type:'扩展选修',notes_cn:'官方公开 RCI 课程树（20241、2026/27 学年）扩展模块；手册周期不是当期名额或时间承诺。',rule_cohort:'2024夏季起 · 请核对个人TUMonline归类',source_regulation:row.module_detail_urls[0],last_reviewed:row.review_date,catalog_source:'current',...patch});
+  courses.push({module_code:row.module_code,module_name_legal_2025:row.name,section_2025:row.section,ects:row.ects===null?'待核实':String(row.ects),term_legal_annex:row.term,language_legal_annex:row.language,type:row.section[0]==='E'?'实践课选项':'扩展选修',notes_cn:row.notes_cn||'官方公开 RCI 课程树（20241、2026/27 学年）扩展模块；手册周期不是当期名额或时间承诺。',rule_cohort:'2024夏季起 · 请核对个人TUMonline归类',source_regulation:row.module_detail_urls[0],last_reviewed:row.review_date,catalog_source:'current',prerequisites:row.prerequisites,recommendation_note:row.recommendation_note,...patch});
  }
  for(const [code,patch] of Object.entries(overrides.courses)){
   const c=courses.find(x=>x.module_code===code);
@@ -22,7 +22,7 @@ module.exports=function loadCourses(root=path.resolve(__dirname,'..')){
  }
  for(const m of memberships.modules){
   const c=courses.find(x=>x.module_code===m.module_code),v=evidence.courses[m.module_code];
-  if(!c||Number(c.ects)!==m.ects||!v)throw Error('Current membership or verification missing: '+m.module_code);
+  if(!c||c.ects!==(m.ects===null?'待核实':String(m.ects))||!v)throw Error('Current membership or verification missing: '+m.module_code);
   const fields=['identity','ects','groups','term','language','prerequisites'];
   if(fields.some(k=>!['verified','pending'].includes(v.fields?.[k])))throw Error('Invalid field verification: '+m.module_code);
   const review=v.follow_up_review;
@@ -54,6 +54,16 @@ module.exports=function loadCourses(root=path.resolve(__dirname,'..')){
   const c=courses.find(x=>x.module_code===m.module_code);
   if(c){if(m.ects!==null&&Number(c.ects)!==m.ects)throw Error('Existing J curriculum ECTS changed: '+m.module_code);Object.assign(c,patch);}
   else courses.push({module_code:m.module_code,module_name_legal_2025:m.name,section_2025:'J Support Electives',term_legal_annex:v.term,language_legal_annex:v.language,type:'扩展选修',notes_cn:'官方公开 RCI 20241、2026/27 学年 J 类模块。列入目录不等于已满足个人资格、获得名额或学校认可。',rule_cohort:'2024夏季起 · 请核对个人TUMonline归类',source_regulation:v.source,last_reviewed:v.checked_on,catalog_source:'current',...patch});
+ }
+ const curriculum=JSON.parse(read('data/official-curriculum.json'));
+ const omitted=new Set(curriculum.site_omissions?.module_codes||[]);
+ for(const m of curriculum.modules){
+  const c=courses.find(x=>x.module_code===m.module_code);
+  if(omitted.has(m.module_code)){if(c)throw Error('Intentionally unpublished module was loaded: '+m.module_code);continue;}
+  if(!m.name?.trim()||m.module_detail_urls?.length!==1||!m.module_detail_urls.every(C.safeURL))throw Error('Invalid full curriculum source: '+m.module_code);
+  if(!c||c.ects!==(m.ects===null?'待核实':String(m.ects))||JSON.stringify((c.allowed_groups||[c.section_2025[0]]).slice().sort())!==JSON.stringify(m.groups.slice().sort()))throw Error('Full curriculum membership mismatch: '+m.module_code);
+  c.module_name_current=m.name;c.current_curriculum_checked_on=curriculum.checked_on;
+  c.current_metadata_source=m.module_detail_urls[0];
  }
  if(new Set(courses.map(c=>c.module_code)).size!==courses.length)throw Error('Duplicate module code in current catalog');
  return courses;
