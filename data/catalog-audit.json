@@ -1,25 +1,31 @@
 {
-  "checked_on": "2026-10-15",
+  "checked_on": "2026-10-16",
   "curriculum_version": "20241",
   "curriculum_id": 5271,
   "academic_year": "2026/27",
   "study_year_id": 1623,
   "source_page_count": 14,
-  "source_tree_rows": 4097,
-  "source_scope": "All actual G/H/I/J module identities under current public tree, including one J module with missing curriculum ECTS; recognition placeholders excluded. Not personal eligibility or current lecture registration.",
-  "category_memberships": 587,
-  "distinct_module_codes": 582,
-  "distinct_module_handbook_ids": 582,
+  "source_tree_rows": 4104,
+  "source_scope": "All actual A–J modules in the 2026/27 public RCI tree, deduplicated by code. Recognition placeholders excluded; statutory K recorded separately.",
+  "category_memberships": 599,
+  "distinct_module_codes": 594,
+  "distinct_module_handbook_ids": 594,
   "category_counts": {
-    "G": 70,
+    "A": 2,
+    "B": 1,
+    "C": 2,
+    "D": 1,
+    "E": 2,
+    "F": 1,
+    "G": 71,
     "H": 27,
     "I": 61,
-    "J": 429
+    "J": 431
   },
   "dataset_legal_rows": 35,
   "dataset_additional_rows": 560,
   "dataset_distinct_module_codes": 595,
-  "dataset_matching_full_tree_module_codes": 582,
+  "dataset_matching_full_tree_module_codes": 590,
   "dataset_matching_ects_mismatches": 0,
   "new_records_matching_current_tree": 560,
   "multi_category_codes": {
@@ -46,43 +52,66 @@
   },
   "coverage": {
     "GHI": {
-      "official_distinct_modules": 153,
+      "official_distinct_modules": 154,
       "dataset_distinct_modules": 155,
       "matching_distinct_modules": 153,
-      "omitted_distinct_modules": 0,
+      "omitted_distinct_modules": 1,
       "statutory_only_codes": [
         "IN2404",
         "MW2352"
+      ],
+      "missing_curriculum_ects_codes": [
+        "IN3150"
+      ],
+      "intentionally_unpublished_codes": [
+        "IN3150"
       ]
     },
     "J": {
-      "official_distinct_modules": 429,
+      "official_distinct_modules": 431,
       "dataset_distinct_modules": 431,
       "matching_distinct_modules": 429,
-      "omitted_distinct_modules": 0,
+      "omitted_distinct_modules": 2,
       "statutory_only_codes": [
         "IN9003",
         "WI000159"
       ],
-      "official_fixed_credit_modules": 428,
+      "official_fixed_credit_modules": 430,
       "missing_curriculum_ects_codes": [
         "CLA31307"
       ],
       "handbook_ects_conflict_codes": [
         "SOT10082"
+      ],
+      "intentionally_unpublished_codes": [
+        "SOT56601",
+        "SOT82136"
       ]
+    },
+    "core": {
+      "official_distinct_modules": 9,
+      "dataset_distinct_modules": 8,
+      "matching_distinct_modules": 8,
+      "omitted_distinct_modules": 1,
+      "intentionally_unpublished_codes": [
+        "MA8113"
+      ]
+    },
+    "K": {
+      "module_code": "ED140014",
+      "basis": "2025 amended FPSO conditional requirement; outside the 20241 public curriculum tree"
     }
   },
   "limitations": [
-    "专业选修G/H/I目录成员已完整收录，但目录成员不等于个人资格或当期开课",
+    "官方全量目录已保存核查证据；按维护者要求，4条模块暂不收录到网站。目录收录不等于个人资格或当期开课。",
     "空白先修、双语冲突、学年错误、未提供周期不视为已核实；不定期、明确前置背景或导师条件未确认的模块不自动推荐",
     "普通知识背景随方案提示，不推断TUMonline报名硬门槛；J语言资格、实际课题、个人认定和等价去重仍需确认",
     "自动规划在可推荐模块与计算预算内搜索，不证明全局最优"
   ],
   "additional_professional_modules": 106,
   "verification": {
-    "scope": "All 153 distinct current professional G/H/I modules. J verification is reported separately under j_verification; historical annex-only records remain disabled.",
-    "checked_on": "2026-10-15",
+    "scope": "153 published professional G/H/I modules; IN3150 intentionally unpublished per the 2026-10-17 maintenance decision.",
+    "checked_on": "2026-10-16",
     "fully_verified": 139,
     "pending": 14,
     "automatic_recommendation_eligible": 114,
@@ -220,11 +249,11 @@
       "dated_offering_does_not_bypass_gate": true
     }
   },
-  "fixed_credit_category_memberships": 586,
+  "fixed_credit_category_memberships": 597,
   "dataset_current_file_rows": 140,
   "dataset_interdisciplinary_added_rows": 420,
   "j_verification": {
-    "checked_on": "2026-10-15",
+    "checked_on": "2026-10-16",
     "reviewed_modules": 429,
     "new_fixed_credit_modules": 419,
     "new_missing_credit_modules": 1,
@@ -235,5 +264,60 @@
     "language_modules": 156,
     "full_current_handbooks": 429,
     "recognition_family_count": 32
-  }
+  },
+  "reconciliation": {
+    "checked_on": "2026-10-16",
+    "before_dataset_count": 595,
+    "before_matching_current_modules": 590,
+    "before_omitted_codes": [
+      "MA8113",
+      "IN3150",
+      "SOT56601",
+      "SOT82136"
+    ],
+    "corrected_display_names": [
+      "ED160028",
+      "IN2228",
+      "IN9006"
+    ],
+    "current_handbooks_read": 594,
+    "handbook_current_year_selected": 593,
+    "old_selected_year_codes": [
+      "IN2123"
+    ],
+    "missing_curriculum_ects_codes": [
+      "IN3150",
+      "CLA31307"
+    ],
+    "handbook_ects_conflict_codes": [
+      "SOT10082"
+    ],
+    "historical_only_codes": [
+      "IN2404",
+      "MW2352",
+      "IN9003",
+      "WI000159"
+    ],
+    "existing_j_prerequisite_full_text_hashes_unchanged": true,
+    "full_inventory": "data/official-curriculum.json",
+    "existing_j_full_dto_unchanged": 429,
+    "publication_decision": {
+      "decided_on": "2026-10-17",
+      "intentionally_unpublished_codes": [
+        "IN3150",
+        "MA8113",
+        "SOT56601",
+        "SOT82136"
+      ],
+      "dataset_records_after_decision": 595,
+      "matching_current_modules_after_decision": 590
+    }
+  },
+  "publication_decision_on": "2026-10-17",
+  "intentionally_unpublished_codes": [
+    "IN3150",
+    "MA8113",
+    "SOT56601",
+    "SOT82136"
+  ]
 }

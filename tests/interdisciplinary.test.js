@@ -5,9 +5,9 @@ const courses=require('../scripts/load-courses')(),source=require('../data/offic
 const known=new Map(courses.map(c=>[c.module_code,c]));
 const draft=()=>C.validatePlan({version:5,cohort:'2026/27冬季',conditional:false,conditionalConfirmed:true,items:[]},courses);
 let count=0;const test=(name,fn)=>{fn();count++;console.log('PASS',name);};
-test('All 428 fixed-credit J modules plus the actual missing-credit module are visible exactly once',()=>{
+test('All 428 published fixed-credit J modules plus the actual missing-credit module are visible exactly once',()=>{
  assert.equal(source.modules.length,429);assert.equal(new Set(source.modules.map(m=>m.module_code)).size,429);assert.equal(courses.length,595);
- assert.equal(audit.coverage.J.omitted_distinct_modules,0);assert.equal(audit.j_verification.new_fixed_credit_modules,419);
+ assert.equal(audit.coverage.J.omitted_distinct_modules,2);assert.equal(audit.j_verification.new_fixed_credit_modules,419);
  for(const m of source.modules){const c=known.get(m.module_code);assert(c,m.module_code);assert.deepEqual(c.allowed_groups,['J']);assert.equal(c.ects,m.ects===null?'待核实':String(m.ects));assert(m.module_detail_ids.length===1&&m.source_memberships.length);}
  assert.equal(known.get('CLA31307').verification.fields.ects,'pending');assert.equal(known.get('CLA31307').verification.handbook_ects,3);
  assert.equal(known.get('SOT10082').ects,'2');assert.equal(known.get('SOT10082').verification.handbook_ects,3);assert.equal(known.get('SOT10082').verification.fields.ects,'pending');

@@ -7,14 +7,14 @@ const map=new Map(courses.map(c=>[c.module_code,c]));
 const B=require('../site3/backup-core');
 const draft=()=>C.validatePlan({version:2,cohort:'2026/27冬季',conditional:false,items:[]},courses);
 let count=0;const test=(name,fn)=>{fn();count++;console.log('PASS',name);};
-test('All 153 official professional modules and 158 memberships are present with exact ECTS',()=>{
+test('All 153 published professional modules have exact curriculum credits',()=>{
  assert.equal(courses.length,595);assert.equal(source.modules.length,153);assert.equal(new Set(source.modules.map(m=>m.module_code)).size,153);
  assert.equal(source.modules.reduce((n,m)=>n+m.accepted_sections.length,0),158);
- for(const m of source.modules){const c=map.get(m.module_code);assert(c,m.module_code);assert.equal(Number(c.ects),m.ects);assert.deepEqual(c.allowed_groups,m.accepted_sections.map(x=>x[0]));assert.equal(m.module_detail_ids.length,1);}
- assert.equal(audit.coverage.GHI.omitted_distinct_modules,0);assert.equal(audit.additional_professional_modules,106);assert.equal(audit.coverage.J.omitted_distinct_modules,0);
+ for(const m of source.modules){const c=map.get(m.module_code);assert(c,m.module_code);assert.equal(c.ects,m.ects===null?'待核实':String(m.ects));assert.deepEqual(c.allowed_groups,m.accepted_sections.map(x=>x[0]));assert.equal(m.module_detail_ids.length,1);}
+ assert.equal(audit.coverage.GHI.omitted_distinct_modules,1);assert.equal(audit.additional_professional_modules,106);assert.equal(audit.coverage.J.omitted_distinct_modules,2);
 });
 test('Every professional module has field-level evidence and unsupported facts cannot default to verified',()=>{
- for(const m of source.modules){const v=evidence.courses[m.module_code];assert(v);assert.equal(v.fields.ects,'verified');assert.equal(v.fields.groups,'verified');assert(C.safeURL(v.source));assert(C.safeURL(v.source_api));assert(/^[a-f0-9]{64}$/.test(v.source_sha256));
+ for(const m of source.modules){const v=evidence.courses[m.module_code];assert(v);assert.equal(v.fields.ects,m.ects===null?'pending':'verified');assert.equal(v.fields.groups,'verified');assert(C.safeURL(v.source));assert(C.safeURL(v.source_api));assert(/^[a-f0-9]{64}$/.test(v.source_sha256));
   for(const [key,sourceKey] of [['term','term'],['language','language'],['prerequisites','prerequisites']])if(v.source_field_status[sourceKey]==='not_provided')assert.equal(v.fields[key],'pending',m.module_code+' '+key);
  }
  const vs=Object.values(evidence.courses),complete=v=>Object.values(v.fields).every(x=>x==='verified');

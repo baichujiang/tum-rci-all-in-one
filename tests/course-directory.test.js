@@ -11,17 +11,28 @@ const defaults={query:'',group:'',term:'',language:'',selection:''};
 let checks=0;
 async function test(name,fn){await fn();checks++;console.log('PASS',name);}
 function element(){return {value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,handlers:{},dataset:{},children:[],addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];},focus(){this.focused=true;},contains(){return false;},getBoundingClientRect(){return {top:200,bottom:240};}};}
-async function harness(search='',desktop=false){
- let plan=empty(),lastURL='',fail=false;
- const nodes={},calls=[],events={};
+async function harness(search='',desktop=false,options={}){
+ let plan=options.plan||empty(),lastURL='',fail=false,rows=[],cache=options.saved?JSON.stringify(options.saved):null;
+ const nodes={},calls=[],events={},frames=[],scrolls=[],location={search,pathname:'/courses/',hash:options.hash||''};
+ const history={state:options.historyState||null,replaceState(state,_b,url){this.state=state;lastURL=url;const u=new URL(url,'http://localhost:8001');location.search=u.search;location.hash=u.hash;}};
+ const env={scrollY:options.scrollY||0,innerHeight:900};
  for(const id of ['course-target-semester','page-search','group-filter','term-filter','directory-language','directory-selection','results','result-count','directory-undo','directory-status','directory-feedback','more-results','directory-subcategories','directory-active-filters','directory-filter-count','reset-filters','directory-target-credits','catalog-filter-options'])nodes['#'+id]=element();
  nodes['form']=element();nodes['[data-directory-clear-query]']=element();nodes['#catalog-filter-options'].querySelector=()=>element();
+ let html='';Object.defineProperty(nodes['#results'],'innerHTML',{get:()=>html,set:value=>{
+  html=value;rows=[...value.matchAll(/<article class="course-entry[^"]*" id="directory-course-([^"]+)">/g)].map((match,index)=>{
+   const link={...element(),dataset:{directoryDetail:match[1]},href:'/courses/'+match[1]+'/'};
+   return {id:'directory-course-'+match[1],code:match[1],link,getBoundingClientRect:()=>({top:(options.listTop||300)+index*180-env.scrollY,bottom:(options.listTop||300)+(index+1)*180-env.scrollY}),querySelector:()=>link};
+  });nodes['#results'].children=rows;
+ }});
+ nodes['#results'].querySelectorAll=selector=>selector==='.course-entry'?rows:[];
  const box=element();box.querySelector=s=>nodes[s];
  const U={base:'',persisted:true,data:async()=>data,plan:async()=>copy(plan),addCourse:async(code,semester,options)=>{calls.push({code,semester,options});if(fail)throw new Error('保存失败');const previous=plan.items.find(x=>x.code===code);plan.items=plan.items.filter(x=>x.code!==code);plan.items.push({code,semester,status:'planned'});events['rci:planchange']?.();return {kind:previous?'moved':'added',code,semester,previous};},undoCourse:async change=>{plan.items=plan.items.filter(x=>x.code!==change.code);if(change.previous)plan.items.push(change.previous);events['rci:planchange']?.();}};
- vm.runInNewContext(source,{matchMedia:()=>({matches:desktop,addEventListener(){}}),RCI:C,RCISearch:S,RCIUI:U,document:{getElementById:()=>box,addEventListener(){},activeElement:null},location:{search,pathname:'/courses/',hash:''},history:{replaceState(_a,_b,url){lastURL=url;}},URLSearchParams,setTimeout,clearTimeout,addEventListener:(type,fn)=>events[type]=fn});
+ Object.assign(env,{matchMedia:()=>({matches:desktop,addEventListener(){}}),RCI:C,RCISearch:S,RCIUI:U,document:{getElementById:id=>id==='course-directory'?box:nodes['#'+id]||rows.find(row=>row.id===id),addEventListener(){},activeElement:null},location,history,sessionStorage:{getItem(){if(options.storageDenied)throw Error('Denied');return cache;},setItem(_key,value){if(options.storageDenied)throw Error('Denied');cache=value;}},requestAnimationFrame:fn=>frames.push(fn),scrollTo:({top})=>{env.scrollY=top;scrolls.push(top);},URLSearchParams,setTimeout,clearTimeout,addEventListener:(type,fn)=>events[type]=fn});
+ vm.runInNewContext(source,env);
  await tick();
+ const flush=()=>{for(const fn of frames.splice(0))fn();};if(!options.deferRestore)flush();
  const click=async(attrs,id)=>{const b={id,dataset:{},disabled:false,hasAttribute:key=>key in attrs};for(const [key,value] of Object.entries(attrs))b.dataset[key.replace(/^data-/,'').replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=value;await box.handlers.click({target:{closest:()=>b}});await tick();};
- return {nodes,calls,click,plan:()=>copy(plan),url:()=>lastURL,setPlan:async p=>{plan=p;await events['rci:planchange']();await tick();},fail:()=>{fail=true;}};
+ return {nodes,calls,click,events,history,location,rows:()=>rows,saved:()=>cache&&JSON.parse(cache),flush,scrolls,scroll:top=>env.scrollY=top,y:()=>env.scrollY,open:async code=>{const row=rows.find(r=>r.code===code);assert(row,'Course is rendered');await box.handlers.click({target:{closest:selector=>selector==='[data-directory-detail]'?row.link:null}});return row.link.href;},plan:()=>copy(plan),url:()=>lastURL,setPlan:async p=>{plan=p;await events['rci:planchange']();await tick();},fail:()=>{fail=true;}};
 }
 (async()=>{
  await test('Local search accepts spaced codes, Chinese aliases and all cross-category memberships',()=>{
@@ -78,6 +89,33 @@ async function harness(search='',desktop=false){
   h.nodes['#course-target-semester'].value='3';await h.nodes['#course-target-semester'].handlers.change();
   const p=h.plan();p.timeline.count=2;await h.setPlan(p);
   assert.equal(h.nodes['#course-target-semester'].value,'1');assert(h.nodes['#directory-status'].textContent.includes('第 1 学期'));
+ });
+ await test('Returning from details restores loaded courses, filters, destination and the clicked row at its previous viewport position',async()=>{
+  const search='?group=professional&language=EN&semester=3',first=await harness(search);
+  await first.click({},'more-results');assert.equal(first.rows().length,48);
+  const code=first.rows()[32].code;first.scroll(300+32*180-150);
+  const href=await first.open(code),from=new URL(href,'http://localhost:8001').searchParams.get('from');
+  assert.equal(from,'/courses/'+search+'#directory-course-'+code);
+  const saved=first.saved();assert.equal(saved.limit,48);assert.equal(saved.offset,150);assert.equal(first.calls.length,0);
+  const returned=await harness(search,false,{hash:'#directory-course-'+code,saved,listTop:360});
+  assert.equal(returned.rows().length,48);assert.equal(returned.rows().find(r=>r.code===code).getBoundingClientRect().top,150);
+  assert(returned.rows().find(r=>r.code===code).link.focused);assert.equal(returned.location.hash,'');
+  assert.equal(returned.nodes['#group-filter'].value,'professional');assert.equal(returned.nodes['#directory-language'].value,'EN');assert.equal(returned.nodes['#course-target-semester'].value,'3');assert.equal(returned.calls.length,0);
+  const back=await harness(search,false,{historyState:first.history.state});assert.equal(back.rows().length,48);assert.equal(back.rows().find(r=>r.code===code).getBoundingClientRect().top,150);
+  first.scroll(0);first.events.pageshow({persisted:true});await tick();first.flush();assert.equal(first.rows().find(r=>r.code===code).getBoundingClientRect().top,150);
+ });
+ await test('A course anchor still returns to a later result when session storage is unavailable',async()=>{
+  const first=await harness('?semester=2');await first.click({},'more-results');const code=first.rows()[35].code;
+  const h=await harness('?semester=2',false,{hash:'#directory-course-'+code,storageDenied:true});
+  assert.equal(h.rows().length,48);assert.equal(h.rows().find(r=>r.code===code).getBoundingClientRect().top,90);assert.equal(h.nodes['#course-target-semester'].value,'2');assert.equal(h.calls.length,0);
+ });
+ await test('Invalid view snapshots and changed result sets cannot inject courses, overwrite a plan or interrupt manual scrolling',async()=>{
+  const route='/courses/?semester=1',valid={version:1,route,limit:48,y:5000,code:'IN2064',offset:150};
+  for(const change of [{route:'/admin/'},{limit:Infinity},{limit:100000},{y:-1},{offset:NaN},{code:'../admin'}])assert.equal(D.validView({...valid,...change},route),null);
+  assert.equal(D.returnCode('#directory-course-../admin'),null);
+  const stale=await harness('?semester=1',false,{saved:{...valid,route:'/courses/?q=old'}});assert.equal(stale.rows().length,24);assert.equal(stale.scrolls.length,0);
+  const missing=await harness('?q=IN2060&semester=1',false,{hash:'#directory-course-IN2064',saved:{...valid,route:'/courses/?q=IN2060&semester=1'}});assert.equal(missing.rows().length,1);assert.equal(missing.rows()[0].code,'IN2060');assert.equal(missing.calls.length,0);
+  const h=await harness('?semester=1',false,{historyState:{rciCourseDirectory:valid},deferRestore:true});h.scroll(400);h.events.wheel({});h.flush();assert.equal(h.y(),400);assert.equal(h.scrolls.length,0);
  });
  console.log(`${checks} course directory checks passed`);
 })().catch(error=>{console.error(error);process.exitCode=1;});

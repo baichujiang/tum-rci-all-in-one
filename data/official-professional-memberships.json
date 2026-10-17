@@ -2,7 +2,7 @@
   "curriculum_version": "20241",
   "academic_year": "2026/27",
   "study_year_id": 1623,
-  "checked_on": "2026-10-14",
+  "checked_on": "2026-10-16",
   "source": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=&pStpKnotenNr=",
   "modules": [
     {
@@ -2621,5 +2621,6 @@
         9
       ]
     }
-  ]
+  ],
+  "scope": "Published subset of the 2026/27 public curriculum. Four intentionally unpublished modules are documented in official-curriculum.json; this file is not the complete tree."
 }

@@ -1,9 +1,9 @@
 {
-  "checked_on": "2026-10-15",
+  "checked_on": "2026-10-16",
   "curriculum_version": "20241",
   "academic_year": "2026/27",
   "study_year_id": 1623,
-  "scope": "All actual J modules, including one missing-credit module; recognition placeholders excluded.",
+  "scope": "Published subset of the 2026/27 public curriculum. Four intentionally unpublished modules are documented in official-curriculum.json; this file is not the complete tree.",
   "modules": [
     {
       "module_code": "AR17093",
@@ -4841,17 +4841,17 @@
         "3886864"
       ],
       "source_pages": [
-        12
+        13
       ],
       "source_tree_urls": [
-        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=12&pStpKnotenNr=#kn3886864"
+        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=13&pStpKnotenNr=#kn3886864"
       ],
       "source_memberships": [
         {
           "node_id": "3886864",
-          "page": 12,
+          "page": 13,
           "ects_raw": "2",
-          "tree_url": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=12&pStpKnotenNr=#kn3886864",
+          "tree_url": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=13&pStpKnotenNr=#kn3886864",
           "branch_path": [
             {
               "node_id": "3873186",
@@ -4887,17 +4887,17 @@
         "3886508"
       ],
       "source_pages": [
-        11
+        12
       ],
       "source_tree_urls": [
-        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=11&pStpKnotenNr=#kn3886508"
+        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=12&pStpKnotenNr=#kn3886508"
       ],
       "source_memberships": [
         {
           "node_id": "3886508",
-          "page": 11,
+          "page": 12,
           "ects_raw": "2",
-          "tree_url": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=11&pStpKnotenNr=#kn3886508",
+          "tree_url": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=12&pStpKnotenNr=#kn3886508",
           "branch_path": [
             {
               "node_id": "3873186",
@@ -11149,17 +11149,17 @@
         "4110496"
       ],
       "source_pages": [
-        13
+        14
       ],
       "source_tree_urls": [
-        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=13&pStpKnotenNr=#kn4110496"
+        "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=14&pStpKnotenNr=#kn4110496"
       ],
       "source_memberships": [
         {
           "node_id": "4110496",
-          "page": 13,
+          "page": 14,
           "ects_raw": "3",
-          "tree_url": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=13&pStpKnotenNr=#kn4110496",
+          "tree_url": "https://campus.tum.de/tumonline/pl/ui/$ctx;design=pl;header=max;lang=DE/wbstpcs.showSpoTree?pStStudiumNr=&pStpStpNr=5271&pStartSemester=W&pSjNr=1623&pFilterType=20&pPageNr=14&pStpKnotenNr=#kn4110496",
           "branch_path": [
             {
               "node_id": "3873186",

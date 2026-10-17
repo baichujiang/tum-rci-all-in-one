@@ -17,9 +17,9 @@ snapshot=json.loads((args.manifest or project/'data/official-professional-member
 SOURCE_DATE=datetime.date.today().isoformat()
 bycode={}
 for row in snapshot['modules']:
- item={'code':row['module_code'],'title':row['name'],'credits':row['ects'],'memberships':[{'section':s,'credits':row['ects'],'node_ids':row['source_node_ids'],'source_pages':row['source_page']} for s in row['accepted_sections']],'ids':set(row['module_detail_ids'])}
+ item={'code':row['module_code'],'title':row['name'],'credits':row['ects'],'memberships':[{'section':s,'credits':row['ects'],'node_ids':row['source_node_ids'],'source_pages':row.get('source_page',row.get('source_pages',[]))} for s in row.get('accepted_sections',row.get('groups',[]))],'ids':set(row['module_detail_ids'])}
  bycode[item['code']]=item
-if not args.manifest: assert len(bycode)==153, len(bycode)
+if len(bycode)!=len(snapshot['modules']): raise SystemExit('Manifest contains duplicate module codes')
 
 def lang_values(el):
  if el is None: return {'value':None,'translations':{}}
