@@ -320,7 +320,7 @@ if(app){
   $('#result-count').textContent=`${q.value.trim()?'“'+q.value.trim()+'”：':''}找到 ${results.length} ${app.dataset.mode==='courses'?'门课程':'条内容'}${sf.checked?' · 仅收藏':''}`;
   const hasFilters=!!(q.value.trim()||(!kind.closest('label').hidden&&kind.value)||task.value||sg?.value||term?.value||sf.checked);
   $('#reset-filters').hidden=!hasFilters||!results.length;
-  const el=$('#results');el.innerHTML=results.length?results.slice(0,limit).map(d=>resultCard(d)).join(''):`<div class="empty"><h2>${sf.checked?'没有匹配的收藏':'没有找到匹配的内容'}</h2><p class="desktop-legacy">试试中文名、课程代码或官方名称，也可以清除筛选重新选择。</p><div class="actions"><button class="button secondary" data-reset-search>清除筛选</button><a class="text-link" href="${full('/study/')}">回到选课指南 →</a></div></div>`;
+  const el=$('#results');el.innerHTML=results.length?results.slice(0,limit).map(d=>resultCard(d)).join(''):`<div class="empty"><h2>${sf.checked?'没有匹配的收藏':'没有找到匹配的内容'}</h2><p class="desktop-legacy">试试中文名、课程代码或官方名称，也可以清除筛选重新选择。</p><div class="actions"><button class="button secondary" data-reset-search>清除筛选</button><a class="text-link" href="${full('/study/')}">查看学分与学业规则 →</a></div></div>`;
   $('#more-results').hidden=results.length<=limit;syncSaves();syncAddButtons();updateURL();
  }
  function reset(){q.value='';kind.value=app.dataset.mode==='courses'?'course':app.dataset.mode==='resources'?'resource':'';task.value='';if(sg)sg.value='';if(term)term.value='';sf.checked=false;limit=18;render();q.focus();}

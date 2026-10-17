@@ -47,10 +47,10 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   assert(h.creditHTML().includes('22.5<small> / 120 ECTS'));assert(h.creditHTML().includes('97.5<small> ECTS'));assert(h.creditHTML().includes('超出 1.5 ECTS 未计入总进度'));
   for(const group of ['core','professional','F','H','I'])assert(h.creditHTML().includes('/courses/?group='+group));
   assert(!h.creditHTML().includes('href="/courses/?group=G"'));assert(!h.creditHTML().includes('href="/courses/?group=J"'));
-  assert(h.creditHTML().includes('已包含在上方专业选修总额中'));assert(h.creditHTML().includes('计划可覆盖'));assert(h.creditHTML().includes('计划还差 7.5 ECTS'));
+  assert(h.creditHTML().includes('data-study-section="deadlines"'));assert(h.creditHTML().includes('已包含在上方专业选修总额中'));assert(h.creditHTML().includes('计划可覆盖'));assert(h.creditHTML().includes('计划还差 7.5 ECTS'));
   await h.click('data-open-credit-check','');assert(h.creditDialog.open);assert.equal(h.writes(),0);assert.deepEqual(h.plan(),initial);
   await h.external({...initial,items:[]});assert(h.creditDialog.open);assert(h.creditHTML().includes('120<small> ECTS'));assert(h.creditHTML().includes('/courses/?group=J'));assert.equal(h.writes(),0);
-  const narrow=await harness(initial,false);assert(narrow.html().includes('id="summary-gaps"'));assert(!narrow.html().includes('data-open-credit-check'));assert.equal(narrow.creditHTML(),'');
+  const narrow=await harness(initial,false);assert(narrow.html().includes('id="summary-gaps"'));assert(narrow.html().includes('data-study-section="deadlines"'));assert(!narrow.html().includes('data-open-credit-check'));assert.equal(narrow.creditHTML(),'');
  });
  await test('Credit check separates historical records from future estimates and explains unconfirmed remediation',async()=>{
   const initial=C.validatePlan({...draft([{code:'IN2064',status:'passed',semester:0},{code:'ED140014',status:'planned',semester:4}]),cohort:'unknown',conditionalConfirmed:false,preferences:{startSemester:4}},courses),h=await harness(initial);
