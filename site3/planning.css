@@ -148,6 +148,22 @@
 
 }
 .progression-status{display:grid;gap:5px;margin:12px 0}.progression-status p{margin:0 0 4px}.progression-status .met{color:#3b7751}
+.plan-progress-alerts{border:1px solid #e7d1a5;border-left:3px solid #bb822a;border-radius:10px;background:#fff9ed;color:#79571c;padding:10px 16px 12px;margin:0 0 18px}
+.progress-alert-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.progress-alert-heading h2{font-size:14px;margin:0;font-weight:650}
+.progress-alert-heading .study-progress-link{flex-shrink:0;min-height:32px;padding:5px 0;font-size:12px}
+.plan-progress-alerts ul{list-style:none;margin:4px 0 8px;padding:0;display:grid;gap:6px}
+.plan-progress-alerts li{display:flex;align-items:baseline;gap:12px;font-size:13px;line-height:1.7}
+.plan-progress-alerts li>b{flex-shrink:0;font-weight:600}
+.plan-progress-alerts>p{font-size:11px;line-height:1.7;margin:0;color:#886d42}
+@media(max-width:700px){
+ .plan-progress-alerts{padding:10px 12px 12px;margin-bottom:16px}
+ .progress-alert-heading{align-items:baseline;gap:8px}
+ .progress-alert-heading h2{font-size:13px}
+ .progress-alert-heading .study-progress-link{font-size:11px}
+ .plan-progress-alerts li{display:block;font-size:12px}
+ .plan-progress-alerts li>b{margin-right:8px}
+}
 .planner-page .semester-tools{margin:0 0 6px}
 .planner-page .semester-tools h2{font-size:18px;margin:0}
 .planner-page .semester-tools h2 span{font-size:12px;font-weight:400;color:var(--muted)}

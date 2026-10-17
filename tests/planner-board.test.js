@@ -28,6 +28,41 @@ async function harness(initial,desktop=true){
 const card=(html,code)=>html.match(new RegExp('<details[^>]*id="plan-course-'+code+'"[\\s\\S]*?</details>'))?.[0];
 let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS',name);}
 (async()=>{
+ await test('Visible semester reminders show a cumulative third-semester shortfall on both screen sizes and clear at exactly 30 ECTS',async()=>{
+  const initial=C.validatePlan({...draft([{code:'IN2064',status:'planned',semester:1},{code:'OWNG',name:'自录专业选修',custom:true,group:'G',ects:21.5,status:'planned',semester:3}]),timeline:{count:3,start:'winter'}},courses);
+  for(const desktop of [true,false]){
+   const h=await harness(initial,desktop),alert=h.html().match(/<section class="plan-progress-alerts"[\s\S]*?<\/section>/)[0];
+   assert(alert.includes('第 3 学期末'));assert(alert.includes('累计已规划 29.5 / 至少 30 ECTS，还差 0.5 ECTS'));
+   assert(!alert.includes('data-progress-semester="2"'));assert(!alert.includes('data-progress-semester="4"'));assert(!alert.includes('<details'));
+   assert(h.html().indexOf(alert)<h.html().indexOf('id="semester-board-title"'));assert(alert.includes('data-study-section="deadlines"'));
+   const fixed=copy(initial);fixed.items[1].ects=22;await h.external(fixed);
+   assert(!h.html().includes('class="plan-progress-alerts"'));assert.equal(h.writes(),0);assert.deepEqual(h.plan(),fixed);
+  }
+ });
+ await test('Visible reminders include the second-semester foundation deadline and never count later courses toward an earlier checkpoint',async()=>{
+  const initial=draft([{code:'IN2064',status:'planned',semester:4},{code:'OWNG',name:'之后的选修',custom:true,group:'G',ects:30,status:'planned',semester:4}]);initial.preferences.deadlineException=true;
+  assert(C.calculate(initial,courses).allocated>30);
+  const h=await harness(initial),alert=h.html().match(/<section class="plan-progress-alerts"[\s\S]*?<\/section>/)[0];
+  assert(alert.includes('data-progress-semester="2"'));assert(alert.includes('A/B/C 基础必修模块（至少通过 1 门）'));
+  assert(alert.includes('第 3 学期末'));assert(alert.includes('累计已规划 0 / 至少 30 ECTS，还差 30 ECTS'));
+  assert(!alert.includes('data-progress-semester="5"'));assert.equal(h.writes(),0);assert(h.plan().preferences.deadlineException);
+  const empty=C.validatePlan({...draft([]),timeline:{count:3,start:'winter'}},courses),narrow=await harness(empty,false);
+  assert(narrow.html().includes('累计已规划 0 / 至少 30 ECTS，还差 30 ECTS'));
+ });
+ await test('Historical reminders request missing passed-semester records instead of declaring a definite credit shortfall',async()=>{
+  const initial=C.validatePlan({...draft([{code:'IN2064',status:'passed',semester:0},{code:'OWNG',name:'已修认定',custom:true,group:'G',ects:22,status:'passed',semester:2}]),preferences:{startSemester:4}},courses),h=await harness(initial);
+  const third=h.html().match(/<li data-progress-semester="3">[\s\S]*?<\/li>/)[0];
+  assert(third.includes('累计通过至少 30 ECTS'));assert(third.includes('通过学期待补充'));assert(!third.includes('还差'));assert.equal(h.writes(),0);
+  const recorded=copy(initial);recorded.items[0].semester=1;await h.external(recorded);
+  assert(!h.html().includes('data-progress-semester="2"'));assert(!h.html().includes('data-progress-semester="3"'));
+ });
+ await test('Reminders cover each checkpoint in the selected planning horizon and qualify unconfirmed rules',async()=>{
+  const initial=C.validatePlan({...draft([]),cohort:'unknown',conditionalConfirmed:false,timeline:{count:6,start:'winter'}},courses),h=await harness(initial);
+  const alert=h.html().match(/<section class="plan-progress-alerts"[\s\S]*?<\/section>/)[0];
+  for(const [semester,required] of [[3,30],[4,60],[5,90],[6,120]])assert(alert.includes(`累计已规划 0 / 至少 ${required} ECTS，还差 ${required} ECTS`),semester);
+  assert(alert.includes('入学批次尚未确认或不在当前模型内'));assert.equal(h.writes(),0);
+  const short=await harness(C.validatePlan({...draft([]),timeline:{count:1,start:'winter'}},courses));assert(!short.html().includes('class="plan-progress-alerts"'));
+ });
  await test('Semester overview counts include passed history and update after status changes and undo',async()=>{
   const codes=['IN2067','IN2064','IN2406','ED150039','IN2346','IN2106','MW0085','MW1808','IN2107','MW1420','CIT433037','IN2357','WI001056_1','IN2320'];
   const initial=draft(codes.map(code=>({code,status:code==='IN2064'?'passed':'planned',semester:code==='IN2064'?6:2}))),h=await harness(initial);
