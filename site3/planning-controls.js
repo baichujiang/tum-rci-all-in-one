@@ -3,34 +3,36 @@
 'use strict';
 const desktopPlanning=window.matchMedia?.('(min-width: 961px)');
 const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,E=window.RCIPlanning,e=C.esc,box=document.getElementById('planning-controls');if(!box)return;
-let db,p,query='',mode='passed',worker=null,preparing=false,searchTimer=null,generation=0,preview=null,expected='',original=null,renderId=0,autoIntent=false;
+let db,p,query='',mode='passed',worker=null,preparing=false,searchTimer=null,generation=0,preview=null,expected='',original=null,renderId=0,autoIntent=false,fixedSettingsNotice=false,workloadSemester=1;
 const dialog=document.getElementById('auto-plan-dialog'),result=document.getElementById('auto-plan-result');
 const settings=document.getElementById('plan-settings-dialog'),preferences=document.getElementById('course-preferences-dialog'),tools=document.getElementById('plan-tools-dialog');
 const dirtyForms=new Set();
 try{db=await U.data();await render();}catch(error){box.innerHTML=`<p class="notice">${e(error.message)}。现有计划没有修改。</p><button type="button" class="button secondary" data-backup-open>备份与恢复</button>`;return;}
 function title(code){const own=p.items.find(x=>x.code===code&&x.custom);if(own)return own.name;return db.names[code]||db.courses.find(c=>c.module_code===code)?.module_name_legal_2025||p.items.find(x=>x.code===code)?.name||code;}
 function chips(codes,kind){return codes.length?codes.map(code=>`<span class="preference-chip">${e(title(code))} <small>${e(code)}</small><button class="quiet" type="button" data-forget="${e(code)}" data-kind="${kind}" aria-label="取消${kind==='passed'?'已修':kind==='desired'?'想选':'排除'} ${e(title(code))}">×</button></span>`).join(''):'<p class="meta">尚未添加</p>';}
-function fields(value,prefix,keys=['minECTS','maxECTS','minExams','maxExams']){return [['minECTS','最少修多少学分（ECTS）',120,.5],['maxECTS','最多修多少学分（ECTS）',120,.5],['minExams','最少几次考试',50,1],['maxExams','最多几次考试',50,1]].filter(([key])=>keys.includes(key)).map(([key,label,max,step])=>`<label>${label}<input name="${prefix+key}" type="number" min="0" max="${max}" step="${step}" value="${value[key]}" required></label>`).join('');}
+function fields(value,prefix,keys=['minECTS','maxECTS','minExams','maxExams']){return [['minECTS','学分下限','ECTS',120,.5],['maxECTS','学分上限','ECTS',120,.5],['minExams','考试数下限','次',50,1],['maxExams','考试数上限','次',50,1]].filter(([key])=>keys.includes(key)).map(([key,label,unit,max,step])=>`<label>${label}<span class="plan-number-control"><input name="${prefix+key}" type="number" min="0" max="${max}" step="${step}" value="${value[key]}" aria-label="${label}（${unit}）" required><span aria-hidden="true">${unit}</span></span></label>`).join('');}
 function semesterLabel(number){const term=T.term(p,number);return term.year===null?term.label:`第 ${number} 学期 · ${term.label}`;}
-function settingsHTML(){return `
- <section id="plan-options" class="plan-basic-settings" aria-labelledby="plan-basics-title">
-  <h3 id="plan-basics-title">学业信息 <small class="meta">自动保存</small></h3>
+function requiredSettings(plan){return !C.cohorts.includes(plan.cohort)?'先选择入学时间，并确认录取通知里的补修要求。':!plan.conditionalConfirmed?'先确认录取通知里的补修要求。':(plan.cohort.endsWith('夏季')?'summer':'winter')!==plan.timeline.start?'第一学期与入学时间不一致，请调整。':'';}
+function settingsHTML(){workloadSemester=Math.min(workloadSemester,p.timeline.count);return `
+ <section id="plan-options" class="plan-basic-settings plan-settings-card" aria-labelledby="plan-basics-title">
+  <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">01</span><div><h3 id="plan-basics-title">学业信息</h3><p>确定适用规则和计划的学期范围。</p></div><span class="settings-save-badge">自动保存</span></div>
   <div class="plan-settings-grid">
    <label>入学时间<select id="plan-cohort">${[['unknown','请选择'],...C.cohorts.map(v=>[v,v]),['older','其他时间']].map(([v,t])=>`<option value="${e(v)}" ${p.cohort===v?'selected':''}>${e(t)}</option>`).join('')}</select></label>
-   <label>一共读几个学期<select id="plan-semester-count">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${p.timeline.count===i+1?'selected':''}>${i+1} 个学期</option>`).join('')}</select></label>
-   <label>第一学期<select id="plan-start-term"><option value="winter" ${p.timeline.start==='winter'?'selected':''}>冬季学期</option><option value="summer" ${p.timeline.start==='summer'?'selected':''}>夏季学期</option></select></label>
-   <label>录取通知要求补修吗<select id="controls-conditional-status"><option value="unknown" ${!p.conditionalConfirmed?'selected':''}>还没确认</option><option value="no" ${p.conditionalConfirmed&&!p.conditional?'selected':''}>不需要</option><option value="yes" ${p.conditionalConfirmed&&p.conditional?'selected':''}>需要</option></select></label>
+   <label>计划学期数<select id="plan-semester-count">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${p.timeline.count===i+1?'selected':''}>${i+1} 个学期</option>`).join('')}</select></label>
+   <label>第一学期的季节<select id="plan-start-term"><option value="winter" ${p.timeline.start==='winter'?'selected':''}>冬季学期</option><option value="summer" ${p.timeline.start==='summer'?'selected':''}>夏季学期</option></select></label>
+   <label>录取通知的补修要求<select id="controls-conditional-status" aria-describedby="settings-remediation-help"><option value="unknown" ${!p.conditionalConfirmed?'selected':''}>还没确认</option><option value="no" ${p.conditionalConfirmed&&!p.conditional?'selected':''}>不需要</option><option value="yes" ${p.conditionalConfirmed&&p.conditional?'selected':''}>需要</option></select></label>
   </div>
-  <p class="meta">共 120 ECTS，平均每学期 ${Number((120/p.timeline.count).toFixed(1))} ECTS。</p>
+  <p id="settings-remediation-help" class="meta settings-field-help">补修要求请按录取通知填写。</p>
+  <div class="settings-pace"><span>毕业总学分参考</span><p><b>120</b> ECTS <span aria-hidden="true">÷</span> ${p.timeline.count} 个学期 <span aria-hidden="true">≈</span> <strong>${Number((120/p.timeline.count).toFixed(1))}</strong> ECTS／学期</p><small>这是平均参考，不会限制每学期的实际学分。</small></div>
   ${p.cohort==='older'?'<p class="meta">这个入学时间暂不支持自动规划，可以继续手动排课。</p>':''}
  </section>
- <section id="planning-preference-settings" class="plan-load-settings" aria-labelledby="plan-load-title">
-  <h3 id="plan-load-title">每学期怎么安排</h3>
+ <section id="planning-preference-settings" class="plan-load-settings plan-settings-card" aria-labelledby="plan-load-title">
+  <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">02</span><div><h3 id="plan-load-title">规划偏好</h3><p>设置每学期负担与授课语言。</p></div><span class="settings-save-badge is-draft">保存后生效</span></div>
   <form id="planning-preferences">
    <div class="load-fields">${fields(p.workload,'',['maxECTS','maxExams'])}</div>
-   <p class="meta">每门课按 1 次考试估算，论文和研讨课也算。</p>
-   <div class="plan-settings-grid plan-language-settings"><label>从第几学期开始排课<select name="startSemester">${Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}" ${p.preferences.startSemester===i+1?'selected':''}>${e(semesterLabel(i+1))}</option>`).join('')}</select></label>
-   <fieldset><legend>上课用什么语言</legend>${['EN','DE'].map(l=>`<label class="check"><input type="checkbox" name="language" value="${l}" ${p.preferences.languages.includes(l)?'checked':''}>${l==='EN'?'英语':'德语'}</label>`).join('')}</fieldset></div>
+   <p class="meta settings-exam-note">考试数为估算：每门课计 1 次，论文和研讨课也计入。</p>
+   <div class="plan-settings-grid plan-language-settings"><label>从哪个学期开始规划<select name="startSemester">${Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}" ${p.preferences.startSemester===i+1?'selected':''}>${e(semesterLabel(i+1))}</option>`).join('')}</select></label>
+   <fieldset class="settings-language-choices"><legend>授课语言 <small>可多选</small></legend><div>${['EN','DE'].map(l=>`<label class="check"><input type="checkbox" name="language" value="${l}" ${p.preferences.languages.includes(l)?'checked':''}><span>${l==='EN'?'英语':'德语'}</span><small>${l}</small></label>`).join('')}</div></fieldset></div>
    <details id="advanced-planning-limits"><summary>其他排课要求</summary><div class="load-fields">${fields(p.workload,'',['minECTS','minExams'])}</div><p class="meta">填 0 表示不设最低要求。</p>
     <div class="planning-toggle-options">${[
      ['allowUnconfirmed','提前安排尚未公布开课的课程','例如某课通常在冬季开，可先排到明年冬季，之后再确认是否开课。'],
@@ -38,7 +40,7 @@ function settingsHTML(){return `
     ].map(([key,label,help])=>`<div class="planning-toggle-option"><label class="check"><input name="${key}" type="checkbox" aria-describedby="${key}-help" ${p.preferences[key]?'checked':''}>${label}</label><p id="${key}-help" class="meta">${help}</p></div>`).join('')}</div>
    </details>
   </form>
-  <details id="semester-overrides"><summary>单独设置某个学期</summary><form id="semester-workload"><label>要调整哪个学期<select name="semester">${Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}">${e(semesterLabel(i+1))}</option>`).join('')}</select></label><div class="load-fields">${fields(E.bounds(p,1),'')}</div><div class="inline-actions"><button class="button secondary" type="submit">保存这个学期</button><button class="quiet" type="button" data-reset-workload>使用上面的设置</button></div></form><div class="workload-overrides">${Object.entries(p.workload.semesters).map(([n])=>`<p>第 ${n} 学期：学分 ${E.bounds(p,n).minECTS}–${E.bounds(p,n).maxECTS} ECTS，考试 ${E.bounds(p,n).minExams}–${E.bounds(p,n).maxExams} 次（估算）</p>`).join('')||''}</div></details>
+  <details id="semester-overrides"><summary>单独设置某个学期${Object.keys(p.workload.semesters).length?`<span class="settings-override-count">${Object.keys(p.workload.semesters).length} 个已设置</span>`:''}</summary><p class="meta">只覆盖所选学期，其他学期沿用上方设置。</p><form id="semester-workload"><label>选择学期<select name="semester">${Array.from({length:p.timeline.count},(_,i)=>`<option value="${i+1}" ${workloadSemester===i+1?'selected':''}>${e(semesterLabel(i+1))}</option>`).join('')}</select></label><div class="load-fields">${fields(E.bounds(p,workloadSemester),'')}</div><div class="inline-actions"><button class="button secondary" type="submit">保存这个学期</button><button class="quiet" type="button" data-reset-workload>恢复为统一设置</button></div></form><div class="workload-overrides">${Object.entries(p.workload.semesters).map(([n])=>`<p>第 ${n} 学期：学分 ${E.bounds(p,n).minECTS}–${E.bounds(p,n).maxECTS} ECTS，考试 ${E.bounds(p,n).minExams}–${E.bounds(p,n).maxExams} 次（估算）</p>`).join('')||''}</div></details>
  </section>
  <button class="quiet plan-rules-link" type="button" data-open-planning-rules aria-haspopup="dialog">规划说明 <span aria-hidden="true">›</span></button>`;}
 function rulesHTML(){return `
@@ -70,6 +72,7 @@ async function render(){
  document.getElementById('plan-settings-content').innerHTML=settingsHTML();
  document.getElementById('planning-rules-content').innerHTML=rulesHTML();
  document.getElementById('course-preferences-content').innerHTML=preferencesHTML();
+ if(autoIntent&&settings.open&&!fixedSettingsNotice){const notice=document.getElementById('plan-settings-notice'),message=requiredSettings(p);notice.textContent=message;notice.hidden=!message;}
  box.querySelector('[data-clear-area]').hidden=!p.items.length;
  for(const [key,isOpen] of detailState){const el=document.getElementById(key);if(el)el.open=isOpen;}
  for(const [formId,values] of drafts){const form=document.getElementById(formId);if(!form)continue;for(const saved of values){const el=[...form.elements].find(x=>x.name===saved.name&&(saved.type!=='checkbox'||x.value===saved.value));if(!el)continue;if(saved.type==='checkbox')el.checked=saved.checked;else if(el.tagName!=='SELECT'||[...el.options].some(o=>o.value===saved.value))el.value=saved.value;}}
@@ -82,8 +85,8 @@ function search(){
  document.getElementById('preference-results').innerHTML=list.map(c=>{const own=p.items.find(x=>x.code===c.module_code&&x.custom),shown=own?{...c,ects:own.ects,allowed_groups:[own.group]}:c;const already=mode==='passed'?p.items.some(x=>x.code===c.module_code&&x.status==='passed'):p.preferences[mode].includes(c.module_code);return `<div class="preference-result"><span><b>${e(c.module_name_legal_2025)}</b><small>${e(c.module_code)} · ${shown.ects} ECTS${db.names[c.module_code]?' · '+e(db.names[c.module_code]):''}</small>${own?'<small>保留原有自录认定；学分与归类需个人核对。</small>':c.recommendation_note?`<small>${e(c.recommendation_note)}</small>`:''}</span><button class="quiet" type="button" data-record="${e(c.module_code)}" ${already||mode==='passed'&&!Number.isFinite(Number(shown.ects))?'disabled':''}>${mode==='passed'&&!Number.isFinite(Number(shown.ects))?'学分待核实':already?'已记录':mode==='passed'?'记为已修':mode==='desired'?'想选 ＋':'排除 ＋'}</button></div>`;}).join('')||'<p class="meta">未找到。目录外课程可从「更多」中自行录入，认定需学校确认。</p>';
 }
 function openPlanDialog(target){for(const other of [settings,preferences,tools])if(other!==target&&other.open)other.close();if(!target.open)target.showModal();}
-function openSettings(forAuto=false,message=''){
- autoIntent=forAuto;
+function openSettings(forAuto=false,message='',fixedNotice=false){
+ autoIntent=forAuto;fixedSettingsNotice=fixedNotice;
  const notice=document.getElementById('plan-settings-notice');notice.textContent=message;notice.hidden=!message;
  document.getElementById('plan-settings-title').textContent=forAuto?'调整规划条件':'计划设置';
  settings.querySelector('[data-finish-settings]').textContent=forAuto?'保存并预览':'保存设置';
@@ -116,7 +119,7 @@ box.addEventListener('change',async event=>{
     return {...p,timeline:{...p.timeline,count},preferences:{...p.preferences,startSemester:Math.min(count,p.preferences.startSemester)},items:p.items.map(x=>x.status==='planned'&&x.semester>count?{...x,semester:desktopPlanning?.matches?1:0}:x)};
    });
   }
-  if(el.closest('#semester-workload')&&el.name==='semester'){const b=E.bounds(p,Number(el.value));for(const key of ['minECTS','maxECTS','minExams','maxExams'])el.form.elements[key].value=b[key];}
+  if(el.closest('#semester-workload')&&el.name==='semester'){workloadSemester=Number(el.value);const b=E.bounds(p,workloadSemester);for(const key of ['minECTS','maxECTS','minExams','maxExams'])el.form.elements[key].value=b[key];}
  }catch(error){U.toast(error.message);}
 });
 box.addEventListener('submit',async event=>{if(!['planning-preferences','semester-workload'].includes(event.target.id))return;event.preventDefault();try{if(await savePreferences(event.target))U.toast('规划条件已保存。');}catch(error){U.toast(error.message);}});
@@ -180,7 +183,7 @@ result.addEventListener('click',async event=>{
 });
 dialog.querySelector('[data-edit-auto-settings]').addEventListener('click',()=>{
  const conflict=desktopPlanning?.matches&&preview?.issue==='remediation-conflict';
- dialog.close();openSettings(true,conflict?'请按录取通知确认补修要求。只有要求修读 ED140014 时，才选“需要”。':'');
+ dialog.close();openSettings(true,conflict?'请按录取通知确认补修要求。只有要求修读 ED140014 时，才选“需要”。':'',!!conflict);
  if(conflict)document.getElementById('controls-conditional-status').focus();
 });
 async function generate(){
@@ -189,9 +192,7 @@ async function generate(){
  const run=++generation;
  let snapshot;try{snapshot=await U.plan();}finally{preparing=false;}
  if(run!==generation)return;
- if(!C.cohorts.includes(snapshot.cohort)||!snapshot.conditionalConfirmed||((snapshot.cohort.endsWith('夏季')?'summer':'winter')!==snapshot.timeline.start)){
-  openSettings(true,!C.cohorts.includes(snapshot.cohort)?'先选择入学时间，并确认录取通知里的补修要求。':!snapshot.conditionalConfirmed?'先确认录取通知里的补修要求。':'第一学期与入学时间不一致，请调整。');return;
- }
+ const missing=requiredSettings(snapshot);if(missing){openSettings(true,missing);return;}
  original=snapshot;expected=JSON.stringify(original);preview=null;
  autoHeading('自动方案预览','先查看安排，采用后才会更新计划。');
  dialog.querySelector('[data-edit-auto-settings]').textContent='调整条件';

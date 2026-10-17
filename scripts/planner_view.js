@@ -19,11 +19,11 @@ module.exports=function plannerView(studyHelp=''){return `
   <header class="plan-dialog-heading"><div><h2 id="credit-check-title">学分检查</h2><p id="credit-check-description">按当前计划计算，包含待修和已通过课程。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭学分检查">关闭</button></header>
   <div id="credit-check-content"></div>
  </dialog>
- <dialog id="plan-settings-dialog" class="plan-dialog" aria-labelledby="plan-settings-title">
-  <header class="plan-dialog-heading"><h2 id="plan-settings-title">计划设置</h2><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭计划设置">关闭</button></header>
+ <dialog id="plan-settings-dialog" class="plan-dialog" aria-labelledby="plan-settings-title" aria-describedby="plan-settings-description">
+  <header class="plan-dialog-heading"><div><h2 id="plan-settings-title">计划设置</h2><p id="plan-settings-description">调整学期节奏和每学期负担。</p></div><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭计划设置">关闭</button></header>
   <p id="plan-settings-notice" class="notice" role="status" hidden></p>
   <div id="plan-settings-content" class="planning-workflow"></div>
-  <footer class="plan-dialog-footer"><button type="button" class="button" data-finish-settings>保存设置</button></footer>
+  <footer class="plan-dialog-footer"><p class="meta settings-save-note">学业信息自动保存，规划偏好点击按钮保存。</p><button type="button" class="button" data-finish-settings>保存设置</button></footer>
  </dialog>
  <dialog id="planning-rules-dialog" class="plan-dialog" aria-labelledby="planning-rules-title">
   <header class="plan-dialog-heading"><h2 id="planning-rules-title">规划说明</h2><button type="button" class="quiet" data-close-plan-dialog aria-label="关闭规划说明">返回设置</button></header>
