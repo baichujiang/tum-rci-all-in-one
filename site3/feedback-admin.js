@@ -7,12 +7,13 @@ const labels={pending:'待处理',progress:'处理中',resolved:'已处理'},typ
 const base=document.querySelector('meta[name="rci-base"]')?.content||'';
 const date=new Intl.DateTimeFormat('zh-CN',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Berlin'});
 let csrf='',items=[],nextCursor=null,busy=false,expiryTimer=null,requestVersion=0,loadedFilter='all';
+const analytics=window.RCIAdminAnalytics.create({api});
 function announce(text,error=false){status.textContent=text;status.dataset.state=error?'error':'';}
 function lock(text='请输入管理员密码登录。'){
- requestVersion++;csrf='';items=[];nextCursor=null;list.replaceChildren();$('admin-list-summary').textContent='';login.hidden=false;inbox.hidden=true;password.value='';clearTimeout(expiryTimer);announce(text);
+ requestVersion++;csrf='';items=[];nextCursor=null;list.replaceChildren();$('admin-list-summary').textContent='';login.hidden=false;inbox.hidden=true;password.value='';analytics.reset();clearTimeout(expiryTimer);announce(text);
 }
 function authenticated(session){
- csrf=session.csrf;login.hidden=true;inbox.hidden=false;password.value='';
+ csrf=session.csrf;login.hidden=true;inbox.hidden=false;password.value='';analytics.show();
  clearTimeout(expiryTimer);expiryTimer=setTimeout(()=>lock('登录已过期，请重新登录。'),Math.max(0,session.expiresAt-Date.now()));
 }
 function pending(value){
@@ -76,12 +77,12 @@ async function load(reset){
  }catch(error){filter.value=loadedFilter;announce(error.message,true);}finally{pending(false);}
 }
 async function check(){
- try{const result=await api('/api/admin-session');if(result.authenticated){authenticated(result);await load(true);}else lock();}
+ try{const result=await api('/api/admin-session');if(result.authenticated){authenticated(result);await Promise.all([load(true),analytics.load()]);}else lock();}
  catch(error){lock(error.message);announce(error.message,true);}
 }
 $('admin-login-form').addEventListener('submit',async event=>{
  event.preventDefault();if(busy||!event.currentTarget.reportValidity())return;pending(true);announce('正在登录…');
- try{const result=await api('/api/admin-session',{method:'POST',body:JSON.stringify({password:password.value})});authenticated(result);pending(false);await load(true);}
+ try{const result=await api('/api/admin-session',{method:'POST',body:JSON.stringify({password:password.value})});authenticated(result);pending(false);await Promise.all([load(true),analytics.load()]);}
  catch(error){password.value='';announce(error.message,true);}finally{pending(false);}
 });
 filter.addEventListener('change',()=>load(true));$('admin-refresh').addEventListener('click',()=>load(true));$('admin-more').addEventListener('click',()=>load(false));

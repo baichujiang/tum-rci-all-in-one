@@ -26,7 +26,7 @@
  [data-favorites-section="websites"]>.section-title>span,
  .favorites-heading>.eyebrow,.feedback-heading>.eyebrow,.feedback-heading>.lead,.feedback-followup,
  .study-heading>.eyebrow,.study-heading>.lead,.catalog-heading p,.plan-page-heading h1+p,
- #plan-settings-dialog .plan-dialog-heading p,#plan-tools-dialog .plan-dialog-heading p,.picker-heading .eyebrow{display:none}
+ #plan-tools-dialog .plan-dialog-heading p,.picker-heading .eyebrow{display:none}
  #websites:has(#portal-search:placeholder-shown) #portal-status{display:none}
  .header{background:var(--white);backdrop-filter:none}
  .header-inner{max-width:1344px;min-height:64px;padding:0 32px;gap:12px}

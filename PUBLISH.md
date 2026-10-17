@@ -12,6 +12,8 @@
 
 ## 本地
 
+管理员访客统计另需在 Production 配置项目专用 `ANALYTICS_VERCEL_TOKEN` Secret，然后重新部署。不要共享到预览环境。管理员 API 必须先验证现有会话才查询 Vercel；匿名请求应返回 401。登录后检查 7 天／30 天切换、总量、趋势、热门页面和退出清空。统计查询只读，不改变原有 Web Analytics 采集。
+
 ```sh
 node scripts/build_site.js
 node tests/site.test.js

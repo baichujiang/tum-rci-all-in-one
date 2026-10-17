@@ -7,22 +7,24 @@ const source=fs.readFileSync(path.join(__dirname,'../site3/planning-controls.js'
 const copy=x=>JSON.parse(JSON.stringify(x)),tick=()=>new Promise(resolve=>setImmediate(resolve));
 function element(){return {innerHTML:'',hidden:false,handlers:{},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];}};}
 async function harness(desktop=false){
- let plan=C.validatePlan({version:2,cohort:'2026/27冬季',conditional:false,items:[]},courses),nextTimer=0,planGate=null,planReads=0;
- const timers=new Map(),workers=[],box=element(),dialog=element(),result=element(),apply=element(),cancel=element(),edit=element(),choices=element();
+ let plan=C.validatePlan({version:2,cohort:'2026/27冬季',conditional:false,items:[]},courses),nextTimer=0,planGate=null,planReads=0,planWrites=0,updateError=null;
+ const timers=new Map(),workers=[],listeners=new Map(),box=element(),dialog=element(),result=element(),apply=element(),cancel=element(),edit=element(),choices=element();
  const settings=element(),preferences=element(),tools=element(),finishSettings=element(),notice=element(),clear=element();
  dialog.querySelector=selector=>({'[data-apply-auto]':apply,'[data-cancel-auto]':cancel,'[data-edit-auto-settings]':edit}[selector]);
  settings.querySelector=()=>finishSettings;box.querySelector=()=>clear;
  for(const panel of [dialog,settings,preferences,tools]){panel.showModal=()=>{panel.open=true;};panel.close=()=>{panel.open=false;panel.handlers.close?.();};}
  class Worker{constructor(){this.terminated=false;workers.push(this);}postMessage(input){this.input=copy(input);}terminate(){this.terminated=true;}}
- const U={base:'',persisted:true,data:async()=>({courses,names:{},synonyms:[]}),plan:async()=>{planReads++;if(planGate)await planGate;return copy(plan);},updatePlan:async fn=>{const next=await fn(copy(plan));if(next)plan=C.validatePlan(next,courses);return plan;},confirmAction:async()=>true,toast(){}};
+ const U={base:'',persisted:true,data:async()=>({courses,names:{},synonyms:[]}),plan:async()=>{planReads++;if(planGate)await planGate;return copy(plan);},updatePlan:async fn=>{if(updateError)throw new Error(updateError);planWrites++;const next=await fn(copy(plan));if(next)plan=C.validatePlan(next,courses);return plan;},confirmAction:async()=>true,toast(){}};
  const nodes={'planning-controls':box,'auto-plan-dialog':dialog,'auto-plan-result':result,'preference-results':choices,'plan-settings-dialog':settings,'course-preferences-dialog':preferences,'plan-tools-dialog':tools,'plan-context':element(),'plan-add-course':{dataset:{}},'plan-settings-content':element(),'planning-rules-content':element(),'plan-settings-title':element(),'course-preferences-content':element(),'plan-settings-notice':notice,'plan-cohort':{focus(){}},'controls-conditional-status':{focus(){this.focused=true;}},'auto-plan-title':element(),'auto-plan-description':element(),'preference-search':{focus(){this.focused=true;}},'plan-start-term':{focus(){}}};
- vm.runInNewContext(source,{window:{matchMedia:()=>({matches:desktop}),RCIUI:U,RCI:C,RCIPlanning:E,RCICourseContext:T,RCISearch:S,addEventListener(){}},document:{getElementById:id=>nodes[id]},Worker,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id)});
+ vm.runInNewContext(source,{window:{matchMedia:()=>({matches:desktop}),RCIUI:U,RCI:C,RCIPlanning:E,RCICourseContext:T,RCISearch:S,addEventListener:(event,listener)=>listeners.set(event,listener)},document:{getElementById:id=>nodes[id]},Worker,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id)});
  await tick();
  const generate=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-generate'})}});
+ const defaults=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-generate-defaults'})}});
  const finish=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-finish-settings'})}});
  const change=(id,value)=>box.handlers.change({target:{id,value,closest:()=>null}});
+ const changeSemester=async number=>{const form={id:'semester-workload',elements:Object.fromEntries(['minECTS','maxECTS','minExams','maxExams'].map(key=>[key,{value:''}]))};await box.handlers.change({target:{name:'semester',value:String(number),form,closest:()=>form}});};
  const forgetPassed=code=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-forget',dataset:{kind:'passed',forget:code}})}});
- return {nodes,preferences,workers,timers,dialog,result,apply,edit,settings,notice,generate,finish,change,forgetPassed,getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},planReads:()=>planReads,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};
+ return {nodes,preferences,workers,timers,dialog,result,apply,edit,settings,notice,generate,defaults,finish,change,changeSemester,forgetPassed,refresh:async()=>{listeners.get('rci:planchange')();await tick();},getPlan:()=>copy(plan),setPlan:value=>{plan=C.validatePlan(value,courses);},setUpdateError:value=>{updateError=value;},planReads:()=>planReads,planWrites:()=>planWrites,holdPlan:()=>{let resolve;planGate=new Promise(done=>{resolve=done;});return ()=>{planGate=null;resolve();};}};
 }
 (async()=>{
  const h=await harness();await h.generate();const first=h.workers[0],oldTimeout=[...h.timers.values()][0],oldMessage=first.onmessage;
@@ -40,7 +42,8 @@ async function harness(desktop=false){
  console.log('PASS Rapid generate clicks reserve one request while the plan snapshot is still loading');
  const setup=await harness(),unknown=setup.getPlan();unknown.cohort='unknown';unknown.conditionalConfirmed=false;setup.setPlan(unknown);
  await setup.generate();assert.equal(setup.workers.length,0);assert(setup.settings.open);assert(setup.notice.textContent.includes('补修要求'));
- await setup.change('plan-cohort','2026/27冬季');await setup.change('controls-conditional-status','no');await setup.finish();
+ await setup.change('plan-cohort','2026/27冬季');await setup.refresh();assert.equal(setup.notice.textContent,'先确认录取通知里的补修要求。');
+ await setup.change('controls-conditional-status','no');await setup.refresh();assert.equal(setup.notice.hidden,true);await setup.finish();
  assert.equal(setup.settings.open,false);assert.equal(setup.workers.length,1);assert(setup.dialog.open);
  console.log('PASS First-time automatic planning opens necessary settings, then continues directly to a preview');
  await setup.edit.handlers.click();assert(setup.workers[0].terminated);assert.equal(setup.dialog.open,false);assert(setup.settings.open);assert.equal(setup.getPlan().items.length,0);
@@ -55,6 +58,7 @@ async function harness(desktop=false){
  const unchanged=conflict.getPlan();await conflict.generate();conflict.workers[0].onmessage({data:E.generate(conflict.workers[0].input.plan,courses)});
  assert.equal(conflict.nodes['auto-plan-title'].textContent,'先核对补修要求');assert(conflict.result.innerHTML.includes('控制理论（ED140014）'));assert(conflict.result.innerHTML.includes('查看已选课程'));assert(conflict.result.innerHTML.includes('还没核对'));assert(conflict.result.innerHTML.includes('返回计划'));assert.equal(conflict.edit.textContent,'核对补修设置');assert(conflict.apply.hidden);
  await conflict.edit.handlers.click();assert(conflict.settings.open);assert(conflict.nodes['controls-conditional-status'].focused);assert.deepEqual(conflict.getPlan(),unchanged);
+ await conflict.refresh();assert(conflict.notice.textContent.includes('请按录取通知确认补修要求。'));assert.equal(conflict.notice.hidden,false);
  console.log('PASS Remediation conflict explains both choices and focuses the setting without enabling it or removing a course');
  const desired=await harness(true),wanted=desired.getPlan();wanted.preferences.desired=['ED140014'];desired.setPlan(wanted);await desired.generate();desired.workers[0].onmessage({data:E.generate(desired.workers[0].input.plan,courses)});
  assert(desired.result.innerHTML.includes('“想选”列表'));assert(desired.result.innerHTML.includes('查看想选记录'));assert(!desired.result.innerHTML.includes('查看已选课程'));
@@ -64,5 +68,34 @@ async function harness(desktop=false){
  await revert.forgetPassed('IN2064');assert.equal(revert.getPlan().items[0].semester,3);assert.equal(revert.getPlan().items[0].status,'planned');
  await revert.forgetPassed('IN2228');assert.equal(revert.getPlan().items[1].semester,1);assert.equal(revert.getPlan().items.length,2);
  console.log('PASS Cancelling passed status keeps an in-range semester and safely places out-of-range future records in semester one');
- console.log('10 planning UI checks passed');
+ const individual=await harness(),individualPlan=individual.getPlan();individualPlan.workload.semesters[3]={maxECTS:24};individual.setPlan(individualPlan);await individual.refresh();await individual.changeSemester(3);await individual.refresh();
+ const semesterForm=()=>individual.nodes['plan-settings-content'].innerHTML.match(/<form id="semester-workload">([\s\S]*?)<\/form>/)[1];
+ assert(semesterForm().includes('value="3" selected'));assert(/name="maxECTS"[^>]*value="24"/.test(semesterForm()));
+ await individual.change('plan-semester-count','2');await individual.refresh();assert(semesterForm().includes('value="2" selected'));
+ console.log('PASS Single-semester settings keep the selected term and its saved limits across updates, clamping only when the plan is shortened');
+ const mobileConflict=await harness(false);mobileConflict.setPlan(conflicted);await mobileConflict.generate();mobileConflict.workers[0].onmessage({data:E.generate(mobileConflict.workers[0].input.plan,courses)});
+ assert.equal(mobileConflict.nodes['auto-plan-title'].textContent,'先核对补修要求');assert(mobileConflict.result.innerHTML.includes('控制理论（ED140014）'));assert(mobileConflict.apply.hidden);
+ await mobileConflict.edit.handlers.click();assert(mobileConflict.settings.open);assert(mobileConflict.nodes['controls-conditional-status'].focused);assert.deepEqual(mobileConflict.getPlan(),unchanged);
+ console.log('PASS Narrow-screen remediation previews offer the same safe review actions and focused settings as desktop');
+ const presentation=await harness(),before=presentation.getPlan();before.items=[{code:'IN2064',status:'passed',semester:1},{code:'IN2067',status:'planned',semester:1},{code:'IN2228',status:'planned',semester:2},{code:'MY-COURSE',name:'<img src=x onerror=alert(1)>',ects:3,group:'J',custom:true,status:'planned',semester:1,locked:true}];presentation.setPlan(before);const initial=presentation.getPlan();await presentation.generate();
+ const proposed=C.validatePlan({...initial,items:initial.items.filter(x=>x.code!=='IN2228').map(x=>x.code==='IN2067'?{...x,semester:2}:x).concat({code:'IN2406',status:'planned',semester:1})},courses);
+ presentation.workers[0].onmessage({data:{ok:true,plan:proposed,finish:2,added:['IN2406'],moved:['IN2067'],removed:['IN2228'],calculation:C.calculate(proposed,courses),passed:C.calculate(proposed,courses,true),warnings:['核对 <课程要求>']}});
+ const html=presentation.result.innerHTML;assert(html.includes('已修 8 ECTS · 待修 15 ECTS'));assert(html.includes('新增 1 门'));assert(html.includes('调整学期 1 门'));assert(html.includes('移除 1 门'));assert(html.includes('移除已排除的选修：Computer Vision II: Multiple View Geometry'));
+ assert(!html.includes('class="auto-course-code">IN2064</span>'));assert(html.includes('class="auto-semester-credits">9 '));assert(html.includes('class="auto-course-credits">3 '));assert(html.includes('固定学期'));assert(html.includes('&lt;img src=x onerror=alert(1)&gt;'));assert(!html.includes('<img src=x'));assert(html.includes('核对 &lt;课程要求&gt;'));assert(html.includes('auto-preview-warnings" open'));assert.deepEqual(presentation.getPlan(),initial);assert.equal(presentation.apply.hidden,false);
+ console.log('PASS Preview metrics, course credits, changes and visible warnings retain passed records and escape custom content before adoption');
+ const failed=await harness(false),beforeFailure=failed.getPlan();await failed.generate();failed.workers[0].onmessage({data:{ok:false,reasons:['条件 <需要调整>']}});
+ assert.equal(failed.nodes['auto-plan-title'].textContent,'还没找到合适的方案');assert(failed.result.innerHTML.includes('条件 &lt;需要调整&gt;'));assert(failed.apply.hidden);assert.deepEqual(failed.getPlan(),beforeFailure);
+ console.log('PASS Unsuccessful mobile previews explain the result without offering adoption or modifying the plan');
+ const reset=await harness(true),personal=reset.getPlan();personal.timeline.count=5;personal.conditional=true;personal.items=[{code:'IN2064',status:'passed',semester:2},{code:'IN2406',status:'planned',semester:3,locked:true}];personal.preferences={...personal.preferences,languages:['DE'],startSemester:4,desired:['IN2067'],excluded:['IN2228'],allowUnconfirmed:false,deadlineException:true};personal.workload={minECTS:10,maxECTS:22,minExams:2,maxExams:3,semesters:{3:{maxECTS:18}}};reset.setPlan(personal);const protectedPlan=reset.getPlan();reset.settings.showModal();await reset.defaults();
+ const restored=reset.getPlan(),canonical=C.validatePlan({...protectedPlan,preferences:undefined,workload:undefined},courses);
+ assert.deepEqual(restored.workload,canonical.workload);assert.deepEqual(restored.preferences.languages,canonical.preferences.languages);assert.equal(restored.preferences.allowUnconfirmed,canonical.preferences.allowUnconfirmed);assert.equal(restored.preferences.deadlineException,canonical.preferences.deadlineException);assert.equal(restored.preferences.startSemester,2);
+ for(const key of ['cohort','conditional','conditionalConfirmed','timeline','items'])assert.deepEqual(restored[key],protectedPlan[key]);for(const key of ['desired','excluded'])assert.deepEqual(restored.preferences[key],protectedPlan.preferences[key]);assert.equal(reset.settings.open,false);assert(reset.dialog.open);assert.equal(reset.workers.length,1);assert.deepEqual(reset.workers[0].input.plan,restored);
+ console.log('PASS Default recommendation restores canonical limits and flags, clears term overrides and protects academic, passed, fixed and course-preference records');
+ const defaultSetup=await harness(),incomplete=defaultSetup.getPlan();incomplete.cohort='unknown';incomplete.conditionalConfirmed=false;defaultSetup.setPlan(incomplete);await defaultSetup.defaults();assert.equal(defaultSetup.workers.length,0);assert(defaultSetup.settings.open);assert(defaultSetup.notice.textContent.includes('补修要求'));assert.equal(defaultSetup.getPlan().cohort,'unknown');assert.equal(defaultSetup.getPlan().conditionalConfirmed,false);
+ console.log('PASS Default recommendation still requires real admission and remediation confirmation before generating');
+ const rapidDefaults=await harness(),releaseDefaults=rapidDefaults.holdPlan(),pendingDefaults=rapidDefaults.defaults();await tick();await rapidDefaults.defaults();releaseDefaults();await pendingDefaults;assert.equal(rapidDefaults.workers.length,1);assert.equal(rapidDefaults.planWrites(),1);
+ console.log('PASS Repeated default-recommendation clicks produce one settings update and one preview request');
+ const resetFailure=await harness(),beforeResetFailure=resetFailure.getPlan();resetFailure.setUpdateError('Storage unavailable');await resetFailure.defaults();assert.deepEqual(resetFailure.getPlan(),beforeResetFailure);assert.equal(resetFailure.workers.length,0);resetFailure.setUpdateError(null);await resetFailure.defaults();assert.equal(resetFailure.workers.length,1);
+ console.log('PASS A failed default reset leaves records untouched and releases the request guard for a safe retry');
+ console.log('18 planning UI checks passed');
 })().catch(error=>{console.error(error);process.exitCode=1;});

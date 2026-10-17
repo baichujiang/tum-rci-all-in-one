@@ -183,12 +183,12 @@
 .plan-dialog-heading>.quiet{min-height:40px;flex-shrink:0;font-size:13px;padding:6px 9px}
 .plan-dialog-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;bottom:0;background:var(--white);padding:16px 24px;border-top:1px solid var(--line);z-index:2}
 .plan-dialog-footer .meta{margin:0;font-size:12px}
-#plan-settings-dialog{display:flex;flex-direction:column;overflow:hidden}
+#plan-settings-dialog{display:flex;flex-direction:column;overflow:hidden;width:min(920px,calc(100vw - 48px));max-height:calc(100dvh - 48px)}
 #plan-settings-dialog:not([open]){display:none}
 #plan-settings-dialog>.plan-dialog-heading,#plan-settings-dialog>.plan-dialog-footer{flex-shrink:0}
-#plan-settings-dialog>.plan-dialog-footer{position:static;justify-content:flex-end}
+#plan-settings-dialog>.plan-dialog-footer{position:static;justify-content:space-between}
 #plan-settings-dialog [data-finish-settings]{flex-shrink:0}
-#plan-settings-content{overflow-y:auto;min-height:0;overscroll-behavior:contain;scroll-padding:16px}
+#plan-settings-content{overflow-y:auto;min-height:0;overscroll-behavior:contain;scroll-padding:16px;display:grid;gap:12px;padding:16px;background:var(--paper)}
 #plan-settings-notice{margin:18px 24px 0;font-size:13px}
 .planning-workflow{padding:20px 24px}
 .planning-workflow h3{font-size:15px;margin:0 0 14px}
@@ -221,6 +221,92 @@
 .planning-workflow form>.meta{margin:0}
 .load-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .planning-workflow .button{justify-self:start;min-height:42px;font-size:13px}
+/* Common conditions come first; each optional group has its own disclosure. */
+.settings-default-shortcut{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 20px;border:1px solid var(--line);border-radius:12px;background:var(--brand-soft,#edf4ef)}
+.settings-default-shortcut>div{min-width:0}
+#plan-settings-content .settings-default-shortcut h3{margin:0 0 5px;font-size:15px;line-height:1.6}
+.settings-default-shortcut p{margin:0;font-size:12px;line-height:1.7}
+.settings-default-shortcut small{display:block;margin-top:4px;font-size:11px;line-height:1.7;color:var(--muted)}
+#plan-settings-content .settings-default-shortcut .button{display:inline-flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;min-height:44px;padding:10px 14px;font-size:13px;background:var(--white);border-color:var(--brand,var(--green));color:var(--brand,var(--green))}
+#plan-settings-content .settings-default-shortcut .button:hover{background:var(--brand-soft,#edf4ef)}
+#plan-settings-content .plan-settings-card{min-width:0;padding:18px 20px;background:var(--white);border:1px solid var(--line);border-radius:12px}
+#plan-settings-content .plan-load-settings{margin:0}
+.settings-section-heading{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.settings-section-number{display:grid;place-items:center;flex:none;width:26px;height:26px;border-radius:7px;background:var(--brand-soft,#edf4ef);color:var(--brand,var(--green));font-size:11px;font-weight:650;font-variant-numeric:tabular-nums}
+.settings-section-heading>div{flex:1;min-width:0}
+#plan-settings-content .settings-section-heading h3{margin:0;font-size:16px;line-height:1.6}
+.settings-save-badge{flex:none;padding:3px 7px;border-radius:5px;background:#edf6ef;color:#457350;font-size:11px;line-height:1.6;white-space:nowrap}
+.settings-save-badge.is-draft{background:#f0f3f7;color:var(--muted)}
+#plan-settings-content .plan-settings-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.settings-basics-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin-top:12px}
+#plan-settings-content .settings-field-help{margin:0;font-size:12px}
+.settings-pace{margin:0;padding:6px 10px;background:var(--brand-soft,#f0f5f2);border-radius:6px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.settings-pace strong{font-weight:600;color:var(--brand,var(--green));font-variant-numeric:tabular-nums}
+.settings-pace>span:last-child{margin-left:8px;color:var(--muted)}
+.plan-common-fields{display:grid;grid-template-columns:1fr 1fr 1.4fr 1.3fr;align-items:end;gap:14px}
+.plan-number-control{position:relative;display:block}
+.planning-workflow .plan-number-control input:not([type=checkbox]){padding-right:60px;font-variant-numeric:tabular-nums}
+.plan-number-control>span{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:400;line-height:1;color:var(--muted);pointer-events:none}
+.plan-number-control input::-webkit-inner-spin-button{margin-right:-12px}
+#plan-settings-content #planning-preferences{margin:0;gap:12px}
+#plan-settings-content .settings-exam-note{font-size:12px;margin-top:-4px}
+#plan-settings-dialog .settings-language-choices{min-width:0;margin:0;padding:0;border:0;border-radius:0}
+.settings-language-choices legend{padding:0;margin-bottom:8px}
+.settings-language-choices legend small{font-size:12px;font-weight:400;color:var(--muted);margin-left:5px}
+.settings-language-choices>div{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#plan-settings-dialog .settings-language-choices .check{display:flex;align-items:center;gap:8px;min-height:42px;margin:0;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:13px;cursor:pointer}
+.settings-language-choices .check:has(input:checked){background:var(--brand-soft,#edf4ef);border-color:var(--brand,var(--green));color:var(--brand,var(--green))}
+.settings-language-choices .check:focus-within{outline:2px solid var(--brand,var(--green));outline-offset:2px}
+.settings-language-choices .check>small{margin-left:auto;font-size:12px;color:var(--muted)}
+#plan-settings-dialog input[type=checkbox]{accent-color:var(--brand,var(--green));min-height:18px}
+.settings-optional{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:12px}
+#plan-settings-content .settings-optional>details{min-width:0;margin:0;padding:0;border:1px solid var(--line);border-radius:10px;background:var(--white);overflow:hidden}
+#plan-settings-content .settings-optional summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:74px;padding:13px 18px;list-style:none;color:var(--ink)}
+.settings-optional summary::-webkit-details-marker{display:none}
+.settings-optional summary:hover{background:var(--brand-soft,#edf4ef)}
+.settings-optional summary b{display:block;font-size:13px;font-weight:600;line-height:1.6}
+.settings-optional summary small{display:block;margin-top:3px;font-size:12px;font-weight:400;color:var(--muted);line-height:1.5}
+.settings-disclosure-arrow{flex:none;font-size:18px;color:var(--muted);line-height:1}
+details[open]>summary>.settings-disclosure-arrow{transform:rotate(180deg)}
+.settings-disclosure-body{padding:4px 18px 18px}
+#plan-settings-content .settings-disclosure-body>.meta{margin:0 0 12px;font-size:12px}
+#plan-settings-content .settings-disclosure-body>.load-fields+.meta{margin:10px 0 0}
+#plan-settings-content .planning-toggle-options{gap:10px;margin-top:16px}
+#plan-settings-content .planning-toggle-option{padding:12px;background:var(--paper);border:1px solid var(--line);border-radius:9px}
+#plan-settings-content .planning-toggle-option .check{font-size:13px}
+#plan-settings-content .planning-toggle-option .meta{font-size:12px}
+.settings-override-count{display:inline-block;margin-left:8px;font-size:11px;font-weight:400;color:var(--brand,var(--green))}
+.workload-overrides p{padding:10px 12px;border-radius:8px;background:var(--brand-soft,#edf4ef);font-size:12px}
+#plan-settings-content .plan-rules-link{margin:0;padding:0 4px;border:0;min-height:32px;font-size:13px}
+#plan-settings-dialog .settings-save-note{font-size:12px;line-height:1.6;color:var(--muted)}
+#plan-settings-dialog [data-finish-settings]{min-height:44px;padding:10px 20px;font-size:14px}
+@media(max-width:800px){
+ #plan-settings-dialog{width:min(600px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+ #plan-settings-content .plan-settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .plan-common-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .plan-common-fields>label:last-of-type,.plan-common-fields>fieldset{grid-column:1/-1}
+ .settings-optional{grid-template-columns:1fr}
+ .settings-language-choices>div{grid-template-columns:1fr 1fr}
+ .settings-default-shortcut{align-items:stretch;flex-direction:column;gap:12px;padding:16px}
+ #plan-settings-content .settings-default-shortcut .button{width:100%;font-size:14px}
+}
+@media(max-width:600px){
+ #plan-settings-dialog>.plan-dialog-heading{padding:16px 18px 14px}
+ #plan-settings-dialog>.plan-dialog-footer{padding:12px 16px;gap:10px}
+ #plan-settings-content{padding:14px}
+ #plan-settings-content .plan-settings-card{padding:16px}
+ .settings-section-heading{gap:8px}
+ #plan-settings-content .settings-section-heading h3{font-size:15px}
+ .settings-section-number{width:24px;height:24px}
+ .settings-save-badge{font-size:10px}
+ .settings-basics-foot{margin-top:10px;gap:10px}
+ .settings-pace{width:100%}
+ #plan-settings-content .settings-language-choices .check{min-height:44px}
+ #plan-settings-content .plan-number-control input:not([type=checkbox]){padding-right:52px}
+ #plan-settings-content .settings-optional summary{padding:12px 16px}
+ .settings-disclosure-body{padding:4px 16px 16px}
+ #plan-settings-dialog .settings-save-note{width:100%;font-size:12px;margin:0}
+}
 .workload-overrides{font-size:12px;color:var(--muted)}
 .preference-modes{display:flex;gap:4px;padding:4px;background:var(--paper);border:1px solid var(--line);border-radius:10px;margin-bottom:14px}
 .preference-modes button{flex:1;border:0;border-radius:7px;background:transparent;color:var(--muted);min-height:40px;padding:8px 10px;font-family:inherit;font-size:14px;cursor:pointer}
@@ -248,11 +334,84 @@
 .plan-tool-row:hover{background:var(--paper);text-decoration:none}.plan-tool-row b{display:block;font-size:14px;font-weight:600}.plan-tool-row small{display:block;font-size:12px;line-height:1.6;color:var(--muted);margin-top:3px}.plan-tool-row>span:last-child{color:var(--muted)}
 #plan-exports{padding:0;margin:0}.plan-storage-note{margin:18px 24px;font-size:12px;line-height:1.7}
 #plan-share-output{padding:18px 24px;border-bottom:1px solid var(--line);font-size:13px}#plan-share-output textarea{display:block;width:100%;margin:8px 0;word-break:break-all;font-size:12px;padding:12px;border:1px solid var(--line);border-radius:8px}#plan-share-output .meta{font-size:12px}
-.auto-plan-dialog{width:min(860px,calc(100vw - 32px));max-height:90vh;max-height:90dvh;overflow:auto;border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--white);color:var(--ink);box-shadow:0 24px 90px #122a3a33}
-.auto-plan-dialog .plan-dialog-heading{padding:0 0 16px;margin-bottom:18px}
-.auto-plan-dialog .dialog-actions{position:sticky;bottom:-24px;padding:16px 0;background:var(--white);margin-top:20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.auto-plan-dialog [data-edit-auto-settings]{margin-right:auto;min-height:42px;font-size:13px}
-.auto-preview-semesters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.auto-preview-semesters section{border:1px solid var(--line);border-radius:10px;padding:14px}.auto-preview-semesters h3{font-size:14px;margin:0}.auto-preview-semesters ul{padding-left:20px;font-size:13px}.auto-preview-semesters li{margin:8px 0}.auto-preview-semesters small{display:block;color:var(--muted)}.auto-result-total{font-size:18px}#printable-plan{display:none}
+.auto-plan-dialog{width:min(920px,calc(100vw - 48px));max-height:calc(100dvh - 48px);overflow:hidden;border:1px solid var(--line);border-radius:16px;padding:0;background:var(--white);color:var(--ink);box-shadow:0 24px 90px #122a3a33}
+.auto-plan-dialog[open]{display:flex;flex-direction:column}
+.auto-plan-dialog>.plan-dialog-heading{flex-shrink:0}
+#auto-plan-result{min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-padding:16px;padding:16px;display:grid;grid-auto-rows:max-content;align-content:start;gap:16px;background:var(--paper)}
+.auto-plan-dialog .dialog-actions{position:static;flex-shrink:0;padding:16px 24px;margin:0;border-top:1px solid var(--line);display:flex;gap:16px;align-items:center;justify-content:space-between;background:var(--white)}
+.auto-plan-dialog [data-edit-auto-settings]{min-height:44px;font-size:14px;padding:10px 12px}
+.auto-preview-primary-actions{display:flex;align-items:center;gap:10px}
+.auto-plan-dialog .dialog-actions .button{min-height:44px;padding:10px 18px;font-size:14px}
+.auto-preview-overview,.auto-preview-semester,.auto-preview-state{min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--white)}
+.auto-preview-overview{padding:18px 20px}
+.auto-preview-overview .settings-section-heading h3{margin:0;font-size:16px;line-height:1.6}
+.auto-preview-draft{font-size:11px;line-height:1.6;padding:3px 8px;border-radius:5px;color:var(--brand,var(--green));background:var(--brand-soft,#edf4ef)}
+.auto-preview-metrics{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:20px}
+.auto-preview-metrics>div+div{border-left:1px solid var(--line);padding-left:20px}
+.auto-preview-metrics>div>span{font-size:12px;color:var(--muted)}
+.auto-preview-metrics strong{display:block;font-size:24px;font-weight:650;line-height:1.5;margin:4px 0;color:var(--brand,var(--green));font-variant-numeric:tabular-nums}
+.auto-preview-metrics strong small{font-size:13px;font-weight:400;color:var(--muted)}
+.auto-preview-metrics p{margin:0;font-size:12px;line-height:1.7;color:var(--muted)}
+.auto-preview-change-counts{display:flex;flex-wrap:wrap;gap:0 10px}
+.auto-preview-change-counts>span{white-space:nowrap}
+.auto-preview-removals{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:12px;line-height:1.8;color:var(--muted)}
+.auto-preview-section-heading{display:flex;align-items:center;gap:10px;margin:0 4px 12px}
+.auto-preview-section-heading h3{margin:0;font-size:16px;line-height:1.6}
+.auto-preview-section-heading>span:last-child{margin-left:auto;font-size:12px;color:var(--muted)}
+.auto-preview-semesters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+.auto-preview-semester>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px 0}
+.auto-preview-semester h4{margin:0;font-size:15px;line-height:1.6}
+.auto-preview-semester header p{font-size:12px;line-height:1.6;color:var(--muted);margin:3px 0 0}
+.auto-semester-credits{flex:none;font-size:20px;font-weight:650;color:var(--brand,var(--green));font-variant-numeric:tabular-nums}
+.auto-semester-credits small{font-size:11px;font-weight:400}
+.auto-semester-load{margin:8px 18px 0;padding-bottom:12px;border-bottom:1px solid var(--line);font-size:12px;line-height:1.6;color:var(--muted)}
+.auto-preview-semester ul{list-style:none;margin:0;padding:0 18px}
+.auto-preview-semester li{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin:0;padding:12px 0}
+.auto-preview-semester li+li{border-top:1px solid var(--line)}
+.auto-preview-course{min-width:0}
+.auto-preview-course>b{display:block;font-size:13px;font-weight:500;line-height:1.7;overflow-wrap:anywhere}
+.auto-preview-course>div{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.6}
+.auto-course-code{font-variant-numeric:tabular-nums}
+.auto-course-change,.auto-course-locked{padding:1px 5px;border-radius:4px;font-size:10px}
+.auto-course-change{background:var(--brand-soft,#edf4ef);color:var(--brand,var(--green))}
+.auto-course-locked{background:var(--paper);color:var(--muted)}
+.auto-course-credits{flex:none;font-size:14px;font-weight:600;line-height:1.7;white-space:nowrap;font-variant-numeric:tabular-nums}
+.auto-course-credits small{font-size:10px;font-weight:400;color:var(--muted)}
+.auto-preview-semester .auto-preview-empty{font-size:13px;color:var(--muted);padding:18px 0}
+.auto-preview-warnings{border:1px solid #e7d7b9;border-radius:12px;background:var(--white);overflow:hidden}
+.auto-preview-warnings>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:74px;padding:13px 18px;list-style:none;cursor:pointer;background:var(--warning-soft,#fff8ec)}
+.auto-preview-warnings>summary::-webkit-details-marker{display:none}
+.auto-preview-warnings summary b{display:block;font-size:14px;line-height:1.6;font-weight:600}
+.auto-preview-warnings summary small{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.6}
+.auto-warning-count{display:flex;align-items:center;gap:10px;flex:none;font-size:12px;color:var(--warning,#935c10)}
+.auto-preview-warnings[open] .settings-disclosure-arrow{transform:rotate(180deg)}
+.auto-preview-warnings ul{margin:0;padding:8px 22px 16px 36px;font-size:13px;line-height:1.8}
+.auto-preview-warnings li{padding:5px 0;overflow-wrap:anywhere}
+.auto-preview-footnote{padding:0 4px}
+.auto-preview-footnote p{margin:0;font-size:12px;line-height:1.8;color:var(--muted)}
+.auto-preview-footnote p+p{margin-top:4px}
+.auto-preview-state{padding:28px;font-size:14px;line-height:1.8}
+.auto-preview-state h3{margin:0 0 8px;font-size:17px;line-height:1.6}
+.auto-preview-state p{margin:8px 0;font-size:14px;line-height:1.8}
+.auto-preview-state ul{padding-left:22px;margin:12px 0}
+.auto-preview-state li+li{margin-top:10px}
+.auto-preview-state.is-loading{padding:48px 24px;text-align:center}
+.auto-preview-state.is-loading p{font-size:13px;color:var(--muted)}
+.auto-preview-spinner{display:block;width:28px;height:28px;margin:0 auto 18px;border:3px solid var(--line);border-top-color:var(--brand,var(--green));border-radius:50%;animation:auto-preview-spin 1s linear infinite}
+.auto-preview-conflict{border-color:#e7d7b9}
+.auto-preview-conflict .inline-actions{margin-top:18px}
+@keyframes auto-preview-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.auto-preview-spinner{animation:none}}
+@media(max-width:800px){
+ .auto-plan-dialog{width:min(600px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+ .auto-preview-metrics{grid-template-columns:1fr 1fr;gap:14px 16px}
+ .auto-preview-metrics>div:first-child{grid-column:1/-1;padding-bottom:12px;border-bottom:1px solid var(--line)}
+ .auto-preview-metrics>div:nth-child(2){border:0;padding:0}
+ .auto-preview-metrics>div:nth-child(3){padding-left:16px}
+ .auto-preview-metrics strong{font-size:22px}
+ .auto-preview-semesters{grid-template-columns:1fr}
+}
+#printable-plan{display:none}
 @media(max-width:700px){
  .plan-page-heading{align-items:flex-start;flex-direction:column;gap:18px;margin-bottom:10px}.plan-page-heading h1{font-size:28px}.plan-page-heading p{font-size:13px}
  .plan-primary-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;width:100%;gap:8px}.plan-primary-actions .plan-action-button{gap:6px;padding:10px;font-size:13px}.plan-action-icon{width:16px;height:16px}.plan-primary-actions .plan-more-button{padding:10px}
@@ -265,7 +424,24 @@
  #plan-settings-dialog .plan-dialog-footer{flex-wrap:wrap;gap:10px}#plan-settings-dialog .plan-dialog-footer .meta{max-width:none}#plan-settings-dialog [data-finish-settings]{width:100%}.plan-language-settings{grid-template-columns:1fr}.planning-workflow .plan-language-settings fieldset{padding:6px 12px}
  .preference-modes button{font-size:13px;padding:8px 5px}.preference-modes button span{font-size:10px;margin-left:4px}.preference-result{padding:12px 10px;gap:10px}.preference-result b{font-size:13px}.preference-result small{font-size:11px}.preference-result button{font-size:12px}.preference-results{max-height:35vh}
  .plan-tool-row{padding:14px 18px}.plan-storage-note{margin:16px 18px}.plan-tools-footer{padding:14px 18px;padding-bottom:max(14px,env(safe-area-inset-bottom))}.plan-clear-button{width:100%}#plan-share-output{padding:16px 18px}
- .auto-preview-semesters{grid-template-columns:1fr}.auto-plan-dialog{padding:18px}.auto-plan-dialog .dialog-actions{bottom:-18px}.auto-plan-dialog .dialog-actions .button{font-size:12px;padding:10px 12px}.auto-plan-dialog [data-edit-auto-settings]{font-size:12px}
+ .auto-plan-dialog>.plan-dialog-heading{padding:16px 18px 14px}
+ #auto-plan-result{padding:14px;gap:14px}
+ .auto-plan-dialog .dialog-actions{flex-wrap:wrap;padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));gap:8px}
+ .auto-plan-dialog [data-edit-auto-settings]{width:100%;padding:6px 10px;min-height:38px;font-size:13px}
+ .auto-preview-primary-actions{width:100%;gap:10px}
+ .auto-preview-primary-actions .button{flex:1;justify-content:center}
+ .auto-plan-dialog .dialog-actions .button{font-size:14px;padding:10px 12px}
+ .auto-preview-overview{padding:16px}
+ .auto-preview-overview .settings-section-heading h3,.auto-preview-section-heading h3{font-size:15px}
+ .auto-preview-section-heading{gap:8px;margin-left:2px;margin-right:2px}
+ .auto-preview-section-heading>span:last-child{font-size:11px}
+ .auto-preview-semester>header{padding:14px 16px 0}
+ .auto-semester-load{margin-left:16px;margin-right:16px}
+ .auto-preview-semester ul{padding:0 16px}
+ .auto-preview-warnings>summary{padding:12px 16px}
+ .auto-preview-warnings summary small{font-size:11px}
+ .auto-warning-count{gap:6px;font-size:11px}
+ .auto-preview-state{padding:20px}
 }
 @media(max-width:380px){.plan-settings-grid{grid-template-columns:1fr}.plan-progress .summary-caption{width:100%;margin:0}.unassigned-heading>small{display:none}.plan-dialog-footer{align-items:flex-start}.plan-dialog-footer .meta{max-width:130px}}
 @media(max-width:700px){
