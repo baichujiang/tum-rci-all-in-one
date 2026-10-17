@@ -3,7 +3,7 @@
 'use strict';
 const desktopPlanning=window.matchMedia?.('(min-width: 961px)');
 const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,E=window.RCIPlanning,e=C.esc,box=document.getElementById('planning-controls');if(!box)return;
-let db,p,query='',mode='passed',worker=null,preparing=false,searchTimer=null,generation=0,preview=null,expected='',original=null,renderId=0,autoIntent=false,fixedSettingsNotice=false,workloadSemester=1;
+let db,p,query='',mode='passed',worker=null,preparing=false,searchTimer=null,generation=0,preview=null,expected='',original=null,renderId=0,autoIntent=false,fixedSettingsNotice=false,workloadSemester=1,defaultsApplied=false,defaultsFeedbackTimer=null;
 const dialog=document.getElementById('auto-plan-dialog'),result=document.getElementById('auto-plan-result');
 const settings=document.getElementById('plan-settings-dialog'),preferences=document.getElementById('course-preferences-dialog'),tools=document.getElementById('plan-tools-dialog');
 const dirtyForms=new Set();
@@ -14,17 +14,27 @@ function fields(value,prefix,keys=['minECTS','maxECTS','minExams','maxExams'],fo
 function semesterLabel(number){const term=T.term(p,number);return term.year===null?term.label:`第 ${number} 学期 · ${term.label}`;}
 function requiredSettings(plan){return !C.cohorts.includes(plan.cohort)?'先选择入学时间，并确认录取通知里的补修要求。':!plan.conditionalConfirmed?'先确认录取通知里的补修要求。':(plan.cohort.endsWith('夏季')?'summer':'winter')!==plan.timeline.start?'第一学期与入学时间不一致，请调整。':'';}
 function defaultConditions(plan){return C.validatePlan({...plan,workload:undefined,preferences:{...plan.preferences,languages:undefined,startSemester:Math.min(plan.timeline.count,Math.max(1,...plan.items.filter(x=>x.status==='passed').map(x=>x.semester))),allowUnconfirmed:undefined,deadlineException:undefined}},db.courses);}
+function updateDefaultFeedback(){
+ const button=document.getElementById('plan-use-default-conditions'),status=document.getElementById('plan-default-conditions-status');
+ if(button){button.classList.toggle('is-success',defaultsApplied);button.innerHTML=defaultsApplied?'<span aria-hidden="true">✓</span>已恢复默认条件':'使用默认规划条件';}
+ if(status)status.textContent=defaultsApplied?'已恢复默认规划条件，可继续调整。':'';
+}
+function setDefaultFeedback(applied=false){
+ clearTimeout(defaultsFeedbackTimer);defaultsFeedbackTimer=null;defaultsApplied=applied;updateDefaultFeedback();
+ if(applied)defaultsFeedbackTimer=setTimeout(()=>setDefaultFeedback(),3500);
+}
 async function applyDefaultConditions(){
  if(worker||preparing)return;
+ setDefaultFeedback();
  preparing=true;
  try{
   await U.updatePlan(defaultConditions);
   dirtyForms.delete('planning-preferences');dirtyForms.delete('semester-workload');
-  await render();U.toast('已恢复默认规划条件，可继续调整。');
+  await render();setDefaultFeedback(true);
  }finally{preparing=false;}
 }
 function settingsHTML(){workloadSemester=Math.min(workloadSemester,p.timeline.count);const defaults=defaultConditions(p);return `
- <section class="settings-default-shortcut" aria-labelledby="settings-default-title"><div><h3 id="settings-default-title">恢复默认规划条件</h3><p>每学期最多 ${defaults.workload.maxECTS} ECTS · ${defaults.workload.maxExams} 次考试（估算）· 英语 / 德语</p><small>从第 ${defaults.preferences.startSemester} 学期开始，清除单学期限制；保留学业信息、课程与想选／排除记录。应用后可在本页继续调整。</small></div><button id="plan-use-default-conditions" type="button" class="button secondary" data-use-default-conditions>使用默认规划条件</button></section>
+ <section class="settings-default-shortcut" aria-labelledby="settings-default-title"><div><h3 id="settings-default-title">恢复默认规划条件</h3><p>每学期最多 ${defaults.workload.maxECTS} ECTS · ${defaults.workload.maxExams} 次考试（估算）· 英语 / 德语</p><small>从第 ${defaults.preferences.startSemester} 学期开始，清除单学期限制；保留学业信息、课程与想选／排除记录。应用后可在本页继续调整。</small></div><button id="plan-use-default-conditions" type="button" class="button secondary" data-use-default-conditions>使用默认规划条件</button><span id="plan-default-conditions-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></section>
  <section id="plan-options" class="plan-basic-settings plan-settings-card" aria-labelledby="plan-basics-title">
   <div class="settings-section-heading"><span class="settings-section-number" aria-hidden="true">01</span><div><h3 id="plan-basics-title">学业信息</h3></div><span class="settings-save-badge">修改后自动保存</span></div>
   <div class="plan-settings-grid">
@@ -81,6 +91,7 @@ async function render(){
  document.getElementById('plan-context').innerHTML=`<button id="plan-open-settings" type="button" class="plan-context-button" data-open-settings aria-haspopup="dialog">${e(p.cohort==='unknown'?'选择入学时间':p.cohort==='older'?'其他入学时间':p.cohort)} · ${p.timeline.count} 个学期 <span class="context-edit">设置</span></button><span class="context-divider" aria-hidden="true"></span><button id="plan-open-passed" type="button" class="plan-context-button" data-open-preferences="passed" aria-haspopup="dialog">已修 ${calc.allocated} ECTS</button><button id="plan-open-preferences" type="button" class="plan-context-button" data-open-preferences="desired" aria-haspopup="dialog">选课偏好${p.preferences.desired.length+p.preferences.excluded.length?' · '+(p.preferences.desired.length+p.preferences.excluded.length):''}</button><button type="button" class="plan-context-button desktop-only" data-open-study aria-haspopup="dialog" aria-controls="plan-study-dialog">选课与学分说明</button><span class="plan-save-state${U.persisted?'':' is-temporary'}">${U.persisted?'自动保存在此浏览器':'仅本页有效，请导出备份'}</span>`;
  document.getElementById('plan-add-course').dataset.pickSemester=String(desktopPlanning?.matches?1:p.preferences.startSemester);
  document.getElementById('plan-settings-content').innerHTML=settingsHTML();
+ updateDefaultFeedback();
  document.getElementById('planning-rules-content').innerHTML=rulesHTML();
  document.getElementById('course-preferences-content').innerHTML=preferencesHTML();
  if(autoIntent&&settings.open&&!fixedSettingsNotice){const notice=document.getElementById('plan-settings-notice'),message=requiredSettings(p);notice.textContent=message;notice.hidden=!message;}
@@ -115,8 +126,9 @@ async function savePreferences(form){
   return true;
  }catch(error){dirtyForms.add(form.id);throw error;}
 }
-box.addEventListener('input',event=>{if(event.target.form)dirtyForms.add(event.target.form.id);if(event.target.id==='preference-search'){query=event.target.value;search();}});
+box.addEventListener('input',event=>{if(defaultsApplied&&settings.open)setDefaultFeedback();if(event.target.form)dirtyForms.add(event.target.form.id);if(event.target.id==='preference-search'){query=event.target.value;search();}});
 box.addEventListener('change',async event=>{
+ if(defaultsApplied&&settings.open)setDefaultFeedback();
  const el=event.target;if(el.form)dirtyForms.add(el.form.id);
  try{
   if(el.id==='controls-conditional-status')await U.updatePlan(p=>({...p,conditional:el.value==='yes',conditionalConfirmed:el.value!=='unknown'}));
@@ -169,6 +181,7 @@ box.addEventListener('keydown',async event=>{
  mode=event.key==='Home'?modes[0]:event.key==='End'?modes[2]:modes[(index+(event.key==='ArrowRight'?1:2))%3];await render();document.getElementById('preference-tab-'+mode).focus({preventScroll:true});
 });
 for(const panel of [settings,preferences,tools])panel.addEventListener('click',event=>{if(event.target!==panel)return;const r=panel.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)panel.close();});
+settings.addEventListener('close',()=>setDefaultFeedback());
 function autoHeading(title,description){
  document.getElementById('auto-plan-title').textContent=title;
  document.getElementById('auto-plan-description').textContent=description;

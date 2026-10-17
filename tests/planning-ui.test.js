@@ -5,17 +5,18 @@ const C=require('../assets/core'),E=require('../assets/planning-engine'),T=requi
 const courses=require('../scripts/load-courses')();
 const source=fs.readFileSync(path.join(__dirname,'../site3/planning-controls.js'),'utf8');
 const copy=x=>JSON.parse(JSON.stringify(x)),tick=()=>new Promise(resolve=>setImmediate(resolve));
-function element(){return {innerHTML:'',hidden:false,handlers:{},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];}};}
+function element(){const classes=new Set();return {innerHTML:'',textContent:'',hidden:false,classList:{toggle(name,on){if(on)classes.add(name);else classes.delete(name);},contains:name=>classes.has(name)},handlers:{},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];}};}
 async function harness(desktop=false){
  let plan=C.validatePlan({version:2,cohort:'2026/27冬季',conditional:false,items:[]},courses),nextTimer=0,planGate=null,planReads=0,planWrites=0,updateError=null;
  const timers=new Map(),workers=[],listeners=new Map(),box=element(),dialog=element(),result=element(),apply=element(),cancel=element(),edit=element(),choices=element();
- const settings=element(),preferences=element(),tools=element(),finishSettings=element(),notice=element(),clear=element();
+ const settings=element(),preferences=element(),tools=element(),finishSettings=element(),notice=element(),clear=element(),defaultButton=element(),defaultStatus=element();
  dialog.querySelector=selector=>({'[data-apply-auto]':apply,'[data-cancel-auto]':cancel,'[data-edit-auto-settings]':edit}[selector]);
  settings.querySelector=()=>finishSettings;box.querySelector=()=>clear;
  for(const panel of [dialog,settings,preferences,tools]){panel.showModal=()=>{panel.open=true;};panel.close=()=>{panel.open=false;panel.handlers.close?.();};}
  class Worker{constructor(){this.terminated=false;workers.push(this);}postMessage(input){this.input=copy(input);}terminate(){this.terminated=true;}}
  const U={base:'',persisted:true,data:async()=>({courses,names:{},synonyms:[]}),plan:async()=>{planReads++;if(planGate)await planGate;return copy(plan);},updatePlan:async fn=>{if(updateError)throw new Error(updateError);planWrites++;const next=await fn(copy(plan));if(next)plan=C.validatePlan(next,courses);return plan;},confirmAction:async()=>true,toast(){}};
  const nodes={'planning-controls':box,'auto-plan-dialog':dialog,'auto-plan-result':result,'preference-results':choices,'plan-settings-dialog':settings,'course-preferences-dialog':preferences,'plan-tools-dialog':tools,'plan-context':element(),'plan-add-course':{dataset:{}},'plan-settings-content':element(),'planning-rules-content':element(),'plan-settings-title':element(),'course-preferences-content':element(),'plan-settings-notice':notice,'plan-cohort':{focus(){}},'controls-conditional-status':{focus(){this.focused=true;}},'auto-plan-title':element(),'auto-plan-description':element(),'preference-search':{focus(){this.focused=true;}},'plan-start-term':{focus(){}}};
+ nodes['plan-use-default-conditions']=defaultButton;nodes['plan-default-conditions-status']=defaultStatus;
  vm.runInNewContext(source,{window:{matchMedia:()=>({matches:desktop}),RCIUI:U,RCI:C,RCIPlanning:E,RCICourseContext:T,RCISearch:S,addEventListener:(event,listener)=>listeners.set(event,listener)},document:{getElementById:id=>nodes[id]},Worker,setTimeout:fn=>{timers.set(++nextTimer,fn);return nextTimer;},clearTimeout:id=>timers.delete(id)});
  await tick();
  const generate=()=>box.handlers.click({target:{closest:()=>({hasAttribute:key=>key==='data-generate'})}});
@@ -96,7 +97,13 @@ async function harness(desktop=false){
  console.log('PASS Applying defaults leaves missing admission and remediation information unconfirmed and keeps generation blocked');
  const rapidDefaults=await harness(),releaseDefaults=rapidDefaults.holdPlan(),pendingDefaults=rapidDefaults.defaults();await tick();await rapidDefaults.defaults();releaseDefaults();await pendingDefaults;assert.equal(rapidDefaults.workers.length,0);assert.equal(rapidDefaults.planWrites(),1);
  console.log('PASS Repeated default clicks produce one settings update and never start a preview');
- const resetFailure=await harness(),beforeResetFailure=resetFailure.getPlan();resetFailure.setUpdateError('Storage unavailable');await resetFailure.defaults();assert.deepEqual(resetFailure.getPlan(),beforeResetFailure);assert.equal(resetFailure.workers.length,0);resetFailure.setUpdateError(null);await resetFailure.defaults();assert.equal(resetFailure.workers.length,0);assert.equal(resetFailure.planWrites(),1);
+ const resetFailure=await harness(),beforeResetFailure=resetFailure.getPlan();resetFailure.setUpdateError('Storage unavailable');await resetFailure.defaults();assert.deepEqual(resetFailure.getPlan(),beforeResetFailure);assert.equal(resetFailure.workers.length,0);assert.equal(resetFailure.nodes['plan-default-conditions-status'].textContent,'');assert.equal(resetFailure.timers.size,0);resetFailure.setUpdateError(null);await resetFailure.defaults();assert.equal(resetFailure.workers.length,0);assert.equal(resetFailure.planWrites(),1);
  console.log('PASS A failed default reset leaves records untouched and releases the request guard for a safe retry');
- console.log('18 planning UI checks passed');
+ const feedback=await harness();await feedback.generate();await feedback.edit.handlers.click();await feedback.defaults();const feedbackButton=feedback.nodes['plan-use-default-conditions'],feedbackStatus=feedback.nodes['plan-default-conditions-status'];
+ assert(feedback.settings.open);assert(feedbackButton.classList.contains('is-success'));assert(feedbackButton.innerHTML.includes('已恢复默认条件'));assert(feedbackStatus.textContent.includes('可继续调整'));assert(feedback.nodes['plan-settings-content'].innerHTML.includes('id="plan-default-conditions-status" class="sr-only" role="status"'));assert.equal(feedback.timers.size,1);
+ await feedback.refresh();assert(feedbackButton.classList.contains('is-success'));await feedback.defaults();assert.equal(feedback.timers.size,1);[...feedback.timers.values()][0]();assert.equal(feedback.timers.size,0);assert.equal(feedbackStatus.textContent,'');assert.equal(feedbackButton.innerHTML,'使用默认规划条件');assert(!feedbackButton.classList.contains('is-success'));assert(feedback.settings.open);assert.equal(feedback.workers.length,1);assert(feedback.workers[0].terminated);
+ console.log('PASS Successful defaults show accessible feedback inside settings, survive updates, restart once and expire without opening a preview');
+ await feedback.defaults();await feedback.change('plan-semester-count','5');assert.equal(feedbackStatus.textContent,'');assert.equal(feedback.timers.size,0);await feedback.defaults();feedback.settings.close();assert.equal(feedbackStatus.textContent,'');assert(!feedbackButton.classList.contains('is-success'));assert.equal(feedback.timers.size,0);
+ console.log('PASS Editing settings or closing the dialog clears default feedback and its timer');
+ console.log('20 planning UI checks passed');
 })().catch(error=>{console.error(error);process.exitCode=1;});
