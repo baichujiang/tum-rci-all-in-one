@@ -34,7 +34,7 @@ test('merged resource entries retain their original descriptions and task catego
 test('task filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{task:'life'}).every(d=>d.tasks.includes('life'))));
 test('kind filter is enforced',()=>assert(S.search(index.docs,'',index.synonyms,{kind:'course'}).every(d=>d.kind==='course')));
 const walk=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(path.join(p,x.name)):[path.join(p,x.name)]),html=walk(dist).filter(p=>p.endsWith('.html'));
-test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,639);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
+test('focused study entry and exactly one H1 per page',()=>{assert(fs.existsSync(path.join(dist,'study/index.html')));assert.equal(html.length,640);for(const p of html)assert.equal((fs.readFileSync(p,'utf8').match(/<h1[ >]/g)||[]).length,1,p);});
 test('every page can resolve historical favorite IDs before loading search data',()=>{
  for(const p of html){const match=fs.readFileSync(p,'utf8').match(/<meta name="rci-favorite-groups" content="([^"]+)">/);assert(match,p);
   const groups=JSON.parse(match[1].replace(/&quot;/g,'"'));
@@ -56,6 +56,26 @@ test('Local backup UI is reachable from favorites and planner, with its dependen
  const planner=fs.readFileSync(path.join(dist,'planner/index.html'),'utf8');assert(planner.includes('id="plan-tools-dialog"'));assert(planner.includes('data-backup-open'));assert(!planner.includes('plan-import'));
 });
 test('main answers rendered without fetching or JS',()=>{const s=fs.readFileSync(path.join(dist,'guides/exams/index.html'),'utf8');assert(s.includes('选了课，还需要报名考试吗？'));assert(s.includes('先看答案'));assert(s.includes('接下来这样做'));assert(s.includes('IN2106'));});
+test('Canteen page ships Chinese references while keeping live menu loading and the simple homepage entry',()=>{
+ const s=fs.readFileSync(path.join(dist,'mensa/index.html'),'utf8'),match=s.match(/<script type="application\/json" id="mensa-catalog">([\s\S]*?)<\/script>/);
+ assert(match);const data=JSON.parse(match[1]);
+ for(const file of ['leaflet.js','leaflet.css','leaflet.markercluster.js','MarkerCluster.css','Leaflet-LICENSE','MarkerCluster-LICENSE'])assert(fs.existsSync(path.join(dist,'assets/vendor/leaflet',file)),file);
+ assert(s.includes('/assets/mensa-places.js'));assert(s.includes('id="mensa-map"'));assert(s.includes('id="mensa-place-search"'));assert(s.includes('id="mensa-explorer"'));assert(!s.includes('mensa-picker-popup'));assert(!s.includes('mensa-picker-toggle'));assert(s.includes('https://tile.openstreetmap.org'));assert(!fs.readFileSync(path.join(dist,'index.html'),'utf8').includes('vendor/leaflet'));
+ assert(data.canteens.every(c=>Number.isFinite(c.latitude)&&Number.isFinite(c.longitude)));
+ assert(s.includes('id="mensa-place-region"'));assert(s.includes('mensa-place-searchbar'));assert(!s.includes('id="mensa-mensa-only"'));assert(!s.includes('只看食堂'));
+ const garchingOptions=s.match(/<optgroup label="Garching[^"]*">([\s\S]*?)<\/optgroup>/)?.[1]||'';assert.deepEqual([...garchingOptions.matchAll(/<option value="([^"]+)"/g)].map(([,id])=>id),['mensa-garching','stucafe-boltzmannstr','stucafe-garching','fmi-bistro']);
+ assert(s.includes('<option value="olympiapark">奥林校区'));assert(s.includes('<option value="stammgelaende">主校区'));assert.equal(data.canteens.find(c=>c.id==='stucafe-connollystr').area,'olympiapark');
+ assert.deepEqual(data.translations,require('../content/mensa-zh.json'));assert.deepEqual(data.labels,require('../content/canteens.json').labels);
+ assert.deepEqual(data.availability,require('../content/mensa-availability.json'));assert(s.includes('id="mensa-opening"'));assert(s.includes('官方营业与休息安排'));
+ assert(s.includes('id="mensa-crowding"'));assert(s.includes('mensa-service-info'));assert(/class="mensa-title"><h2 id="mensa-name">[^<]*<\/h2><span id="mensa-crowding"/.test(s));assert(!/class="mensa-service-info">[^<]*<span id="mensa-hours">[^<]*<\/span><span id="mensa-crowding"/.test(s));assert.equal(data.crowding_url,'/api/mensa-crowding/');assert.deepEqual(data.crowding_canteens,Object.keys(require('../lib/mensa-crowding').SOURCES));assert(s.indexOf('/assets/mensa-crowding.js')<s.indexOf('/assets/mensa.js'));
+ assert(!s.includes('mensa-footnote'));assert.equal(data.translation_url,'/api/mensa-translations/');assert(s.includes('/assets/mensa.js'));assert(s.includes('https://tum-dev.github.io'));assert(s.includes('id="mensa-week"'));assert(s.includes('查看原菜单'));
+ assert(!s.includes('base_price'));
+ for(const file of ['index.html','favorites/index.html']){
+  const page=fs.readFileSync(path.join(dist,file),'utf8'),card=page.match(/<article class="portal-card" data-portal="tool:mensa" data-group="campus"[^>]*>[\s\S]*?<\/article>/)?.[0];
+  assert(card,file);assert(card.includes('data-portal-link="tool:mensa" href="/mensa/"'));assert(card.includes('data-save="tool:mensa"'));assert(!page.includes('mensa-entry'));
+ }
+ assert.equal(top('食堂菜单'),'tool:mensa');
+});
 test('static course pages keep official links and selection rules without maintenance logs',()=>{const s=fs.readFileSync(path.join(dist,'courses/IN2067/index.html'),'utf8');assert(s.includes('官方课程介绍'));assert(s.includes('campus.tum.de'));assert(s.includes('二选一'));assert(!s.includes('来源与核查记录'));assert(!s.includes('独立人工复核'));});
 test('old source records retained with separate library destinations',()=>{const info=JSON.parse(fs.readFileSync(path.join(dist,'build-info.json'),'utf8'));assert.equal(info.resources,146);assert.equal(info.courses,595);assert.equal(info.topics,58);assert(index.docs.some(d=>d.id==='R042'));});
 
@@ -146,10 +166,11 @@ test('Homepage search retains every original resource name behind its shorter ca
  const nav=JSON.parse(fs.readFileSync(path.join(root,'content/navigation.json'),'utf8')),C=require('../assets/core'),resources=C.csv(fs.readFileSync(path.join(root,'data/resources.csv'),'utf8')),home=fs.readFileSync(path.join(dist,'index.html'),'utf8');
  const entities={'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'"},decode=text=>text.replace(/&(?:amp|lt|gt|quot|#39);/g,entity=>entities[entity]);
  const cards=[...home.matchAll(/<article class="portal-card" data-portal="([^"]+)"[^>]*data-keywords="([^"]*)"/g)].map(match=>{const shortcut=nav.shortcuts.find(s=>s.id===match[1]);return {id:match[1],kind:'resource',title:shortcut.label,summary:shortcut.hint,body:decode(match[2]),aliases:[],tasks:[]};});
- for(const shortcut of nav.shortcuts){const original=resources.find(r=>r.id===shortcut.id);assert(S.search(cards,original.title).some(card=>card.id===shortcut.id),original.id+' '+original.title);}
+ for(const shortcut of nav.shortcuts){const original=resources.find(r=>r.id===shortcut.id),title=shortcut.path?shortcut.label:original.title;assert(S.search(cards,title).some(card=>card.id===shortcut.id),shortcut.id+' '+title);}
 });
 test('Course directory can target a semester while static links remain available',()=>{
  const s=fs.readFileSync(path.join(dist,'courses/index.html'),'utf8');assert(s.includes('id="course-target-semester"'));assert(s.includes('先选课，稍后分配'));assert(s.includes('TUMonline'));
+ assert(s.includes('id="directory-cohort"'));assert(s.includes('data-edit-academic-term'));assert(s.includes('设置入学时间'));
 });
 const Picker=require('../site3/course-picker'),Core=require('../assets/core'),pickerData=JSON.parse(fs.readFileSync(path.join(dist,'assets/planner-data.json'),'utf8'));
 const pickerPlan={version:2,cohort:'2026/27冬季',conditional:false,timeline:{count:4,start:'winter'},items:[]};

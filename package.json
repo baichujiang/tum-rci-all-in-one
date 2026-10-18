@@ -8,6 +8,8 @@
   "dependencies": {
     "@vercel/analytics": "2.0.1",
     "@vercel/blob": "2.8.2",
-    "iron-session": "9.0.1"
+    "iron-session": "9.0.1",
+    "leaflet": "1.9.4",
+    "leaflet.markercluster": "1.5.3"
   }
 }

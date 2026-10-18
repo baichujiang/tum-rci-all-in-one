@@ -1,0 +1,1086 @@
+{
+  "catalog_source": "https://tum-dev.github.io/eat-api/enums/canteens.json",
+  "checked_on": "2026-10-17",
+  "canteens": [
+    {
+      "id": "mensa-arcisstr",
+      "name": "Mensa Arcisstraße",
+      "address": "Arcisstraße 17, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_421_-de.html",
+      "latitude": 48.14742,
+      "longitude": 11.56722,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "主校区",
+        "市中心",
+        "本部",
+        "主校区食堂",
+        "Stammgelände",
+        "Stammgelaende",
+        "Innenstadt Campus",
+        "TUM 主校区"
+      ],
+      "area": "stammgelaende",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "mensa-garching",
+      "name": "Mensa Garching",
+      "address": "Boltzmannstraße 19, Garching",
+      "group": "garching",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_422_-de.html",
+      "latitude": 48.268132,
+      "longitude": 11.672263,
+      "aliases": [
+        "加兴",
+        "加尔兴",
+        "加兴食堂",
+        "加兴主食堂"
+      ],
+      "area": "garching",
+      "open_hours": {
+        "mon": {
+          "start": "10:45",
+          "end": "14:15"
+        },
+        "tue": {
+          "start": "10:45",
+          "end": "14:15"
+        },
+        "wed": {
+          "start": "10:45",
+          "end": "14:15"
+        },
+        "thu": {
+          "start": "10:45",
+          "end": "14:15"
+        },
+        "fri": {
+          "start": "10:45",
+          "end": "14:15"
+        }
+      }
+    },
+    {
+      "id": "mensa-leopoldstr",
+      "name": "Mensa Leopoldstraße",
+      "address": "Leopoldstraße 13a, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_411_-de.html",
+      "latitude": 48.156311,
+      "longitude": 11.582446,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "LMU",
+        "大学区",
+        "路德维希",
+        "Universität",
+        "Universitaet"
+      ],
+      "area": "lmu",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:30"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:30"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:30"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:30"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "mensa-lothstr",
+      "name": "Mensa Lothstraße",
+      "address": "Lothstraße 13d, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_431_-de.html",
+      "latitude": 48.153989,
+      "longitude": 11.552424,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "洛特街",
+        "HM",
+        "Hochschule München"
+      ],
+      "area": "lothstr",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "mensa-martinsried",
+      "name": "Mensa Martinsried",
+      "address": "Großhaderner Straße 44, Plategg",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_412_-de.html",
+      "latitude": 48.109824,
+      "longitude": 11.460006,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "马丁斯里德",
+        "Grosshadern",
+        "Großhadern",
+        "Martinsried"
+      ],
+      "area": "martinsried",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "mensa-pasing",
+      "name": "Mensa Pasing",
+      "address": "Am Stadtpark 20, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_432_-de.html",
+      "latitude": 48.141568,
+      "longitude": 11.451119,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "帕辛",
+        "HM",
+        "Hochschule München"
+      ],
+      "area": "pasing",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "mensa-weihenstephan",
+      "name": "Mensa Weihenstephan",
+      "address": "Maximus-von-Imhof-Forum 5, Freising",
+      "group": "freising",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_423_-de.html",
+      "latitude": 48.39959,
+      "longitude": 11.723147,
+      "aliases": [
+        "弗赖辛",
+        "弗莱辛",
+        "Freising",
+        "Weihenstephan"
+      ],
+      "area": "freising",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "13:30"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "13:30"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "13:30"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "13:30"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "13:30"
+        }
+      }
+    },
+    {
+      "id": "stubistro-arcisstr",
+      "name": "StuBistro Arcisstraße",
+      "address": "Arcisstraße 12, 80333 München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_450_-de.html",
+      "latitude": 48.146008,
+      "longitude": 11.567606,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "主校区",
+        "市中心",
+        "本部",
+        "Stammgelände",
+        "Stammgelaende",
+        "Innenstadt Campus",
+        "TUM 主校区"
+      ],
+      "area": "stammgelaende",
+      "open_hours": {
+        "mon": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "tue": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "wed": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "thu": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "fri": {
+          "start": "09:00",
+          "end": "15:00"
+        }
+      }
+    },
+    {
+      "id": "stubistro-goethestr",
+      "name": "StuBistro Goethestraße",
+      "address": "Goethestraße 70, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_418_-de.html",
+      "latitude": 48.131396,
+      "longitude": 11.558264,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "Goethe",
+        "歌德街",
+        "市中心医学区",
+        "Medizin Innenstadt"
+      ],
+      "area": "medizin-innenstadt",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "stubistro-butenandstr",
+      "name": "StuBistro Butenandstraße",
+      "address": "Butenandtstraße 13, Gebäude F, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_414_-de.html",
+      "latitude": 48.113744,
+      "longitude": 11.467514,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "马丁斯里德",
+        "Grosshadern",
+        "Großhadern",
+        "Martinsried"
+      ],
+      "area": "martinsried",
+      "open_hours": {
+        "mon": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "tue": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "wed": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "thu": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "fri": {
+          "start": "09:00",
+          "end": "14:30"
+        }
+      }
+    },
+    {
+      "id": "stubistro-rosenheim",
+      "name": "StuBistro Rosenheim",
+      "address": "Hochschulstraße 1, Rosenheim",
+      "group": "other",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_441_-de.html",
+      "latitude": 47.867344,
+      "longitude": 12.107559,
+      "aliases": [
+        "罗森海姆"
+      ],
+      "area": "rosenheim",
+      "open_hours": {
+        "mon": {
+          "start": "09:00",
+          "end": "15:30"
+        },
+        "tue": {
+          "start": "09:00",
+          "end": "15:30"
+        },
+        "wed": {
+          "start": "09:00",
+          "end": "15:30"
+        },
+        "thu": {
+          "start": "09:00",
+          "end": "15:30"
+        },
+        "fri": {
+          "start": "09:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "stubistro-schellingstr",
+      "name": "StuBistro Schellingstraße",
+      "address": "Schellingstraße 3, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_416_-de.html",
+      "latitude": 48.148893,
+      "longitude": 11.579027,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "LMU",
+        "大学区",
+        "路德维希",
+        "Universität",
+        "Universitaet"
+      ],
+      "area": "lmu",
+      "open_hours": {
+        "mon": {
+          "start": "09:00",
+          "end": "16:30"
+        },
+        "tue": {
+          "start": "09:00",
+          "end": "16:30"
+        },
+        "wed": {
+          "start": "09:00",
+          "end": "16:30"
+        },
+        "thu": {
+          "start": "09:00",
+          "end": "16:30"
+        },
+        "fri": {
+          "start": "09:00",
+          "end": "14:30"
+        }
+      }
+    },
+    {
+      "id": "stubistro-martinsried",
+      "name": "StuBistro Martinsried",
+      "address": "Großhadernerstr. 9a, 82152 Planegg-Martinsried",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_415_-de.html",
+      "latitude": 48.109994,
+      "longitude": 11.458461,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "马丁斯里德",
+        "Grosshadern",
+        "Großhadern",
+        "Martinsried"
+      ],
+      "area": "martinsried",
+      "open_hours": {
+        "mon": {
+          "start": "08:30",
+          "end": "14:30"
+        },
+        "tue": {
+          "start": "08:30",
+          "end": "14:30"
+        },
+        "wed": {
+          "start": "08:30",
+          "end": "14:30"
+        },
+        "thu": {
+          "start": "08:30",
+          "end": "14:30"
+        },
+        "fri": {
+          "start": "08:30",
+          "end": "14:30"
+        }
+      }
+    },
+    {
+      "id": "stucafe-adalbertstr",
+      "name": "StuCafé Adalbertstraße",
+      "address": "Adalbertstraße 5, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_512_-de.html",
+      "latitude": 48.151374,
+      "longitude": 11.580448,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "LMU",
+        "大学区",
+        "路德维希",
+        "Universität",
+        "Universitaet"
+      ],
+      "area": "lmu",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "stucafe-akademie-weihenstephan",
+      "name": "StuCafé Akademie Weihenstephan",
+      "address": "Alte Akademie 1, Freising",
+      "group": "freising",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_526_-de.html",
+      "latitude": 48.3948,
+      "longitude": 11.729338,
+      "aliases": [
+        "弗赖辛",
+        "弗莱辛",
+        "Freising",
+        "Weihenstephan"
+      ],
+      "area": "freising",
+      "open_hours": {
+        "mon": {
+          "start": "08:00",
+          "end": "14:30"
+        },
+        "tue": {
+          "start": "08:00",
+          "end": "14:30"
+        },
+        "wed": {
+          "start": "08:00",
+          "end": "14:30"
+        },
+        "thu": {
+          "start": "08:00",
+          "end": "14:30"
+        },
+        "fri": {
+          "start": "08:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "stucafe-weihenstephan-maximus",
+      "name": "StuCafé Weihenstephan-Maximus",
+      "address": "Maximus-von-Imhof-Forum 5, 85354 Freising",
+      "group": "freising",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_525_-de.html",
+      "latitude": 48.399751,
+      "longitude": 11.723394,
+      "aliases": [
+        "弗赖辛",
+        "弗莱辛",
+        "Freising",
+        "Weihenstephan"
+      ],
+      "area": "freising",
+      "open_hours": {
+        "mon": {
+          "start": "08:30",
+          "end": "15:00"
+        },
+        "tue": {
+          "start": "08:30",
+          "end": "15:00"
+        },
+        "wed": {
+          "start": "08:30",
+          "end": "15:00"
+        },
+        "thu": {
+          "start": "08:30",
+          "end": "15:00"
+        },
+        "fri": {
+          "start": "08:30",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "stucafe-boltzmannstr",
+      "name": "StuBistro Boltzmannstraße",
+      "address": "Boltzmannstraße 15, Garching",
+      "group": "garching",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_457_-de.html",
+      "latitude": 48.265768,
+      "longitude": 11.667593,
+      "aliases": [
+        "加兴",
+        "加尔兴"
+      ],
+      "area": "garching",
+      "open_hours": {
+        "mon": {
+          "start": "08:30",
+          "end": "16:30"
+        },
+        "tue": {
+          "start": "08:30",
+          "end": "16:30"
+        },
+        "wed": {
+          "start": "08:30",
+          "end": "16:30"
+        },
+        "thu": {
+          "start": "08:30",
+          "end": "16:30"
+        },
+        "fri": {
+          "start": "08:30",
+          "end": "15:00"
+        }
+      }
+    },
+    {
+      "id": "stucafe-connollystr",
+      "name": "StuCafé Connollystraße",
+      "address": "Connollystraße 32, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_425_-de.html",
+      "latitude": 48.180179,
+      "longitude": 11.544467,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "奥林",
+        "奥林校区",
+        "奥林匹克",
+        "奥林匹克公园",
+        "Olympiapark",
+        "Olympiacampus",
+        "Olympiadorf",
+        "Olympic",
+        "ZHS",
+        "体育校区",
+        "奥林食堂"
+      ],
+      "area": "olympiapark",
+      "open_hours": {
+        "mon": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "tue": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "wed": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "thu": {
+          "start": "09:00",
+          "end": "15:00"
+        },
+        "fri": {
+          "start": "09:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "stucafe-garching",
+      "name": "StuBistro Garching",
+      "address": "Boltzmannstraße 19, Garching",
+      "group": "garching",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_426_-de.html",
+      "latitude": 48.268268,
+      "longitude": 11.6717,
+      "aliases": [
+        "加兴",
+        "加尔兴",
+        "加兴小餐厅"
+      ],
+      "area": "garching",
+      "open_hours": {
+        "mon": {
+          "start": "09:00",
+          "end": "16:00"
+        },
+        "tue": {
+          "start": "09:00",
+          "end": "16:00"
+        },
+        "wed": {
+          "start": "09:00",
+          "end": "16:00"
+        },
+        "thu": {
+          "start": "09:00",
+          "end": "16:00"
+        },
+        "fri": {
+          "start": "09:00",
+          "end": "15:00"
+        }
+      }
+    },
+    {
+      "id": "stucafe-karlstr",
+      "name": "StuCafé Karlstraße",
+      "address": "Karlstraße 6, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_532_-de.html",
+      "latitude": 48.142759,
+      "longitude": 11.568432,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "卡尔街",
+        "HM",
+        "Hochschule München"
+      ],
+      "area": "karlstr",
+      "open_hours": {
+        "mon": {
+          "start": "08:15",
+          "end": "15:00"
+        },
+        "tue": {
+          "start": "08:15",
+          "end": "15:00"
+        },
+        "wed": {
+          "start": "08:15",
+          "end": "15:00"
+        },
+        "thu": {
+          "start": "08:15",
+          "end": "15:00"
+        },
+        "fri": {
+          "start": "08:15",
+          "end": "15:00"
+        }
+      }
+    },
+    {
+      "id": "stucafe-pasing",
+      "name": "StuCafé Pasing",
+      "address": "Am Stadtpark 20, München",
+      "group": "munich",
+      "menu_url": "https://www.studierendenwerk-muenchen-oberbayern.de/mensa/speiseplan/speiseplan_534_-de.html",
+      "latitude": 48.141568,
+      "longitude": 11.451119,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "帕辛",
+        "HM",
+        "Hochschule München"
+      ],
+      "area": "pasing",
+      "open_hours": {
+        "mon": {
+          "start": "07:45",
+          "end": "16:15"
+        },
+        "tue": {
+          "start": "07:45",
+          "end": "16:15"
+        },
+        "wed": {
+          "start": "07:45",
+          "end": "16:00"
+        },
+        "thu": {
+          "start": "07:45",
+          "end": "16:00"
+        },
+        "fri": {
+          "start": "07:45",
+          "end": "14:30"
+        }
+      }
+    },
+    {
+      "id": "fmi-bistro",
+      "name": "FMI Bistro Garching",
+      "address": "Boltzmannstraße 3, 85748 Garching",
+      "group": "garching",
+      "menu_url": "https://www.wilhelm-gastronomie.de/Uni-Gastronomie/index.php/",
+      "latitude": 48.262408,
+      "longitude": 11.668028,
+      "aliases": [
+        "加兴",
+        "加尔兴",
+        "数学",
+        "信息",
+        "计算机"
+      ],
+      "area": "garching",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:00"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:00"
+        }
+      }
+    },
+    {
+      "id": "mediziner-mensa",
+      "name": "Mediziner Mensa",
+      "address": "Ismaninger Straße 22, 81675 München",
+      "group": "munich",
+      "menu_url": "https://www.sv.tum.de/med/startseite/",
+      "latitude": 48.136569,
+      "longitude": 11.5993226,
+      "aliases": [
+        "慕尼黑",
+        "慕尼黑及周边",
+        "Munich",
+        "Muenchen",
+        "医学院",
+        "医学",
+        "伊萨尔河右岸",
+        "Rechts der Isar",
+        "Klinikum",
+        "TUM 医学"
+      ],
+      "area": "rechts-der-isar",
+      "open_hours": {
+        "mon": {
+          "start": "08:00",
+          "end": "15:30"
+        },
+        "tue": {
+          "start": "08:00",
+          "end": "15:30"
+        },
+        "wed": {
+          "start": "08:00",
+          "end": "15:30"
+        },
+        "thu": {
+          "start": "08:00",
+          "end": "15:30"
+        },
+        "fri": {
+          "start": "08:00",
+          "end": "15:30"
+        }
+      }
+    },
+    {
+      "id": "mensa-straubing",
+      "name": "Mensa Straubing",
+      "address": "Schulgasse 22, 94315 Straubing",
+      "group": "other",
+      "menu_url": "https://stwno.de/de/gastronomie/cafeterien-straubing",
+      "latitude": 48.8845587,
+      "longitude": 12.5829364,
+      "aliases": [
+        "施特劳宾"
+      ],
+      "area": "straubing",
+      "open_hours": {
+        "mon": {
+          "start": "07:30",
+          "end": "15:00"
+        },
+        "tue": {
+          "start": "07:30",
+          "end": "15:00"
+        },
+        "wed": {
+          "start": "07:30",
+          "end": "15:00"
+        },
+        "thu": {
+          "start": "07:30",
+          "end": "15:00"
+        },
+        "fri": {
+          "start": "07:30",
+          "end": "14:30"
+        }
+      }
+    },
+    {
+      "id": "mensa-bildungscampus-heilbronn",
+      "name": "Mensa Bildungscampus Heilbronn",
+      "address": "Bildungscampus 8, 74076 Heilbronn",
+      "group": "other",
+      "menu_url": "https://www.stw.uni-heidelberg.de/essen-trinken/restaurant/mensa-am-bildungscampus/",
+      "latitude": 49.14863559683538,
+      "longitude": 9.21598792582061,
+      "aliases": [
+        "海尔布隆"
+      ],
+      "area": "heilbronn",
+      "open_hours": {
+        "mon": {
+          "start": "11:00",
+          "end": "14:30"
+        },
+        "tue": {
+          "start": "11:00",
+          "end": "14:30"
+        },
+        "wed": {
+          "start": "11:00",
+          "end": "14:30"
+        },
+        "thu": {
+          "start": "11:00",
+          "end": "14:30"
+        },
+        "fri": {
+          "start": "11:00",
+          "end": "14:30"
+        }
+      }
+    }
+  ],
+  "labels": {
+    "GLUTEN": "含麸质谷物",
+    "WHEAT": "小麦",
+    "RYE": "黑麦",
+    "BARLEY": "大麦",
+    "OAT": "燕麦",
+    "SPELT": "斯佩尔特小麦",
+    "HYBRIDS": "杂交谷物",
+    "SHELLFISH": "甲壳类",
+    "CHICKEN_EGGS": "鸡蛋",
+    "FISH": "鱼类",
+    "PEANUTS": "花生",
+    "SOY": "大豆",
+    "MILK": "牛奶",
+    "LACTOSE": "乳糖",
+    "ALMONDS": "杏仁",
+    "HAZELNUTS": "榛子",
+    "WALNUTS": "核桃",
+    "CASHEWS": "腰果",
+    "PECAN": "碧根果",
+    "PISTACHIOS": "开心果",
+    "MACADAMIA": "夏威夷果",
+    "CELERY": "芹菜",
+    "MUSTARD": "芥末",
+    "SESAME": "芝麻",
+    "SULPHURS": "经硫处理",
+    "SULFITES": "亚硫酸盐",
+    "LUPIN": "羽扇豆",
+    "MOLLUSCS": "软体动物",
+    "SHELL_FRUITS": "坚果",
+    "BAVARIA": "巴伐利亚质量认证",
+    "MSC": "MSC 可持续渔业认证",
+    "DYESTUFF": "色素",
+    "PRESERVATIVES": "防腐剂",
+    "ANTIOXIDANTS": "抗氧化剂",
+    "FLAVOR_ENHANCER": "增味剂",
+    "WAXED": "经打蜡处理",
+    "PHOSPHATES": "磷酸盐",
+    "SWEETENERS": "甜味剂",
+    "PHENYLALANINE": "含苯丙氨酸来源",
+    "COCOA_CONTAINING_GREASE": "含可可的油脂",
+    "GELATIN": "明胶",
+    "ALCOHOL": "酒精",
+    "PORK": "猪肉",
+    "BEEF": "牛肉",
+    "VEAL": "小牛肉",
+    "WILD_MEAT": "野味",
+    "LAMB": "羊肉",
+    "GARLIC": "大蒜",
+    "POULTRY": "禽肉",
+    "CEREAL": "谷物",
+    "MEAT": "肉类",
+    "VEGAN": "纯素",
+    "VEGETARIAN": "素食"
+  },
+  "locations_checked_on": "2026-10-18",
+  "areas_checked_on": "2026-10-18",
+  "area_sources": [
+    "https://www.tum.de/ueber-die-tum/standorte/muenchen",
+    "https://www.studierendenwerk-muenchen-oberbayern.de/gastronomie/standorte-und-oeffnungszeiten/muenchen/",
+    "https://www.studierendenwerk-muenchen-oberbayern.de/gastronomie/standorte-und-oeffnungszeiten/martinsried-grosshadern/",
+    "https://hm.edu/hochschule_muenchen/kontakt/umfeld_standort/Standort_und_Lageplaene.de.html",
+    "https://www.lmu.de/de/workspace-fuer-studierende/studieren-und-leben/essen/",
+    "https://www.lmu.de/en/workspace-for-students/student-support-services/studying-with-a-disability/barrier-free-access-and-aids/index.html"
+  ],
+  "opening_hours_checked_on": "2026-10-18"
+}

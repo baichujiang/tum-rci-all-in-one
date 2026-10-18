@@ -24,6 +24,7 @@ jobs:
       - run: node tests/routes.test.js
       - run: node tests/portals.test.js
       - run: node tests/checklist.test.js
+      - run: node tests/mensa.test.js && node tests/mensa-places.test.js && node tests/mensa-sync.test.js && node tests/mensa-crowding.test.js
       - run: node tests/build.test.js
       - run: node scripts/build_site.js && node tests/site.test.js
       - run: node --check site3/app.js && node --check site3/planner.js

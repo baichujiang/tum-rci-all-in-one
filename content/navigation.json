@@ -12,7 +12,7 @@
   ],
   "portal_groups": [
     {"id":"courses","title":"上课与选课","hint":"课程、课件、成绩排名与名额申请"},
-    {"id":"campus","title":"图书馆与校园","hint":"找自习位置、查文献、去教室"},
+    {"id":"campus","title":"图书馆与校园","hint":"图书馆、自习座位、教室与食堂"},
     {"id":"research","title":"科研与协作","hint":"找论文题目、写报告、共享代码和文件"},
     {"id":"support","title":"咨询与支持","hint":"学分认定、账号与网络问题"}
   ],
@@ -26,6 +26,7 @@
     {"id":"R032","label":"TUM Live","hint":"课程视频 · 直播 · 录播","group":"courses","icon":"play","access":"部分内容需登录","aliases":["视频","lecture"]},
     {"id":"R132","label":"MATLAB 与 Simulink","hint":"控制与仿真 · 校园软件下载","group":"courses","icon":"grid","access":"先在 TUMonline 激活","aliases":["matlab","simulink","软件许可","安装","仿真","控制","MathWorks","matlab.rbg.tum.de"],"help_source":"matlab-campus","help_label":"许可激活与安装说明"},
     {"id":"R033","label":"Navigatum","hint":"找教室 · 查楼栋 · 校园导航","group":"campus","icon":"map","access":"直接访问","aliases":["教室导航","房间","room"]},
+    {"id":"tool:mensa","path":"/mensa/","label":"食堂菜单","hint":"中文菜名 · 每周菜单 · 学生价格","group":"campus","icon":"food","access":"无需登录","aliases":["Mensa","canteen","今天吃什么","午餐","Garching","主校区"]},
     {"id":"R127","label":"预约自习座位","hint":"讨论室 · 视频间 · 演讲练习室","group":"campus","icon":"seat","access":"TUM 账号","aliases":["图书馆","library","预约","位置","座位","自习","study desks","anny","讨论室","小组讨论","group rooms","视频面试","面试间","视频会议","Webinar Carrels","演讲","报告练习","答辩练习","Presentation Lab"],"help_source":"library-seats","help_label":"预约打不开？查看官方说明"},
     {"id":"R126","label":"查找图书","hint":"搜索馆藏 · 电子书 · 论文","group":"campus","icon":"book","access":"检索公开 · 借阅需登录","aliases":["图书馆","library","查书","文献","论文检索","OPAC","借书"]},
     {"id":"R129","label":"校外访问文献","hint":"eAccess · 电子期刊与全文","group":"campus","icon":"library","access":"先用 TUM 账号登录","aliases":["eAccess","校外","论文全文","文献","期刊","电子书","数据库","文献下载"]},

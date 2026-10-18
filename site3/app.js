@@ -76,21 +76,28 @@ function updatePlan(change){
  planQueue=task;return task;
 }
 let academicTermPrompt=null;
-async function ensureAcademicTerm(){
- const before=await plan();if(C.hasAcademicTerm(before))return true;
+async function ensureAcademicTerm({edit=false}={}){
+ const before=await plan();if(!edit&&C.hasAcademicTerm(before))return true;
  if(!academicTermPrompt)academicTermPrompt=askAcademicTerm(before).finally(()=>{academicTermPrompt=null;});
  return academicTermPrompt;
 }
+const editAcademicTerm=()=>ensureAcademicTerm({edit:true});
 function askAcademicTerm(before){
  return new Promise((resolve,reject)=>{
-  const dialog=document.createElement('dialog');dialog.className='plan-dialog academic-term-dialog';dialog.setAttribute('aria-labelledby','academic-term-title');
-  dialog.innerHTML=`<header class="plan-dialog-heading"><div><h2 id="academic-term-title">先确认入学时间</h2><p>用于确定第一学期的冬／夏季，并筛选对应开课课程。只需确认一次。</p></div><button type="button" class="quiet" data-term-cancel aria-label="取消确认入学时间">关闭</button></header><form id="academic-term-form"><div class="planning-workflow"><label for="academic-term-cohort">入学时间<select id="academic-term-cohort" name="cohort" required><option value="">请选择入学时间</option>${C.cohorts.map(cohort=>`<option value="${esc(cohort)}" ${before.cohort===cohort?'selected':''}>${esc(cohort)}</option>`).join('')}</select></label><p id="academic-term-preview" class="meta" aria-live="polite">选择后可预览前两个学期的冬／夏季。</p><p id="academic-term-error" class="notice" role="alert" hidden></p></div><footer class="plan-dialog-footer"><button type="button" class="button secondary" data-term-cancel>取消</button><button type="submit" class="button" id="academic-term-save">确认并继续</button></footer></form>`;
+  const editing=C.hasAcademicTerm(before),previousFocus=document.activeElement,saveLabel=editing?'保存修改':'确认并继续';
+  const dialog=document.createElement('dialog');dialog.className='plan-dialog academic-term-dialog';dialog.setAttribute('aria-labelledby','academic-term-title');dialog.setAttribute('aria-describedby','academic-term-description');
+  dialog.innerHTML=`<header class="plan-dialog-heading"><div><h2 id="academic-term-title">${editing?'修改入学时间':'先确认入学时间'}</h2><p id="academic-term-description">入学批次决定第一学期的冬／夏季及适用规则。</p></div><button type="button" class="quiet academic-term-close" data-term-cancel aria-label="关闭入学时间设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button></header><form id="academic-term-form"><div class="planning-workflow"><label for="academic-term-cohort">入学时间<select id="academic-term-cohort" name="cohort" required><option value="">请选择入学时间</option>${C.cohorts.map(cohort=>`<option value="${esc(cohort)}" ${before.cohort===cohort?'selected':''}>${esc(cohort)}</option>`).join('')}</select></label><div id="academic-term-preview" class="academic-term-preview" aria-live="polite" aria-atomic="true"></div><p class="academic-term-note">${editing?'已选课程和学期安排会保留，保存后请核对开课季节。':'之后可随时在选课程页修改。'}</p><p id="academic-term-error" class="notice" role="alert" hidden></p></div><footer class="plan-dialog-footer"><button type="button" class="button secondary" data-term-cancel>取消</button><button type="submit" class="button" id="academic-term-save">${saveLabel}</button></footer></form>`;
   const form=dialog.querySelector('form'),input=dialog.querySelector('#academic-term-cohort'),error=dialog.querySelector('#academic-term-error'),save=dialog.querySelector('#academic-term-save');
   const baseline=JSON.stringify([before.cohort,before.timeline.start]);let saving=false,saved=false;
-  input.addEventListener('change',()=>{error.hidden=true;dialog.querySelector('#academic-term-preview').textContent=input.value?`第 1 学期：${input.value.endsWith('夏季')?'夏季；第 2 学期：冬季':'冬季；第 2 学期：夏季'}`:'请选择入学时间。';});
+  input.value=C.cohorts.includes(before.cohort)?before.cohort:'';
+  const preview=()=>{
+   error.hidden=true;const first=input.value.endsWith('夏季')?'夏季':'冬季',second=first==='夏季'?'冬季':'夏季';
+   dialog.querySelector('#academic-term-preview').innerHTML=input.value?`<span class="academic-term-preview-label">学期预览</span><div class="academic-term-seasons"><span class="academic-term-semester"><small>第 1 学期</small><strong>${first}</strong></span><span class="academic-term-arrow" aria-hidden="true">→</span><span class="academic-term-semester"><small>第 2 学期</small><strong>${second}</strong></span></div>`:'<p class="academic-term-empty">选择入学时间后，查看对应的学期季节。</p>';
+  };
+  input.addEventListener('change',preview);preview();
   for(const button of dialog.querySelectorAll('[data-term-cancel]'))button.addEventListener('click',()=>{if(!saving)dialog.close();});
   dialog.addEventListener('cancel',event=>{if(saving)event.preventDefault();});
-  dialog.addEventListener('close',()=>{dialog.remove();resolve(saved);},{once:true});
+  dialog.addEventListener('close',()=>{dialog.remove();previousFocus?.focus({preventScroll:true});resolve(saved);},{once:true});
   form.addEventListener('submit',async event=>{
    event.preventDefault();if(saving)return;
    const cohort=input.value;if(!C.cohorts.includes(cohort)){error.textContent='请选择入学时间。';error.hidden=false;input.focus();return;}
@@ -102,7 +109,7 @@ function askAcademicTerm(before){
     });
     saved=true;dialog.close();
    }catch(err){error.textContent=err.message+'。现有课程保留，可重试。';error.hidden=false;}
-   finally{saving=false;input.disabled=false;save.disabled=false;save.textContent='确认并继续';}
+   finally{saving=false;input.disabled=false;save.disabled=false;save.textContent=saveLabel;}
   });
   try{document.body.append(dialog);dialog.showModal();input.focus();}catch(error){dialog.remove();reject(error);}
  });
@@ -229,7 +236,7 @@ function confirmAction(title,description,confirmLabel){
  dialog.returnValue='cancel';dialog.showModal();
  return new Promise(resolve=>dialog.addEventListener('close',()=>resolve(dialog.returnValue==='confirm'),{once:true}));
 }
-window.RCIUI={toast,read,store,data,plan,savePlan,clearPlan,updatePlan,empty,base,confirmAction,ensureAcademicTerm,addCourse,moveCourse,undoCourse,reorderCourse,undoCourseOrder,assignUnscheduled,get persisted(){return planPersisted;}};
+window.RCIUI={toast,read,store,data,plan,savePlan,clearPlan,updatePlan,empty,base,confirmAction,ensureAcademicTerm,editAcademicTerm,addCourse,moveCourse,undoCourse,reorderCourse,undoCourseOrder,assignUnscheduled,get persisted(){return planPersisted;}};
 
 const savedRaw=read('rci:v2:saves',[]);
 let saved=new Set(Array.isArray(savedRaw)?savedRaw.filter(x=>typeof x==='string'):[]);

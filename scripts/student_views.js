@@ -15,7 +15,8 @@ const paths = {
   external:'M14 3h7v7 M21 3L10 14 M10 3H3v18h18v-7',
   check:'M5 12l4 4L19 6',
   star:'m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L2 9.6l6.2-.9z',
-  message:'M4 4h16v12H9l-5 4z M8 8h8 M8 12h5'
+  message:'M4 4h16v12H9l-5 4z M8 8h8 M8 12h5',
+  food:'M4 3v6a3 3 0 0 0 6 0V3 M7 3v18 M17 3v18 M17 3c5 3 5 9 0 9'
 };
 function icon(name, cls='') {
   return `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name]||paths.grid}"/></svg>`;
@@ -26,9 +27,10 @@ module.exports = function views({nav,community,e,url,resLink,internal,resourceMa
   const courseDock = () => `<aside class="plan-dock" aria-label="当前学分计划"><div>${icon('plan')}<span><b><span data-plan-count>0</span> 门已选</b><small>规划计入 <span data-plan-credits>0</span> ECTS</small></span></div>${internal('/planner/','查看我的计划 →','button desktop-legacy')}</aside>`;
 
   function portalCard(s, hidden=false) {
-    const r=resourceMap.get(s.id),href=r&&safeURL(r.url);
+    if(s.path&&!/^\/(?:[a-zA-Z0-9_-]+\/)+$/.test(s.path))throw new Error('Invalid website shortcut path: '+s.id);
+    const r=resourceMap.get(s.id),href=s.path?url(s.path):r&&safeURL(r.url);
     if(!href)throw new Error('Invalid website shortcut: '+s.id);
-    const domain=new URL(href).hostname;
+    const domain=s.path?'':new URL(href).hostname;
     const access=s.desktop_access?desktopText(s.access,s.desktop_access):e(s.access);
     const label=s.desktop_label?desktopText(s.label,s.desktop_label):e(s.label);
     const hint=s.desktop_hint?desktopText(s.hint,s.desktop_hint):e(s.hint);
@@ -38,7 +40,7 @@ module.exports = function views({nav,community,e,url,resLink,internal,resourceMa
       if(!helpURL||!s.help_label?.trim())throw new Error('Invalid website help: '+s.id);
       help=`<a class="portal-help" data-portal-help="${e(s.id)}" href="${e(helpURL)}" target="_blank" rel="noopener noreferrer">${e(s.help_label)} ↗</a>`;
     }
-    return `<article class="portal-card" data-portal="${e(s.id)}" data-group="${e(s.group)}" data-keywords="${e([s.label,s.hint,s.desktop_label||'',s.desktop_hint||'',r.title,domain,...(s.aliases||[])].join(' '))}"${s.desktop_only?' data-desktop-only="true"':''}${hidden?' hidden':''}><a class="portal-link shortcut" data-portal-link="${e(s.id)}" href="${e(href)}" target="_blank" rel="noopener noreferrer"><span class="portal-icon">${icon(s.icon)}</span><h3>${label}</h3><p>${hint}</p><div class="portal-meta"><span>${access}</span>${icon('external')}</div><span class="sr-only">（在新标签页打开）</span></a>${help}<button class="portal-save" data-save="${e(s.id)}" data-save-style="star" data-save-name="${e(s.desktop_label||s.label)}" aria-label="收藏 ${e(s.desktop_label||s.label)}" aria-pressed="false">${icon('star')}</button></article>`;
+    return `<article class="portal-card" data-portal="${e(s.id)}" data-group="${e(s.group)}" data-keywords="${e([s.label,s.hint,s.desktop_label||'',s.desktop_hint||'',r?.title||'',domain,...(s.aliases||[])].join(' '))}"${s.desktop_only?' data-desktop-only="true"':''}${hidden?' hidden':''}><a class="portal-link shortcut" data-portal-link="${e(s.id)}" href="${e(href)}" target="_blank" rel="noopener noreferrer"><span class="portal-icon">${icon(s.icon)}</span><h3>${label}</h3><p>${hint}</p><div class="portal-meta"><span>${access}</span>${icon('external')}</div><span class="sr-only">（在新标签页打开）</span></a>${help}<button class="portal-save" data-save="${e(s.id)}" data-save-style="star" data-save-name="${e(s.desktop_label||s.label)}" aria-label="收藏 ${e(s.desktop_label||s.label)}" aria-pressed="false">${icon('star')}</button></article>`;
   }
   function favoritesSurface(inline=false){
     return `<div id="favorites-app" data-favorites-surface${inline?' class="inline-favorites"':''}><p id="favorites-loading" class="loading-state">正在读取你的收藏…</p><p id="favorites-status" class="portal-hint" role="status" aria-live="polite"></p><section data-favorites-section="websites" hidden>${inline?'':'<div class="section-title"><h2>常用网站</h2><span>点击直接打开 ↗</span></div>'}<div class="portal-grid">${nav.shortcuts.map(s=>portalCard(s,true)).join('')}</div></section><section data-favorites-section="other" hidden>${inline?'':'<div class="section-title"><h2>其他收藏</h2></div>'}<div class="portal-grid" id="favorites-other"></div></section><div id="favorites-empty" class="favorites-empty empty" hidden><span class="empty-symbol">${icon('star')}</span><div><h${inline?'3':'2'}>${desktopText('把常用入口放在这里','暂无收藏')}</h${inline?'3':'2'}><p class="desktop-legacy">${desktopText('点下方网站的星标，收藏会直接出现在这里。','点击网站卡片的星标即可收藏。')}</p>${inline?'':internal('/#websites','去收藏常用网站 →','button')}</div></div></div><noscript><p>启用 JavaScript 后，可以读取保存在这个浏览器的收藏。</p></noscript>`;

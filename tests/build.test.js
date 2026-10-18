@@ -14,7 +14,7 @@ try{
  const releaseScript=deployment.buildCommand.match(/^node (scripts\/[a-z_-]+\.js)$/);
  assert(releaseScript&&fs.existsSync(path.join(root,releaseScript[1])),'The release command must reference an existing local verification script');
  console.log('PASS Release build command fits the platform schema and resolves its local script');
- for(const folder of ['scripts','assets','site3','content','data','guides'])fs.cpSync(path.join(root,folder),path.join(fixture,folder),{recursive:true});
+ for(const folder of ['scripts','assets','site3','content','data','guides','lib'])fs.cpSync(path.join(root,folder),path.join(fixture,folder),{recursive:true});
  fs.symlinkSync(path.join(root,'node_modules'),path.join(fixture,'node_modules'),'dir');
  const first=build();assert.equal(first.status,0,first.stderr);const original=manifest(path.join(fixture,'dist'));
  const navFile=path.join(fixture,'content/navigation.json'),nav=JSON.parse(fs.readFileSync(navFile,'utf8'));
@@ -26,7 +26,13 @@ try{
  fs.writeFileSync(navFile,JSON.stringify(nav));
  const prefixed=build({BASE_PATH:'/rci',SITE_URL:'https://rci.example.invalid'});assert.equal(prefixed.status,0,prefixed.stderr);
  const info=JSON.parse(fs.readFileSync(path.join(fixture,'dist/build-info.json'),'utf8'));
- assert.equal(info.base,'/rci');assert.equal(info.pages,639);assert.equal(info.searchRecords,810);
+ assert.equal(info.base,'/rci');assert.equal(info.pages,640);assert.equal(info.searchRecords,811);
+ assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('\"translation_url\":\"/rci/api/mensa-translations/\"'));
+ assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('/rci/assets/vendor/leaflet/leaflet.js'));
+ assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('/rci/assets/mensa-places.js'));
+ assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('/rci/assets/mensa-crowding.js'));
+ assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('\"crowding_url\":\"/rci/api/mensa-crowding/\"'));
+ for(const file of ['index.html','favorites/index.html'])assert(fs.readFileSync(path.join(fixture,'dist',file),'utf8').includes('data-portal-link="tool:mensa" href="/rci/mensa/"'));
  assert(fs.readFileSync(path.join(fixture,'dist/sitemap.xml'),'utf8').includes('https://rci.example.invalid/rci/guides/matching/'));
  console.log('PASS A following valid build publishes a complete prefixed site without temporary files');
  const published=digest(manifest(path.join(fixture,'dist')));

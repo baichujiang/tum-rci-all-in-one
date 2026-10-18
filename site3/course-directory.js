@@ -113,8 +113,10 @@ async function refresh(){
  if(desktopMedia?.matches&&semester===0)semester=1;
  if(semester>plan.timeline.count){semester=desktopMedia?.matches?1:0;notice(desktopMedia?.matches?'原目标学期已移除，已切换到第 1 学期。':'原目标学期已移除，已切换为待分配。',null);}
  target.innerHTML=Array.from({length:plan.timeline.count},(_,i)=>`<option value="${i+1}">${e(C.planSemesterLabel(plan,i+1))}</option>`).join('')+(desktopMedia?.matches?'':'<option value="0">先选课，稍后分配</option>');target.value=String(semester);target.disabled=false;
+ $('#directory-cohort').textContent=plan.cohort==='unknown'?'待设置':plan.cohort==='older'?'其他时间':plan.cohort.replace(/(冬季|夏季)$/,' $1');
+ const editTerm=$('[data-edit-academic-term]'),confirmed=C.hasAcademicTerm(plan);editTerm.setAttribute('aria-label',confirmed?'修改入学时间':'设置入学时间');$('[data-academic-action]').textContent=confirmed?'修改':'设置';editTerm.disabled=false;
  const items=plan.items.filter(x=>x.status!=='passed'&&x.semester===semester),ects=items.reduce((n,item)=>n+Number(item.custom?item.ects:db.courses.find(c=>c.module_code===item.code)?.ects||0),0);
- $('#directory-target-credits').textContent=semester?`${ects} ECTS`:'待分配';
+ $('#directory-target-credits').textContent=`${ects} ECTS`;
  render();
 }
 const update=()=>refresh().catch(error=>notice(error.message+'；现有记录没有修改。',null));
@@ -128,6 +130,11 @@ $('#reset-filters').addEventListener('click',reset);
 box.addEventListener('click',async event=>{
  if(rememberDetail(event))return;
  const b=event.target.closest('button');if(!b)return;
+ if(b.hasAttribute('data-edit-academic-term')){
+  try{if(await U.editAcademicTerm()){await update();notice('入学时间已更新，已选课程和学期编号保留，请核对新的冬／夏季安排。'+(U.persisted?'':'本次修改仅本页有效，请导出备份。'),null);}}
+  catch(error){notice(error.message,null);}
+  return;
+ }
  if(b.hasAttribute('data-course-category')){group.value=b.dataset.courseCategory;limit=24;render();return;}
  if(b.hasAttribute('data-directory-clear-query')){query.value='';clearTimeout(debounce);limit=24;render();query.focus({preventScroll:true});return;}
  if(b.hasAttribute('data-directory-reset')){reset();return;}

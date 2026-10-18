@@ -53,6 +53,21 @@ async function test(name,fn){await fn();tests++;console.log('PASS',name);}
   await new Promise(resolve=>setImmediate(resolve));assert.equal(h.prompts.length,1);await prompt.submit('2027夏季');
   assert.equal(await first,true);assert.equal((await second).semester,1);assert.equal(h.stored().timeline.start,'summer');assert.equal(h.confirmations(),0);
  });
+ await test('An existing entry time can be corrected repeatedly without changing course records or planning conditions',async()=>{
+  const initial=C.validatePlan({...draft(),conditional:true,conditionalConfirmed:true,items:[{code:'IN2064',status:'planned',semester:1,locked:true},{code:'IN2228',status:'passed',semester:2}]},courses),h=harness(initial);
+  let pending=h.U.editAcademicTerm(),prompt=await h.nextPrompt();
+  assert(prompt.innerHTML.includes('修改入学时间'));assert.equal(prompt.querySelector('#academic-term-cohort').value,initial.cohort);assert(prompt.querySelector('#academic-term-preview').innerHTML.includes('第 1 学期</small><strong>冬季'));assert.equal(h.writes(),0);
+  await prompt.submit('2027夏季');assert.equal(await pending,true);assert.deepEqual(h.stored(),{...initial,cohort:'2027夏季',timeline:{...initial.timeline,start:'summer'}});
+  assert.equal(C.planSemesterLabel(await h.U.plan(),1),'第 1 学期 · 夏季');
+  pending=h.U.editAcademicTerm();prompt=await h.nextPrompt();assert.equal(prompt.querySelector('#academic-term-cohort').value,'2027夏季');await prompt.submit('2026/27冬季');assert.equal(await pending,true);assert.deepEqual(h.stored(),initial);
+  pending=h.U.editAcademicTerm();prompt=await h.nextPrompt();prompt.querySelector('#academic-term-cohort').value='2027夏季';prompt.close();assert.equal(await pending,false);assert.deepEqual(h.stored(),initial);assert.equal(h.writes(),2);
+ });
+ await test('Editing entry time preserves concurrent course updates and refuses competing entry-time changes',async()=>{
+  const initial=draft(),h=harness(initial),pending=h.U.editAcademicTerm(),prompt=await h.nextPrompt(),latest={...initial,items:[...initial.items,{code:'IN2228',status:'passed',semester:2}]};
+  h.externalPlan(latest);await prompt.submit('2027夏季');assert.equal(await pending,true);assert.deepEqual(h.stored().items,C.validatePlan(latest,courses).items);
+  const other=harness(initial),blocked=other.U.editAcademicTerm(),active=await other.nextPrompt(),newer={...initial,cohort:'2025/26冬季'};other.externalPlan(newer);
+  await active.submit('2027夏季');assert.equal(other.writes(),0);assert.deepEqual(other.stored(),newer);assert.match(active.querySelector('#academic-term-error').textContent,/其他页面/);active.close();assert.equal(await blocked,false);
+ });
  await test('A clear confirmation cannot erase a course added by another page',async()=>{
   const h=harness(),latest={...draft(),items:[...draft().items,{code:'IN2320',status:'planned',semester:4}]};
   h.control.onConfirm=()=>h.externalPlan(latest);

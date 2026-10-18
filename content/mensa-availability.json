@@ -1,0 +1,39 @@
+{
+  "checked_on": "2026-10-18",
+  "note": "人工核对的官方常规营业日及 2026/27 圣诞、新年休息公告；并非完整假日或临时停业日历。没有记录不表示营业。菜单每日同步不更新本文件。",
+  "sources": {
+    "garching": "https://www.studierendenwerk-muenchen-oberbayern.de/gastronomie/standorte-und-oeffnungszeiten/garching/",
+    "munich": "https://www.studierendenwerk-muenchen-oberbayern.de/gastronomie/standorte-und-oeffnungszeiten/muenchen/",
+    "martinsried": "https://www.studierendenwerk-muenchen-oberbayern.de/gastronomie/standorte-und-oeffnungszeiten/martinsried-grosshadern/",
+    "freising": "https://www.studierendenwerk-muenchen-oberbayern.de/gastronomie/standorte-und-oeffnungszeiten/freising-weihenstephan/",
+    "pasing": "https://www.studierendenwerk-muenchen-oberbayern.de/gastronomie/standorte-und-oeffnungszeiten/pasing/",
+    "rosenheim": "https://www.studierendenwerk-muenchen-oberbayern.de/gastronomie/standorte-und-oeffnungszeiten/rosenheim/"
+  },
+  "periods": {
+    "christmas-2026": {"from": "2026-12-24", "to": "2027-01-06", "reason": "圣诞／新年假期"},
+    "christmas-2026-early": {"from": "2026-12-23", "to": "2027-01-06", "reason": "圣诞／新年假期"}
+  },
+  "canteens": {
+    "mensa-arcisstr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "mensa-garching": {"source": "garching", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "mensa-leopoldstr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "mensa-lothstr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026-early"]},
+    "mensa-martinsried": {"source": "martinsried", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "mensa-pasing": {"source": "pasing", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026-early"]},
+    "mensa-weihenstephan": {"source": "freising", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stubistro-arcisstr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stubistro-goethestr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stubistro-butenandstr": {"source": "martinsried", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stubistro-rosenheim": {"source": "rosenheim", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stubistro-schellingstr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stubistro-martinsried": {"source": "martinsried", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stucafe-adalbertstr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stucafe-akademie-weihenstephan": {"source": "freising", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stucafe-weihenstephan-maximus": {"source": "freising", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stucafe-boltzmannstr": {"source": "garching", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stucafe-connollystr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026-early"]},
+    "stucafe-garching": {"source": "garching", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026"]},
+    "stucafe-karlstr": {"source": "munich", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026-early"]},
+    "stucafe-pasing": {"source": "pasing", "regular_days": [1, 2, 3, 4, 5], "periods": ["christmas-2026-early"]}
+  }
+}

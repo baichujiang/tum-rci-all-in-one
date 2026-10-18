@@ -4,7 +4,14 @@
   "buildCommand": "node scripts/verify_site.js",
   "outputDirectory": "dist",
   "installCommand": "npm ci --omit=dev",
-  "functions": {"api/feedback.js": {"maxDuration": 15, "regions": ["fra1"]}, "api/admin-*.js": {"maxDuration": 30, "regions": ["fra1"]}},
+  "functions": {
+    "api/feedback.js": {"maxDuration": 15, "regions": ["fra1"]},
+    "api/admin-*.js": {"maxDuration": 30, "regions": ["fra1"]},
+    "api/mensa-translations.js": {"maxDuration": 15, "regions": ["fra1"]},
+    "api/mensa-crowding.js": {"maxDuration": 15, "regions": ["fra1"]},
+    "api/mensa-sync.js": {"maxDuration": 300, "regions": ["fra1"]}
+  },
+  "crons": [{"path": "/api/mensa-sync/", "schedule": "30 9 * * *"}],
   "trailingSlash": true,
   "headers": [{"source":"/(.*)","headers":[{"key":"X-Content-Type-Options","value":"nosniff"},{"key":"Referrer-Policy","value":"strict-origin"},{"key":"X-Frame-Options","value":"DENY"}]}]
 }

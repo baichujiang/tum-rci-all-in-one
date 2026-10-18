@@ -11,11 +11,12 @@ const cards=[
  card('R139','校园打印与扫描','CIT · PDF 上传与取件步骤','校园打印与扫描 CIT PDF 上传与取件步骤'),
  card('R140','英语写作辅导预约','免费咨询 · 论文与求职文本','英语写作辅导预约 免费咨询 · 论文与求职文本 tumenglishwritingcenter.simplybook.it 英语写作 英文论文 English Writing Center EWC writing 简历 求职信'),
  card('R131','研究组论文题目','参与平台的研究组 · 非全校完整题库','找论文题目 研究组论文题目 Thesis Management'),
- {...card('R145','全校论文题目公告栏','跨学院发布 · 不保证收齐全部题目','全校论文题目公告栏 Themenbörse'),dataset:{portal:'R145',keywords:'全校论文题目公告栏 Themenbörse',desktopOnly:'true'}}
+ {...card('R145','全校论文题目公告栏','跨学院发布 · 不保证收齐全部题目','全校论文题目公告栏 Themenbörse'),dataset:{portal:'R145',keywords:'全校论文题目公告栏 Themenbörse',desktopOnly:'true'}},
+ card('tool:mensa','食堂菜单','中文菜名 · 每周菜单 · 学生价格','食堂菜单 中文菜名 每周菜单 学生价格 Mensa canteen 今天吃什么 午餐 Garching 主校区')
 ];
-const courses={hidden:false,querySelector:()=>cards.slice(0,2).find(c=>!c.hidden)||null},support={hidden:false,querySelector:()=>cards.slice(2).find(c=>!c.hidden)||null};
+const courses={hidden:false,querySelector:()=>cards.slice(0,2).find(c=>!c.hidden)||null},support={hidden:false,querySelector:()=>cards.slice(2,7).find(c=>!c.hidden)||null},campus={hidden:false,querySelector:()=>cards.slice(7).find(c=>!c.hidden)||null};
 function element(){return {value:'',hidden:false,textContent:'',listeners:{},addEventListener(type,fn){this.listeners[type]=fn;},focus(){this.focused=true;}};}
-const input=element(),reset=element(),status=element(),empty=element(),controls=element(),directory={querySelectorAll:selector=>selector==='[data-portal]'?cards:[courses,support]};
+const input=element(),reset=element(),status=element(),empty=element(),controls=element(),directory={querySelectorAll:selector=>selector==='[data-portal]'?cards:[courses,support,campus]};
 const nodes={'#portal-controls':controls,'#websites':directory,'#portal-search':input,'#portal-empty':empty,'#portal-status':status,'[data-portal-reset]':reset};
 const media={matches:true,addEventListener(type,fn){this.change=fn;}};
 vm.runInNewContext(source,{window:{RCISearch:S,matchMedia:()=>media},$:selector=>nodes[selector]});
@@ -25,9 +26,10 @@ assert.deepEqual(search('作业 moodle'),['R031']);console.log('PASS Reordering 
 assert.deepEqual(search('IT'),['R035']);console.log('PASS Short IT query does not match CIT inside another word');
 assert.deepEqual(search('simplybook.it'),['R140']);console.log('PASS Full hostnames remain searchable without matching a country suffix alone');
 assert.deepEqual(search('不存在xyz'),[]);assert.equal(empty.hidden,false);console.log('PASS Unknown query shows the empty state');
-reset.listeners.click();assert.equal(cards.filter(c=>!c.hidden).length,7);assert.equal(empty.hidden,true);assert(input.focused);console.log('PASS Reset restores all website modules and focuses the search field');
+reset.listeners.click();assert.equal(cards.filter(c=>!c.hidden).length,8);assert.equal(empty.hidden,true);assert(input.focused);console.log('PASS Reset restores all website modules and focuses the search field');
+for(const query of ['食堂菜单','Mensa','今天吃什么'])assert.deepEqual(search(query),['tool:mensa']);assert.equal(campus.hidden,false);assert.equal(courses.hidden,true);assert.equal(support.hidden,true);console.log('PASS Menu searches use the regular campus module and hide unrelated website cards');
 assert.deepEqual(search('论文题目'),['R131','R145']);assert.equal(status.textContent,'找到 2 个网站');console.log('PASS Desktop thesis search finds both complementary destinations');
 assert.deepEqual(search('Themenbörse'),['R145']);console.log('PASS The university bulletin is searchable by its official name');
 media.matches=false;media.change();assert.equal(empty.hidden,false);assert.equal(status.textContent,'找到 0 个网站');
 media.matches=true;media.change();assert.equal(empty.hidden,true);assert.equal(status.textContent,'找到 1 个网站');console.log('PASS Desktop-only entries keep search counts and empty states consistent at the desktop boundary');
-console.log('9 homepage search checks passed');
+console.log('10 homepage search checks passed');

@@ -10,13 +10,15 @@ const empty=()=>C.validatePlan({version:2,cohort:'2026/27冬季',conditional:fal
 const defaults={query:'',group:'',term:'',language:'',selection:''};
 let checks=0;
 async function test(name,fn){await fn();checks++;console.log('PASS',name);}
-function element(){return {value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,handlers:{},dataset:{},children:[],addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];},focus(){this.focused=true;},contains(){return false;},getBoundingClientRect(){return {top:200,bottom:240};}};}
+function element(){return {value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,handlers:{},dataset:{},attributes:{},children:[],setAttribute(key,value){this.attributes[key]=value;},getAttribute(key){return this.attributes[key];},addEventListener(type,fn){this.handlers[type]=fn;},querySelectorAll(){return [];},focus(){this.focused=true;},contains(){return false;},getBoundingClientRect(){return {top:200,bottom:240};}};}
 async function harness(search='',desktop=false,options={}){
  let plan=options.plan||empty(),lastURL='',fail=false,rows=[],cache=options.saved?JSON.stringify(options.saved):null;
  const nodes={},calls=[],events={},frames=[],scrolls=[],location={search,pathname:'/courses/',hash:options.hash||''};
  const history={state:options.historyState||null,replaceState(state,_b,url){this.state=state;lastURL=url;const u=new URL(url,'http://localhost:8001');location.search=u.search;location.hash=u.hash;}};
  const env={scrollY:options.scrollY||0,innerHeight:900};
- for(const id of ['course-target-semester','page-search','group-filter','term-filter','directory-language','directory-selection','results','result-count','directory-undo','directory-status','directory-feedback','more-results','directory-subcategories','directory-active-filters','directory-filter-count','reset-filters','directory-target-credits','catalog-filter-options'])nodes['#'+id]=element();
+ for(const id of ['course-target-semester','page-search','group-filter','term-filter','directory-language','directory-selection','results','result-count','directory-undo','directory-status','directory-feedback','more-results','directory-subcategories','directory-active-filters','directory-filter-count','reset-filters','directory-target-credits','catalog-filter-options','directory-cohort'])nodes['#'+id]=element();
+ nodes['[data-edit-academic-term]']=element();
+ nodes['[data-academic-action]']=element();
  nodes['form']=element();nodes['[data-directory-clear-query]']=element();nodes['#catalog-filter-options'].querySelector=()=>element();
  let html='';Object.defineProperty(nodes['#results'],'innerHTML',{get:()=>html,set:value=>{
   html=value;rows=[...value.matchAll(/<article class="course-entry[^"]*" id="directory-course-([^"]+)">/g)].map((match,index)=>{
@@ -27,6 +29,7 @@ async function harness(search='',desktop=false,options={}){
  nodes['#results'].querySelectorAll=selector=>selector==='.course-entry'?rows:[];
  const box=element();box.querySelector=s=>nodes[s];
  const U={base:'',persisted:true,data:async()=>data,plan:async()=>copy(plan),addCourse:async(code,semester,options)=>{calls.push({code,semester,options});if(fail)throw new Error('保存失败');const previous=plan.items.find(x=>x.code===code);plan.items=plan.items.filter(x=>x.code!==code);plan.items.push({code,semester,status:'planned'});events['rci:planchange']?.();return {kind:previous?'moved':'added',code,semester,previous};},undoCourse:async change=>{plan.items=plan.items.filter(x=>x.code!==change.code);if(change.previous)plan.items.push(change.previous);events['rci:planchange']?.();}};
+ U.editAcademicTerm=async()=>{calls.push({editAcademicTerm:true});if(!options.editCohort)return false;plan.cohort=options.editCohort;plan.timeline.start=plan.cohort.endsWith('夏季')?'summer':'winter';events['rci:planchange']?.();return true;};
  Object.assign(env,{matchMedia:()=>({matches:desktop,addEventListener(){}}),RCI:C,RCISearch:S,RCIUI:U,document:{getElementById:id=>id==='course-directory'?box:nodes['#'+id]||rows.find(row=>row.id===id),addEventListener(){},activeElement:null},location,history,sessionStorage:{getItem(){if(options.storageDenied)throw Error('Denied');return cache;},setItem(_key,value){if(options.storageDenied)throw Error('Denied');cache=value;}},requestAnimationFrame:fn=>frames.push(fn),scrollTo:({top})=>{env.scrollY=top;scrolls.push(top);},URLSearchParams,setTimeout,clearTimeout,addEventListener:(type,fn)=>events[type]=fn});
  vm.runInNewContext(source,env);
  await tick();
@@ -72,6 +75,19 @@ async function harness(search='',desktop=false,options={}){
  });
  await test('Failed add presents a reason without modifying saved records',async()=>{
   const h=await harness('?q=IN2060&semester=1');h.fail();await h.click({'data-directory-add':'IN2060'});assert.equal(h.plan().items.length,0);assert(h.nodes['#directory-status'].textContent.includes('保存失败'));assert.equal(h.nodes['#directory-undo'].hidden,true);
+ });
+ await test('Entry-time editing updates seasons while preserving the target, filters and selected courses on both layouts',async()=>{
+  for(const desktop of [false,true]){
+   const plan=empty();plan.items=[{code:'IN2064',status:'planned',semester:3}];
+   const h=await harness('?q=IN2064&term=WiSe&semester=3',desktop,{plan,editCohort:'2027夏季'}),before=h.plan();
+   assert.equal(h.nodes['#directory-cohort'].textContent,'2026/27 冬季');assert.equal(h.nodes['[data-edit-academic-term]'].getAttribute('aria-label'),'修改入学时间');
+   await h.click({'data-edit-academic-term':''});
+   assert.equal(h.calls[0].editAcademicTerm,true);assert.equal(h.plan().timeline.start,'summer');assert.deepEqual(h.plan().items,before.items);
+   assert.equal(h.nodes['#directory-cohort'].textContent,'2027 夏季');assert(h.nodes['#course-target-semester'].innerHTML.includes('第 1 学期 · 夏季'));assert.equal(h.nodes['#course-target-semester'].value,'3');
+   assert.equal(h.nodes['#page-search'].value,'IN2064');assert.equal(h.nodes['#term-filter'].value,'WiSe');assert(h.nodes['#directory-status'].textContent.includes('入学时间已更新'));
+  }
+  const cancelled=await harness('?semester=2'),before=cancelled.plan();await cancelled.click({'data-edit-academic-term':''});assert.deepEqual(cancelled.plan(),before);assert.equal(cancelled.nodes['#course-target-semester'].value,'2');
+  const plan=empty();plan.cohort='unknown';const newcomer=await harness('',false,{plan});assert.equal(newcomer.nodes['[data-edit-academic-term]'].getAttribute('aria-label'),'设置入学时间');assert(newcomer.nodes['#course-target-semester'].innerHTML.includes('季节待确认'));
  });
  await test('Shared plan widgets update counts with a destination selector, preserving directory ownership',async()=>{
   const app=fs.readFileSync(require.resolve('../site3/app'),'utf8');
