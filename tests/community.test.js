@@ -15,25 +15,25 @@ function invitation(time){
 }
 let count=0;
 function test(name,fn){fn();count++;console.log('PASS',name);}
-test('Invitation works up to the last moment before October 20 in Berlin',()=>{
- const ui=invitation('2026-10-19T23:59:59.999+02:00');
+test('Invitation works up to the last moment before October 26 in Berlin winter time',()=>{
+ const ui=invitation('2026-10-25T23:59:59.999+01:00');
  assert.equal(ui.active.hidden,false);assert.equal(ui.contact.hidden,true);
  assert.equal(ui.image.src,config.qrImage);assert.equal(ui.timer().delay,1);
 });
 test('The exact deadline hides the code and offers developer contact',()=>{
- const ui=invitation('2026-10-20T00:00:00+02:00');
+ const ui=invitation('2026-10-26T00:00:00+01:00');
  assert.equal(ui.active.hidden,true);assert.equal(ui.contact.hidden,false);
  assert.equal(ui.image.src,undefined);assert(ui.status.textContent.includes('二维码已过期'));assert.equal(ui.timer(),null);
 });
 test('A page left open switches without a reload',()=>{
- const ui=invitation('2026-10-19T23:59:59+02:00'),callback=ui.timer().fn;
- ui.setTime('2026-10-20T00:00:00+02:00');callback();
+ const ui=invitation('2026-10-25T23:59:59+01:00'),callback=ui.timer().fn;
+ ui.setTime('2026-10-26T00:00:00+01:00');callback();
  assert.equal(ui.active.hidden,true);assert.equal(ui.contact.hidden,false);assert.equal(ui.image.src,undefined);
 });
 test('Opening, resuming or restoring the page rechecks the deadline',()=>{
  for(const event of ['toggle','pageshow','visibilitychange']){
-  const ui=invitation('2026-10-13T12:00:00+02:00');
-  ui.setTime('2026-10-21T12:00:00+02:00');ui.handlers[event]();
+  const ui=invitation('2026-10-19T12:00:00+02:00');
+  ui.setTime('2026-10-27T12:00:00+01:00');ui.handlers[event]();
   assert.equal(ui.active.hidden,true);assert.equal(ui.contact.hidden,false);assert.equal(ui.image.src,undefined);
  }
 });

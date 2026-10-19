@@ -9,14 +9,15 @@ window.RCIAdminAnalytics={create({api}){
  function reset(){version++;busy=false;panel.hidden=true;results.hidden=true;range.value='7';loadedDays='7';refresh.disabled=false;range.disabled=false;panel.setAttribute('aria-busy','false');status.textContent='';$('analytics-visitors').textContent='—';$('analytics-pageviews').textContent='—';$('analytics-trend').replaceChildren();$('analytics-pages').replaceChildren();$('analytics-daily').replaceChildren();$('analytics-updated').textContent='';}
  function render(data){
   $('analytics-visitors').textContent=number.format(data.totals.visitors);$('analytics-pageviews').textContent=number.format(data.totals.pageviews);
-  const trend=$('analytics-trend');trend.replaceChildren();
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 720 164');svg.setAttribute('role','img');svg.setAttribute('aria-label','每日页面浏览量；完整数据见下方每日明细');
-  const max=Math.max(1,...data.trend.map(row=>row.pageviews)),width=720/data.trend.length;
-  for(let i=0;i<data.trend.length;i++){
-   const row=data.trend[i],height=row.pageviews/max*124,rect=document.createElementNS(svg.namespaceURI,'rect'),title=document.createElementNS(svg.namespaceURI,'title');
-   rect.setAttribute('x',String(i*width+width*.15));rect.setAttribute('y',String(136-height));rect.setAttribute('width',String(width*.7));rect.setAttribute('height',String(height));rect.setAttribute('rx','3');title.textContent=`${row.date}：${row.visitors} 位访客，${row.pageviews} 次浏览`;rect.append(title);svg.append(rect);
+  const trend=$('analytics-trend'),bars=element('div','analytics-bars');trend.replaceChildren();
+  const max=Math.max(1,...data.trend.map(row=>row.pageviews));bars.style.setProperty('--analytics-days',String(data.trend.length));bars.style.setProperty('--analytics-column-width',Math.max(32,number.format(max).length*8)+'px');
+  for(const row of data.trend){
+   const day=element('div','analytics-day'),track=element('div','analytics-bar-track'),bar=element('div','analytics-bar');
+   day.title=`${row.date}：${number.format(row.visitors)} 位访客，${number.format(row.pageviews)} 次浏览`;day.setAttribute('role','img');day.setAttribute('aria-label',day.title);
+   bar.style.height=String(row.pageviews/max*124)+'px';bar.append(element('span','analytics-value',number.format(row.pageviews)));track.append(bar);
+   day.append(track,element('span','analytics-date',row.date.slice(5).replace('-','/')));bars.append(day);
   }
-  trend.append(svg);const axis=element('div','analytics-axis');axis.append(element('span','',data.trend[0].date),element('span','',data.trend.at(-1).date));trend.append(axis);
+  trend.append(bars);trend.scrollLeft=0;
   $('analytics-empty').hidden=data.totals.pageviews!==0;
   const body=$('analytics-daily');body.replaceChildren();for(const row of data.trend){const tr=element('tr');tr.append(element('th','',row.date),element('td','',number.format(row.visitors)),element('td','',number.format(row.pageviews)));tr.firstChild.scope='row';body.append(tr);}
   const pages=$('analytics-pages');pages.replaceChildren();for(const row of data.topPages){const tr=element('tr'),cell=element('th'),link=element('a','text-link',row.path);cell.scope='row';link.href=row.path;link.target='_blank';link.rel='noopener noreferrer';cell.append(link);tr.append(cell,element('td','',number.format(row.visitors)),element('td','',number.format(row.pageviews)));pages.append(tr);}
