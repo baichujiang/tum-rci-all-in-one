@@ -52,7 +52,7 @@ def contains(path, expected):
 
 for route, marker in [
     ("/", "常用网站，一步直达。"),
-    ("/study/", "<h1>学分与学业规则</h1>"),
+    ("/study/", "<h1>帮助说明已移至我的计划</h1>"),
     ("/favorites/", 'id="favorites-app"'),
     ("/feedback/", 'id="feedback-form"'),
     ("/guides/matching/", "实验课、研讨课怎么选？"),

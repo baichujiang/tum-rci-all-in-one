@@ -1,4 +1,4 @@
-/* Shared academic rules stay readable without loading or changing personal plans. */
+/* Planner help works independently of plan storage; shared study URLs enter it. */
 (function(){
 'use strict';
 const guide=document.getElementById('plan-study-dialog');
@@ -53,5 +53,7 @@ if(guide){
  return;
 }
 const base=document.querySelector('meta[name="rci-base"]').content;
-window.location.replace(base+'/planner/?guide=study');
+const params=new URLSearchParams(window.location.search);
+const section=params.get('section')||window.location.hash.slice(1).replace(/^study-/,'');
+window.location.replace(base+'/planner/?guide=study'+(['credits','deadlines','registration','sources'].includes(section)?'&section='+section:''));
 })();

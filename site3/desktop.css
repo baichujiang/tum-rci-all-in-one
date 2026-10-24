@@ -34,7 +34,7 @@
  .brand{font-size:11px;line-height:1.4;letter-spacing:0}
  .brand b{font-size:15px}
  .desktop-nav{margin:0 auto;gap:4px;padding:0;background:transparent;border-radius:0;font-size:14px}
- .desktop-nav a,.desktop-nav>.desktop-only{display:flex;align-items:center;gap:7px;min-height:38px;padding:7px 15px;color:var(--muted);border-radius:7px;font-weight:500}
+ .desktop-nav a{display:flex;align-items:center;gap:7px;min-height:38px;padding:7px 15px;color:var(--muted);border-radius:7px;font-weight:500}
  .desktop-nav a[aria-current=page]{background:var(--brand-soft);color:var(--brand);box-shadow:none;font-weight:650}
  .desktop-nav a:hover{background:var(--paper);color:var(--brand)}
  .plan-badge{background:#d9eafb;color:var(--brand);font-size:11px;border-radius:5px;padding:0 5px;min-width:19px}
@@ -53,12 +53,12 @@
  .small,.meta{font-size:13px!important;color:var(--muted)}
  .button{border-radius:8px;min-height:38px;font-size:14px;padding:7px 14px;background:var(--brand);border-color:var(--brand);transition:background .15s,border-color .15s}
  .button:active{transform:none}
- .button:hover{background:var(--brand-hover);border-color:var(--brand-hover)}
+ .button:not(:disabled):hover{background:var(--brand-hover);border-color:var(--brand-hover)}
  .button.secondary{background:var(--white);color:var(--brand);border-color:var(--line)}
- .button.secondary:hover{background:var(--brand-soft);border-color:#b2cde8}
+ .button.secondary:not(:disabled):hover{background:var(--brand-soft);border-color:#b2cde8}
  .quiet{font-size:13px;border-radius:7px;color:var(--brand)}
- .quiet:hover,.quiet[aria-pressed=true]{background:var(--brand-soft)}
- .quiet:disabled{color:var(--success);background:var(--success-soft)}
+ .quiet:not(:disabled):hover,.quiet[aria-pressed=true]{background:var(--brand-soft)}
+ .quiet:disabled{color:var(--muted);background:transparent}
  input,select{font-size:14px;min-height:40px;border-color:var(--line);border-radius:7px;background:var(--white)}
  input:focus,select:focus{border-color:var(--brand)}
  :focus-visible{outline-color:var(--brand)}
@@ -147,7 +147,6 @@
  .portal-save{top:8px;right:8px;color:var(--muted);border-radius:6px}
  .portal-save:hover,.portal-save[aria-pressed=true]{background:var(--brand-soft);color:var(--brand)}
  .portal-hint{font-size:13px}
- .home>.resume-card,.home>.study-entry{display:none}
 
  /* Course tools share one row; static markup still works without JavaScript. */
  .courses-page{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px 24px;align-content:start;padding-bottom:48px}

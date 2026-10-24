@@ -26,7 +26,18 @@ try{
  fs.writeFileSync(navFile,JSON.stringify(nav));
  const prefixed=build({BASE_PATH:'/rci',SITE_URL:'https://rci.example.invalid'});assert.equal(prefixed.status,0,prefixed.stderr);
  const info=JSON.parse(fs.readFileSync(path.join(fixture,'dist/build-info.json'),'utf8'));
- assert.equal(info.base,'/rci');assert.equal(info.pages,640);assert.equal(info.searchRecords,811);
+ assert.equal(info.base,'/rci');assert.equal(info.pages,640+require('../data/course-topics.json').entries.length);assert.equal(info.searchRecords,811);
+ const updateHome=fs.readFileSync(path.join(fixture,'dist/index.html'),'utf8');
+ assert(updateHome.includes('src="/rci/assets/site-updates.js"'));
+ assert(updateHome.includes('href="/rci/#site-updates" data-site-updates-open'));
+ for(const change of require('../content/site-updates.json').changes)assert(updateHome.includes('href="/rci'+change.href+'"'));
+ for(const selector of ['desktop-nav','mobile-bottom-nav']){
+  const nav=updateHome.match(new RegExp('<nav class="'+selector+'"[^>]*>([\\s\\S]*?)<\\/nav>'))[1];
+  assert.deepEqual([...nav.matchAll(/href="([^"]+)"/g)].map(m=>m[1]),['/rci/','/rci/courses/','/rci/planner/']);
+ }
+ const legacyStudy=fs.readFileSync(path.join(fixture,'dist/study/index.html'),'utf8');
+ assert(legacyStudy.includes('href="/rci/planner/?guide=study"'));assert(legacyStudy.includes('content="noindex,follow"'));
+ assert(!fs.readFileSync(path.join(fixture,'dist/sitemap.xml'),'utf8').includes('https://rci.example.invalid/rci/study/'));
  assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('\"translation_url\":\"/rci/api/mensa-translations/\"'));
  assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('/rci/assets/vendor/leaflet/leaflet.js'));
  assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('/rci/assets/mensa-places.js'));
@@ -34,6 +45,9 @@ try{
  assert(fs.readFileSync(path.join(fixture,'dist/mensa/index.html'),'utf8').includes('\"crowding_url\":\"/rci/api/mensa-crowding/\"'));
  for(const file of ['index.html','favorites/index.html'])assert(fs.readFileSync(path.join(fixture,'dist',file),'utf8').includes('data-portal-link="tool:mensa" href="/rci/mensa/"'));
  assert(fs.readFileSync(path.join(fixture,'dist/sitemap.xml'),'utf8').includes('https://rci.example.invalid/rci/guides/matching/'));
+ const matching=fs.readFileSync(path.join(fixture,'dist/guides/matching/index.html'),'utf8');
+ for(const code of ['IN2106','IN2107'])assert(matching.includes('href="/rci/courses/'+code+'/#course-topics"'));
+ assert(matching.includes('href="/rci/tasks/study/"'));assert(matching.includes('href="#matching-spots"'));
  console.log('PASS A following valid build publishes a complete prefixed site without temporary files');
  const published=digest(manifest(path.join(fixture,'dist')));
  for(const options of [{BASE_PATH:'//rci'},{BASE_PATH:'/rci//nested'},{SITE_URL:'https://rci.example.invalid?source=qa'},{SITE_URL:'https://rci.example.invalid#about'},{SITE_URL:'https://qa:placeholder@rci.example.invalid'},{SITE_URL:'https://rci.example.invalid\\unexpected'},{SITE_URL:'https://rci.example.invalid\n'}]){

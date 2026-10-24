@@ -3,9 +3,9 @@
 const path=require('node:path'),{spawnSync}=require('node:child_process');
 const root=path.resolve(__dirname,'..');
 const pipeline=[
- 'tests/core.test.js','tests/curriculum.test.js','tests/course-detail.test.js','tests/catalog.test.js','tests/interdisciplinary.test.js','tests/planning.test.js','tests/plan-export.test.js','tests/planning-ui.test.js','tests/planner-board.test.js','tests/local-lock.test.js','tests/interactions.test.js','tests/backup.test.js',
- 'tests/backup-ui.test.js','tests/favorites.test.js','tests/search.test.js','tests/course-directory.test.js',
- 'tests/routes.test.js','tests/portals.test.js','tests/checklist.test.js','tests/feedback.test.js','tests/feedback-admin.test.js','tests/analytics.test.js','tests/admin-analytics.test.js',
+ 'tests/core.test.js','tests/curriculum.test.js','tests/course-detail.test.js','tests/catalog.test.js','tests/interdisciplinary.test.js','tests/planning.test.js','tests/plan-export.test.js','tests/planning-ui.test.js','tests/planner-board.test.js','tests/local-lock.test.js','tests/course-topics.test.js','tests/interactions.test.js','tests/backup.test.js',
+ 'tests/course-topic-picker.test.js','tests/course-topic-details.test.js','tests/backup-ui.test.js','tests/favorites.test.js','tests/search.test.js','tests/course-directory.test.js',
+ 'tests/site-updates.test.js','tests/routes.test.js','tests/portals.test.js','tests/checklist.test.js','tests/feedback.test.js','tests/feedback-admin.test.js','tests/analytics.test.js','tests/admin-analytics.test.js',
  'tests/mensa.test.js','tests/mensa-places.test.js','tests/mensa-sync.test.js','tests/mensa-crowding.test.js','tests/build.test.js','scripts/build_site.js','tests/site.test.js'
 ];
 for(const script of pipeline){

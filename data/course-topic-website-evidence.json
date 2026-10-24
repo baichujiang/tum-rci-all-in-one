@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "checkedOn": "2026-10-23",
+  "records": {
+    "IN2107-2026W-dac9bc5a67aa": {
+      "courseId": "950942567",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "teaching",
+          "url": "https://www.hfp.tum.de/en/css/lehre/",
+          "label": "查看授课团队教学目录",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "80be72873740c29db077a0b960695156852dee1fea13c812ef574f1ad83cd806",
+          "identityNote": "当期教学目录以 950942567 链接对应本课；无独立内容介绍"
+        }
+      ],
+      "reviewNote_cn": "已核对授课团队 2026/27 冬季教学目录，公开内容仍只提供本课入口，未提供具体研究主题或提交要求；不沿用其他学期或同名课程的介绍。"
+    },
+    "IN2107-2026W-40b884b077f6": {
+      "courseId": "950976308",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.ifi.lmu.de/nm/de/lehre/wintersemester-2026-27/seminar_haupt.html",
+          "label": "查看 LMU 当期课程官网",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "be3267e3cda0c584fd3b3937122224f15a9d9aaca1622677fb6f443007b11b3a",
+          "identityNote": "官方短链接重定向至 2026/27 冬季 Hauptseminar，明确包含 TUM 学生 Matching 路径"
+        }
+      ],
+      "reviewNote_cn": null
+    },
+    "IN2107-2026W-03efe3b74233": {
+      "courseId": "950943027",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.cs.cit.tum.de/en/cg/teaching/winter-term-25-26-1/deep-learning-in-physics/",
+          "label": "查看当期课程官网",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "a73da0f0c9c8c066c39ec0505b376b34e69fa84445c28ec5acfc1ddc4e3c0ccd",
+          "identityNote": "页面面包屑为 Winter Term 26/27，正文开始日期为 2026-10-14，标题和授课团队对应本课"
+        }
+      ],
+      "reviewNote_cn": null
+    },
+    "IN2107-2026W-244f29e3e991": {
+      "courseId": "950941707",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.cs.cit.tum.de/en/cg/teaching/winter-term-25-26-1/deep-learning-in-computer-graphics/",
+          "label": "查看当期课程官网",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "2872cfeb196a426af8d8bce55f696113abd3e8f0d97909a3a41fb50f9b71030a",
+          "identityNote": "页面面包屑为 Winter Term 26/27，正文开始日期为 2026-10-13，标题和授课团队对应本课"
+        }
+      ],
+      "reviewNote_cn": "当期官网的报告提交说明同时写有 2027 年 1 月 11 日和报告后一周；出勤栏同时写最多缺席一次与第三次缺席不及格。具体截止与出勤处理仍须向导师确认。"
+    },
+    "IN2107-2026W-547365f3ed1a": {
+      "courseId": "950945842",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.sec.in.tum.de/i20/teaching/ws2026/software-supply-chain-security",
+          "label": "查看当期课程官网",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "91d064f7fcb94ed724ff5dced81b36f68c445283ae6d8770cc9919ed0811b6d2",
+          "identityNote": "TUMonline 直接链接的 WS2026 页面，由 Lukas Gehrke 负责"
+        },
+        {
+          "key": "slides",
+          "url": "https://www.sec.in.tum.de/i20/assets/vorlesung/26w/premeeting_seminar_wise26-27.pdf",
+          "label": "查看当期说明会资料（PDF）",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "92c336b6721a624250c0e46d15f02ff4524d41081fa9663639110049cad8f9fd",
+          "identityNote": "WS2026 页面直接链接，封面日期 2026-07-02，标题和教师与课程一致"
+        }
+      ],
+      "reviewNote_cn": "当期说明会资料的目标页写十页论文和二十分钟报告，交付要求页则写八页论文和十五分钟报告；篇幅与时长须向授课团队确认，不能当作已统一的要求。"
+    },
+    "IN2107-2026W-219eff76fdae": {
+      "courseId": "950946083",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.sec.in.tum.de/i20/teaching/ws2026/advanced-security-analysis",
+          "label": "查看当期课程官网",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "b06b1efdfe10a90bcf76616854701ff3454cca514e4f89ffc1712ce930c1f153",
+          "identityNote": "TUMonline 直接链接的 WS2026 页面，由 Maximilian Tschirschnitz 负责"
+        },
+        {
+          "key": "slides",
+          "url": "https://www.sec.in.tum.de/i20/assets/vorlesung/26w/asa-premeeting.pdf",
+          "label": "查看当期说明会资料（PDF）",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "707d465a694601a857efa30baefeb69bccde29bc4a91822e74acef0bb3598eeb",
+          "identityNote": "WS2026 页面直接链接；封面明确 WS2026/27 和 2026-07-07，教师对应本课"
+        }
+      ],
+      "reviewNote_cn": null
+    },
+    "IN2107-2026W-2ce98f5cc302": {
+      "courseId": "950975378",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "teaching",
+          "url": "https://www.ce.cit.tum.de/ibrs/teaching/",
+          "label": "查看授课团队教学目录",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "5f6fbdb4e99ad3f84f28fbe6850945142b26f7bfe8c900902f7f06858467d940",
+          "identityNote": "当期教学目录以 950975378 链接对应本课；仅列课程入口"
+        }
+      ],
+      "reviewNote_cn": "已核对 IBRS 当期教学目录，仍未公开本课的具体主题、任务、先修与考核；不把研究组介绍或其他可穿戴机器人课程改写成本课内容。"
+    },
+    "IN2106-2026W-f0f46b10df7b": {
+      "courseId": "950945411",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.cs.cit.tum.de/en/cg/teaching/winter-term-25-26-1/gpu-pro/",
+          "label": "查看当期课程官网",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "d88cef8aa93cd646c08eabe17ab3b12fb69b5fee5e88e295cef734413d2a2c79",
+          "identityNote": "页面面包屑为 Winter Term 26/27，正文开始日期为 2026-10-12，标题和 2026-10-07 启动会对应本课"
+        }
+      ],
+      "reviewNote_cn": null
+    },
+    "IN2106-2026W-ae36b6e1a295": {
+      "courseId": "950975237",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.cs.cit.tum.de/en/ndx/teaching/course/950975237/?cHash=818f2c53949518b9b08082cba5b71ceb",
+          "label": "查看当期课程官网",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "75eb22752ea9e59b47a6b67417ae812b65fe5c9929de0cf5b9e5d5972d1b2eca",
+          "identityNote": "课程官网 URL 包含 950975237，标题、学期和教师对应本课"
+        }
+      ],
+      "reviewNote_cn": "当期课程官网仍只指向 IN2106 的通用模块说明，该链接不是 Virtual Reality Applications 的独立介绍，不能据此补写本课题目、组队人数或评分细则。"
+    },
+    "IN2106-2026W-d75fa5a5b145": {
+      "courseId": "950975377",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "teaching",
+          "url": "https://www.ce.cit.tum.de/ibrs/teaching/",
+          "label": "查看授课团队教学目录",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "5f6fbdb4e99ad3f84f28fbe6850945142b26f7bfe8c900902f7f06858467d940",
+          "identityNote": "当期教学目录以 950975377 链接对应本课；仅列课程入口"
+        }
+      ],
+      "reviewNote_cn": "已核对 IBRS 当期教学目录，仍未公开本课的感知方法、项目任务和考核安排；不套用 Actuation strategies 的课程描述。"
+    },
+    "IN2107-2026W-eec15ea6c699": {
+      "courseId": "950944479",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.gov.sot.tum.de/en/elaw/teaching-single-view/?cHash=c9e9a94a4f601f433e130bdc95d21cf6&tx_tumcourses_single%5Bcontroller%5D=Courses&tx_tumcourses_single%5Bcourse%5D=950944479",
+          "label": "查看当期课程官网",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "71dea5b11c212587f6c18f14fb83531adb8a95fee0f45bd9ac980e962d26fffb",
+          "identityNote": "URL 参数为 950944479，页面明确 Winter semester 2026/27，教师和模块标识对应本课"
+        }
+      ],
+      "reviewNote_cn": "当期课程官网也保留仅限政治学本科生的报名说明与 2025 年截止日期，尚未找到消除资格冲突的当期公开通知；RCI 资格仍须向团队确认。"
+    },
+    "IN2107-2026W-1614c869381d": {
+      "courseId": "950975812",
+      "term": "2026W",
+      "sources": [
+        {
+          "key": "course",
+          "url": "https://www.moodle.tum.de/course/info.php?id=125913",
+          "label": "查看当期 Moodle 公开信息",
+          "term": "2026W",
+          "checkedOn": "2026-10-23",
+          "sourceSHA256": "fbc6ec23d0de041b727da6da225a072357610c79c38e79aad26867701170ec58",
+          "identityNote": "课程公开信息标注 W2026/27，标题及教师 Benedikt Hoock 对应本课；未公开具体教学安排"
+        }
+      ],
+      "reviewNote_cn": "公开 Moodle 页面可确认 2026/27 冬季课程与授课教师，但未公开课堂安排；每周研讨与集中授课的两处说明仍未得到进一步澄清。"
+    },
+    "IN2107-2026W-eda596ee5539": {
+      "courseId": "951007445",
+      "term": "2026W",
+      "sources": [],
+      "reviewNote_cn": "仍未找到能对应 TUM 2026/27 冬季本课的公开资格澄清；不以教师在外校开设的同名课程来解释这里的成绩门槛。"
+    }
+  }
+}

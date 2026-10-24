@@ -1,0 +1,1031 @@
+{
+  "version": 1,
+  "sourceType": "remaining_spots",
+  "checkedOn": "2026-10-23",
+  "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/",
+  "sourceSHA256": "284ed90b8903cbe907a684561fe5e1f31b473c664a8acff2699a4f0a46cab112",
+  "entries": [
+    {
+      "id": "IN2107-2026W-48274061a8da",
+      "module": "IN2107",
+      "title": "Master Seminar - Generative modeling for different domains (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-2f8cdf6155c3",
+      "module": "IN2107",
+      "title": "Seminar: Computer Vision in the Operating Room (IN2107, IN45082)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-dac9bc5a67aa",
+      "module": "IN2107",
+      "title": "Seminar Computational Social Science (IN0014, IN2107, IN4875)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-a557c0a47fa2",
+      "module": "IN2107",
+      "title": "Praxisworkshop Datenschutz für StartUps (IN0014, IN2107, IN4906_4)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-4584b67fd24c",
+      "module": "IN2107",
+      "title": "Advanced Seminar on Safe Cyber-Physical Systems (MW2400, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-eec15ea6c699",
+      "module": "IN2107",
+      "title": "CDR: Digital Future Challenge – verantwortungsvolle KI (IN0014, IN2107, SOT82509)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-a6ec774b4a0b",
+      "module": "IN2107",
+      "title": "Hauptseminar - Didaktik der Informatik (ED0383, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-18afc5476a7a",
+      "module": "IN2107",
+      "title": "Seminar - Innovative Internet-Technologien und Mobilkommunikation (IN0014, IN2107, IN4595)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-40b884b077f6",
+      "module": "IN2107",
+      "title": "Masterseminar - Emerging Topics in Machine Learning and AI (IN2107, IN4421)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-6d27e9d8ea71",
+      "module": "IN2107",
+      "title": "Master-Seminar: Multimodal Learning for Medicine & Healthcare: The Challenges and Opportunities (IN2107, IN45150)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-d5b1828e559f",
+      "module": "IN2107",
+      "title": "Master-Seminar - Current Topics in Medical Machine Learning and Computational Pathology (IN2107, IN4514)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-ccaeef345cb4",
+      "module": "IN2107",
+      "title": "Master Seminar: Large Language Models in Medicine (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-155313178f89",
+      "module": "IN2107",
+      "title": "Master-Seminar: Wireless Internet Communication (IN2107, IN4449)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-03efe3b74233",
+      "module": "IN2107",
+      "title": "Seminar - Deep Learning in Physics (IN2107, IN0014, IN4939)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-4b56cb187907",
+      "module": "IN2107",
+      "title": "Master-Seminar - Generative AI in Computer Vision (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-5eb18040d765",
+      "module": "IN2107",
+      "title": "Master-Seminar - Deep Learning for Medical Applications (IN2107, IN4860)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-244f29e3e991",
+      "module": "IN2107",
+      "title": "Seminar - Deep Learning in Computer Graphics (IN2107, IN0014, IN4858)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-6c2dca9f4d13",
+      "module": "IN2107",
+      "title": "Master-Seminar – Advanced Techniques in NLP / Advanced NLP (IN2107, IN4443)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-fe557118d9d7",
+      "module": "IN2107",
+      "title": "Responsible Computing (IN0014, IN2107, IN4906_6)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-f0aa428a40d9",
+      "module": "IN2107",
+      "title": "Seminar Automated Mobile App Testing (IN0014, IN2107, IN45110)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-d9f6611df3d0",
+      "module": "IN2107",
+      "title": "Master Seminar: AI in Medicine: Learning from Incomplete Patient Data (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-8de3dbd2517b",
+      "module": "IN2107",
+      "title": "Seminar LLM-Driven GUI Agents: Theory, Techniques, and Evaluation (Location: Garching), IN0014, IN2107",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-54d9eab86afb",
+      "module": "IN2107",
+      "title": "Seminar - The Hitchhiker's Guide to Hyperproperties (IN0014, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-01849c237dab",
+      "module": "IN2107",
+      "title": "Master Seminar: Spatial Human Robot Interaction (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-45fdb6abed81",
+      "module": "IN2107",
+      "title": "Master-Seminar - Wearable Robotics for Motion Assistance and Augmentation (IN2107, IN45095)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-1614c869381d",
+      "module": "IN2107",
+      "title": "Masterseminar: Applied Machine Learning in Medicine and Natural Sciences (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-18d7e44be09e",
+      "module": "IN2107",
+      "title": "Seminar: Formally Verified Systems (IN0014, IN2107, IN45166)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-84394704adba",
+      "module": "IN2107",
+      "title": "Seminar - Making Sense of Games, Critically (IN0014, IN2107, IN45161)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-8180c7ce5da6",
+      "module": "IN2107",
+      "title": "Master Seminar: Perception for Intelligent Systems (IN2107, IN45088)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-bff3e685c916",
+      "module": "IN2107",
+      "title": "Master Seminar: 3D Machine Learning (IN2107, IN4429)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-b55a909a1f89",
+      "module": "IN2107",
+      "title": "Seminar - Sustainable Information Systems Engineering (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-1b0d9e83e668",
+      "module": "IN2107",
+      "title": "Seminar IT und Unternehmensberatung (IN2396, IN2107, IN0014)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-8b3f9604a5a2",
+      "module": "IN2107",
+      "title": "Seminar - Game Analysis (IN0014, IN2107, IN4824)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-ce1992436c04",
+      "module": "IN2107",
+      "title": "Seminar - Interactive Learning (IN0014, IN2107, IN4893)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-7994c61af635",
+      "module": "IN2107",
+      "title": "Seminar - Trends der Wirtschaftsinformatik (IN0014, IN2107, IN45033)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-9fb8cad27897",
+      "module": "IN2107",
+      "title": "Seminar - Industrial Security (IN0014, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-e845a0360f5a",
+      "module": "IN2107",
+      "title": "Master Seminar: Networked AI Systems (NAIS) (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-12c433cbd79a",
+      "module": "IN2107",
+      "title": "Modern Storage Technologies and Systems (IN0014, IN2107, IN45011)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-1c472110090e",
+      "module": "IN2107",
+      "title": "Seminar - Investigating the Role of Audio in Video Games (IN0014, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-4cb6288a8a05",
+      "module": "IN2107",
+      "title": "Seminar: Responsible AI and Language Technologies (IN2107, IN45148)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-8196c575e154",
+      "module": "IN2107",
+      "title": "Master-Seminar - Feedforward 3D Computer Vision (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-92ae503a36de",
+      "module": "IN2107",
+      "title": "Master-Seminar - Generative 3D Reconstruction (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-74eab854da4a",
+      "module": "IN2107",
+      "title": "Seminar Computational Aspects of Machine Learning (IN2107,IN0014, IN2183)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-a4bc70208370",
+      "module": "IN2107",
+      "title": "Master-Seminar - Recent Highlights in Computer Graphics & Visualization (IN2107, IN4778)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-9d464bc2045c",
+      "module": "IN2107",
+      "title": "Seminar - Teaching iOS (IN0014, IN2107, IN4741)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-8c7ca2a4dda1",
+      "module": "IN2107",
+      "title": "Seminar Cyber-Physical Systems (IN0014, IN2107, IN4813)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-985c9117a5e6",
+      "module": "IN2107",
+      "title": "Masterseminar - Agentic AI and Foundation Models for Autonomous Driving (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-b52348b531d9",
+      "module": "IN2107",
+      "title": "Master-Seminar-Grundlagen und Modelle neuronaler Netze im Maschinellen Sehen (IN2107, IN45156)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-156552123dbf",
+      "module": "IN2107",
+      "title": "Seminar: Quantum Software Systems (IN0014, IN2107, IN45016)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-7c478c3bd4dd",
+      "module": "IN2107",
+      "title": "Seminar Causal Reasoning (IN2107, IN0014, IN45036)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-9b9789618f35",
+      "module": "IN2107",
+      "title": "IN2107 Seminar on Topics in Design Automation",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-547365f3ed1a",
+      "module": "IN2107",
+      "title": "Seminar - Software-Supply Chain Security (IN0014, IN2107, IN45107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-2e1c8f65e695",
+      "module": "IN2107",
+      "title": "Masterseminar - Trends on Autonomous Agents: Advances in Architecture and Practice (IN2107, IN45094)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-672acf56ff65",
+      "module": "IN2107",
+      "title": "Master-Seminar - Recent advances in 4D Computer Vision (IN2107, IN45066)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-0b89be023d38",
+      "module": "IN2107",
+      "title": "Digital Health (IN2107, IN2396, IN45123)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-ecf43dee2c38",
+      "module": "IN2107",
+      "title": "Seminar - Gamifying AI Ethics (IN0014, IN2107, IN2396, IN45143)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-219eff76fdae",
+      "module": "IN2107",
+      "title": "Seminar - Advanced Security Analysis (IN0014, IN2107, IN45135)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-edb33222fc42",
+      "module": "IN2107",
+      "title": "Seminar on Dataflow-based Computing System for Irregular Parallelism (IN2107, IN45138)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-38e9247e4a5d",
+      "module": "IN2107",
+      "title": "Seminar: Computer Systems (IN0014, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-75d9f240d4fd",
+      "module": "IN2107",
+      "title": "Master-Seminar: Induktive Biases in der KI für die Wissenschaft (IN2107, IN45134)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-2b7dfbe57ca0",
+      "module": "IN2107",
+      "title": "Seminar - From Source to Speed: Performance Tools and Techniques in HPC/AI (IN0014, IN2107, IN2183, IN45160)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-f83b1c48cc16",
+      "module": "IN2107",
+      "title": "Master Seminar: 3D Perception for Embodied AI (IN2107, IN45168)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-56733cf9c7eb",
+      "module": "IN2107",
+      "title": "Master Seminar: Agents for 3D Generative AI (IN2107, IN45169)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-7f9d2db20e2e",
+      "module": "IN2107",
+      "title": "Master Seminar: Safety in Human-Robot Interaction in the Age of AI (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-b4fd9a04ba54",
+      "module": "IN2107",
+      "title": "Master Seminar: AI Research in the Large Language Models Era (IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-d952cc377558",
+      "module": "IN2107",
+      "title": "Seminar: Case Studies in Computational Science and Engineering (IN2183, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-b8db1c7bf342",
+      "module": "IN2107",
+      "title": "Seminar: Next-Generation Data Systems (IN0014, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-0b5a7e62de87",
+      "module": "IN2107",
+      "title": "Master Seminar - Networks in the Sky (IN2107, IN4493)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-2ce98f5cc302",
+      "module": "IN2107",
+      "title": "Master-Seminar - Advanced magnetic sensing for wearable robotics (IN2107, IN45175)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-5c80b90c2a51",
+      "module": "IN2107",
+      "title": "Master-Seminar - Collaborative Robotics and Assistive Technology for Advanced Human-Robot Interaction (IN2107, IN45092)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-49371d96d9f2",
+      "module": "IN2107",
+      "title": "Seminar - Ausgewählte Themen aus Effiziente Algorithmen (IN0014, IN2107, IN4808)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-7fb46de4a5a7",
+      "module": "IN2107",
+      "title": "Seminar: Approximationsalgorithmen (IN0014, IN2107, IN4764)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-a0f8a4a64715",
+      "module": "IN2107",
+      "title": "Seminar on Formal Aspects of Neural Language Models (IN0014, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2107-2026W-eda596ee5539",
+      "module": "IN2107",
+      "title": "Seminar - Trustworthy Machine Learning (IN0014, IN2107)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5153"
+    },
+    {
+      "id": "IN2106-2026W-b498e8c3ed2a",
+      "module": "IN2106",
+      "title": "Practical Course - Human-Centered Computing: applications in natural language processing, network science, machine learning, and AI (IN0012, IN2106, IN4906_8)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-3d98f415d160",
+      "module": "IN2106",
+      "title": "Master-Praktikum - Augmented Reality Applications (IN2106, IN4073)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-38033ccb2116",
+      "module": "IN2106",
+      "title": "Master-Praktikum - Scientific Computing - High-Performance Computing (IN2106, IN4230,IN2397)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-a003976a5127",
+      "module": "IN2106",
+      "title": "Master Practical Course: Exploring Beyond 5G Networks Through Simulation (IN2106, IN4324)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-a8aa8ebc472f",
+      "module": "IN2106",
+      "title": "Praktikum - Internet-Praktikum ilab 2 (IN0012, IN2106, IN4097, IN8018)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-09fc0639457e",
+      "module": "IN2106",
+      "title": "Masterpraktikum: Human-Centered Artifact Design (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-f0f46b10df7b",
+      "module": "IN2106",
+      "title": "GPU-Pro (Computer Games Laboratory (IN7106) / Informatics Master Practical (IN2106))",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-fc234807f8e2",
+      "module": "IN2106",
+      "title": "IN2106 Intelligent Machine Design Laboratory",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-6eee6eecb60f",
+      "module": "IN2106",
+      "title": "Master Practical: Teaching Robots a Spatial Language Understanding (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-1bdeca8ece9b",
+      "module": "IN2106",
+      "title": "Praktikum: Advances in Testing AI Systems (IN0012, IN2106, IN4388)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-ef1ecc77ea13",
+      "module": "IN2106",
+      "title": "Master-Praktikum – Next-Generation Rechenzentrumsbetrieb für SAP Enterprise Software (IN2128, IN2106, IN212810)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-4374d8e3c4cc",
+      "module": "IN2106",
+      "title": "IN2106 Cybathlon Challenge: Mechanism Design & Control",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-ed55eb983880",
+      "module": "IN2106",
+      "title": "Masterpraktikum - Foundation Models and AI Agents for Autonomous Driving (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-175b9cf98868",
+      "module": "IN2106",
+      "title": "Master-Praktikum - Machine Learning in Crowd Modeling & Simulation (IN2106, IN4267)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-5b9e427d3f51",
+      "module": "IN2106",
+      "title": "Master-Praktikum: IoT (Internet of Things) (IN2106, IN4224)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-30404a20164c",
+      "module": "IN2106",
+      "title": "Praktikum: Evaluierung moderner HPC-Architekturen und -Beschleuniger (IN0012, IN2106, IN2397, IN4294)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-a1f9ceec3977",
+      "module": "IN2106",
+      "title": "Masterpraktikum - Micromouse: Designing an Educational Racing-Robot from Scratch (IN2106, IN4235)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-048c6ec56444",
+      "module": "IN2106",
+      "title": "Masterpraktikum: AI-Start-up: Deeply Integrated AI Agents for Enterprise Productivity (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-0d6a58752ece",
+      "module": "IN2106",
+      "title": "Practical Course: Generative AI - From Diffusion to World Models (IN2106, IN40038)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-11b59e906de5",
+      "module": "IN2106",
+      "title": "Practical Course - Sustainable Software Service Engineering (IN0012, IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-681d224ba89b",
+      "module": "IN2106",
+      "title": "Advanced Practical Course Deep Learning for Audio, Speech, and Language (IN2106, IN40017)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-a63f26402a53",
+      "module": "IN2106",
+      "title": "Praktikum - Agile Project Management (IN0012, IN2106, IN2128, IN4206)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-5d092fbfe093",
+      "module": "IN2106",
+      "title": "Praktikum: Scenario-Based Testing of Cyber-Physical Vehicles (IN0012, IN2106, IN4391)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-9a6be2b2134b",
+      "module": "IN2106",
+      "title": "Praktikum - Internet-Praktikum - iLabX (IN0012, IN2106, IN4240)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-39db5f019b03",
+      "module": "IN2106",
+      "title": "Master-Praktikum: Decentralized Information Systems (IN2106, IN40020)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-3b7d849bf429",
+      "module": "IN2106",
+      "title": "Advanced Practical Course Machine Learning for Health (IN2106, IN40018)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-653e43eecc34",
+      "module": "IN2106",
+      "title": "Practical Course - Algorithms for Programming Contests (IN0012, IN2106, IN4205)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-85bb873f665c",
+      "module": "IN2106",
+      "title": "Masterpraktikum - Safe Reinforcement Learning for Modular Robots (IN2106, IN4386)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-5103435fb88a",
+      "module": "IN2106",
+      "title": "Praktikum: Operating Systems Design and Implementation Lab (IN0012, IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-d8cedd7dd20f",
+      "module": "IN2106",
+      "title": "Masterpraktikum - Formal Methods for AI-Enabled Cyber-Physical Systems (IN2106, IN4385)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-0e129a26d6f3",
+      "module": "IN2106",
+      "title": "Praktikum - Interactive Learning (IN0012, IN2106, IN2175, IN4234)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-54c9180e57fd",
+      "module": "IN2106",
+      "title": "Praktikum - Hacking - Binary-Exploitation (IN2106, IN0012, IN4120)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-ee65affbe88d",
+      "module": "IN2106",
+      "title": "Praktikum: Compiler and Hardware Co-Design (IN0012, IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-f99df4809377",
+      "module": "IN2106",
+      "title": "Practical Course - Software Engineering & Applied AI (IN0012, IN2106, IN2175, IN2128)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-c845709efe68",
+      "module": "IN2106",
+      "title": "Master Practical Course - Natural Language Processing on Legal Text (IN2106, IN4316)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-55014b33381b",
+      "module": "IN2106",
+      "title": "Master Practical Course Projects in Large Language Models (IN2106, IN40043)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-b940048f80f2",
+      "module": "IN2106",
+      "title": "Master-Praktikum-Visuelle Navigation (IN2106, IN4174)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-bc2d3c926669",
+      "module": "IN2106",
+      "title": "Master-Praktikum - Anwendungen des Natural Language Processing (NLP) (IN2106, IN4249)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-3c78a6006931",
+      "module": "IN2106",
+      "title": "Practical Course: Spatial Intelligence for Virtual Humans (IN2106, IN4263)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-13ad25bcd4ea",
+      "module": "IN2106",
+      "title": "Praktikum: Systems Programming (IN0012, IN2106, IN2128)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-f39e19b4b5c2",
+      "module": "IN2106",
+      "title": "Applied Deep Learning in Medicine (IN2106, IN4314)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-d49bd47f6a06",
+      "module": "IN2106",
+      "title": "Master-Praktikum - Sustainable Process Automation: Humans, Software and the Mediator Pattern (IN2128, IN2106, IN4303)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-1e069c53fbf8",
+      "module": "IN2106",
+      "title": "Praktikum - Advanced Algorithms in Competitive Programming Problems (IN0012, IN2106, IN4375)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-d301cab2a243",
+      "module": "IN2106",
+      "title": "Praktikum on 3D Computer Vision (IN2106, IN4313)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-7bc492482d46",
+      "module": "IN2106",
+      "title": "IN2106 Praktikum Robot Modelling, Identification and Control",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-2555ab8f4444",
+      "module": "IN2106",
+      "title": "Praktikum - iPraktikum, iOS Praktikum (IN0012, IN2106, IN2175, IN2128, IN4049)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-1f3b86f1d436",
+      "module": "IN2106",
+      "title": "Entwicklungspraktikum Software Engineering für betriebliche Informationssysteme (IN2106, IN2129)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-4ff787b46292",
+      "module": "IN2106",
+      "title": "Praktikum - Automotive Software Entwicklung (IN2106, IN0012, IN4124)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-be32b02882a5",
+      "module": "IN2106",
+      "title": "Master-Praktikum - Machine Learning in Medical Imaging (IN2106, IN4142)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-a29735305078",
+      "module": "IN2106",
+      "title": "Advanced Practical Course - Agentic Business AI (IN2106, IN4212)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-fbc2ac708e8f",
+      "module": "IN2106",
+      "title": "Advanced Practical Course - Message Correlation and Inter-Instance/Process Communication in Process Aware Information Systems (IN2106, IN2130)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-cfcad522bcbb",
+      "module": "IN2106",
+      "title": "Praktikum: Advanced Testing of Deep Learning Models - Towards Robust AI (IN0012, IN2106, IN4336)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-e40697d4b5da",
+      "module": "IN2106",
+      "title": "Advanced Practical Course - There and Back Again - Foundations and Applications of Process (Re-)Discovery with Petri Nets and Process Trees (IN2106, IN2128)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-a4f040bfca46",
+      "module": "IN2106",
+      "title": "Practical Course: Data Structure Engineering (IN0012, IN2106, IN4358)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-c55d82c5f9dc",
+      "module": "IN2106",
+      "title": "Praktikum: Resilient Cognitive Systems (IN0012, IN2106, IN4356)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-45dbb2f24287",
+      "module": "IN2106",
+      "title": "Masterpraktikum - Building an Autonomous Truck (IN2106, IN40008)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-e8fed5e259cb",
+      "module": "IN2106",
+      "title": "Practical Course - Deep Learning for Human Modelling (IN0012, IN2106, IN40010)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-35db48a128a1",
+      "module": "IN2106",
+      "title": "Praktikum - Provably safe reinforcement learning challenge (IN2106, IN0012, IN40024)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-8a28a6e6afde",
+      "module": "IN2106",
+      "title": "Masterpraktikum - Building Autonomous Agents and Bots: Applications on the Web and Beyond (IN2106, IN40009)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-69405219dbae",
+      "module": "IN2106",
+      "title": "Masterpraktikum - Building a BBQ Robot (IN2106, IN40019)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-e25ae171a249",
+      "module": "IN2106",
+      "title": "Master-Praktikum-Shape Quest: Learning to Explore the 3D World (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-fe55bdc2397f",
+      "module": "IN2106",
+      "title": "Master-Praktikum-One-Way Ticket to the Finsler World: Into the Future of Geometric AI (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-bf200e365e1d",
+      "module": "IN2106",
+      "title": "Master-Praktikum: Deep Representation Learning for Computer Vision and Beyond (IN2106, IN40036)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-7453d407a77d",
+      "module": "IN2106",
+      "title": "Master-Praktikum: Robot Learning from Demonstration for Household Tasks (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-11e8572e406d",
+      "module": "IN2106",
+      "title": "Master-Praktikum: Medical Images In Motion (Mi2M) (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-38cdcad9bb8e",
+      "module": "IN2106",
+      "title": "Practical Course - Strong Results with Weak Relations (IN0012, IN2106, IN40016)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-ae36b6e1a295",
+      "module": "IN2106",
+      "title": "Master-Praktikum - Virtual Reality Applications (IN2106)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-d75fa5a5b145",
+      "module": "IN2106",
+      "title": "Master Practical Course - Sensing strategies and control for assistive wearable robotics (IN2106, IN40031)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-ace705685074",
+      "module": "IN2106",
+      "title": "Master Practical Course - Actuations strategies and control for assistive wearable robotics (IN2106, IN40030)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-ea78595b09c8",
+      "module": "IN2106",
+      "title": "Praktikum - Implementierung von Datenbanksystemen (IN0012, IN2106, IN4146)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-eb59d78deef5",
+      "module": "IN2106",
+      "title": "IN2106 Dodo Alive! - Resurrecting the Dodo with Robotics and AI: Simulation & Control",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    },
+    {
+      "id": "IN2106-2026W-8293a8337861",
+      "module": "IN2106",
+      "title": "Practical Course - Technical Project Leadership (IN0012, IN2106, IN2128, IN4357)",
+      "term": "2026W",
+      "sourceURL": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/#sec5152"
+    }
+  ]
+}

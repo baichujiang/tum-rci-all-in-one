@@ -1,7 +1,7 @@
 /* Run the production board and status actions against validated local records. */
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-const C=require('../assets/core'),T=require('../assets/course-context'),E=require('../assets/planning-engine');
+const C=require('../assets/core'),T=require('../assets/course-context'),E=require('../assets/planning-engine'),Topics=require('../site3/course-topics');
 const courses=require('../scripts/load-courses')(),names=require('../content/editorial.json').course_names_zh;
 const source=fs.readFileSync(require.resolve('../site3/planner'),'utf8');
 const copy=x=>JSON.parse(JSON.stringify(x)),tick=()=>new Promise(resolve=>setImmediate(resolve));
@@ -24,7 +24,7 @@ async function harness(initial,desktop=true){
  const media={matches:desktop,addEventListener(type,fn){this[type]=fn;}};
  U.moveCourse=async(code,semester,options)=>{moves.push(copy({code,semester,options}));return {kind:'unchanged',code,semester};};
  U.reorderCourse=async(code,semester,options)=>{reorders.push(copy({code,semester,options}));return {kind:'unchanged'};};
- vm.runInNewContext(source,{window:{matchMedia:()=>media,RCIUI:U,RCI:C,RCICourseContext:T,RCIPlanning:E,addEventListener:(key,fn)=>events[key]=fn},document:{activeElement:null,getElementById:id=>({'planner':box,'credit-check-dialog':creditDialog,'credit-check-content':creditContent}[id])},cancelAnimationFrame(){},requestAnimationFrame(){}});
+ vm.runInNewContext(source,{window:{matchMedia:()=>media,RCIUI:U,RCI:C,RCICourseContext:T,RCIPlanning:E,RCICourseTopics:Topics,addEventListener:(key,fn)=>events[key]=fn},document:{activeElement:null,getElementById:id=>({'planner':box,'credit-check-dialog':creditDialog,'credit-check-content':creditContent}[id])},cancelAnimationFrame(){},requestAnimationFrame(){}});
  await tick();
  const click=async(key,code)=>{const name=key.replace(/^data-/,'').replace(/-([a-z])/g,(_,c)=>c.toUpperCase());await box.handlers.click({target:{closest:()=>({dataset:{[name]:code},hasAttribute:k=>k===key})}});await tick();};
  const changeSemester=async(code,semester)=>{await box.handlers.change({target:{value:String(semester),dataset:{semester:code},hasAttribute:key=>key==='data-semester'}});await tick();};
@@ -43,6 +43,18 @@ async function harness(initial,desktop=true){
 const card=(html,code)=>html.match(new RegExp('<details[^>]*id="plan-course-'+code+'"[\\s\\S]*?</details>'))?.[0];
 let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS',name);}
 (async()=>{
+ await test('Both layouts expose the same topic setting on collapsed module cards without adding credits or a navigation detour',async()=>{
+  const topic=require('../data/course-topics.json').entries.find(x=>x.module==='IN2107');
+  const initial=draft([{code:'IN2107',status:'planned',semester:1,topic:C.validateTopic(topic,'IN2107')},{code:'IN2106',status:'planned',semester:2}]);
+  for(const desktop of [true,false]){
+   const h=await harness(initial,desktop);
+   for(const code of ['IN2107','IN2106']){
+    const html=card(h.html(),code),summary=html.match(/<summary[\s\S]*?<\/summary>/)[0],record=initial.items.find(x=>x.code===code);
+    assert(summary.includes(Topics.field(code,C.itemTopics(record),{semester:record.semester})));assert(!summary.includes('选题／课程详情'));assert(!summary.includes('#course-topics'));
+   }
+   assert.equal(C.calculate(h.plan(),courses).allocated,15);assert.equal(h.plan().items.length,2);assert.equal(h.writes(),0);
+  }
+ });
  await test('Both layouts show the third-semester cumulative shortfall at the semester, clearing at exactly 30 ECTS without saving',async()=>{
   const initial=C.validatePlan({...draft([{code:'IN2064',status:'planned',semester:1},{code:'OWNG',name:'自录专业选修',custom:true,group:'G',ects:21.5,status:'planned',semester:3}]),timeline:{count:3,start:'winter'}},courses);
   for(const desktop of [true,false]){

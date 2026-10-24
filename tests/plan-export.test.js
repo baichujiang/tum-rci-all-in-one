@@ -88,5 +88,16 @@ let checks=0;async function test(name,fn){await fn();checks++;console.log('PASS'
   assert(view.semesters.every(x=>x.season===null&&x.label.includes('待确认')));assert.equal(view.items[0].termLabel,'第 1 学期 · 季节待确认');
   assert.match(view.settings.find(x=>x[0]==='学期规划')[1],/待确认/);assert(!X.printPlan(view).includes('冬季开始'));
  });
+ await test('Real compressed sharing round-trips every candidate with one module and a recoverable import',async()=>{
+  const candidates=require('../data/course-topics.json').entries.filter(x=>x.module==='IN2107').slice(0,3),p=draft([{code:'IN2107',status:'planned',semester:2,topics:candidates.map(x=>C.validateTopic(x,'IN2107'))}]),empty=draft();
+  let handler,imported=null,backups=0,confirmed='';const textarea={value:'',focus(){},select(){}},output={hidden:true,querySelector:()=>textarea},box={innerHTML:'',addEventListener:(type,fn)=>{handler=fn;},querySelector:()=>output};
+  const U={base:'',data:async()=>db,plan:async()=>p,toast:message=>{if(!message.includes('已导入'))throw Error(message);}};
+  const source=fs.readFileSync(require.resolve('../site3/plan-sharing'),'utf8'),env={window:{RCIUI:U,RCI:C,RCIExports:X},document:{getElementById:()=>box},location:{hash:'',origin:'http://localhost:8013'},CompressionStream,DecompressionStream,Blob,Response,Uint8Array,btoa,atob,history:{replaceState(){}}};
+  await vm.runInNewContext(source,env);await handler({target:{closest:()=>({hasAttribute:key=>key==='data-plan-link'})}});
+  assert(!output.hidden);assert(textarea.value.startsWith('http://localhost:8013/planner/#plan='));
+  U.plan=async()=>empty;U.confirmAction=async(title,message)=>{confirmed=message;return true;};U.backupSnapshot=async()=>{backups++;return {data:{plan:empty}};};U.importBackup=async incoming=>{imported=JSON.parse(JSON.stringify(incoming.plan));};
+  env.location.hash='#plan='+textarea.value.split('#plan=')[1];await vm.runInNewContext(source,env);
+  assert.equal(backups,1);assert.deepEqual(imported,p);assert(confirmed.includes('1 门课程'));assert(confirmed.includes('5 / 120 ECTS'));assert.equal(imported.items[0].topics.length,3);assert.equal(imported.version,7);
+ });
  console.log(`${checks} plan export checks passed`);
 })().catch(error=>{console.error(error);process.exitCode=1;});

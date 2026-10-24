@@ -15,7 +15,7 @@ async function harness(search='',desktop=false,options={}){
  let plan=options.plan||empty(),lastURL='',fail=false,rows=[],cache=options.saved?JSON.stringify(options.saved):null;
  const nodes={},calls=[],events={},frames=[],scrolls=[],location={search,pathname:'/courses/',hash:options.hash||''};
  const history={state:options.historyState||null,replaceState(state,_b,url){this.state=state;lastURL=url;const u=new URL(url,'http://localhost:8001');location.search=u.search;location.hash=u.hash;}};
- const env={scrollY:options.scrollY||0,innerHeight:900};
+ const env={scrollY:options.scrollY||0,innerHeight:900,RCICourseTopics:require('../site3/course-topics')};
  for(const id of ['course-target-semester','page-search','group-filter','term-filter','directory-language','directory-selection','results','result-count','directory-undo','directory-status','directory-feedback','more-results','directory-subcategories','directory-active-filters','directory-filter-count','reset-filters','directory-target-credits','catalog-filter-options','directory-cohort'])nodes['#'+id]=element();
  nodes['[data-edit-academic-term]']=element();
  nodes['[data-academic-action]']=element();

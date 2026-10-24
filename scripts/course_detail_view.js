@@ -1,6 +1,6 @@
 /* Student-facing course detail. Audit evidence stays in the maintenance data. */
 'use strict';
-const C=require('../assets/core'),e=C.esc;
+const C=require('../assets/core'),e=C.esc,{backLink}=require('./control_view');
 const termLabel=value=>({WiSe:'冬季',SoSe:'夏季','WiSe/SoSe':'冬季／夏季','不定期':'不定期开课','一次性':'仅开设一次','自主安排':'自行安排','待核实':'待确认'}[value]||value||'待确认');
 const languageLabel=value=>({EN:'英语',DE:'德语','DE/EN':'德语／英语','课程所学语言':'所学语言','待核实':'待确认'}[value]||value||'待确认');
 const labels={A:'机器人学 · 二选一',B:'认知',C:'智能自主系统',D:'研讨课',E:'实践课',F:'硕士论文',G:'计算',H:'机械',I:'系统与控制',J:'跨学科基础',K:'控制理论补修'};
@@ -50,7 +50,7 @@ function relatedCourses(c,catalog){
  const family=c.j_constraints?.recognition_family;
  return catalog.filter(other=>other.module_code!==c.module_code&&(codes.has(other.module_code)||family&&other.j_constraints?.recognition_family===family));
 }
-module.exports=function courseDetailView({course:c,translation='',summary,catalog=[],base='',relatedURL='/guides/curriculum/'}){
+module.exports=function courseDetailView({course:c,translation='',summary,catalog=[],base='',relatedURL='/guides/curriculum/',topicCatalog=require('../data/course-topics.json')}){
  const code=c.module_code,title=C.courseName(c),v=c.verification,groups=c.allowed_groups||[c.section_2025[0]],unknown=!Number.isFinite(Number(c.ects));
  const internal=(path,label,cls='')=>`<a class="${cls}" href="${e(base+path)}">${label}</a>`;
  const link=(href,label,cls='text-link')=>C.safeURL(href)?`<a class="${cls}" href="${e(href)}" target="_blank" rel="noopener noreferrer">${e(label)} <span aria-hidden="true">↗</span></a>`:'';
@@ -95,10 +95,11 @@ module.exports=function courseDetailView({course:c,translation='',summary,catalo
  </aside>`;
  return `<article class="course-detail" id="course-detail" data-course-code="${e(code)}">
  <div class="course-detail-layout">
- <header class="course-detail-heading"><div class="course-detail-topline"><nav class="course-detail-back" aria-label="课程导航">${internal('/courses/','<span aria-hidden="true">←</span> 返回课程列表','text-link').replace('<a ', '<a data-detail-back ')}</nav><div class="course-detail-tags"><span class="course-detail-code">${e(code)}</span>${groups.map(g=>`<span>${e(g+' · '+labels[g])}</span>`).join('')}${pending?(conditionBody?'<a class="course-detail-review" href="#course-requirements">选课条件需确认 ↓</a>':'<span class="course-detail-review">本学期要求待确认</span>'):''}</div></div><h1>${e(title)}</h1>${translation?`<p class="course-detail-translation">${e(translation)}</p>`:''}
+ <header class="course-detail-heading"><div class="course-detail-topline"><nav class="course-detail-back" aria-label="课程导航">${backLink(base+'/courses/','返回课程列表',{detail:true})}</nav><div class="course-detail-tags"><span class="course-detail-code">${e(code)}</span>${groups.map(g=>`<span>${e(g+' · '+labels[g])}</span>`).join('')}${pending?(conditionBody?'<a class="course-detail-review" href="#course-requirements">选课条件需确认 ↓</a>':'<span class="course-detail-review">本学期要求待确认</span>'):''}</div></div><h1>${e(title)}</h1>${translation?`<p class="course-detail-translation">${e(translation)}</p>`:''}
  ${historical?`<p class="course-detail-history">以下按${e(period)}的${summary.source_type==='module_handbook'?'旧版手册':'官方课程页'}整理，本学期安排需确认。</p>`:''}
  ${intro?`<div class="course-detail-overview"><p>${e(intro)}</p></div>`:''}
  <dl class="course-detail-facts"><div><dt>学分</dt><dd>${e(c.ects)}${unknown?'':' <small>ECTS</small>'}</dd></div><div><dt>通常开课</dt><dd>${e(term)}${termPending?'<small class="course-fact-pending">待确认</small>':''}</dd></div><div><dt>授课语言</dt><dd>${e(language)}${languagePending?'<small class="course-fact-pending">待确认</small>':''}</dd></div>${Number.isFinite(workload?.total)?`<div><dt>预计投入</dt><dd>${e(workload.total)} <small>小时 / 学期</small>${weeklyHours!==null?`<small class="course-fact-weekly">每周约 ${e(weeklyHours)} 小时<span class="course-weekly-basis">（按15周）</span></small>`:''}</dd></div>`:''}</dl>
+ ${require('./course_topics_view')(code,topicCatalog)}
  <div class="course-detail-quick-links">${link(official,book?'官方课程介绍':'查看官方依据')}<a class="text-link" href="#course-plan-title">安排课程 <span aria-hidden="true">↓</span></a></div>
  </header>
  <div class="course-detail-content">

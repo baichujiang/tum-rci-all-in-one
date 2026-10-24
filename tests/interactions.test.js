@@ -5,6 +5,7 @@ const root=path.resolve(__dirname,'..'),C=require('../assets/core.js');
 const courses=C.csv(fs.readFileSync(path.join(root,'data/courses_legal_2025.csv'),'utf8'));
 const source=fs.readFileSync(path.join(root,'site3/app.js'),'utf8').split('const savedRaw=')[0]+'})();';
 const draft=()=>({version:2,cohort:'2026/27冬季',conditional:false,timeline:{count:4,start:'winter'},items:[{code:'IN2064',status:'planned',semester:1}]});
+const courseTopics=require('../data/course-topics.json');
 function harness(initial=draft(),desktop=false){
  let stored=JSON.stringify(initial),writes=0,events=0,confirmations=0;
  const control={confirm:true,quota:false},prompts=[];
@@ -19,13 +20,53 @@ function harness(initial=draft(),desktop=false){
  }
  const toast={replaceChildren(){},append(){},contains(){return false;}};
  const window={matchMedia:()=>({matches:desktop}),RCILocalLock:require('../site3/local-lock'),RCI:C,confirm(){confirmations++;if(control.onConfirm)control.onConfirm();return control.confirm;},dispatchEvent(ev){assert.equal(ev.type,'rci:planchange');events++;}};
- const context={window,navigator:{locks:{request:(_name,work)=>work()}},URLSearchParams,location:{search:''},document:{body:{append(){}},querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;return null;},createElement},localStorage:{getItem(){return stored;},setItem(key,value){assert.equal(key,'rci:v2:plan');if(control.quota)throw new Error('quota');stored=value;writes++;}},fetch:async url=>{assert.equal(url,'/assets/planner-data.json');return {ok:true,json:async()=>({courses,names:{}})};},Event:function(type){this.type=type;},setTimeout(){return 0;},clearTimeout(){}};
+ const context={window,navigator:{locks:{request:(_name,work)=>work()}},URLSearchParams,location:{search:''},document:{body:{append(){}},querySelector(s){if(s==='meta[name="rci-base"]')return {content:''};if(s==='#toast')return toast;return null;},createElement},localStorage:{getItem(){return stored;},setItem(key,value){assert.equal(key,'rci:v2:plan');if(control.quota)throw new Error('quota');stored=value;writes++;}},fetch:async url=>{assert.equal(url,'/assets/planner-data.json');return {ok:true,json:async()=>({courses,courseTopics,names:{}})};},Event:function(type){this.type=type;},setTimeout(){return 0;},clearTimeout(){}};
  vm.runInNewContext(source,context,{filename:'site3/app.js'});
  return {U:window.RCIUI,control,prompts,nextPrompt:async()=>{for(let i=0;i<8&&!prompts.at(-1)?.open;i++)await new Promise(resolve=>setImmediate(resolve));assert(prompts.at(-1)?.open,'Expected entry-term prompt');return prompts.at(-1);},stored:()=>JSON.parse(stored),externalPlan:value=>{stored=JSON.stringify(value);},writes:()=>writes,events:()=>events,confirmations:()=>confirmations};
 }
 let tests=0;
 async function test(name,fn){await fn();tests++;console.log('PASS',name);}
 (async()=>{
+ await test('Saving candidate sets keeps one credit-bearing module; remove, clear and undo preserve placement',async()=>{
+  const [first,second,third]=courseTopics.entries.filter(x=>x.module==='IN2107'),h=harness({...draft(),items:[]});
+  const added=await h.U.setCourseTopics('IN2107',[first.id,second.id],{semester:2,expectedTopics:[],expectedExists:false});
+  assert.equal(added.kind,'added');assert.equal(h.stored().version,7);assert.equal(h.stored().items.length,1);assert.equal(C.calculate(h.stored(),courses).allocated,5);assert.equal(h.stored().items[0].topics.length,2);
+  const changed=await h.U.setCourseTopics('IN2107',[second.id,third.id],{semester:3,expectedTopics:[C.validateTopic(first,'IN2107'),C.validateTopic(second,'IN2107')],expectedExists:true});
+  assert.equal(changed.kind,'topics');assert.equal(h.stored().items.length,1);assert.equal(h.stored().items[0].semester,2);assert.deepEqual(h.stored().items[0].topics.map(x=>x.id),[second.id,third.id]);
+  const count=h.writes();assert.equal((await h.U.setCourseTopics('IN2107',[third.id,second.id])).kind,'unchanged');assert.equal(h.writes(),count);
+  await h.U.undoCourse(changed);assert.deepEqual(h.stored().items[0].topics.map(x=>x.id),[first.id,second.id]);
+  const cleared=await h.U.setCourseTopics('IN2107',[]);assert.equal(h.stored().items.length,1);assert(!h.stored().items[0].topics);assert.equal(h.stored().version,7);assert.equal(C.calculate(h.stored(),courses).allocated,5);
+  await h.U.undoCourse(cleared);assert.deepEqual(h.stored().items[0].topics.map(x=>x.id),[first.id,second.id]);
+  const practical=courseTopics.entries.find(x=>x.module==='IN2106');await h.U.setCourseTopics('IN2106',[practical.id],{semester:1});assert.equal(h.stored().items.length,2);assert.equal(C.calculate(h.stored(),courses).allocated,15);
+ });
+ await test('Candidate changes preserve passed results and locks, and stale selections or undo cannot overwrite newer sets',async()=>{
+  const [first,second]=courseTopics.entries.filter(x=>x.module==='IN2107');
+  const initial={...draft(),version:6,items:[{code:'IN2107',status:'passed',semester:7,locked:true,topic:C.validateTopic(first,'IN2107')}]},h=harness(initial);
+  const change=await h.U.setCourseTopics('IN2107',[first.id,second.id],{semester:1}),record=h.stored().items[0];
+  assert.equal(record.status,'passed');assert.equal(record.semester,7);assert(record.locked);assert.equal(record.topics.length,2);assert.equal(C.calculate(h.stored(),courses,true).allocated,5);
+  await assert.rejects(()=>h.U.setCourseTopics('IN2107',[first.id],{expectedTopics:[C.validateTopic(first,'IN2107')]}),/其他页面/);
+  await h.U.setCourseTopics('IN2107',[]);await assert.rejects(()=>h.U.undoCourse(change),/其他调整/);
+  for(const ids of [[first.id,first.id],null,['unknown']])await assert.rejects(()=>h.U.setCourseTopics('IN2107',ids),/重复|无效|不属于/);
+  await assert.rejects(()=>h.U.setCourseTopics('IN2106',[first.id]),/不属于/);await assert.rejects(()=>h.U.setCourseTopics('IN2064',[first.id]),/不支持/);
+ });
+ await test('Historical candidates can survive later edits and be removed without accepting unknown snapshots',async()=>{
+  const first=courseTopics.entries.find(x=>x.module==='IN2107'),old={...C.validateTopic(first,'IN2107'),id:'IN2107-2025W-123456abcdef',term:'2025W',title:'往期候选'},h=harness({...draft(),items:[{code:'IN2107',status:'planned',semester:1,topics:[old]}]});
+  await h.U.setCourseTopics('IN2107',[old.id,first.id]);assert.deepEqual(h.stored().items[0].topics[0],old);assert.equal(h.stored().items[0].topics.length,2);
+  await h.U.setCourseTopics('IN2107',[first.id]);assert.equal(h.stored().items[0].topics.length,1);await assert.rejects(()=>h.U.setCourseTopics('IN2107',[old.id,first.id]),/不在当前目录/);
+ });
+ await test('Cancelled entry setup and unavailable storage never silently persist candidate selection',async()=>{
+  const entry=courseTopics.entries.find(x=>x.module==='IN2107'),h=harness({...draft(),cohort:'unknown',items:[]});
+  const pending=h.U.setCourseTopics('IN2107',[entry.id],{semester:1}),prompt=await h.nextPrompt();prompt.close();assert.equal((await pending).kind,'cancelled');assert.equal(h.writes(),0);assert.equal(h.stored().items.length,0);
+  const blocked=harness({...draft(),items:[{code:'IN2107',status:'planned',semester:2}]});blocked.control.quota=true;
+  await blocked.U.setCourseTopics('IN2107',[entry.id]);assert.equal(blocked.U.persisted,false);assert(!blocked.stored().items[0].topics);assert.equal((await blocked.U.plan()).items[0].topics[0].id,entry.id);
+ });
+ await test('An open candidate manager cannot save against a changed semester, status, lock or candidate set',async()=>{
+  const [entry,other]=courseTopics.entries.filter(x=>x.module==='IN2107');
+  for(const patch of [{semester:3},{status:'passed'},{locked:true},{topics:[C.validateTopic(other,'IN2107')]}]){
+   const h=harness({...draft(),items:[{code:'IN2107',status:'planned',semester:2}]}),expectedItem=(await h.U.plan()).items[0],latest={...await h.U.plan(),items:[{...expectedItem,...patch}]};h.externalPlan(latest);
+   await assert.rejects(()=>h.U.setCourseTopics('IN2107',[entry.id],{semester:2,expectedItem}),/其他页面调整/);assert.equal(h.writes(),0);assert.deepEqual(h.stored(),latest);
+  }
+ });
  await test('First add waits for entry term, cancellation changes nothing, then summer resumes the original target',async()=>{
   const initial={...draft(),cohort:'unknown',items:[]},h=harness(initial);
   let pending=h.U.addCourse('IN2228',3),prompt=await h.nextPrompt();assert.equal(h.writes(),0);prompt.close();

@@ -34,15 +34,21 @@ function prepare(current,incoming,mode,courses){
  else{
   const p=current.plan,sameSeason=p.timeline.start===other.timeline.start;
   const count=sameSeason?Math.max(p.timeline.count,other.timeline.count):p.timeline.count;
-  const items=[...p.items],currentCodes=new Set(items.map(x=>x.code)),used=new Set(currentCodes);let moved=0,kept=0;
+  const items=[...p.items],currentCodes=new Set(items.map(x=>x.code)),used=new Set(currentCodes);let moved=0,kept=0,addedTopics=0;
   for(const item of other.items){
-   if(used.has(item.code)){kept++;continue;}
+   if(used.has(item.code)){
+    kept++;
+    const index=items.findIndex(x=>x.code===item.code),local=items[index],existing=C.itemTopics(local),ids=new Set(existing.map(x=>x.id)),extra=C.itemTopics(item).filter(x=>!ids.has(x.id));
+    if(extra.length){items[index]={...local,topics:C.validateTopics([...existing,...extra],item.code)};addedTopics+=extra.length;}
+    continue;
+   }
    const opposite=item.code==='IN2067'?'ED160028':item.code==='ED160028'?'IN2067':null;
    if(opposite&&used.has(opposite)){notes.push(`${item.code} 与当前选择的 ${opposite} 二选一，保留当前选择。`);continue;}
    const semester=sameSeason?item.semester:0;if(!sameSeason&&item.semester)moved++;
    items.push({...item,semester});used.add(item.code);
   }
   if(kept)notes.push(`${kept} 门重复课程保留当前设备的安排与状态。`);
+  if(addedTopics)notes.push(`候选清单合并去重，补充 ${addedTopics} 个课题；不增加模块学分。`);
   if(moved)notes.push(`起始冬夏季节不同，${moved} 门新增课程放入待分配。`);
   plan={...p,timeline:{...p.timeline,count},items};
   if(sameSeason)for(const semester of Object.keys(other.courseOrder||{})){

@@ -598,6 +598,10 @@ details[open]>summary>.settings-disclosure-arrow{transform:rotate(180deg)}
  #printable-plan .print-history th{background:#edf5fb}
  #printable-plan .print-history th:first-child{width:55%}
  #printable-plan .print-history th:nth-child(2){width:12%}
+ #printable-plan .print-candidates{margin-bottom:7mm}
+ #printable-plan .print-candidate-table th{background:#edf5fb}
+ #printable-plan .print-candidate-table th:first-child{width:20%}
+ #printable-plan .print-candidate-table th:last-child{width:18%}
  #printable-plan .print-settings th{width:20%;background:#f4f8fc}
  #printable-plan .print-settings td{white-space:pre-wrap}
  #printable-plan .print-footnote{font-size:8pt;color:#5c6b64;margin-top:5mm}

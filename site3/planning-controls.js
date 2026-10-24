@@ -45,6 +45,8 @@ function updateSettingsState(){
  document.getElementById('plan-settings-description').textContent=generateAfterSettings?'确认一次，之后即可直接一键规划。':'修改后保存，返回规划条件。';
  document.getElementById('plan-settings-cancel').textContent=autoEntrySetup?'取消':'返回条件';
  document.getElementById('plan-settings-close').setAttribute('aria-label',autoEntrySetup?'关闭自动规划':'返回条件');
+ document.getElementById('plan-settings-close').textContent=autoEntrySetup?'关闭':'返回条件';
+ for(const id of ['plan-settings-close','plan-settings-cancel'])document.getElementById(id).setAttribute('data-return',String(!autoEntrySetup));
  note.textContent=settingsSaving?'正在保存设置…':generateAfterSettings?'保存后直接生成并更新看板，可撤销。':'保存学业信息，保留本次课程偏好。';
  document.getElementById('plan-settings-content').inert=settingsSaving;
  button.disabled=settingsSaving;button.textContent=settingsSaving?'正在保存…':generateAfterSettings?'开始规划':'保存并返回';

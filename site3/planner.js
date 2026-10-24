@@ -2,6 +2,7 @@
 (async function(){
 'use strict';
 const U=window.RCIUI,C=window.RCI,T=window.RCICourseContext,e=C.esc,box=document.getElementById('planner');if(!box)return;
+const Topics=window.RCICourseTopics;
 let db,known,refreshVersion=0,renderedVersion=-1,refreshTask=null,draggedCode=null,draggedSemester=null,dragFrame=0,dragX=0,boardScrollOwner=null;
 const desktopPlanning=window.matchMedia?.('(min-width: 961px)');
 const creditCategories=[
@@ -80,11 +81,12 @@ function row(x,p){
  const fixed=passed?'':`<label class="course-card-fixed"><input type="checkbox" data-lock="${e(x.code)}" ${x.locked?'checked':''} ${!x.semester?'disabled':''}><span>自动规划时保留此学期</span></label>`;
  const semesterField=passed||!desktopPlanning?.matches?`<div class="course-card-field"><label for="${e(fieldId)}">${passed?'通过学期':'安排学期'}</label><select id="${e(fieldId)}" data-semester="${e(x.code)}" aria-label="${e(title)} ${passed?'通过学期':'安排学期'}"${notice?` aria-describedby="${e(noticeId)}"`:''}>${passed?passedSemesterOptions(p,x.semester):semesterOptions(p,x.semester,c)}</select>${notice}</div>`:'';
  const schedule=semesterField||notice||allocation?`<div class="row-controls course-card-schedule">${semesterField||notice}${allocation}</div>`:'';
- const detailLink=c?`<a class="text-link course-card-detail-link" href="${U.base}/courses/${e(x.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(title)} 课程详情（新标签页）">课程详情 ↗</a>`:'';
+ const detailLink=c?`<a class="text-link course-card-detail-link" href="${U.base}/courses/${e(x.code)}/" target="_blank" rel="noopener noreferrer" aria-label="查看 ${e(title)} 的课程详情（新标签页）">课程详情 ↗</a>`:'';
  const actions=passed?`<button class="quiet course-status-action" type="button" data-unpass="${e(x.code)}">改为待修</button>`:`<button class="quiet course-status-action" type="button" data-passed="${e(x.code)}">标记已通过</button><button class="quiet remove-course" type="button" data-remove="${e(x.code)}" aria-label="移除 ${e(title)}">移除</button>`;
  return `<details class="plan-row scheduled-row course-card${passed?' is-passed':''}${conflict?' has-conflict':''}${categoryClass}"${categoryAttribute} id="plan-course-${e(x.code)}" data-plan-course="${e(x.code)}" data-plan-semester="${x.semester}" draggable="true">
   <summary class="course-card-summary" id="plan-course-toggle-${e(x.code)}" aria-label="${e(title)}，${e(credits)} ECTS，${passed?'已通过，可调整通过学期':desktopPlanning?.matches?'展开课程操作':'调整学期'}${conflict?'，目录季节不符':''}">
    <span class="course-drag" title="拖动调整课程顺序或学期" aria-hidden="true">⠿</span><span class="course-card-heading"><span class="course-card-title">${e(title)}</span>${translation?`<span class="course-card-translation">${e(translation)}</span>`:''}</span><span class="course-card-credits">${e(credits)} <small>ECTS</small></span><svg class="course-card-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+   ${Topics.field(x.code,C.itemTopics(x),{semester:x.semester})}
    <span class="course-card-meta-row"><span class="course-card-meta">${e(x.code)} · ${e(metadata)}</span>${detailLink}</span>
    ${passed?'<span class="course-passed-state">✓ 已通过</span>':conflict?'<span class="course-card-alert">季节需核对</span>':''}
   </summary>

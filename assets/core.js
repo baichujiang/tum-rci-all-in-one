@@ -41,8 +41,23 @@
     try { const u = new URL(String(url)); return ['https:', 'http:'].includes(u.protocol) && !u.username && !u.password ? u.href : ''; }
     catch (_) { return ''; }
   }
+  function topicTermLabel(term) {
+    if(!/^\d{4}[WS]$/.test(term))return '';
+    const year=Number(term.slice(0,4));return term.endsWith('W')?`${year}/${String(year+1).slice(-2)} 冬季`:`${year} 夏季`;
+  }
+  function validateTopic(topic,code) {
+    if(!['IN2106','IN2107'].includes(code)||!topic||typeof topic!=='object'||Array.isArray(topic)||typeof topic.id!=='string'||!new RegExp('^'+code+'-\\d{4}[WS]-[a-f0-9]{12}$').test(topic.id)||typeof topic.title!=='string'||!topic.title.trim()||topic.title.length>400||/[\x00-\x1f]/.test(topic.title)||typeof topic.term!=='string'||!/^\d{4}[WS]$/.test(topic.term)||!topic.id.startsWith(code+'-'+topic.term+'-')||typeof topic.sourceURL!=='string'||topic.sourceURL.length>1000||!safeURL(topic.sourceURL)||!topic.sourceURL.startsWith('https://'))throw new Error('具体课题记录无效，须属于对应的 Praktikum 或 Seminar 模块');
+    return {id:topic.id,title:topic.title.trim(),term:topic.term,sourceURL:topic.sourceURL};
+  }
+  function itemTopics(item) { return item?.topics ?? (item?.topic ? [item.topic] : []); }
+  function validateTopics(topics,code) {
+    if(!['IN2106','IN2107'].includes(code)||!Array.isArray(topics)||topics.length>200)throw new Error('候选课题列表无效，每个模块最多保留 200 个课题');
+    const result=topics.map(topic=>validateTopic(topic,code));
+    if(new Set(result.map(topic=>topic.id)).size!==result.length)throw new Error('候选课题列表中有重复课题');
+    return result;
+  }
   function validatePlan(raw, courses) {
-    if (!raw || ![2,3,4,5].includes(raw.version) || !Array.isArray(raw.items) || raw.items.length > 250) throw new Error('不是有效的学分计划文件（支持 v2 / v3 / v4 / v5）');
+    if (!raw || ![2,3,4,5,6,7].includes(raw.version) || !Array.isArray(raw.items) || raw.items.length > 250) throw new Error('不是有效的学分计划文件（支持 v2–v7）');
     if (typeof raw.conditional !== 'boolean' || typeof raw.cohort !== 'string' || !['unknown', 'older', ...cohorts].includes(raw.cohort)) throw new Error('批次或补修设置无效');
     const conditionalConfirmed=raw.conditionalConfirmed ?? (raw.version===2&&cohorts.includes(raw.cohort)?true:raw.conditional);
     if(typeof conditionalConfirmed!=='boolean')throw new Error('个人补修确认状态无效');
@@ -59,6 +74,11 @@
       if (!Number.isInteger(semester) || semester < 0 || semester > (x.status==='passed'?12:timeline.count)) throw new Error('课程安排的学期超出规划范围');
       if (x.locked !== undefined && typeof x.locked !== 'boolean') throw new Error('固定课程设置无效');
       const extra = {locked:x.locked ?? false};
+      if(x.topic!==undefined&&x.topics!==undefined)throw new Error('候选课题字段冲突，请保留一份课题记录');
+      if(x.topics!==undefined||x.topic!==undefined){
+        const topics=validateTopics(x.topics!==undefined?x.topics:[x.topic],code);
+        if(topics.length)extra.topics=topics;
+      }
       if (known.has(code) && !(x.custom===true && 'GHIJ'.includes(known.get(code).section_2025?.[0]))) {
         if(!Number.isFinite(Number(known.get(code).ects))||Number(known.get(code).ects)<=0)throw new Error(code+' 的官方目录学分尚未核实；请先核对学校认定，再以自录选修记录实际学分。');
         const groups=known.get(code).allowed_groups;
@@ -135,7 +155,7 @@
       if(!value||!known.has(value.code)||!Number.isInteger(value.semester)||value.semester<1||value.semester>12)throw new Error('旧版时间替代记录无效');
       return {code:value.code,semester:value.semester};
     });
-    return {version:5, cohort:raw.cohort, conditional:raw.conditional, conditionalConfirmed,timeline:{count:timeline.count, start:timeline.start}, items,...(Object.keys(courseOrder).length?{courseOrder}:{}),
+    return {version:raw.version>=6||raw.items.some(x=>x.topic!==undefined||x.topics!==undefined)?7:5, cohort:raw.cohort, conditional:raw.conditional, conditionalConfirmed,timeline:{count:timeline.count, start:timeline.start}, items,...(Object.keys(courseOrder).length?{courseOrder}:{}),
       preferences:{desired,excluded,languages:[...new Set(languages)],...flags,startSemester},workload,timetable:{events:normalizedEvents,replaced:normalizedReplaced}};
   }
   function semesterSeason(timeline, number) {
@@ -286,7 +306,7 @@
       return {...row,value,historical,unknown,met:value>=row.required,exception:plan.preferences.deadlineException};
     });
   }
-  const api = {csv, esc, courseName, safeURL, validatePlan, calculate, progression, amended, semesterSeason, semesterLabel, hasAcademicTerm, planSemesterLabel, offering, semesterItems, reorderSemester, schedule, markdown, cohorts, courseGroups, creditOriginalNames};
+  const api = {csv, esc, courseName, safeURL, validateTopic, validateTopics, itemTopics, topicTermLabel, validatePlan, calculate, progression, amended, semesterSeason, semesterLabel, hasAcademicTerm, planSemesterLabel, offering, semesterItems, reorderSemester, schedule, markdown, cohorts, courseGroups, creditOriginalNames};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.RCI = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

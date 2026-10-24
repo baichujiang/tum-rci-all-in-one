@@ -29,9 +29,9 @@
       "title": "实验课与研讨课 Matching",
       "url": "https://www.cit.tum.de/en/cit/studies/students/examination-matters-modules/informatics/practical-courses-seminar-courses/",
       "status": "checked",
-      "checked_on": "2026-10-11",
+      "checked_on": "2026-10-23",
       "checked_by": "AI 辅助对照公开原文",
-      "scope": "IN2106/IN2107 的匹配入口与 2026/27 冬季匹配状态；未逐条复核 58 个历史课题的当前余位。",
+      "scope": "AI 辅助对照学院公开页的适用模块、2026/27 冬季常规匹配已结束，以及联系全部指定负责人申请余位的要求；余位名单不是实时库存，未确认个别课题当前仍有位置。",
       "human_review": "pending",
       "watch": true
     },
@@ -238,8 +238,8 @@
     },
     {
       "id": "matching",
-      "title": "实验课与研讨课，不是普通选课",
-      "subtitle": "IN2106 / IN2107 的申请入口要单独关注。",
+      "title": "实验课与研讨课：先挑候选，再申请名额",
+      "subtitle": "本站候选、学校申请和正式录取分开处理。",
       "category": "选课办事",
       "cohort": "Matching 流程；状态快照为 WiSe 2026/27",
       "sources": [
@@ -248,12 +248,12 @@
       "status": "checked",
       "sections": [
         {
-          "heading": "先参加 Matching",
-          "text": "官方说明 IN2106、IN2107 等指定模块通过 Matching 分配，不是直接在 TUMonline 注册名额。具体主题还可能有说明会、申请材料等安排，请查看负责教学团队的说明。"
+          "heading": "先确认自己要参加哪一学期",
+          "text": "常规 Matching 需要先查时间表与课程要求，再在系统中保存正式偏好。本站可收集多个候选，但收藏不等于向学校申请。"
         },
         {
-          "heading": "余位列表不是实时库存",
-          "text": "2026 年 10 月 11 日复核时，官网写明 2026/27 冬季常规匹配已完成；余位需直接联系相应导师。站内 58 条课题保留为 v1 学期快照，不能据此推断当前仍有位置。"
+          "heading": "常规匹配结束后走余位补录",
+          "text": "2026 年 10 月 23 日对照时，学院已公布 2026/27 冬季常规匹配结束。查看官方余位名单，按各课程要求联系指定授课团队，等待明确接受；名单不保证此刻仍有空位。"
         }
       ]
     },

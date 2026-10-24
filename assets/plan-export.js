@@ -73,6 +73,9 @@ function planView(p,db,date=new Date().toLocaleDateString('zh-CN')){
  return {cohort:p.cohort,date,items,semesters,other,settings,allocated:C.calculate(p,db.courses).allocated,passed:C.calculate(p,db.courses,true).allocated};
 }
 const boardNote='学期总额为课程学分之和；毕业进度按类别上限计入。已通过课程保留原学期。';
+const candidateSummary=x=>{
+ const topics=C.itemTopics(x);return topics.length?`候选课题（${topics.length} 个，未确认匹配）：\n${topics.slice(0,2).map(t=>(t.title.length>80?t.title.slice(0,80)+'…':t.title)+' · '+C.topicTermLabel(t.term)).join('\n')}${topics.length>2?'\n其余见候选课题清单':''}`:'';
+};
 const summary=v=>`已修 ${v.passed} ECTS · 毕业进度（含待修）${v.allocated} / 120 ECTS`;
 function planSheets(v){
  const cell=(value,style)=>({value,style}),groups=[...v.semesters,...v.other];
@@ -96,7 +99,7 @@ function planSheets(v){
   for(const x of items){
    const translation=x.translation&&x.translation!==x.name?x.translation:'';
    const name=[x.name,translation].filter(Boolean).join('\n');
-   const notes=[!g.number?x.termLabel:'',x.locked?'固定学期':'',x.custom?'自录课程，认定需核对':''].filter(Boolean).join('\n');
+   const notes=[!g.number?x.termLabel:'',candidateSummary(x),x.locked?'固定学期':'',x.custom?'自录课程，认定需核对':''].filter(Boolean).join('\n');
    const values=[name,x.code,x.group,x.ects,x.statusLabel,notes];
    const course={...cell(name,readingStyle[body+'Text']),runs:[{text:x.name,bold:true},...(translation?[{text:'\n'+translation,color:'5C6B64',size:9}]:[])]};
    add([course,cell(x.code,readingStyle[body+'Meta']),cell(x.group,readingStyle[body+'Status']),cell(x.ects,readingStyle[body+'Number']),cell(x.statusLabel,readingStyle[body+(x.status==='passed'?'Passed':'Status')]),cell(notes,readingStyle[body+'Meta'])],rowHeight(values,widths,42));
@@ -110,25 +113,34 @@ function planSheets(v){
  groups.forEach((g,index)=>{
   const items=g.number?g.items:[...g.items].sort((a,b)=>(a.semester||Infinity)-(b.semester||Infinity));
   items.forEach((x,i)=>{
-   const values=[x.termLabel,x.code,x.name,x.translation,x.ects,x.group,x.statusLabel,x.locked?'是':'否',x.custom?'自录课程，认定需核对':''];
+   const values=[x.termLabel,x.code,x.name,x.translation,x.ects,x.group,x.statusLabel,x.locked?'是':'否',[C.itemTopics(x).length?`${C.itemTopics(x).length} 个候选课题，未确认匹配；见候选课题表`:'',x.custom?'自录课程，认定需核对':''].filter(Boolean).join('\n')];
    detailRows.push(values.map(value=>cell(value,band(index,i===0)+(typeof value==='number'?1:0))));detailHeights.push(rowHeight(values,detailWidths));
   });
  });
  const details={name:'课程明细',rows:detailRows,widths:detailWidths,heights:detailHeights,freezeRows:1,freezeColumns:1,repeatRows:1,autoFilter:`A1:I${detailRows.length}`,showGridLines:false};
  const settingWidths=[26,105],settings={name:'规划条件',rows:v.settings.map((r,i)=>r.map(value=>cell(value,i===0?9:10))),widths:settingWidths,heights:v.settings.map((r,i)=>i===0?28:rowHeight(r,settingWidths)),freezeRows:1,repeatRows:1,showGridLines:false};
- return [{name:'课程计划',rows,widths,heights,merges,freezeRows:5,repeatRows:[5,5],showGridLines:false},details,settings];
+ const sheets=[{name:'课程计划',rows,widths,heights,merges,freezeRows:5,repeatRows:[5,5],showGridLines:false},details,settings];
+ const topicWidths=[18,34,85,22,65],topicRows=[['所属模块','模块安排','候选课题（不代表匹配成功）','课题来源学期','官方来源'].map(value=>cell(value,9))],topicHeights=[28];
+ for(const x of v.items)for(const topic of C.itemTopics(x)){
+  const values=[x.code,x.termLabel,topic.title,C.topicTermLabel(topic.term),topic.sourceURL];
+  topicRows.push(values.map(value=>cell(value,10)));topicHeights.push(rowHeight(values,topicWidths));
+ }
+ if(topicRows.length>1)sheets.push({name:'候选课题',rows:topicRows,widths:topicWidths,heights:topicHeights,freezeRows:1,repeatRows:1,autoFilter:`A1:E${topicRows.length}`,showGridLines:false});
+ return sheets;
 }
 function printPlan(v){
  const e=C.esc;
- const card=x=>`<article class="print-course${x.status==='passed'?' is-passed':''}"><div class="print-course-title">${e(x.name)}</div>${x.translation?`<div class="print-course-translation">${e(x.translation)}</div>`:''}<div class="print-course-code">${e(x.code)} · ${e(x.group)}${x.custom?' · 自录认定':''}</div><div class="print-course-bottom"><b>${x.ects} ECTS</b><span>${x.statusLabel}${x.locked?' · 固定学期':''}</span></div></article>`;
+ const card=x=>`<article class="print-course${x.status==='passed'?' is-passed':''}"><div class="print-course-title">${e(x.name)}</div>${x.translation?`<div class="print-course-translation">${e(x.translation)}</div>`:''}${C.itemTopics(x).length?`<div class="print-course-translation">${C.itemTopics(x).length} 个候选课题 · 未确认匹配，详见候选清单</div>`:''}<div class="print-course-code">${e(x.code)} · ${e(x.group)}${x.custom?' · 自录认定':''}</div><div class="print-course-bottom"><b>${x.ects} ECTS</b><span>${x.statusLabel}${x.locked?' · 固定学期':''}</span></div></article>`;
  // Balance groups (e.g. 5 semesters => 3 + 2) and repeat headings on overflow pages.
  const groupSize=Math.ceil(v.semesters.length/Math.ceil(v.semesters.length/4)),boards=[];
  for(let offset=0;offset<v.semesters.length;offset+=groupSize){
   const groups=v.semesters.slice(offset,offset+groupSize);
   boards.push(`<section class="print-board-section${offset?' print-new-page':''}"><h2>学期安排${v.semesters.length>groupSize?` · 第 ${groups[0].number}–${groups.at(-1).number} 学期`:''}</h2><table class="print-semester-board"><thead><tr>${groups.map(g=>`<th scope="col" class="${g.season}"><span class="print-term-title">${g.title}</span><span class="print-term-label">${e(g.label)}</span><strong>${g.credits} ECTS · ${g.items.length} 门</strong><small>已通过 ${g.passedCredits} · 待修 ${g.plannedCredits} ECTS</small></th>`).join('')}</tr></thead><tbody>${Array.from({length:Math.max(1,...groups.map(g=>g.items.length))},(_,i)=>`<tr>${groups.map(g=>`<td>${g.items[i]?card(g.items[i]):i===0?'<p class="print-empty">还没有安排课程</p>':''}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`);
  }
- const other=v.other.map(g=>`<section class="print-other"><h2>${g.title} <small>${g.credits} ECTS · ${g.items.length} 门</small></h2><p>${g.label}</p><table class="print-history"><thead><tr><th>课程</th><th>ECTS</th><th>状态与学期</th></tr></thead><tbody>${g.items.map(x=>`<tr><td><b>${e(x.name)}</b>${x.translation?`<br>${e(x.translation)}`:''}<br><small>${e(x.code)} · ${e(x.group)}${x.custom?' · 自录认定':''}</small></td><td>${x.ects}</td><td>${x.statusLabel}<br>${e(x.termLabel)}</td></tr>`).join('')}</tbody></table></section>`).join('');
- return `<header class="print-plan-heading"><h1>TUM RCI · 我的毕业计划</h1><p>${e(v.cohort)} · 导出日期 ${e(v.date)}</p><div class="print-summary">${summary(v)}</div></header><p class="print-board-note">${boardNote}</p>${boards.join('')}<div class="print-appendix print-new-page">${other}<section class="print-settings"><h2>规划条件</h2><table><tbody>${v.settings.slice(1).map(([k,value])=>`<tr><th scope="row">${e(k)}</th><td>${e(value)||'未设置'}</td></tr>`).join('')}</tbody></table></section><p class="print-footnote">独立学生项目，规则、名额、时间与学分认定请核对学校记录。</p></div>`;
+ const other=v.other.map(g=>`<section class="print-other"><h2>${g.title} <small>${g.credits} ECTS · ${g.items.length} 门</small></h2><p>${g.label}</p><table class="print-history"><thead><tr><th>课程</th><th>ECTS</th><th>状态与学期</th></tr></thead><tbody>${g.items.map(x=>`<tr><td><b>${e(x.name)}</b>${x.translation?`<br>${e(x.translation)}`:''}${C.itemTopics(x).length?`<br>${C.itemTopics(x).length} 个候选课题 · 详见候选清单`:''}<br><small>${e(x.code)} · ${e(x.group)}${x.custom?' · 自录认定':''}</small></td><td>${x.ects}</td><td>${x.statusLabel}<br>${e(x.termLabel)}</td></tr>`).join('')}</tbody></table></section>`).join('');
+ const candidateRows=v.items.flatMap(x=>C.itemTopics(x).map(topic=>`<tr><td>${e(x.code)}<br><small>${e(x.termLabel)}</small></td><td>${e(topic.title)}</td><td>${e(C.topicTermLabel(topic.term))}<br><a href="${e(topic.sourceURL)}">官方来源</a></td></tr>`));
+ const candidates=candidateRows.length?`<section class="print-candidates"><h2>Praktikum / Seminar 候选课题</h2><p>候选清单不代表报名或匹配成功；学分按所属模块计算一次。</p><table class="print-candidate-table"><thead><tr><th>所属模块与安排</th><th>候选课题</th><th>来源学期</th></tr></thead><tbody>${candidateRows.join('')}</tbody></table></section>`:'';
+ return `<header class="print-plan-heading"><h1>TUM RCI · 我的毕业计划</h1><p>${e(v.cohort)} · 导出日期 ${e(v.date)}</p><div class="print-summary">${summary(v)}</div></header><p class="print-board-note">${boardNote}</p>${boards.join('')}<div class="print-appendix print-new-page">${other}${candidates}<section class="print-settings"><h2>规划条件</h2><table><tbody>${v.settings.slice(1).map(([k,value])=>`<tr><th scope="row">${e(k)}</th><td>${e(value)||'未设置'}</td></tr>`).join('')}</tbody></table></section><p class="print-footnote">独立学生项目，规则、名额、时间与学分认定请核对学校记录。</p></div>`;
 }
 function download(content,name,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
 const api={xlsx,download,planView,planSheets,printPlan};if(typeof module==='object'&&module.exports)module.exports=api;else root.RCIExports=api;
